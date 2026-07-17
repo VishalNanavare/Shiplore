@@ -1,0 +1,161 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controllers\Auth;
+
+use App\Controllers\BaseController;
+use App\Libraries\AuthException;
+
+/**
+ * LoginController — web session login (Phase 5, web). Renders the themed login,
+ * enforces brute-force lockout, verifies credentials via the tested
+ * WebAuthenticator + UserRepository, starts a regenerated session, and audits
+ * every attempt to `login_attempts` (via LoginAttemptRepository). The POST is
+ * CSRF-protected (session token, see Config\Security + the `csrf` route filter).
+ *
+ * @see docs/architecture/23-AUTH-ACCESS-CONTROL.md §3.4,§7
+ */
+final class LoginController extends BaseController
+{
+    private const MAX_FAILS  = 5;   // lock after this many failures
+    private const WINDOW_MIN = 15;  // ...within this rolling window (minutes)
+
+    public function show()
+    {
+        if (session()->get('isLoggedIn')) {
+            return redirect()->to($this->landingFor((string) session()->get('principal_type')));
+        }
+
+        // The login page must always render — never let an integration lookup break it.
+        try {
+            $cfg = service('integrationRepository')->config('firebase');
+        } catch (\Throwable) {
+            $cfg = [];
+        }
+        $project = trim((string) ($cfg['project_id'] ?? ''));
+
+        return view('auth/login', [
+            'title' => 'Sign In · Omnichannel Commerce',
+            'fb'    => [
+                'apiKey'            => trim((string) ($cfg['web_api_key'] ?? '')),
+                'authDomain'        => $project !== '' ? $project . '.firebaseapp.com' : '',
+                'projectId'         => $project,
+                'messagingSenderId' => trim((string) ($cfg['sender_id'] ?? '')),
+                'appId'             => trim((string) ($cfg['app_id'] ?? '')),
+            ],
+        ]);
+    }
+
+    /** Staff land in their own panel: vendors -> vendor panel, platform staff -> admin. */
+    private function landingFor(?string $principalType): string
+    {
+        return $principalType === 'vendor' ? 'vendor/dashboard' : 'admin/dashboard';
+    }
+
+    public function attempt()
+    {
+        $login    = trim((string) $this->request->getPost('login'));
+        $password = (string) $this->request->getPost('password');
+        $attempts = service('loginAttemptRepository');
+
+        // --- Brute-force lockout (per identifier, rolling window) ---
+        if ($attempts->recentFailureCount($login, self::WINDOW_MIN) >= self::MAX_FAILS) {
+            return redirect()->back()->withInput()
+                ->with('error', 'Too many failed attempts. Please try again in a few minutes.');
+        }
+
+        $authenticator = service('webAuthenticator');
+        $users         = service('userRepository');
+
+        try {
+            $user = $authenticator->attempt($login, $password, static fn (string $l): ?array => $users->findByLogin($l));
+        } catch (AuthException) {
+            $attempts->record($login, false, 'invalid_credentials', null, $this->request->getIPAddress(), (string) $this->request->getUserAgent());
+
+            return redirect()->back()->withInput()->with('error', 'Invalid credentials.');
+        }
+
+        $attempts->record($login, true, null, (int) $user['id'], $this->request->getIPAddress(), (string) $this->request->getUserAgent());
+
+        session()->regenerate();
+        session()->set([
+            'isLoggedIn'     => true,
+            'user_id'        => (int) $user['id'],
+            'user_name'      => $user['name'] ?? '',
+            'principal_type' => $user['principal_type'] ?? null,
+        ]);
+
+        return redirect()->to($this->landingFor($user['principal_type'] ?? null));
+    }
+
+    /**
+     * Phone-OTP sign-in. The browser completes Firebase Phone Auth and posts the
+     * resulting ID token here (AJAX); we verify it server-side, match the phone to
+     * a STAFF account, and start the same session the password path does. Returns
+     * JSON so the page can navigate. CSRF-protected.
+     */
+    public function otpLogin()
+    {
+        $attempts = service('loginAttemptRepository');
+        $ip       = $this->request->getIPAddress();
+        $ua       = (string) $this->request->getUserAgent();
+
+        $claims = service('firebaseVerifier')->verify((string) $this->request->getPost('id_token'));
+        if ($claims === null) {
+            $attempts->record('otp', false, 'invalid_token', null, $ip, $ua);
+
+            return $this->response->setStatusCode(401)
+                ->setJSON(['ok' => false, 'message' => 'Could not verify the code. Please try again.', 'csrf' => csrf_hash()]);
+        }
+
+        $phone = trim((string) ($claims['phone_number'] ?? ''));
+        if ($phone === '') {
+            return $this->response->setStatusCode(422)
+                ->setJSON(['ok' => false, 'message' => 'The verified token has no phone number.', 'csrf' => csrf_hash()]);
+        }
+
+        $user = service('userRepository')->findByPhone($phone);
+        if ($user === null) {
+            $attempts->record($phone, false, 'no_account', null, $ip, $ua);
+
+            return $this->response->setStatusCode(404)
+                ->setJSON(['ok' => false, 'message' => 'No staff account is registered with ' . $phone . '.', 'csrf' => csrf_hash()]);
+        }
+        if (! in_array($user['principal_type'] ?? '', ['platform', 'vendor'], true)) {
+            $attempts->record($phone, false, 'not_staff', (int) $user['id'], $ip, $ua);
+
+            return $this->response->setStatusCode(403)
+                ->setJSON(['ok' => false, 'message' => "This number isn't a staff/vendor account.", 'csrf' => csrf_hash()]);
+        }
+        if (($user['status'] ?? '') !== 'active') {
+            $attempts->record($phone, false, 'inactive', (int) $user['id'], $ip, $ua);
+
+            return $this->response->setStatusCode(403)
+                ->setJSON(['ok' => false, 'message' => 'This account is not active.', 'csrf' => csrf_hash()]);
+        }
+
+        $attempts->record($phone, true, null, (int) $user['id'], $ip, $ua);
+
+        session()->regenerate();
+        session()->set([
+            'isLoggedIn'     => true,
+            'user_id'        => (int) $user['id'],
+            'user_name'      => $user['name'] ?? '',
+            'principal_type' => $user['principal_type'] ?? null,
+        ]);
+
+        return $this->response->setJSON([
+            'ok'       => true,
+            'redirect' => site_url($this->landingFor($user['principal_type'] ?? null)),
+            'csrf'     => csrf_hash(),
+        ]);
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+
+        return redirect()->to('login')->with('error', 'You have been signed out.');
+    }
+}

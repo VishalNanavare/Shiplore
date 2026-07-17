@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Test Documentation</title>
+        <style>
+            body {
+                text-rendering: optimizeLegibility;
+                font-family: Source SansSerif Pro, Arial, sans-serif;
+                font-variant-ligatures: common-ligatures;
+                font-kerning: normal;
+                margin-left: 2rem;
+                background-color: #fff;
+                color: #000;
+            }
+
+            body > ul > li {
+                font-size: larger;
+            }
+
+            h2 {
+                font-size: larger;
+                text-decoration-line: underline;
+                text-decoration-thickness: 2px;
+                margin: 0;
+                padding: 0.5rem 0;
+            }
+
+            ul {
+                list-style: none;
+                margin: 0 0 2rem;
+                padding: 0 0 0 1rem;
+                text-indent: -1rem;
+            }
+
+            .success:before {
+                color: #4e9a06;
+                content: '✓';
+                padding-right: 0.5rem;
+            }
+
+            .defect {
+                color: #a40000;
+            }
+
+            .defect:before {
+                color: #a40000;
+                content: '✗';
+                padding-right: 0.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Admin Crud Core</h2>
+        <ul>
+            <li class="success">Media allows images under 5mb</li>
+            <li class="defect">Media rejects bad mime and size</li>
+            <li class="success">Document validation allows pdf under 10mb</li>
+            <li class="success">Slugify</li>
+            <li class="success">Category allowed</li>
+            <li class="success">Enum guards to allowed or default</li>
+            <li class="success">Import resolves brand hsn and rich fields</li>
+            <li class="success">Import rejects unknown brand and hsn</li>
+            <li class="success">Import brand and hsn are optional</li>
+            <li class="success">Import product row valid</li>
+            <li class="success">Import rejects category not allowed for vendor</li>
+            <li class="success">Import rejects unknown vendor and dup sku</li>
+            <li class="success">Import rejects missing fields</li>
+        </ul>
+        <h2>Ai Product Assistant</h2>
+        <ul>
+            <li class="success">Stub seo composes from fields</li>
+            <li class="success">Stub seo is deterministic</li>
+            <li class="success">Stub tags drop short and stop words</li>
+            <li class="success">Stub description mentions title and brand</li>
+            <li class="success">Suggest dispatches by kind</li>
+        </ul>
+        <h2>Api Response</h2>
+        <ul>
+            <li class="success">Success envelope</li>
+            <li class="success">Collection envelope carries pagination</li>
+            <li class="success">Error envelope has no data key</li>
+            <li class="success">Status for mapping</li>
+        </ul>
+        <h2>Audit Writer</h2>
+        <ul>
+            <li class="success">Hash is deterministic and key order insensitive</li>
+            <li class="success">Chain links on prev hash</li>
+            <li class="success">Hash ignores existing hash columns</li>
+            <li class="success">Any field change changes hash</li>
+        </ul>
+        <h2>Barcode</h2>
+        <ul>
+            <li class="success">Valid ean 13</li>
+            <li class="success">Ean 13 bad check digit rejected</li>
+            <li class="success">Ean 13 wrong length rejected</li>
+            <li class="success">Valid upc a</li>
+            <li class="success">Upc bad check rejected</li>
+            <li class="success">Check digit computation</li>
+            <li class="success">Custom and code 128 accept free text</li>
+            <li class="success">Code 39 rejects lowercase symbols</li>
+            <li class="success">Empty and overlong rejected</li>
+            <li class="success">Unknown type falls back to custom</li>
+        </ul>
+        <h2>Barcode Decision</h2>
+        <ul>
+            <li class="success">E 1 exact match updates stock</li>
+            <li class="success">E 2 mrp differs creates new variant</li>
+            <li class="success">E 3 only gst differs routes to rate change request</li>
+            <li class="success">E 4 pack size differs creates new variant</li>
+            <li class="success">E 5 unknown to this vendor creates product</li>
+            <li class="success">E 6 combo barcode rejected</li>
+            <li class="success">E 7 empty barcode still creates with auto code</li>
+            <li class="success">E 8 checksum strict rejects</li>
+            <li class="success">E 9 discontinued variant gets fresh variant</li>
+            <li class="success">E 12 weighted scale barcode is never a create</li>
+            <li class="success">Mrp and pack both differ are reported together</li>
+            <li class="success">Checksum math</li>
+        </ul>
+        <h2>Barcode Label Service</h2>
+        <ul>
+            <li class="success">Expand repeats by qty</li>
+            <li class="success">Expand defaults to one copy</li>
+            <li class="success">Sheet html is self contained pdf ready</li>
+            <li class="success">Columns clamp and row wrap</li>
+            <li class="success">Escapes html</li>
+            <li class="success">Empty labels render gracefully</li>
+        </ul>
+        <h2>Bundle Pricing</h2>
+        <ul>
+            <li class="success">Dynamic total sums components</li>
+            <li class="success">Bundle mode uses dynamic sum</li>
+            <li class="success">Combo mode uses fixed price and reports savings</li>
+            <li class="success">Gift card denomination must match</li>
+            <li class="success">Gift card range when no denominations</li>
+        </ul>
+        <h2>Capability Resolver</h2>
+        <ul>
+            <li class="success">Unions and dedups permissions sorted</li>
+            <li class="success">Merges attributes taking max numeric cap</li>
+            <li class="success">Empty assignments</li>
+            <li class="success">Composes with policy engine for tenant isolation</li>
+        </ul>
+        <h2>Change Request Engine</h2>
+        <ul>
+            <li class="success">Staff submit enters level one</li>
+            <li class="success">Vendor owner submission skips own level</li>
+            <li class="success">Full chain approve applies via applier</li>
+            <li class="success">Self approval forbidden</li>
+            <li class="success">Wrong role and wrong vendor blocked</li>
+            <li class="success">Reject requires reason</li>
+            <li class="success">Duplicate open blocked</li>
+            <li class="success">Changes requested then resubmit restarts chain</li>
+            <li class="success">Withdraw only by requester while open</li>
+            <li class="success">Single level chain applies after vendor approval</li>
+            <li class="success">Missing applier parks at approved</li>
+            <li class="success">Failing applier marks apply failed</li>
+            <li class="success">Auto approve rule applies immediately</li>
+            <li class="success">Rule overrides chain and sla</li>
+            <li class="success">Admin override requires reason and audits</li>
+            <li class="success">Unknown action rejected</li>
+            <li class="success">Expire due sweeps overdue only</li>
+        </ul>
+        <h2>Commission Hold Service</h2>
+        <ul>
+            <li class="success">Proration sums exactly to commission</li>
+            <li class="success">Hold creates on hold rows with window</li>
+            <li class="success">Zero day window accrues immediately</li>
+            <li class="success">Idempotent per sub order</li>
+            <li class="success">No commission skips</li>
+            <li class="success">Empty items writes single sub order row</li>
+            <li class="success">Promote due respects boundary</li>
+            <li class="success">Cancel routes by state</li>
+            <li class="success">Partial return cancels only those items</li>
+            <li class="success">Cancel is idempotent</li>
+            <li class="success">Default window when no policy</li>
+        </ul>
+        <h2>Commission Resolver</h2>
+        <ul>
+            <li class="success">Product level wins</li>
+            <li class="success">Falls through to first available</li>
+            <li class="success">Global default last</li>
+            <li class="success">No rates yields zero</li>
+            <li class="success">Amount computation</li>
+        </ul>
+        <h2>Cron Schedule</h2>
+        <ul>
+            <li class="success">Every five minutes</li>
+            <li class="success">Strictly after when already on boundary</li>
+            <li class="success">Daily at three rolls to tomorrow</li>
+            <li class="success">Weekday</li>
+            <li class="success">Seven accepted as sunday</li>
+            <li class="success">Monthly first</li>
+            <li class="success">Yearly jumps months</li>
+            <li class="success">Dom dow or semantics</li>
+            <li class="success">Macros</li>
+            <li class="success">Ranges and lists</li>
+            <li class="success">Rejects malformed</li>
+            <li class="success">Rejects wrong field count</li>
+        </ul>
+        <h2>Delivery Ops</h2>
+        <ul>
+            <li class="success">Unavailable rider ineligible</li>
+            <li class="success">At capacity ineligible</li>
+            <li class="success">Eligible rider scored</li>
+            <li class="success">Pick best chooses nearest eligible</li>
+            <li class="success">Pick best returns null when none eligible</li>
+            <li class="success">Contact masking</li>
+            <li class="success">Sla on time at risk breached</li>
+            <li class="success">Sla delivered compares to delivered at</li>
+        </ul>
+        <h2>Delivery Radius</h2>
+        <ul>
+            <li class="success">Null shop radius uses admin max</li>
+            <li class="success">Shop radius below admin is kept</li>
+            <li class="success">Shop radius above admin is capped to admin</li>
+            <li class="success">Within shop and admin is deliverable</li>
+            <li class="success">Within admin but beyond shop is not deliverable</li>
+            <li class="success">Null radius beyond admin is not deliverable</li>
+            <li class="success">Reason no serving shop when none carry</li>
+            <li class="success">Reason outside service area beyond admin</li>
+            <li class="success">Reason shop no delivery within admin</li>
+            <li class="success">Reason at admin boundary is shop not outside</li>
+        </ul>
+        <h2>Document Pdf Service</h2>
+        <ul>
+            <li class="success">Render html produces pdf</li>
+            <li class="success">Receipt paper is 80mm roll</li>
+            <li class="success">Utf 8 survives</li>
+        </ul>
+        <h2>Document Storage</h2>
+        <ul>
+            <li class="success">Rejects non pdf or image</li>
+            <li class="success">Rejects too large</li>
+            <li class="success">Rejects empty</li>
+            <li class="success">Accepts pdf in dummy mode</li>
+            <li class="success">Accepts image</li>
+            <li class="success">Configured reflects s 3 settings</li>
+            <li class="success">Media allows broader types</li>
+            <li class="success">Media vendor key prefix</li>
+            <li class="success">Media shop key prefix</li>
+            <li class="success">Media rejects over size and bad type</li>
+        </ul>
+        <h2>Firebase Id Token Verifier</h2>
+        <ul>
+            <li class="success">Valid token returns claims</li>
+            <li class="success">Wrong audience rejected</li>
+            <li class="success">Wrong issuer rejected</li>
+            <li class="success">Expired token rejected</li>
+            <li class="success">Missing auth time rejected</li>
+            <li class="success">Future auth time rejected</li>
+            <li class="success">Unknown kid rejected</li>
+            <li class="success">Tampered signature rejected</li>
+            <li class="success">Empty project id rejects</li>
+        </ul>
+        <h2>Gst Calculator</h2>
+        <ul>
+            <li class="success">Exclusive intra state</li>
+            <li class="success">Inclusive intra state</li>
+            <li class="success">Exclusive inter state uses igst</li>
+            <li class="success">Zero rate</li>
+            <li class="success">Odd split rounds cgst sgst to total</li>
+            <li class="success">Inter state detection</li>
+        </ul>
+        <h2>Health</h2>
+        <ul>
+            <li class="success">Is defined app path</li>
+            <li class="success">Base url has been set</li>
+        </ul>
+        <h2>Import Template Service</h2>
+        <ul>
+            <li class="success">Product columns cover the rich model</li>
+            <li class="success">Unknown type falls back to product</li>
+            <li class="success">Xlsx is a real excel workbook</li>
+            <li class="success">Template round trips through the importer reader</li>
+        </ul>
+        <h2>India States</h2>
+        <ul>
+            <li class="success">Code for common states</li>
+            <li class="success">Handles google and alt spellings</li>
+            <li class="success">Unknown returns empty</li>
+            <li class="success">List is code keyed and complete</li>
+        </ul>
+        <h2>Invoice Service</h2>
+        <ul>
+            <li class="success">Indian financial year boundaries</li>
+            <li class="success">Number format and shop scoped prefix</li>
+            <li class="success">Doc type by supplier gstin</li>
+            <li class="success">Lines from items maps snapshots</li>
+        </ul>
+        <h2>Location Service</h2>
+        <ul>
+            <li class="success">Same point is zero</li>
+            <li class="success">One degree longitude at equator</li>
+            <li class="success">Andheri to powai about eight km</li>
+            <li class="success">Within radius</li>
+        </ul>
+        <h2>Media Helper</h2>
+        <ul>
+            <li class="success">Icon by mime</li>
+            <li class="success">Human size</li>
+            <li class="success">Name falls back to basename</li>
+        </ul>
+        <h2>Money</h2>
+        <ul>
+            <li class="success">Parses and formats to four decimals</li>
+            <li class="success">Add</li>
+            <li class="success">Subtract</li>
+            <li class="success">No float drift</li>
+            <li class="success">Multiply by quantity</li>
+            <li class="success">Round half up to two decimals</li>
+            <li class="success">Equals</li>
+        </ul>
+        <h2>Notification Presenter</h2>
+        <ul>
+            <li class="success">Icon maps known categories</li>
+            <li class="success">Icon falls back to bell</li>
+            <li class="success">Accent maps known categories</li>
+            <li class="success">Time ago buckets</li>
+            <li class="success">Time ago accepts datetime string</li>
+        </ul>
+        <h2>Notification Service</h2>
+        <ul>
+            <li class="success">Render replaces placeholders</li>
+            <li class="success">Render missing var becomes empty</li>
+            <li class="success">Allowed channels honours opt out</li>
+            <li class="success">Allowed channels keeps all when no opt out</li>
+        </ul>
+        <h2>Password Reset Service</h2>
+        <ul>
+            <li class="success">Generated token verifies against its hash</li>
+            <li class="success">Expired token fails</li>
+            <li class="success">Tampered token fails</li>
+        </ul>
+        <h2>Payment Gateway Manager</h2>
+        <ul>
+            <li class="success">Registers payu razorpay stripe</li>
+            <li class="success">Valid payu config passes test</li>
+            <li class="success">Missing field fails test with message</li>
+            <li class="success">Unknown provider is rejected</li>
+            <li class="success">Fields are exposed for form rendering</li>
+        </ul>
+        <h2>Price Resolver</h2>
+        <ul>
+            <li class="success">Base when no candidates</li>
+            <li class="success">Flash overlay wins over base</li>
+            <li class="success">Expired overlay ignored</li>
+            <li class="success">Channel mismatch ignored</li>
+            <li class="success">Customer group price applies only to that group</li>
+            <li class="success">Qty tier requires min qty</li>
+            <li class="success">Highest priority wins then lowest price</li>
+        </ul>
+        <h2>Purchase Rules</h2>
+        <ul>
+            <li class="success">No rules allows any positive qty</li>
+            <li class="success">Min and max</li>
+            <li class="success">Step multiples</li>
+            <li class="success">Step relative to min</li>
+            <li class="success">Payment restriction</li>
+        </ul>
+        <h2>Refund Service</h2>
+        <ul>
+            <li class="success">Full refund reverses all tax</li>
+            <li class="success">Partial refund prorates tax</li>
+            <li class="success">Factor is clamped to one</li>
+        </ul>
+        <h2>Report Export Csv</h2>
+        <ul>
+            <li class="success">Header and rows</li>
+            <li class="success">Escapes quotes commas newlines</li>
+            <li class="success">Nulls become empty cells</li>
+        </ul>
+        <h2>Request Authenticator</h2>
+        <ul>
+            <li class="success">Valid bearer produces context</li>
+            <li class="success">Missing header throws</li>
+            <li class="success">Non bearer header throws</li>
+            <li class="success">Expired token throws</li>
+        </ul>
+        <h2>Rider Payout Service</h2>
+        <ul>
+            <li class="success">Fixed commission</li>
+            <li class="success">Per km</li>
+            <li class="success">Per order</li>
+            <li class="success">Salary accrues nothing per delivery</li>
+            <li class="success">Hybrid incentive only above threshold</li>
+            <li class="success">Accrue writes entry from plan</li>
+            <li class="success">No plan means no entry</li>
+        </ul>
+        <h2>Settlement Service</h2>
+        <ul>
+            <li class="success">Net payable</li>
+            <li class="success">Net payable no deductions</li>
+            <li class="success">Net payable rounds</li>
+        </ul>
+        <h2>Shop Bill Settings</h2>
+        <ul>
+            <li class="success">Defaults are present</li>
+            <li class="success">Merge overlays stored over defaults</li>
+            <li class="success">Merge coerces types</li>
+            <li class="success">Merge ignores unknown keys</li>
+        </ul>
+        <h2>Status Machine</h2>
+        <ul>
+            <li class="success">Sub order forward allowed</li>
+            <li class="success">Sub order backward rejected</li>
+            <li class="success">Samestate is noop</li>
+            <li class="success">Delivery transitions</li>
+            <li class="success">Refund transitions</li>
+            <li class="success">Order transitions</li>
+            <li class="success">Transfer transitions</li>
+            <li class="success">Product approval transitions</li>
+        </ul>
+        <h2>Stock Valuation</h2>
+        <ul>
+            <li class="success">On hand value and qty</li>
+            <li class="success">Weighted average cost</li>
+            <li class="success">Fifo consumes oldest first</li>
+            <li class="success">Lifo consumes newest first</li>
+            <li class="success">Wavg consumes at average</li>
+            <li class="success">Shortage is reported not invented</li>
+        </ul>
+        <h2>Sync Engine Core</h2>
+        <ul>
+            <li class="success">New row applies</li>
+            <li class="success">Matching version applies</li>
+            <li class="success">Client ahead applies</li>
+            <li class="success">Stale client conflicts server wins</li>
+            <li class="success">Stale client client wins applies</li>
+            <li class="success">Retry backoff doubles</li>
+            <li class="success">Retry backoff is capped</li>
+            <li class="success">Exhaustion at max</li>
+        </ul>
+        <h2>Task Runner</h2>
+        <ul>
+            <li class="success">Dispatches handler and advances next run</li>
+            <li class="success">Unknown handler skips but still reschedules</li>
+            <li class="success">Failing handler does not block others</li>
+            <li class="success">Bad cron pauses task</li>
+        </ul>
+        <h2>Token Service</h2>
+        <ul>
+            <li class="success">Round trip returns claims with iat exp</li>
+            <li class="success">Expired token throws</li>
+            <li class="success">Tampered payload throws</li>
+            <li class="success">Wrong secret throws</li>
+            <li class="success">Malformed token throws</li>
+        </ul>
+        <h2>Variant Combinator</h2>
+        <ul>
+            <li class="success">Cartesian product size by color</li>
+            <li class="success">Single attribute yields one per value</li>
+            <li class="success">Empty or valueless selections yield nothing</li>
+            <li class="success">Valueless attribute is ignored not multiplied to zero</li>
+            <li class="success">Duplicate values are deduped</li>
+            <li class="success">Signature is order independent</li>
+            <li class="success">Sku suffix sanitizes</li>
+        </ul>
+        <h2>Web Authenticator</h2>
+        <ul>
+            <li class="success">Valid credentials return user</li>
+            <li class="success">Unknown user throws</li>
+            <li class="success">Wrong password throws</li>
+            <li class="success">Inactive account throws</li>
+        </ul>
+    </body>
+</html>

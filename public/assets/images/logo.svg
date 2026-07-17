@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Shiplore">
+  <defs>
+    <clipPath id="circ"><circle cx="100" cy="100" r="97"/></clipPath>
+  </defs>
+
+  <!-- Outer white circle -->
+  <circle cx="100" cy="100" r="99" fill="white"/>
+  <circle cx="100" cy="100" r="98.5" fill="none" stroke="#D5DCE6" stroke-width="1.2"/>
+
+  <!-- India map silhouette -->
+  <g clip-path="url(#circ)">
+    <path d="M76 14 Q87 10 100 13 Q113 14 126 22 Q140 30 145 43
+             Q152 50 150 63 Q158 73 155 86 Q160 98 155 110
+             Q156 122 148 133 Q142 145 133 154 Q124 165 115 173
+             Q107 180 100 184 Q93 179 86 170 Q76 160 69 148
+             Q60 136 55 122 Q47 110 49 97 Q43 85 48 72
+             Q50 58 58 46 Q64 32 76 14Z"
+          fill="#3B7A58" opacity="0.87"/>
+    <path d="M145 43 Q153 36 162 38 Q170 40 172 50 Q174 60 167 67
+             Q160 72 153 66 Q148 58 145 50Z"
+          fill="#3B7A58" opacity="0.72"/>
+    <path d="M85 75 Q102 80 118 74 Q114 96 100 102 Q86 97 83 82Z"
+          fill="#4E9E72" opacity="0.55"/>
+  </g>
+
+  <!-- Network lines -->
+  <g clip-path="url(#circ)" stroke="#9FB8CC" stroke-width="0.7" fill="none" opacity="0.4">
+    <line x1="95" y1="15" x2="130" y2="30"/><line x1="130" y1="30" x2="150" y2="45"/>
+    <line x1="150" y1="45" x2="166" y2="42"/><line x1="95" y1="15" x2="62" y2="32"/>
+    <line x1="62" y1="32" x2="50" y2="58"/><line x1="50" y1="58" x2="44" y2="85"/>
+    <line x1="166" y1="42" x2="168" y2="70"/><line x1="44" y1="85" x2="44" y2="110"/>
+    <line x1="168" y1="70" x2="165" y2="95"/>
+  </g>
+  <g clip-path="url(#circ)" fill="none" stroke="#9FB8CC" stroke-width="0.9" opacity="0.5">
+    <circle cx="95" cy="15" r="3"/><circle cx="150" cy="45" r="3.2"/>
+    <circle cx="166" cy="42" r="2.5"/><circle cx="50" cy="58" r="2.8"/>
+    <circle cx="44" cy="85" r="2.5"/><circle cx="168" cy="70" r="2.5"/>
+    <circle cx="44" cy="110" r="2.5"/><circle cx="165" cy="95" r="2.5"/>
+  </g>
+  <g clip-path="url(#circ)" font-family="sans-serif" font-size="5" fill="#7A9BB0" opacity="0.5">
+    <text x="98" y="13">11</text><text x="170" y="40">14</text>
+    <text x="37" y="84">41</text><text x="37" y="111">14</text>
+  </g>
+
+  <!-- S-Curve ribbon system -->
+  <g clip-path="url(#circ)">
+    <path d="M5 78 Q38 52 80 64 Q118 76 155 54 Q172 44 198 52 L198 62
+             Q172 54 155 64 Q118 86 78 74 Q36 62 5 90Z" fill="#C87828"/>
+    <path d="M5 82 Q38 56 80 68 Q118 80 155 58 Q172 48 198 56 L198 72
+             Q172 62 155 72 Q118 94 78 82 Q36 70 5 96Z" fill="#2D8F8A"/>
+    <path d="M5 86 Q38 60 80 72 Q115 84 153 62 Q170 52 198 60 L198 65
+             Q170 57 152 67 Q114 89 79 77 Q37 65 5 91Z" fill="white" opacity="0.4"/>
+    <path d="M5 95 Q35 70 78 82 Q116 94 154 72 Q172 62 198 70 L198 78
+             Q172 70 154 82 Q115 104 77 92 Q34 80 5 106Z" fill="white"/>
+    <path d="M5 108 Q35 83 78 95 Q116 107 154 85 Q172 75 198 83 L198 102
+             Q172 94 154 106 Q115 128 77 116 Q34 104 5 129Z" fill="#1B3358"/>
+    <path d="M5 125 Q34 102 77 114 Q115 126 154 104 Q172 94 198 102 L198 122
+             Q172 114 154 126 Q114 148 76 136 Q34 124 5 147Z" fill="#C87828"/>
+  </g>
+
+  <!-- Factory icon (top-left, white on teal) -->
+  <g transform="translate(14,66)" clip-path="url(#circ)" fill="white" opacity="0.9">
+    <rect x="1" y="9" width="16" height="11" rx="1"/>
+    <rect x="3.5" y="4.5" width="2.8" height="5"/>
+    <rect x="8.5" y="2" width="2.8" height="7"/>
+    <path d="M4 4 Q3 2 4 0 Q5 1.5 4 4M9.5 2 Q8.5 0 9.5-1 Q10.5.5 9.5 2"
+          stroke="white" stroke-width="0.6" fill="none" opacity="0.7"/>
+  </g>
+
+  <!-- Analytics chart (lower-left, white on navy) -->
+  <g transform="translate(14,113)" clip-path="url(#circ)">
+    <rect x="0" y="0" width="18" height="14" rx="2"
+          fill="none" stroke="white" stroke-width="1" opacity="0.85"/>
+    <rect x="2"    y="9"  width="2.5" height="3.5" rx="0.5" fill="white" opacity="0.85"/>
+    <rect x="5.5"  y="6"  width="2.5" height="6.5" rx="0.5" fill="white" opacity="0.85"/>
+    <rect x="9"    y="4"  width="2.5" height="8.5" rx="0.5" fill="white" opacity="0.85"/>
+    <rect x="12.5" y="7"  width="2.5" height="5.5" rx="0.5" fill="white" opacity="0.85"/>
+  </g>
+
+  <!-- Delivery truck (white band, navy icon) -->
+  <g transform="translate(68,77)" clip-path="url(#circ)">
+    <rect x="0" y="3" width="20" height="12" rx="2" fill="#1B3358" opacity="0.9"/>
+    <polygon points="20,3 20,13 28,13 28,8 24,3" fill="#1B3358" opacity="0.9"/>
+    <line x1="20" y1="7" x2="28" y2="7" stroke="white" stroke-width="0.8"/>
+    <circle cx="5"  cy="17" r="3"   fill="none" stroke="#1B3358" stroke-width="1.6"/>
+    <circle cx="5"  cy="17" r="1.2" fill="#1B3358"/>
+    <circle cx="22" cy="17" r="3"   fill="none" stroke="#1B3358" stroke-width="1.6"/>
+    <circle cx="22" cy="17" r="1.2" fill="#1B3358"/>
+  </g>
+
+  <!-- Factory top-right (on map, navy) -->
+  <g transform="translate(142,38)" clip-path="url(#circ)" fill="#1B3358" opacity="0.85">
+    <rect x="1" y="8" width="14" height="10" rx="1"/>
+    <rect x="3" y="4" width="2.5" height="5"/>
+    <rect x="7.5" y="2" width="2.5" height="6"/>
+    <path d="M3.5 3 Q2.5 1 3.5-.5 Q4.5 1 3.5 3M8 2 Q7 0 8-1 Q9 .5 8 2"
+          stroke="#1B3358" stroke-width="0.5" fill="none" opacity="0.7"/>
+  </g>
+
+  <!-- Shopping cart (navy band, white icon) -->
+  <g transform="translate(68,112)" clip-path="url(#circ)">
+    <path d="M0 0 L2.5 0 L8 13 L22 13 L26 4 L6 4"
+          fill="none" stroke="white" stroke-width="1.6"
+          stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>
+    <circle cx="9"  cy="17" r="2.4" fill="white" opacity="0.9"/>
+    <circle cx="20" cy="17" r="2.4" fill="white" opacity="0.9"/>
+  </g>
+
+  <!-- Store/shop (orange band, white icon) -->
+  <g transform="translate(152,112)" clip-path="url(#circ)">
+    <rect x="0" y="6" width="18" height="13" rx="1.5" fill="white" opacity="0.9"/>
+    <path d="M-2 7 Q9 1 20 7" fill="none" stroke="white" stroke-width="1.6"
+          stroke-linecap="round" opacity="0.9"/>
+    <rect x="6"    y="10" width="6"   height="9"   fill="#C87828" rx="0.5"/>
+    <rect x="2"    y="10" width="3.5" height="5.5" rx="0.5" fill="#C87828" opacity="0.85"/>
+    <rect x="12.5" y="10" width="3.5" height="5.5" rx="0.5" fill="#C87828" opacity="0.85"/>
+  </g>
+
+  <!-- Search magnify (right side, white on navy) -->
+  <g transform="translate(166,103)" clip-path="url(#circ)">
+    <circle cx="6" cy="6" r="5.5" fill="none" stroke="white" stroke-width="1.6" opacity="0.85"/>
+    <line x1="10.5" y1="10.5" x2="15" y2="15" stroke="white" stroke-width="1.8"
+          stroke-linecap="round" opacity="0.85"/>
+  </g>
+
+  <!-- Network cluster (lower-left, white on orange) -->
+  <g transform="translate(14,127)" clip-path="url(#circ)"
+     stroke="white" stroke-width="0.9" fill="white" opacity="0.85">
+    <circle cx="0"  cy="7"  r="3"/>
+    <circle cx="11" cy="0"  r="3"/>
+    <circle cx="11" cy="14" r="3"/>
+    <circle cx="22" cy="7"  r="3"/>
+    <line x1="3" y1="6"  x2="8"  y2="2"/>
+    <line x1="3" y1="8"  x2="8"  y2="12"/>
+    <line x1="14" y1="2"  x2="19" y2="5"/>
+    <line x1="14" y1="12" x2="19" y2="9"/>
+  </g>
+</svg>

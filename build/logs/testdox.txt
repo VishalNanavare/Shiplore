@@ -1,0 +1,367 @@
+Admin Crud Core
+ [x] Media allows images under 5mb
+ [ ] Media rejects bad mime and size
+ [x] Document validation allows pdf under 10mb
+ [x] Slugify
+ [x] Category allowed
+ [x] Enum guards to allowed or default
+ [x] Import resolves brand hsn and rich fields
+ [x] Import rejects unknown brand and hsn
+ [x] Import brand and hsn are optional
+ [x] Import product row valid
+ [x] Import rejects category not allowed for vendor
+ [x] Import rejects unknown vendor and dup sku
+ [x] Import rejects missing fields
+
+Ai Product Assistant
+ [x] Stub seo composes from fields
+ [x] Stub seo is deterministic
+ [x] Stub tags drop short and stop words
+ [x] Stub description mentions title and brand
+ [x] Suggest dispatches by kind
+
+Api Response
+ [x] Success envelope
+ [x] Collection envelope carries pagination
+ [x] Error envelope has no data key
+ [x] Status for mapping
+
+Audit Writer
+ [x] Hash is deterministic and key order insensitive
+ [x] Chain links on prev hash
+ [x] Hash ignores existing hash columns
+ [x] Any field change changes hash
+
+Barcode
+ [x] Valid ean 13
+ [x] Ean 13 bad check digit rejected
+ [x] Ean 13 wrong length rejected
+ [x] Valid upc a
+ [x] Upc bad check rejected
+ [x] Check digit computation
+ [x] Custom and code 128 accept free text
+ [x] Code 39 rejects lowercase symbols
+ [x] Empty and overlong rejected
+ [x] Unknown type falls back to custom
+
+Barcode Decision
+ [x] E 1 exact match updates stock
+ [x] E 2 mrp differs creates new variant
+ [x] E 3 only gst differs routes to rate change request
+ [x] E 4 pack size differs creates new variant
+ [x] E 5 unknown to this vendor creates product
+ [x] E 6 combo barcode rejected
+ [x] E 7 empty barcode still creates with auto code
+ [x] E 8 checksum strict rejects
+ [x] E 9 discontinued variant gets fresh variant
+ [x] E 12 weighted scale barcode is never a create
+ [x] Mrp and pack both differ are reported together
+ [x] Checksum math
+
+Barcode Label Service
+ [x] Expand repeats by qty
+ [x] Expand defaults to one copy
+ [x] Sheet html is self contained pdf ready
+ [x] Columns clamp and row wrap
+ [x] Escapes html
+ [x] Empty labels render gracefully
+
+Bundle Pricing
+ [x] Dynamic total sums components
+ [x] Bundle mode uses dynamic sum
+ [x] Combo mode uses fixed price and reports savings
+ [x] Gift card denomination must match
+ [x] Gift card range when no denominations
+
+Capability Resolver
+ [x] Unions and dedups permissions sorted
+ [x] Merges attributes taking max numeric cap
+ [x] Empty assignments
+ [x] Composes with policy engine for tenant isolation
+
+Change Request Engine
+ [x] Staff submit enters level one
+ [x] Vendor owner submission skips own level
+ [x] Full chain approve applies via applier
+ [x] Self approval forbidden
+ [x] Wrong role and wrong vendor blocked
+ [x] Reject requires reason
+ [x] Duplicate open blocked
+ [x] Changes requested then resubmit restarts chain
+ [x] Withdraw only by requester while open
+ [x] Single level chain applies after vendor approval
+ [x] Missing applier parks at approved
+ [x] Failing applier marks apply failed
+ [x] Auto approve rule applies immediately
+ [x] Rule overrides chain and sla
+ [x] Admin override requires reason and audits
+ [x] Unknown action rejected
+ [x] Expire due sweeps overdue only
+
+Commission Hold Service
+ [x] Proration sums exactly to commission
+ [x] Hold creates on hold rows with window
+ [x] Zero day window accrues immediately
+ [x] Idempotent per sub order
+ [x] No commission skips
+ [x] Empty items writes single sub order row
+ [x] Promote due respects boundary
+ [x] Cancel routes by state
+ [x] Partial return cancels only those items
+ [x] Cancel is idempotent
+ [x] Default window when no policy
+
+Commission Resolver
+ [x] Product level wins
+ [x] Falls through to first available
+ [x] Global default last
+ [x] No rates yields zero
+ [x] Amount computation
+
+Cron Schedule
+ [x] Every five minutes
+ [x] Strictly after when already on boundary
+ [x] Daily at three rolls to tomorrow
+ [x] Weekday
+ [x] Seven accepted as sunday
+ [x] Monthly first
+ [x] Yearly jumps months
+ [x] Dom dow or semantics
+ [x] Macros
+ [x] Ranges and lists
+ [x] Rejects malformed
+ [x] Rejects wrong field count
+
+Delivery Ops
+ [x] Unavailable rider ineligible
+ [x] At capacity ineligible
+ [x] Eligible rider scored
+ [x] Pick best chooses nearest eligible
+ [x] Pick best returns null when none eligible
+ [x] Contact masking
+ [x] Sla on time at risk breached
+ [x] Sla delivered compares to delivered at
+
+Delivery Radius
+ [x] Null shop radius uses admin max
+ [x] Shop radius below admin is kept
+ [x] Shop radius above admin is capped to admin
+ [x] Within shop and admin is deliverable
+ [x] Within admin but beyond shop is not deliverable
+ [x] Null radius beyond admin is not deliverable
+ [x] Reason no serving shop when none carry
+ [x] Reason outside service area beyond admin
+ [x] Reason shop no delivery within admin
+ [x] Reason at admin boundary is shop not outside
+
+Document Pdf Service
+ [x] Render html produces pdf
+ [x] Receipt paper is 80mm roll
+ [x] Utf 8 survives
+
+Document Storage
+ [x] Rejects non pdf or image
+ [x] Rejects too large
+ [x] Rejects empty
+ [x] Accepts pdf in dummy mode
+ [x] Accepts image
+ [x] Configured reflects s 3 settings
+ [x] Media allows broader types
+ [x] Media vendor key prefix
+ [x] Media shop key prefix
+ [x] Media rejects over size and bad type
+
+Firebase Id Token Verifier
+ [x] Valid token returns claims
+ [x] Wrong audience rejected
+ [x] Wrong issuer rejected
+ [x] Expired token rejected
+ [x] Missing auth time rejected
+ [x] Future auth time rejected
+ [x] Unknown kid rejected
+ [x] Tampered signature rejected
+ [x] Empty project id rejects
+
+Gst Calculator
+ [x] Exclusive intra state
+ [x] Inclusive intra state
+ [x] Exclusive inter state uses igst
+ [x] Zero rate
+ [x] Odd split rounds cgst sgst to total
+ [x] Inter state detection
+
+Health
+ [x] Is defined app path
+ [x] Base url has been set
+
+Import Template Service
+ [x] Product columns cover the rich model
+ [x] Unknown type falls back to product
+ [x] Xlsx is a real excel workbook
+ [x] Template round trips through the importer reader
+
+India States
+ [x] Code for common states
+ [x] Handles google and alt spellings
+ [x] Unknown returns empty
+ [x] List is code keyed and complete
+
+Invoice Service
+ [x] Indian financial year boundaries
+ [x] Number format and shop scoped prefix
+ [x] Doc type by supplier gstin
+ [x] Lines from items maps snapshots
+
+Location Service
+ [x] Same point is zero
+ [x] One degree longitude at equator
+ [x] Andheri to powai about eight km
+ [x] Within radius
+
+Media Helper
+ [x] Icon by mime
+ [x] Human size
+ [x] Name falls back to basename
+
+Money
+ [x] Parses and formats to four decimals
+ [x] Add
+ [x] Subtract
+ [x] No float drift
+ [x] Multiply by quantity
+ [x] Round half up to two decimals
+ [x] Equals
+
+Notification Presenter
+ [x] Icon maps known categories
+ [x] Icon falls back to bell
+ [x] Accent maps known categories
+ [x] Time ago buckets
+ [x] Time ago accepts datetime string
+
+Notification Service
+ [x] Render replaces placeholders
+ [x] Render missing var becomes empty
+ [x] Allowed channels honours opt out
+ [x] Allowed channels keeps all when no opt out
+
+Password Reset Service
+ [x] Generated token verifies against its hash
+ [x] Expired token fails
+ [x] Tampered token fails
+
+Payment Gateway Manager
+ [x] Registers payu razorpay stripe
+ [x] Valid payu config passes test
+ [x] Missing field fails test with message
+ [x] Unknown provider is rejected
+ [x] Fields are exposed for form rendering
+
+Price Resolver
+ [x] Base when no candidates
+ [x] Flash overlay wins over base
+ [x] Expired overlay ignored
+ [x] Channel mismatch ignored
+ [x] Customer group price applies only to that group
+ [x] Qty tier requires min qty
+ [x] Highest priority wins then lowest price
+
+Purchase Rules
+ [x] No rules allows any positive qty
+ [x] Min and max
+ [x] Step multiples
+ [x] Step relative to min
+ [x] Payment restriction
+
+Refund Service
+ [x] Full refund reverses all tax
+ [x] Partial refund prorates tax
+ [x] Factor is clamped to one
+
+Report Export Csv
+ [x] Header and rows
+ [x] Escapes quotes commas newlines
+ [x] Nulls become empty cells
+
+Request Authenticator
+ [x] Valid bearer produces context
+ [x] Missing header throws
+ [x] Non bearer header throws
+ [x] Expired token throws
+
+Rider Payout Service
+ [x] Fixed commission
+ [x] Per km
+ [x] Per order
+ [x] Salary accrues nothing per delivery
+ [x] Hybrid incentive only above threshold
+ [x] Accrue writes entry from plan
+ [x] No plan means no entry
+
+Settlement Service
+ [x] Net payable
+ [x] Net payable no deductions
+ [x] Net payable rounds
+
+Shop Bill Settings
+ [x] Defaults are present
+ [x] Merge overlays stored over defaults
+ [x] Merge coerces types
+ [x] Merge ignores unknown keys
+
+Status Machine
+ [x] Sub order forward allowed
+ [x] Sub order backward rejected
+ [x] Samestate is noop
+ [x] Delivery transitions
+ [x] Refund transitions
+ [x] Order transitions
+ [x] Transfer transitions
+ [x] Product approval transitions
+
+Stock Valuation
+ [x] On hand value and qty
+ [x] Weighted average cost
+ [x] Fifo consumes oldest first
+ [x] Lifo consumes newest first
+ [x] Wavg consumes at average
+ [x] Shortage is reported not invented
+
+Sync Engine Core
+ [x] New row applies
+ [x] Matching version applies
+ [x] Client ahead applies
+ [x] Stale client conflicts server wins
+ [x] Stale client client wins applies
+ [x] Retry backoff doubles
+ [x] Retry backoff is capped
+ [x] Exhaustion at max
+
+Task Runner
+ [x] Dispatches handler and advances next run
+ [x] Unknown handler skips but still reschedules
+ [x] Failing handler does not block others
+ [x] Bad cron pauses task
+
+Token Service
+ [x] Round trip returns claims with iat exp
+ [x] Expired token throws
+ [x] Tampered payload throws
+ [x] Wrong secret throws
+ [x] Malformed token throws
+
+Variant Combinator
+ [x] Cartesian product size by color
+ [x] Single attribute yields one per value
+ [x] Empty or valueless selections yield nothing
+ [x] Valueless attribute is ignored not multiplied to zero
+ [x] Duplicate values are deduped
+ [x] Signature is order independent
+ [x] Sku suffix sanitizes
+
+Web Authenticator
+ [x] Valid credentials return user
+ [x] Unknown user throws
+ [x] Wrong password throws
+ [x] Inactive account throws
+

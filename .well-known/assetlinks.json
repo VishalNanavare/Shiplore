@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.shiplore.consumer",
+      "sha256_cert_fingerprints": [
+        "B8:7C:C2:6A:52:96:DD:F5:91:84:05:CA:10:C7:80:BD:32:55:F7:AE:DD:8D:89:11:E3:A5:5D:EC:90:A5:EF:EF"
+      ]
+    }
+  }
+]

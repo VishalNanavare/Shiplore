@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CLI Arguments" tests="277" assertions="720" errors="0" failures="1" skipped="0" time="0.237041">
+    <testsuite name="AdminCrudCoreTest" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" tests="13" assertions="41" errors="0" failures="1" skipped="0" time="0.010906">
+      <testcase name="testMediaAllowsImagesUnder5mb" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="21" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="2" time="0.003563"/>
+      <testcase name="testMediaRejectsBadMimeAndSize" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="27" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="2" time="0.006300">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">AdminCrudCoreTest::testMediaRejectsBadMimeAndSize
+Failed asserting that true is false.
+
+/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php:30</failure>
+      </testcase>
+      <testcase name="testDocumentValidationAllowsPdfUnder10mb" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="34" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="4" time="0.000071"/>
+      <testcase name="testSlugify" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="42" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="2" time="0.000066"/>
+      <testcase name="testCategoryAllowed" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="48" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="2" time="0.000053"/>
+      <testcase name="testEnumGuardsToAllowedOrDefault" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="54" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="5" time="0.000055"/>
+      <testcase name="testImportResolvesBrandHsnAndRichFields" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="77" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="6" time="0.000069"/>
+      <testcase name="testImportRejectsUnknownBrandAndHsn" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="95" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="4" time="0.000305"/>
+      <testcase name="testImportBrandAndHsnAreOptional" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="108" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="3" time="0.000195"/>
+      <testcase name="testImportProductRowValid" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="119" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="3" time="0.000056"/>
+      <testcase name="testImportRejectsCategoryNotAllowedForVendor" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="128" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="2" time="0.000057"/>
+      <testcase name="testImportRejectsUnknownVendorAndDupSku" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="136" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="4" time="0.000059"/>
+      <testcase name="testImportRejectsMissingFields" file="/opt/homebrew/var/www/test/tests/unit/Common/AdminCrudCoreTest.php" line="147" class="AdminCrudCoreTest" classname="AdminCrudCoreTest" assertions="2" time="0.000056"/>
+    </testsuite>
+    <testsuite name="AiProductAssistantTest" file="/opt/homebrew/var/www/test/tests/unit/Common/AiProductAssistantTest.php" tests="5" assertions="17" errors="0" failures="0" skipped="0" time="0.010696">
+      <testcase name="testStubSeoComposesFromFields" file="/opt/homebrew/var/www/test/tests/unit/Common/AiProductAssistantTest.php" line="11" class="AiProductAssistantTest" classname="AiProductAssistantTest" assertions="5" time="0.008695"/>
+      <testcase name="testStubSeoIsDeterministic" file="/opt/homebrew/var/www/test/tests/unit/Common/AiProductAssistantTest.php" line="21" class="AiProductAssistantTest" classname="AiProductAssistantTest" assertions="1" time="0.000308"/>
+      <testcase name="testStubTagsDropShortAndStopWords" file="/opt/homebrew/var/www/test/tests/unit/Common/AiProductAssistantTest.php" line="28" class="AiProductAssistantTest" classname="AiProductAssistantTest" assertions="4" time="0.001116"/>
+      <testcase name="testStubDescriptionMentionsTitleAndBrand" file="/opt/homebrew/var/www/test/tests/unit/Common/AiProductAssistantTest.php" line="37" class="AiProductAssistantTest" classname="AiProductAssistantTest" assertions="3" time="0.000253"/>
+      <testcase name="testSuggestDispatchesByKind" file="/opt/homebrew/var/www/test/tests/unit/Common/AiProductAssistantTest.php" line="45" class="AiProductAssistantTest" classname="AiProductAssistantTest" assertions="4" time="0.000324"/>
+    </testsuite>
+    <testsuite name="ApiResponseTest" file="/opt/homebrew/var/www/test/tests/unit/Common/ApiResponseTest.php" tests="4" assertions="18" errors="0" failures="0" skipped="0" time="0.000338">
+      <testcase name="testSuccessEnvelope" file="/opt/homebrew/var/www/test/tests/unit/Common/ApiResponseTest.php" line="14" class="ApiResponseTest" classname="ApiResponseTest" assertions="3" time="0.000064"/>
+      <testcase name="testCollectionEnvelopeCarriesPagination" file="/opt/homebrew/var/www/test/tests/unit/Common/ApiResponseTest.php" line="22" class="ApiResponseTest" classname="ApiResponseTest" assertions="3" time="0.000057"/>
+      <testcase name="testErrorEnvelopeHasNoDataKey" file="/opt/homebrew/var/www/test/tests/unit/Common/ApiResponseTest.php" line="30" class="ApiResponseTest" classname="ApiResponseTest" assertions="5" time="0.000164"/>
+      <testcase name="testStatusForMapping" file="/opt/homebrew/var/www/test/tests/unit/Common/ApiResponseTest.php" line="40" class="ApiResponseTest" classname="ApiResponseTest" assertions="7" time="0.000053"/>
+    </testsuite>
+    <testsuite name="AuditWriterTest" file="/opt/homebrew/var/www/test/tests/unit/Common/AuditWriterTest.php" tests="4" assertions="5" errors="0" failures="0" skipped="0" time="0.000483">
+      <testcase name="testHashIsDeterministicAndKeyOrderInsensitive" file="/opt/homebrew/var/www/test/tests/unit/Common/AuditWriterTest.php" line="14" class="AuditWriterTest" classname="AuditWriterTest" assertions="2" time="0.000322"/>
+      <testcase name="testChainLinksOnPrevHash" file="/opt/homebrew/var/www/test/tests/unit/Common/AuditWriterTest.php" line="23" class="AuditWriterTest" classname="AuditWriterTest" assertions="1" time="0.000054"/>
+      <testcase name="testHashIgnoresExistingHashColumns" file="/opt/homebrew/var/www/test/tests/unit/Common/AuditWriterTest.php" line="30" class="AuditWriterTest" classname="AuditWriterTest" assertions="1" time="0.000054"/>
+      <testcase name="testAnyFieldChangeChangesHash" file="/opt/homebrew/var/www/test/tests/unit/Common/AuditWriterTest.php" line="38" class="AuditWriterTest" classname="AuditWriterTest" assertions="1" time="0.000053"/>
+    </testsuite>
+    <testsuite name="BarcodeDecisionTest" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" tests="12" assertions="18" errors="0" failures="0" skipped="0" time="0.000671">
+      <testcase name="testE1ExactMatchUpdatesStock" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="21" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="1" time="0.000077"/>
+      <testcase name="testE2MrpDiffersCreatesNewVariant" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="26" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="2" time="0.000058"/>
+      <testcase name="testE3OnlyGstDiffersRoutesToRateChangeRequest" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="34" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="1" time="0.000057"/>
+      <testcase name="testE4PackSizeDiffersCreatesNewVariant" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="42" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="1" time="0.000055"/>
+      <testcase name="testE5UnknownToThisVendorCreatesProduct" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="47" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="1" time="0.000054"/>
+      <testcase name="testE6ComboBarcodeRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="52" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="1" time="0.000051"/>
+      <testcase name="testE7EmptyBarcodeStillCreatesWithAutoCode" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="57" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="2" time="0.000054"/>
+      <testcase name="testE8ChecksumStrictRejects" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="65" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="2" time="0.000052"/>
+      <testcase name="testE9DiscontinuedVariantGetsFreshVariant" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="73" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="1" time="0.000053"/>
+      <testcase name="testE12WeightedScaleBarcodeIsNeverACreate" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="80" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="1" time="0.000054"/>
+      <testcase name="testMrpAndPackBothDifferAreReportedTogether" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="85" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="2" time="0.000056"/>
+      <testcase name="testChecksumMath" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeDecisionTest.php" line="93" class="BarcodeDecisionTest" classname="BarcodeDecisionTest" assertions="3" time="0.000050"/>
+    </testsuite>
+    <testsuite name="BarcodeLabelServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeLabelServiceTest.php" tests="6" assertions="14" errors="0" failures="0" skipped="0" time="0.000412">
+      <testcase name="testExpandRepeatsByQty" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeLabelServiceTest.php" line="14" class="BarcodeLabelServiceTest" classname="BarcodeLabelServiceTest" assertions="3" time="0.000059"/>
+      <testcase name="testExpandDefaultsToOneCopy" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeLabelServiceTest.php" line="26" class="BarcodeLabelServiceTest" classname="BarcodeLabelServiceTest" assertions="1" time="0.000052"/>
+      <testcase name="testSheetHtmlIsSelfContainedPdfReady" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeLabelServiceTest.php" line="31" class="BarcodeLabelServiceTest" classname="BarcodeLabelServiceTest" assertions="5" time="0.000138"/>
+      <testcase name="testColumnsClampAndRowWrap" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeLabelServiceTest.php" line="43" class="BarcodeLabelServiceTest" classname="BarcodeLabelServiceTest" assertions="2" time="0.000058"/>
+      <testcase name="testEscapesHtml" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeLabelServiceTest.php" line="54" class="BarcodeLabelServiceTest" classname="BarcodeLabelServiceTest" assertions="2" time="0.000053"/>
+      <testcase name="testEmptyLabelsRenderGracefully" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeLabelServiceTest.php" line="62" class="BarcodeLabelServiceTest" classname="BarcodeLabelServiceTest" assertions="1" time="0.000051"/>
+    </testsuite>
+    <testsuite name="BarcodeTest" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" tests="10" assertions="15" errors="0" failures="0" skipped="0" time="0.002664">
+      <testcase name="testValidEan13" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="11" class="BarcodeTest" classname="BarcodeTest" assertions="2" time="0.000506"/>
+      <testcase name="testEan13BadCheckDigitRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="18" class="BarcodeTest" classname="BarcodeTest" assertions="1" time="0.000262"/>
+      <testcase name="testEan13WrongLengthRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="23" class="BarcodeTest" classname="BarcodeTest" assertions="1" time="0.000251"/>
+      <testcase name="testValidUpcA" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="28" class="BarcodeTest" classname="BarcodeTest" assertions="1" time="0.000247"/>
+      <testcase name="testUpcBadCheckRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="33" class="BarcodeTest" classname="BarcodeTest" assertions="1" time="0.000234"/>
+      <testcase name="testCheckDigitComputation" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="38" class="BarcodeTest" classname="BarcodeTest" assertions="2" time="0.000230"/>
+      <testcase name="testCustomAndCode128AcceptFreeText" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="44" class="BarcodeTest" classname="BarcodeTest" assertions="2" time="0.000230"/>
+      <testcase name="testCode39RejectsLowercaseSymbols" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="50" class="BarcodeTest" classname="BarcodeTest" assertions="2" time="0.000240"/>
+      <testcase name="testEmptyAndOverlongRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="56" class="BarcodeTest" classname="BarcodeTest" assertions="2" time="0.000233"/>
+      <testcase name="testUnknownTypeFallsBackToCustom" file="/opt/homebrew/var/www/test/tests/unit/Common/BarcodeTest.php" line="62" class="BarcodeTest" classname="BarcodeTest" assertions="1" time="0.000231"/>
+    </testsuite>
+    <testsuite name="BundlePricingTest" file="/opt/homebrew/var/www/test/tests/unit/Common/BundlePricingTest.php" tests="5" assertions="12" errors="0" failures="0" skipped="0" time="0.001424">
+      <testcase name="testDynamicTotalSumsComponents" file="/opt/homebrew/var/www/test/tests/unit/Common/BundlePricingTest.php" line="19" class="BundlePricingTest" classname="BundlePricingTest" assertions="1" time="0.000476"/>
+      <testcase name="testBundleModeUsesDynamicSum" file="/opt/homebrew/var/www/test/tests/unit/Common/BundlePricingTest.php" line="24" class="BundlePricingTest" classname="BundlePricingTest" assertions="2" time="0.000240"/>
+      <testcase name="testComboModeUsesFixedPriceAndReportsSavings" file="/opt/homebrew/var/www/test/tests/unit/Common/BundlePricingTest.php" line="31" class="BundlePricingTest" classname="BundlePricingTest" assertions="3" time="0.000238"/>
+      <testcase name="testGiftCardDenominationMustMatch" file="/opt/homebrew/var/www/test/tests/unit/Common/BundlePricingTest.php" line="39" class="BundlePricingTest" classname="BundlePricingTest" assertions="2" time="0.000238"/>
+      <testcase name="testGiftCardRangeWhenNoDenominations" file="/opt/homebrew/var/www/test/tests/unit/Common/BundlePricingTest.php" line="45" class="BundlePricingTest" classname="BundlePricingTest" assertions="4" time="0.000232"/>
+    </testsuite>
+    <testsuite name="CapabilityResolverTest" file="/opt/homebrew/var/www/test/tests/unit/Common/CapabilityResolverTest.php" tests="4" assertions="11" errors="0" failures="0" skipped="0" time="0.000530">
+      <testcase name="testUnionsAndDedupsPermissionsSorted" file="/opt/homebrew/var/www/test/tests/unit/Common/CapabilityResolverTest.php" line="20" class="CapabilityResolverTest" classname="CapabilityResolverTest" assertions="3" time="0.000350"/>
+      <testcase name="testMergesAttributesTakingMaxNumericCap" file="/opt/homebrew/var/www/test/tests/unit/Common/CapabilityResolverTest.php" line="36" class="CapabilityResolverTest" classname="CapabilityResolverTest" assertions="3" time="0.000062"/>
+      <testcase name="testEmptyAssignments" file="/opt/homebrew/var/www/test/tests/unit/Common/CapabilityResolverTest.php" line="49" class="CapabilityResolverTest" classname="CapabilityResolverTest" assertions="3" time="0.000056"/>
+      <testcase name="testComposesWithPolicyEngineForTenantIsolation" file="/opt/homebrew/var/www/test/tests/unit/Common/CapabilityResolverTest.php" line="57" class="CapabilityResolverTest" classname="CapabilityResolverTest" assertions="2" time="0.000063"/>
+    </testsuite>
+    <testsuite name="ChangeRequestEngineTest" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" tests="17" assertions="47" errors="0" failures="0" skipped="0" time="0.001354">
+      <testcase name="testStaffSubmitEntersLevelOne" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="106" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="6" time="0.000153"/>
+      <testcase name="testVendorOwnerSubmissionSkipsOwnLevel" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="119" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="2" time="0.000073"/>
+      <testcase name="testFullChainApproveAppliesViaApplier" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="130" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="5" time="0.000090"/>
+      <testcase name="testSelfApprovalForbidden" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="149" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="2" time="0.000066"/>
+      <testcase name="testWrongRoleAndWrongVendorBlocked" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="159" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="2" time="0.000067"/>
+      <testcase name="testRejectRequiresReason" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="168" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="2" time="0.000065"/>
+      <testcase name="testDuplicateOpenBlocked" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="178" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="2" time="0.000064"/>
+      <testcase name="testChangesRequestedThenResubmitRestartsChain" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="188" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="3" time="0.000073"/>
+      <testcase name="testWithdrawOnlyByRequesterWhileOpen" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="201" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="3" time="0.000070"/>
+      <testcase name="testSingleLevelChainAppliesAfterVendorApproval" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="211" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="3" time="0.000077"/>
+      <testcase name="testMissingApplierParksAtApproved" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="227" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="3" time="0.000069"/>
+      <testcase name="testFailingApplierMarksApplyFailed" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="239" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="2" time="0.000075"/>
+      <testcase name="testAutoApproveRuleAppliesImmediately" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="253" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="2" time="0.000068"/>
+      <testcase name="testRuleOverridesChainAndSla" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="264" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="2" time="0.000066"/>
+      <testcase name="testAdminOverrideRequiresReasonAndAudits" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="274" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="3" time="0.000097"/>
+      <testcase name="testUnknownActionRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="287" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="1" time="0.000090"/>
+      <testcase name="testExpireDueSweepsOverdueOnly" file="/opt/homebrew/var/www/test/tests/unit/Common/ChangeRequestEngineTest.php" line="293" class="ChangeRequestEngineTest" classname="ChangeRequestEngineTest" assertions="4" time="0.000091"/>
+    </testsuite>
+    <testsuite name="CommissionHoldServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" tests="11" assertions="34" errors="0" failures="0" skipped="0" time="0.000954">
+      <testcase name="testProrationSumsExactlyToCommission" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="99" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="4" time="0.000091"/>
+      <testcase name="testHoldCreatesOnHoldRowsWithWindow" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="110" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="5" time="0.000085"/>
+      <testcase name="testZeroDayWindowAccruesImmediately" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="121" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="2" time="0.000077"/>
+      <testcase name="testIdempotentPerSubOrder" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="129" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="2" time="0.000078"/>
+      <testcase name="testNoCommissionSkips" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="139" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="2" time="0.000064"/>
+      <testcase name="testEmptyItemsWritesSingleSubOrderRow" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="147" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="3" time="0.000071"/>
+      <testcase name="testPromoteDueRespectsBoundary" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="156" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="2" time="0.000076"/>
+      <testcase name="testCancelRoutesByState" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="165" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="7" time="0.000078"/>
+      <testcase name="testPartialReturnCancelsOnlyThoseItems" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="186" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="4" time="0.000075"/>
+      <testcase name="testCancelIsIdempotent" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="199" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="2" time="0.000072"/>
+      <testcase name="testDefaultWindowWhenNoPolicy" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionHoldServiceTest.php" line="210" class="CommissionHoldServiceTest" classname="CommissionHoldServiceTest" assertions="1" time="0.000188"/>
+    </testsuite>
+    <testsuite name="CommissionResolverTest" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionResolverTest.php" tests="5" assertions="10" errors="0" failures="0" skipped="0" time="0.000324">
+      <testcase name="testProductLevelWins" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionResolverTest.php" line="17" class="CommissionResolverTest" classname="CommissionResolverTest" assertions="2" time="0.000079"/>
+      <testcase name="testFallsThroughToFirstAvailable" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionResolverTest.php" line="26" class="CommissionResolverTest" classname="CommissionResolverTest" assertions="2" time="0.000068"/>
+      <testcase name="testGlobalDefaultLast" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionResolverTest.php" line="35" class="CommissionResolverTest" classname="CommissionResolverTest" assertions="2" time="0.000060"/>
+      <testcase name="testNoRatesYieldsZero" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionResolverTest.php" line="42" class="CommissionResolverTest" classname="CommissionResolverTest" assertions="2" time="0.000057"/>
+      <testcase name="testAmountComputation" file="/opt/homebrew/var/www/test/tests/unit/Common/CommissionResolverTest.php" line="49" class="CommissionResolverTest" classname="CommissionResolverTest" assertions="2" time="0.000060"/>
+    </testsuite>
+    <testsuite name="CronScheduleTest" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" tests="12" assertions="17" errors="0" failures="0" skipped="0" time="0.001265">
+      <testcase name="testEveryFiveMinutes" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="26" class="CronScheduleTest" classname="CronScheduleTest" assertions="1" time="0.000100"/>
+      <testcase name="testStrictlyAfterWhenAlreadyOnBoundary" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="31" class="CronScheduleTest" classname="CronScheduleTest" assertions="1" time="0.000085"/>
+      <testcase name="testDailyAtThreeRollsToTomorrow" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="36" class="CronScheduleTest" classname="CronScheduleTest" assertions="1" time="0.000090"/>
+      <testcase name="testWeekday" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="41" class="CronScheduleTest" classname="CronScheduleTest" assertions="1" time="0.000106"/>
+      <testcase name="testSevenAcceptedAsSunday" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="47" class="CronScheduleTest" classname="CronScheduleTest" assertions="1" time="0.000070"/>
+      <testcase name="testMonthlyFirst" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="53" class="CronScheduleTest" classname="CronScheduleTest" assertions="1" time="0.000080"/>
+      <testcase name="testYearlyJumpsMonths" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="58" class="CronScheduleTest" classname="CronScheduleTest" assertions="1" time="0.000098"/>
+      <testcase name="testDomDowOrSemantics" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="63" class="CronScheduleTest" classname="CronScheduleTest" assertions="2" time="0.000093"/>
+      <testcase name="testMacros" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="71" class="CronScheduleTest" classname="CronScheduleTest" assertions="3" time="0.000102"/>
+      <testcase name="testRangesAndLists" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="78" class="CronScheduleTest" classname="CronScheduleTest" assertions="3" time="0.000167"/>
+      <testcase name="testRejectsMalformed" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="85" class="CronScheduleTest" classname="CronScheduleTest" assertions="1" time="0.000205"/>
+      <testcase name="testRejectsWrongFieldCount" file="/opt/homebrew/var/www/test/tests/unit/Common/CronScheduleTest.php" line="91" class="CronScheduleTest" classname="CronScheduleTest" assertions="1" time="0.000068"/>
+    </testsuite>
+    <testsuite name="DeliveryOpsTest" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryOpsTest.php" tests="8" assertions="14" errors="0" failures="0" skipped="0" time="0.000530">
+      <testcase name="testUnavailableRiderIneligible" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryOpsTest.php" line="27" class="DeliveryOpsTest" classname="DeliveryOpsTest" assertions="1" time="0.000064"/>
+      <testcase name="testAtCapacityIneligible" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryOpsTest.php" line="33" class="DeliveryOpsTest" classname="DeliveryOpsTest" assertions="1" time="0.000053"/>
+      <testcase name="testEligibleRiderScored" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryOpsTest.php" line="39" class="DeliveryOpsTest" classname="DeliveryOpsTest" assertions="2" time="0.000128"/>
+      <testcase name="testPickBestChoosesNearestEligible" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryOpsTest.php" line="46" class="DeliveryOpsTest" classname="DeliveryOpsTest" assertions="1" time="0.000058"/>
+      <testcase name="testPickBestReturnsNullWhenNoneEligible" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryOpsTest.php" line="56" class="DeliveryOpsTest" classname="DeliveryOpsTest" assertions="1" time="0.000057"/>
+      <testcase name="testContactMasking" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryOpsTest.php" line="63" class="DeliveryOpsTest" classname="DeliveryOpsTest" assertions="3" time="0.000061"/>
+      <testcase name="testSlaOnTimeAtRiskBreached" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryOpsTest.php" line="70" class="DeliveryOpsTest" classname="DeliveryOpsTest" assertions="3" time="0.000054"/>
+      <testcase name="testSlaDeliveredComparesToDeliveredAt" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryOpsTest.php" line="78" class="DeliveryOpsTest" classname="DeliveryOpsTest" assertions="2" time="0.000056"/>
+    </testsuite>
+    <testsuite name="DeliveryRadiusTest" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" tests="10" assertions="10" errors="0" failures="0" skipped="0" time="0.000514">
+      <testcase name="testNullShopRadiusUsesAdminMax" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="23" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000057"/>
+      <testcase name="testShopRadiusBelowAdminIsKept" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="28" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000051"/>
+      <testcase name="testShopRadiusAboveAdminIsCappedToAdmin" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="33" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000051"/>
+      <testcase name="testWithinShopAndAdminIsDeliverable" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="40" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000051"/>
+      <testcase name="testWithinAdminButBeyondShopIsNotDeliverable" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="46" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000051"/>
+      <testcase name="testNullRadiusBeyondAdminIsNotDeliverable" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="52" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000053"/>
+      <testcase name="testReasonNoServingShopWhenNoneCarry" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="60" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000050"/>
+      <testcase name="testReasonOutsideServiceAreaBeyondAdmin" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="65" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000050"/>
+      <testcase name="testReasonShopNoDeliveryWithinAdmin" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="70" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000050"/>
+      <testcase name="testReasonAtAdminBoundaryIsShopNotOutside" file="/opt/homebrew/var/www/test/tests/unit/Common/DeliveryRadiusTest.php" line="75" class="DeliveryRadiusTest" classname="DeliveryRadiusTest" assertions="1" time="0.000050"/>
+    </testsuite>
+    <testsuite name="DocumentPdfServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentPdfServiceTest.php" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.033912">
+      <testcase name="testRenderHtmlProducesPdf" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentPdfServiceTest.php" line="12" class="DocumentPdfServiceTest" classname="DocumentPdfServiceTest" assertions="2" time="0.027822"/>
+      <testcase name="testReceiptPaperIs80mmRoll" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentPdfServiceTest.php" line="20" class="DocumentPdfServiceTest" classname="DocumentPdfServiceTest" assertions="2" time="0.002671"/>
+      <testcase name="testUtf8Survives" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentPdfServiceTest.php" line="29" class="DocumentPdfServiceTest" classname="DocumentPdfServiceTest" assertions="1" time="0.003419"/>
+    </testsuite>
+    <testsuite name="DocumentStorageTest" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" tests="10" assertions="25" errors="0" failures="0" skipped="0" time="0.003621">
+      <testcase name="testRejectsNonPdfOrImage" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="20" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="1" time="0.000869"/>
+      <testcase name="testRejectsTooLarge" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="25" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="1" time="0.000299"/>
+      <testcase name="testRejectsEmpty" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="30" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="1" time="0.000271"/>
+      <testcase name="testAcceptsPdfInDummyMode" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="35" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="6" time="0.000657"/>
+      <testcase name="testAcceptsImage" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="47" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="2" time="0.000273"/>
+      <testcase name="testConfiguredReflectsS3Settings" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="54" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="2" time="0.000246"/>
+      <testcase name="testMediaAllowsBroaderTypes" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="62" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="4" time="0.000245"/>
+      <testcase name="testMediaVendorKeyPrefix" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="71" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="3" time="0.000269"/>
+      <testcase name="testMediaShopKeyPrefix" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="79" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="3" time="0.000258"/>
+      <testcase name="testMediaRejectsOverSizeAndBadType" file="/opt/homebrew/var/www/test/tests/unit/Common/DocumentStorageTest.php" line="87" class="DocumentStorageTest" classname="DocumentStorageTest" assertions="2" time="0.000233"/>
+    </testsuite>
+    <testsuite name="FirebaseIdTokenVerifierTest" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" tests="9" assertions="11" errors="0" failures="0" skipped="0" time="0.012669">
+      <testcase name="testValidTokenReturnsClaims" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" line="106" class="FirebaseIdTokenVerifierTest" classname="FirebaseIdTokenVerifierTest" assertions="3" time="0.005216"/>
+      <testcase name="testWrongAudienceRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" line="114" class="FirebaseIdTokenVerifierTest" classname="FirebaseIdTokenVerifierTest" assertions="1" time="0.000946"/>
+      <testcase name="testWrongIssuerRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" line="119" class="FirebaseIdTokenVerifierTest" classname="FirebaseIdTokenVerifierTest" assertions="1" time="0.001002"/>
+      <testcase name="testExpiredTokenRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" line="124" class="FirebaseIdTokenVerifierTest" classname="FirebaseIdTokenVerifierTest" assertions="1" time="0.000947"/>
+      <testcase name="testMissingAuthTimeRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" line="129" class="FirebaseIdTokenVerifierTest" classname="FirebaseIdTokenVerifierTest" assertions="1" time="0.000951"/>
+      <testcase name="testFutureAuthTimeRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" line="134" class="FirebaseIdTokenVerifierTest" classname="FirebaseIdTokenVerifierTest" assertions="1" time="0.000944"/>
+      <testcase name="testUnknownKidRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" line="139" class="FirebaseIdTokenVerifierTest" classname="FirebaseIdTokenVerifierTest" assertions="1" time="0.000882"/>
+      <testcase name="testTamperedSignatureRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" line="144" class="FirebaseIdTokenVerifierTest" classname="FirebaseIdTokenVerifierTest" assertions="1" time="0.000913"/>
+      <testcase name="testEmptyProjectIdRejects" file="/opt/homebrew/var/www/test/tests/unit/Common/FirebaseIdTokenVerifierTest.php" line="153" class="FirebaseIdTokenVerifierTest" classname="FirebaseIdTokenVerifierTest" assertions="1" time="0.000868"/>
+    </testsuite>
+    <testsuite name="GstCalculatorTest" file="/opt/homebrew/var/www/test/tests/unit/Common/GstCalculatorTest.php" tests="6" assertions="20" errors="0" failures="0" skipped="0" time="0.000326">
+      <testcase name="testExclusiveIntraState" file="/opt/homebrew/var/www/test/tests/unit/Common/GstCalculatorTest.php" line="17" class="GstCalculatorTest" classname="GstCalculatorTest" assertions="6" time="0.000064"/>
+      <testcase name="testInclusiveIntraState" file="/opt/homebrew/var/www/test/tests/unit/Common/GstCalculatorTest.php" line="28" class="GstCalculatorTest" classname="GstCalculatorTest" assertions="5" time="0.000054"/>
+      <testcase name="testExclusiveInterStateUsesIgst" file="/opt/homebrew/var/www/test/tests/unit/Common/GstCalculatorTest.php" line="39" class="GstCalculatorTest" classname="GstCalculatorTest" assertions="4" time="0.000053"/>
+      <testcase name="testZeroRate" file="/opt/homebrew/var/www/test/tests/unit/Common/GstCalculatorTest.php" line="48" class="GstCalculatorTest" classname="GstCalculatorTest" assertions="2" time="0.000050"/>
+      <testcase name="testOddSplitRoundsCgstSgstToTotal" file="/opt/homebrew/var/www/test/tests/unit/Common/GstCalculatorTest.php" line="55" class="GstCalculatorTest" classname="GstCalculatorTest" assertions="1" time="0.000054"/>
+      <testcase name="testInterStateDetection" file="/opt/homebrew/var/www/test/tests/unit/Common/GstCalculatorTest.php" line="65" class="GstCalculatorTest" classname="GstCalculatorTest" assertions="2" time="0.000050"/>
+    </testsuite>
+    <testsuite name="ImportTemplateServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/ImportTemplateServiceTest.php" tests="4" assertions="30" errors="0" failures="0" skipped="0" time="0.021614">
+      <testcase name="testProductColumnsCoverTheRichModel" file="/opt/homebrew/var/www/test/tests/unit/Common/ImportTemplateServiceTest.php" line="18" class="ImportTemplateServiceTest" classname="ImportTemplateServiceTest" assertions="16" time="0.000069"/>
+      <testcase name="testUnknownTypeFallsBackToProduct" file="/opt/homebrew/var/www/test/tests/unit/Common/ImportTemplateServiceTest.php" line="27" class="ImportTemplateServiceTest" classname="ImportTemplateServiceTest" assertions="1" time="0.000054"/>
+      <testcase name="testXlsxIsARealExcelWorkbook" file="/opt/homebrew/var/www/test/tests/unit/Common/ImportTemplateServiceTest.php" line="32" class="ImportTemplateServiceTest" classname="ImportTemplateServiceTest" assertions="12" time="0.012102"/>
+      <testcase name="testTemplateRoundTripsThroughTheImporterReader" file="/opt/homebrew/var/www/test/tests/unit/Common/ImportTemplateServiceTest.php" line="68" class="ImportTemplateServiceTest" classname="ImportTemplateServiceTest" assertions="1" time="0.009389"/>
+    </testsuite>
+    <testsuite name="IndiaStatesTest" file="/opt/homebrew/var/www/test/tests/unit/Common/IndiaStatesTest.php" tests="4" assertions="86" errors="0" failures="0" skipped="0" time="0.001229">
+      <testcase name="testCodeForCommonStates" file="/opt/homebrew/var/www/test/tests/unit/Common/IndiaStatesTest.php" line="13" class="IndiaStatesTest" classname="IndiaStatesTest" assertions="4" time="0.000140"/>
+      <testcase name="testHandlesGoogleAndAltSpellings" file="/opt/homebrew/var/www/test/tests/unit/Common/IndiaStatesTest.php" line="21" class="IndiaStatesTest" classname="IndiaStatesTest" assertions="5" time="0.000124"/>
+      <testcase name="testUnknownReturnsEmpty" file="/opt/homebrew/var/www/test/tests/unit/Common/IndiaStatesTest.php" line="30" class="IndiaStatesTest" classname="IndiaStatesTest" assertions="2" time="0.000079"/>
+      <testcase name="testListIsCodeKeyedAndComplete" file="/opt/homebrew/var/www/test/tests/unit/Common/IndiaStatesTest.php" line="36" class="IndiaStatesTest" classname="IndiaStatesTest" assertions="75" time="0.000886"/>
+    </testsuite>
+    <testsuite name="InvoiceServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/InvoiceServiceTest.php" tests="4" assertions="18" errors="0" failures="0" skipped="0" time="0.000238">
+      <testcase name="testIndianFinancialYearBoundaries" file="/opt/homebrew/var/www/test/tests/unit/Common/InvoiceServiceTest.php" line="16" class="InvoiceServiceTest" classname="InvoiceServiceTest" assertions="4" time="0.000069"/>
+      <testcase name="testNumberFormatAndShopScopedPrefix" file="/opt/homebrew/var/www/test/tests/unit/Common/InvoiceServiceTest.php" line="24" class="InvoiceServiceTest" classname="InvoiceServiceTest" assertions="3" time="0.000057"/>
+      <testcase name="testDocTypeBySupplierGstin" file="/opt/homebrew/var/www/test/tests/unit/Common/InvoiceServiceTest.php" line="31" class="InvoiceServiceTest" classname="InvoiceServiceTest" assertions="3" time="0.000054"/>
+      <testcase name="testLinesFromItemsMapsSnapshots" file="/opt/homebrew/var/www/test/tests/unit/Common/InvoiceServiceTest.php" line="38" class="InvoiceServiceTest" classname="InvoiceServiceTest" assertions="8" time="0.000059"/>
+    </testsuite>
+    <testsuite name="LocationServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/LocationServiceTest.php" tests="4" assertions="6" errors="0" failures="0" skipped="0" time="0.000317">
+      <testcase name="testSamePointIsZero" file="/opt/homebrew/var/www/test/tests/unit/Common/LocationServiceTest.php" line="17" class="LocationServiceTest" classname="LocationServiceTest" assertions="1" time="0.000057"/>
+      <testcase name="testOneDegreeLongitudeAtEquator" file="/opt/homebrew/var/www/test/tests/unit/Common/LocationServiceTest.php" line="22" class="LocationServiceTest" classname="LocationServiceTest" assertions="1" time="0.000148"/>
+      <testcase name="testAndheriToPowaiAboutEightKm" file="/opt/homebrew/var/www/test/tests/unit/Common/LocationServiceTest.php" line="28" class="LocationServiceTest" classname="LocationServiceTest" assertions="2" time="0.000054"/>
+      <testcase name="testWithinRadius" file="/opt/homebrew/var/www/test/tests/unit/Common/LocationServiceTest.php" line="35" class="LocationServiceTest" classname="LocationServiceTest" assertions="2" time="0.000058"/>
+    </testsuite>
+    <testsuite name="MediaHelperTest" file="/opt/homebrew/var/www/test/tests/unit/Common/MediaHelperTest.php" tests="3" assertions="11" errors="0" failures="0" skipped="0" time="0.001175">
+      <testcase name="testIconByMime" file="/opt/homebrew/var/www/test/tests/unit/Common/MediaHelperTest.php" line="18" class="MediaHelperTest" classname="MediaHelperTest" assertions="5" time="0.000659"/>
+      <testcase name="testHumanSize" file="/opt/homebrew/var/www/test/tests/unit/Common/MediaHelperTest.php" line="27" class="MediaHelperTest" classname="MediaHelperTest" assertions="4" time="0.000267"/>
+      <testcase name="testNameFallsBackToBasename" file="/opt/homebrew/var/www/test/tests/unit/Common/MediaHelperTest.php" line="35" class="MediaHelperTest" classname="MediaHelperTest" assertions="2" time="0.000250"/>
+    </testsuite>
+    <testsuite name="MoneyTest" file="/opt/homebrew/var/www/test/tests/unit/Common/MoneyTest.php" tests="7" assertions="12" errors="0" failures="0" skipped="0" time="0.000398">
+      <testcase name="testParsesAndFormatsToFourDecimals" file="/opt/homebrew/var/www/test/tests/unit/Common/MoneyTest.php" line="17" class="MoneyTest" classname="MoneyTest" assertions="3" time="0.000078"/>
+      <testcase name="testAdd" file="/opt/homebrew/var/www/test/tests/unit/Common/MoneyTest.php" line="24" class="MoneyTest" classname="MoneyTest" assertions="1" time="0.000054"/>
+      <testcase name="testSubtract" file="/opt/homebrew/var/www/test/tests/unit/Common/MoneyTest.php" line="29" class="MoneyTest" classname="MoneyTest" assertions="1" time="0.000049"/>
+      <testcase name="testNoFloatDrift" file="/opt/homebrew/var/www/test/tests/unit/Common/MoneyTest.php" line="34" class="MoneyTest" classname="MoneyTest" assertions="1" time="0.000054"/>
+      <testcase name="testMultiplyByQuantity" file="/opt/homebrew/var/www/test/tests/unit/Common/MoneyTest.php" line="39" class="MoneyTest" classname="MoneyTest" assertions="2" time="0.000057"/>
+      <testcase name="testRoundHalfUpToTwoDecimals" file="/opt/homebrew/var/www/test/tests/unit/Common/MoneyTest.php" line="45" class="MoneyTest" classname="MoneyTest" assertions="2" time="0.000055"/>
+      <testcase name="testEquals" file="/opt/homebrew/var/www/test/tests/unit/Common/MoneyTest.php" line="53" class="MoneyTest" classname="MoneyTest" assertions="2" time="0.000051"/>
+    </testsuite>
+    <testsuite name="NotificationPresenterTest" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationPresenterTest.php" tests="5" assertions="18" errors="0" failures="0" skipped="0" time="0.000390">
+      <testcase name="testIconMapsKnownCategories" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationPresenterTest.php" line="14" class="NotificationPresenterTest" classname="NotificationPresenterTest" assertions="5" time="0.000058"/>
+      <testcase name="testIconFallsBackToBell" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationPresenterTest.php" line="23" class="NotificationPresenterTest" classname="NotificationPresenterTest" assertions="2" time="0.000118"/>
+      <testcase name="testAccentMapsKnownCategories" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationPresenterTest.php" line="29" class="NotificationPresenterTest" classname="NotificationPresenterTest" assertions="5" time="0.000104"/>
+      <testcase name="testTimeAgoBuckets" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationPresenterTest.php" line="38" class="NotificationPresenterTest" classname="NotificationPresenterTest" assertions="5" time="0.000056"/>
+      <testcase name="testTimeAgoAcceptsDatetimeString" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationPresenterTest.php" line="48" class="NotificationPresenterTest" classname="NotificationPresenterTest" assertions="1" time="0.000055"/>
+    </testsuite>
+    <testsuite name="NotificationServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationServiceTest.php" tests="4" assertions="4" errors="0" failures="0" skipped="0" time="0.000232">
+      <testcase name="testRenderReplacesPlaceholders" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationServiceTest.php" line="17" class="NotificationServiceTest" classname="NotificationServiceTest" assertions="1" time="0.000069"/>
+      <testcase name="testRenderMissingVarBecomesEmpty" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationServiceTest.php" line="22" class="NotificationServiceTest" classname="NotificationServiceTest" assertions="1" time="0.000054"/>
+      <testcase name="testAllowedChannelsHonoursOptOut" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationServiceTest.php" line="27" class="NotificationServiceTest" classname="NotificationServiceTest" assertions="1" time="0.000053"/>
+      <testcase name="testAllowedChannelsKeepsAllWhenNoOptOut" file="/opt/homebrew/var/www/test/tests/unit/Common/NotificationServiceTest.php" line="36" class="NotificationServiceTest" classname="NotificationServiceTest" assertions="1" time="0.000056"/>
+    </testsuite>
+    <testsuite name="PasswordResetServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/PasswordResetServiceTest.php" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.000319">
+      <testcase name="testGeneratedTokenVerifiesAgainstItsHash" file="/opt/homebrew/var/www/test/tests/unit/Common/PasswordResetServiceTest.php" line="18" class="PasswordResetServiceTest" classname="PasswordResetServiceTest" assertions="3" time="0.000178"/>
+      <testcase name="testExpiredTokenFails" file="/opt/homebrew/var/www/test/tests/unit/Common/PasswordResetServiceTest.php" line="28" class="PasswordResetServiceTest" classname="PasswordResetServiceTest" assertions="1" time="0.000080"/>
+      <testcase name="testTamperedTokenFails" file="/opt/homebrew/var/www/test/tests/unit/Common/PasswordResetServiceTest.php" line="35" class="PasswordResetServiceTest" classname="PasswordResetServiceTest" assertions="1" time="0.000060"/>
+    </testsuite>
+    <testsuite name="PaymentGatewayManagerTest" file="/opt/homebrew/var/www/test/tests/unit/Common/PaymentGatewayManagerTest.php" tests="5" assertions="11" errors="0" failures="0" skipped="0" time="0.000309">
+      <testcase name="testRegistersPayuRazorpayStripe" file="/opt/homebrew/var/www/test/tests/unit/Common/PaymentGatewayManagerTest.php" line="22" class="PaymentGatewayManagerTest" classname="PaymentGatewayManagerTest" assertions="4" time="0.000073"/>
+      <testcase name="testValidPayuConfigPassesTest" file="/opt/homebrew/var/www/test/tests/unit/Common/PaymentGatewayManagerTest.php" line="31" class="PaymentGatewayManagerTest" classname="PaymentGatewayManagerTest" assertions="1" time="0.000060"/>
+      <testcase name="testMissingFieldFailsTestWithMessage" file="/opt/homebrew/var/www/test/tests/unit/Common/PaymentGatewayManagerTest.php" line="39" class="PaymentGatewayManagerTest" classname="PaymentGatewayManagerTest" assertions="2" time="0.000061"/>
+      <testcase name="testUnknownProviderIsRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/PaymentGatewayManagerTest.php" line="46" class="PaymentGatewayManagerTest" classname="PaymentGatewayManagerTest" assertions="2" time="0.000057"/>
+      <testcase name="testFieldsAreExposedForFormRendering" file="/opt/homebrew/var/www/test/tests/unit/Common/PaymentGatewayManagerTest.php" line="53" class="PaymentGatewayManagerTest" classname="PaymentGatewayManagerTest" assertions="2" time="0.000058"/>
+    </testsuite>
+    <testsuite name="PriceResolverTest" file="/opt/homebrew/var/www/test/tests/unit/Common/PriceResolverTest.php" tests="7" assertions="12" errors="0" failures="0" skipped="0" time="0.002047">
+      <testcase name="testBaseWhenNoCandidates" file="/opt/homebrew/var/www/test/tests/unit/Common/PriceResolverTest.php" line="16" class="PriceResolverTest" classname="PriceResolverTest" assertions="2" time="0.000545"/>
+      <testcase name="testFlashOverlayWinsOverBase" file="/opt/homebrew/var/www/test/tests/unit/Common/PriceResolverTest.php" line="23" class="PriceResolverTest" classname="PriceResolverTest" assertions="2" time="0.000289"/>
+      <testcase name="testExpiredOverlayIgnored" file="/opt/homebrew/var/www/test/tests/unit/Common/PriceResolverTest.php" line="31" class="PriceResolverTest" classname="PriceResolverTest" assertions="1" time="0.000262"/>
+      <testcase name="testChannelMismatchIgnored" file="/opt/homebrew/var/www/test/tests/unit/Common/PriceResolverTest.php" line="38" class="PriceResolverTest" classname="PriceResolverTest" assertions="1" time="0.000241"/>
+      <testcase name="testCustomerGroupPriceAppliesOnlyToThatGroup" file="/opt/homebrew/var/www/test/tests/unit/Common/PriceResolverTest.php" line="45" class="PriceResolverTest" classname="PriceResolverTest" assertions="2" time="0.000241"/>
+      <testcase name="testQtyTierRequiresMinQty" file="/opt/homebrew/var/www/test/tests/unit/Common/PriceResolverTest.php" line="52" class="PriceResolverTest" classname="PriceResolverTest" assertions="2" time="0.000233"/>
+      <testcase name="testHighestPriorityWinsThenLowestPrice" file="/opt/homebrew/var/www/test/tests/unit/Common/PriceResolverTest.php" line="59" class="PriceResolverTest" classname="PriceResolverTest" assertions="2" time="0.000235"/>
+    </testsuite>
+    <testsuite name="PurchaseRulesTest" file="/opt/homebrew/var/www/test/tests/unit/Common/PurchaseRulesTest.php" tests="5" assertions="18" errors="0" failures="0" skipped="0" time="0.001434">
+      <testcase name="testNoRulesAllowsAnyPositiveQty" file="/opt/homebrew/var/www/test/tests/unit/Common/PurchaseRulesTest.php" line="11" class="PurchaseRulesTest" classname="PurchaseRulesTest" assertions="2" time="0.000486"/>
+      <testcase name="testMinAndMax" file="/opt/homebrew/var/www/test/tests/unit/Common/PurchaseRulesTest.php" line="17" class="PurchaseRulesTest" classname="PurchaseRulesTest" assertions="4" time="0.000238"/>
+      <testcase name="testStepMultiples" file="/opt/homebrew/var/www/test/tests/unit/Common/PurchaseRulesTest.php" line="26" class="PurchaseRulesTest" classname="PurchaseRulesTest" assertions="3" time="0.000232"/>
+      <testcase name="testStepRelativeToMin" file="/opt/homebrew/var/www/test/tests/unit/Common/PurchaseRulesTest.php" line="34" class="PurchaseRulesTest" classname="PurchaseRulesTest" assertions="3" time="0.000249"/>
+      <testcase name="testPaymentRestriction" file="/opt/homebrew/var/www/test/tests/unit/Common/PurchaseRulesTest.php" line="43" class="PurchaseRulesTest" classname="PurchaseRulesTest" assertions="6" time="0.000229"/>
+    </testsuite>
+    <testsuite name="RefundServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/RefundServiceTest.php" tests="3" assertions="9" errors="0" failures="0" skipped="0" time="0.000172">
+      <testcase name="testFullRefundReversesAllTax" file="/opt/homebrew/var/www/test/tests/unit/Common/RefundServiceTest.php" line="19" class="RefundServiceTest" classname="RefundServiceTest" assertions="4" time="0.000065"/>
+      <testcase name="testPartialRefundProratesTax" file="/opt/homebrew/var/www/test/tests/unit/Common/RefundServiceTest.php" line="28" class="RefundServiceTest" classname="RefundServiceTest" assertions="3" time="0.000055"/>
+      <testcase name="testFactorIsClampedToOne" file="/opt/homebrew/var/www/test/tests/unit/Common/RefundServiceTest.php" line="36" class="RefundServiceTest" classname="RefundServiceTest" assertions="2" time="0.000052"/>
+    </testsuite>
+    <testsuite name="ReportExportCsvTest" file="/opt/homebrew/var/www/test/tests/unit/Common/ReportExportCsvTest.php" tests="3" assertions="3" errors="0" failures="0" skipped="0" time="0.000172">
+      <testcase name="testHeaderAndRows" file="/opt/homebrew/var/www/test/tests/unit/Common/ReportExportCsvTest.php" line="14" class="ReportExportCsvTest" classname="ReportExportCsvTest" assertions="1" time="0.000060"/>
+      <testcase name="testEscapesQuotesCommasNewlines" file="/opt/homebrew/var/www/test/tests/unit/Common/ReportExportCsvTest.php" line="21" class="ReportExportCsvTest" classname="ReportExportCsvTest" assertions="1" time="0.000060"/>
+      <testcase name="testNullsBecomeEmptyCells" file="/opt/homebrew/var/www/test/tests/unit/Common/ReportExportCsvTest.php" line="28" class="ReportExportCsvTest" classname="ReportExportCsvTest" assertions="1" time="0.000052"/>
+    </testsuite>
+    <testsuite name="RequestAuthenticatorTest" file="/opt/homebrew/var/www/test/tests/unit/Common/RequestAuthenticatorTest.php" tests="4" assertions="8" errors="0" failures="0" skipped="0" time="0.000269">
+      <testcase name="testValidBearerProducesContext" file="/opt/homebrew/var/www/test/tests/unit/Common/RequestAuthenticatorTest.php" line="43" class="RequestAuthenticatorTest" classname="RequestAuthenticatorTest" assertions="5" time="0.000085"/>
+      <testcase name="testMissingHeaderThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/RequestAuthenticatorTest.php" line="57" class="RequestAuthenticatorTest" classname="RequestAuthenticatorTest" assertions="1" time="0.000062"/>
+      <testcase name="testNonBearerHeaderThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/RequestAuthenticatorTest.php" line="63" class="RequestAuthenticatorTest" classname="RequestAuthenticatorTest" assertions="1" time="0.000055"/>
+      <testcase name="testExpiredTokenThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/RequestAuthenticatorTest.php" line="69" class="RequestAuthenticatorTest" classname="RequestAuthenticatorTest" assertions="1" time="0.000067"/>
+    </testsuite>
+    <testsuite name="RiderPayoutServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/RiderPayoutServiceTest.php" tests="7" assertions="14" errors="0" failures="0" skipped="0" time="0.000376">
+      <testcase name="testFixedCommission" file="/opt/homebrew/var/www/test/tests/unit/Common/RiderPayoutServiceTest.php" line="14" class="RiderPayoutServiceTest" classname="RiderPayoutServiceTest" assertions="1" time="0.000056"/>
+      <testcase name="testPerKm" file="/opt/homebrew/var/www/test/tests/unit/Common/RiderPayoutServiceTest.php" line="19" class="RiderPayoutServiceTest" classname="RiderPayoutServiceTest" assertions="1" time="0.000050"/>
+      <testcase name="testPerOrder" file="/opt/homebrew/var/www/test/tests/unit/Common/RiderPayoutServiceTest.php" line="24" class="RiderPayoutServiceTest" classname="RiderPayoutServiceTest" assertions="1" time="0.000050"/>
+      <testcase name="testSalaryAccruesNothingPerDelivery" file="/opt/homebrew/var/www/test/tests/unit/Common/RiderPayoutServiceTest.php" line="29" class="RiderPayoutServiceTest" classname="RiderPayoutServiceTest" assertions="1" time="0.000053"/>
+      <testcase name="testHybridIncentiveOnlyAboveThreshold" file="/opt/homebrew/var/www/test/tests/unit/Common/RiderPayoutServiceTest.php" line="34" class="RiderPayoutServiceTest" classname="RiderPayoutServiceTest" assertions="3" time="0.000055"/>
+      <testcase name="testAccrueWritesEntryFromPlan" file="/opt/homebrew/var/www/test/tests/unit/Common/RiderPayoutServiceTest.php" line="43" class="RiderPayoutServiceTest" classname="RiderPayoutServiceTest" assertions="5" time="0.000060"/>
+      <testcase name="testNoPlanMeansNoEntry" file="/opt/homebrew/var/www/test/tests/unit/Common/RiderPayoutServiceTest.php" line="60" class="RiderPayoutServiceTest" classname="RiderPayoutServiceTest" assertions="2" time="0.000052"/>
+    </testsuite>
+    <testsuite name="SettlementServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/SettlementServiceTest.php" tests="3" assertions="3" errors="0" failures="0" skipped="0" time="0.000155">
+      <testcase name="testNetPayable" file="/opt/homebrew/var/www/test/tests/unit/Common/SettlementServiceTest.php" line="14" class="SettlementServiceTest" classname="SettlementServiceTest" assertions="1" time="0.000054"/>
+      <testcase name="testNetPayableNoDeductions" file="/opt/homebrew/var/www/test/tests/unit/Common/SettlementServiceTest.php" line="20" class="SettlementServiceTest" classname="SettlementServiceTest" assertions="1" time="0.000051"/>
+      <testcase name="testNetPayableRounds" file="/opt/homebrew/var/www/test/tests/unit/Common/SettlementServiceTest.php" line="25" class="SettlementServiceTest" classname="SettlementServiceTest" assertions="1" time="0.000050"/>
+    </testsuite>
+    <testsuite name="ShopBillSettingsTest" file="/opt/homebrew/var/www/test/tests/unit/Common/ShopBillSettingsTest.php" tests="4" assertions="11" errors="0" failures="0" skipped="0" time="0.000211">
+      <testcase name="testDefaultsArePresent" file="/opt/homebrew/var/www/test/tests/unit/Common/ShopBillSettingsTest.php" line="14" class="ShopBillSettingsTest" classname="ShopBillSettingsTest" assertions="4" time="0.000055"/>
+      <testcase name="testMergeOverlaysStoredOverDefaults" file="/opt/homebrew/var/www/test/tests/unit/Common/ShopBillSettingsTest.php" line="24" class="ShopBillSettingsTest" classname="ShopBillSettingsTest" assertions="3" time="0.000054"/>
+      <testcase name="testMergeCoercesTypes" file="/opt/homebrew/var/www/test/tests/unit/Common/ShopBillSettingsTest.php" line="34" class="ShopBillSettingsTest" classname="ShopBillSettingsTest" assertions="3" time="0.000052"/>
+      <testcase name="testMergeIgnoresUnknownKeys" file="/opt/homebrew/var/www/test/tests/unit/Common/ShopBillSettingsTest.php" line="43" class="ShopBillSettingsTest" classname="ShopBillSettingsTest" assertions="1" time="0.000050"/>
+    </testsuite>
+    <testsuite name="StatusMachineTest" file="/opt/homebrew/var/www/test/tests/unit/Common/StatusMachineTest.php" tests="8" assertions="32" errors="0" failures="0" skipped="0" time="0.000405">
+      <testcase name="testSubOrderForwardAllowed" file="/opt/homebrew/var/www/test/tests/unit/Common/StatusMachineTest.php" line="17" class="StatusMachineTest" classname="StatusMachineTest" assertions="2" time="0.000055"/>
+      <testcase name="testSubOrderBackwardRejected" file="/opt/homebrew/var/www/test/tests/unit/Common/StatusMachineTest.php" line="23" class="StatusMachineTest" classname="StatusMachineTest" assertions="2" time="0.000051"/>
+      <testcase name="testSamestateIsNoop" file="/opt/homebrew/var/www/test/tests/unit/Common/StatusMachineTest.php" line="29" class="StatusMachineTest" classname="StatusMachineTest" assertions="1" time="0.000048"/>
+      <testcase name="testDeliveryTransitions" file="/opt/homebrew/var/www/test/tests/unit/Common/StatusMachineTest.php" line="34" class="StatusMachineTest" classname="StatusMachineTest" assertions="3" time="0.000049"/>
+      <testcase name="testRefundTransitions" file="/opt/homebrew/var/www/test/tests/unit/Common/StatusMachineTest.php" line="41" class="StatusMachineTest" classname="StatusMachineTest" assertions="2" time="0.000048"/>
+      <testcase name="testOrderTransitions" file="/opt/homebrew/var/www/test/tests/unit/Common/StatusMachineTest.php" line="47" class="StatusMachineTest" classname="StatusMachineTest" assertions="2" time="0.000050"/>
+      <testcase name="testTransferTransitions" file="/opt/homebrew/var/www/test/tests/unit/Common/StatusMachineTest.php" line="53" class="StatusMachineTest" classname="StatusMachineTest" assertions="11" time="0.000052"/>
+      <testcase name="testProductApprovalTransitions" file="/opt/homebrew/var/www/test/tests/unit/Common/StatusMachineTest.php" line="69" class="StatusMachineTest" classname="StatusMachineTest" assertions="9" time="0.000051"/>
+    </testsuite>
+    <testsuite name="StockValuationTest" file="/opt/homebrew/var/www/test/tests/unit/Common/StockValuationTest.php" tests="6" assertions="15" errors="0" failures="0" skipped="0" time="0.001752">
+      <testcase name="testOnHandValueAndQty" file="/opt/homebrew/var/www/test/tests/unit/Common/StockValuationTest.php" line="21" class="StockValuationTest" classname="StockValuationTest" assertions="2" time="0.000518"/>
+      <testcase name="testWeightedAverageCost" file="/opt/homebrew/var/www/test/tests/unit/Common/StockValuationTest.php" line="27" class="StockValuationTest" classname="StockValuationTest" assertions="2" time="0.000274"/>
+      <testcase name="testFifoConsumesOldestFirst" file="/opt/homebrew/var/www/test/tests/unit/Common/StockValuationTest.php" line="33" class="StockValuationTest" classname="StockValuationTest" assertions="4" time="0.000249"/>
+      <testcase name="testLifoConsumesNewestFirst" file="/opt/homebrew/var/www/test/tests/unit/Common/StockValuationTest.php" line="43" class="StockValuationTest" classname="StockValuationTest" assertions="2" time="0.000239"/>
+      <testcase name="testWavgConsumesAtAverage" file="/opt/homebrew/var/www/test/tests/unit/Common/StockValuationTest.php" line="51" class="StockValuationTest" classname="StockValuationTest" assertions="1" time="0.000235"/>
+      <testcase name="testShortageIsReportedNotInvented" file="/opt/homebrew/var/www/test/tests/unit/Common/StockValuationTest.php" line="57" class="StockValuationTest" classname="StockValuationTest" assertions="4" time="0.000237"/>
+    </testsuite>
+    <testsuite name="SyncEngineCoreTest" file="/opt/homebrew/var/www/test/tests/unit/Common/SyncEngineCoreTest.php" tests="8" assertions="13" errors="0" failures="0" skipped="0" time="0.000415">
+      <testcase name="testNewRowApplies" file="/opt/homebrew/var/www/test/tests/unit/Common/SyncEngineCoreTest.php" line="19" class="SyncEngineCoreTest" classname="SyncEngineCoreTest" assertions="1" time="0.000058"/>
+      <testcase name="testMatchingVersionApplies" file="/opt/homebrew/var/www/test/tests/unit/Common/SyncEngineCoreTest.php" line="25" class="SyncEngineCoreTest" classname="SyncEngineCoreTest" assertions="1" time="0.000052"/>
+      <testcase name="testClientAheadApplies" file="/opt/homebrew/var/www/test/tests/unit/Common/SyncEngineCoreTest.php" line="31" class="SyncEngineCoreTest" classname="SyncEngineCoreTest" assertions="1" time="0.000049"/>
+      <testcase name="testStaleClientConflictsServerWins" file="/opt/homebrew/var/www/test/tests/unit/Common/SyncEngineCoreTest.php" line="37" class="SyncEngineCoreTest" classname="SyncEngineCoreTest" assertions="2" time="0.000052"/>
+      <testcase name="testStaleClientClientWinsApplies" file="/opt/homebrew/var/www/test/tests/unit/Common/SyncEngineCoreTest.php" line="44" class="SyncEngineCoreTest" classname="SyncEngineCoreTest" assertions="2" time="0.000051"/>
+      <testcase name="testRetryBackoffDoubles" file="/opt/homebrew/var/www/test/tests/unit/Common/SyncEngineCoreTest.php" line="51" class="SyncEngineCoreTest" classname="SyncEngineCoreTest" assertions="3" time="0.000053"/>
+      <testcase name="testRetryBackoffIsCapped" file="/opt/homebrew/var/www/test/tests/unit/Common/SyncEngineCoreTest.php" line="59" class="SyncEngineCoreTest" classname="SyncEngineCoreTest" assertions="1" time="0.000049"/>
+      <testcase name="testExhaustionAtMax" file="/opt/homebrew/var/www/test/tests/unit/Common/SyncEngineCoreTest.php" line="64" class="SyncEngineCoreTest" classname="SyncEngineCoreTest" assertions="2" time="0.000050"/>
+    </testsuite>
+    <testsuite name="TaskRunnerTest" file="/opt/homebrew/var/www/test/tests/unit/Common/TaskRunnerTest.php" tests="4" assertions="11" errors="0" failures="0" skipped="0" time="0.000433">
+      <testcase name="testDispatchesHandlerAndAdvancesNextRun" file="/opt/homebrew/var/www/test/tests/unit/Common/TaskRunnerTest.php" line="42" class="TaskRunnerTest" classname="TaskRunnerTest" assertions="3" time="0.000093"/>
+      <testcase name="testUnknownHandlerSkipsButStillReschedules" file="/opt/homebrew/var/www/test/tests/unit/Common/TaskRunnerTest.php" line="56" class="TaskRunnerTest" classname="TaskRunnerTest" assertions="2" time="0.000096"/>
+      <testcase name="testFailingHandlerDoesNotBlockOthers" file="/opt/homebrew/var/www/test/tests/unit/Common/TaskRunnerTest.php" line="65" class="TaskRunnerTest" classname="TaskRunnerTest" assertions="4" time="0.000188"/>
+      <testcase name="testBadCronPausesTask" file="/opt/homebrew/var/www/test/tests/unit/Common/TaskRunnerTest.php" line="84" class="TaskRunnerTest" classname="TaskRunnerTest" assertions="2" time="0.000056"/>
+    </testsuite>
+    <testsuite name="TokenServiceTest" file="/opt/homebrew/var/www/test/tests/unit/Common/TokenServiceTest.php" tests="5" assertions="9" errors="0" failures="0" skipped="0" time="0.000299">
+      <testcase name="testRoundTripReturnsClaimsWithIatExp" file="/opt/homebrew/var/www/test/tests/unit/Common/TokenServiceTest.php" line="21" class="TokenServiceTest" classname="TokenServiceTest" assertions="5" time="0.000071"/>
+      <testcase name="testExpiredTokenThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/TokenServiceTest.php" line="35" class="TokenServiceTest" classname="TokenServiceTest" assertions="1" time="0.000061"/>
+      <testcase name="testTamperedPayloadThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/TokenServiceTest.php" line="45" class="TokenServiceTest" classname="TokenServiceTest" assertions="1" time="0.000059"/>
+      <testcase name="testWrongSecretThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/TokenServiceTest.php" line="58" class="TokenServiceTest" classname="TokenServiceTest" assertions="1" time="0.000057"/>
+      <testcase name="testMalformedTokenThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/TokenServiceTest.php" line="68" class="TokenServiceTest" classname="TokenServiceTest" assertions="1" time="0.000051"/>
+    </testsuite>
+    <testsuite name="VariantCombinatorTest" file="/opt/homebrew/var/www/test/tests/unit/Common/VariantCombinatorTest.php" tests="7" assertions="10" errors="0" failures="0" skipped="0" time="0.001916">
+      <testcase name="testCartesianProductSizeByColor" file="/opt/homebrew/var/www/test/tests/unit/Common/VariantCombinatorTest.php" line="11" class="VariantCombinatorTest" classname="VariantCombinatorTest" assertions="2" time="0.000441"/>
+      <testcase name="testSingleAttributeYieldsOnePerValue" file="/opt/homebrew/var/www/test/tests/unit/Common/VariantCombinatorTest.php" line="21" class="VariantCombinatorTest" classname="VariantCombinatorTest" assertions="1" time="0.000260"/>
+      <testcase name="testEmptyOrValuelessSelectionsYieldNothing" file="/opt/homebrew/var/www/test/tests/unit/Common/VariantCombinatorTest.php" line="26" class="VariantCombinatorTest" classname="VariantCombinatorTest" assertions="2" time="0.000262"/>
+      <testcase name="testValuelessAttributeIsIgnoredNotMultipliedToZero" file="/opt/homebrew/var/www/test/tests/unit/Common/VariantCombinatorTest.php" line="32" class="VariantCombinatorTest" classname="VariantCombinatorTest" assertions="1" time="0.000253"/>
+      <testcase name="testDuplicateValuesAreDeduped" file="/opt/homebrew/var/www/test/tests/unit/Common/VariantCombinatorTest.php" line="39" class="VariantCombinatorTest" classname="VariantCombinatorTest" assertions="1" time="0.000233"/>
+      <testcase name="testSignatureIsOrderIndependent" file="/opt/homebrew/var/www/test/tests/unit/Common/VariantCombinatorTest.php" line="44" class="VariantCombinatorTest" classname="VariantCombinatorTest" assertions="1" time="0.000231"/>
+      <testcase name="testSkuSuffixSanitizes" file="/opt/homebrew/var/www/test/tests/unit/Common/VariantCombinatorTest.php" line="49" class="VariantCombinatorTest" classname="VariantCombinatorTest" assertions="2" time="0.000236"/>
+    </testsuite>
+    <testsuite name="WebAuthenticatorTest" file="/opt/homebrew/var/www/test/tests/unit/Common/WebAuthenticatorTest.php" tests="4" assertions="4" errors="0" failures="0" skipped="0" time="0.110186">
+      <testcase name="testValidCredentialsReturnUser" file="/opt/homebrew/var/www/test/tests/unit/Common/WebAuthenticatorTest.php" line="28" class="WebAuthenticatorTest" classname="WebAuthenticatorTest" assertions="1" time="0.055211"/>
+      <testcase name="testUnknownUserThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/WebAuthenticatorTest.php" line="35" class="WebAuthenticatorTest" classname="WebAuthenticatorTest" assertions="1" time="0.000084"/>
+      <testcase name="testWrongPasswordThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/WebAuthenticatorTest.php" line="41" class="WebAuthenticatorTest" classname="WebAuthenticatorTest" assertions="1" time="0.054820"/>
+      <testcase name="testInactiveAccountThrows" file="/opt/homebrew/var/www/test/tests/unit/Common/WebAuthenticatorTest.php" line="48" class="WebAuthenticatorTest" classname="WebAuthenticatorTest" assertions="1" time="0.000071"/>
+    </testsuite>
+    <testsuite name="HealthTest" file="/opt/homebrew/var/www/test/tests/unit/HealthTest.php" tests="2" assertions="3" errors="0" failures="0" skipped="0" time="0.006989">
+      <testcase name="testIsDefinedAppPath" file="/opt/homebrew/var/www/test/tests/unit/HealthTest.php" line="12" class="HealthTest" classname="HealthTest" assertions="1" time="0.000323"/>
+      <testcase name="testBaseUrlHasBeenSet" file="/opt/homebrew/var/www/test/tests/unit/HealthTest.php" line="17" class="HealthTest" classname="HealthTest" assertions="2" time="0.006666"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

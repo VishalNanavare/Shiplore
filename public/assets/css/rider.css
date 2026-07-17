@@ -1,0 +1,69 @@
+/* ============================================================
+   Rider web panel — mobile-first, standalone (separate from store/admin/vendor).
+   ============================================================ */
+:root { --rd-primary: #0d9488; --rd-primary-2: #14b8a6; --rd-bg: #0f172a; --rd-card: #ffffff; --rd-ink: #1f2937; }
+body.rd-body { background: #f1f5f9; color: var(--rd-ink); font-family: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; padding-bottom: 72px; }
+.rd-wrap { max-width: 520px; margin: 0 auto; padding-left: .9rem; padding-right: .9rem; }
+
+.rd-header { background: var(--rd-bg); color: #fff; position: sticky; top: 0; z-index: 1020; }
+.rd-header .rd-wrap { padding-top: .6rem; padding-bottom: .6rem; }
+.rd-brand { color: #fff; font-weight: 800; font-size: 1.15rem; text-decoration: none; }
+.rd-brand i { color: var(--rd-primary-2); }
+.rd-userbtn { background: rgba(255,255,255,.12); color: #fff; border: none; font-size: .85rem; }
+.rd-userbtn:hover { background: rgba(255,255,255,.2); color: #fff; }
+
+.btn-rd { background: var(--rd-primary); border-color: var(--rd-primary); color: #fff; }
+.btn-rd:hover { background: var(--rd-primary-2); border-color: var(--rd-primary-2); color: #fff; }
+
+.card { border-radius: .8rem; border-color: #e7eaf3; }
+.rd-card { background: var(--rd-card); border-radius: .85rem; box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 6px 18px rgba(16,24,40,.05); }
+
+/* availability switch */
+.rd-avail { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.rd-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.rd-dot.on { background: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,.2); }
+.rd-dot.off { background: #94a3b8; }
+
+/* trip cards */
+.rd-trip { display: block; text-decoration: none; color: inherit; }
+.rd-trip .rd-leg { display: flex; gap: .6rem; }
+.rd-trip .rd-pin { width: 26px; text-align: center; color: var(--rd-primary); }
+.rd-badge { font-size: .68rem; font-weight: 700; padding: .15rem .45rem; border-radius: .35rem; }
+.rd-cod { background: #fef3c7; color: #b45309; }
+
+.rd-stat { text-align: center; }
+.rd-stat .n { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+.rd-stat .l { font-size: .72rem; color: #6b7280; }
+
+/* status pill colors */
+.st-pending { background:#e5e7eb;color:#374151 } .st-assigned{background:#dbeafe;color:#1d4ed8}
+.st-picked_up{background:#cffafe;color:#0e7490} .st-out_for_delivery{background:#fef9c3;color:#a16207}
+.st-delivered{background:#dcfce7;color:#15803d} .st-failed{background:#fee2e2;color:#b91c1c} .st-returned{background:#ede9fe;color:#6d28d9}
+
+/* bottom tab bar */
+.rd-tabbar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e7eaf3; display: flex; z-index: 1020; }
+.rd-tab { flex: 1; text-align: center; padding: .5rem 0; color: #6b7280; text-decoration: none; font-size: .68rem; }
+.rd-tab i { display: block; font-size: 1.2rem; margin-bottom: .1rem; }
+.rd-tab:hover, .rd-tab.active { color: var(--rd-primary); }
+
+/* auth */
+.rd-auth { min-height: 78vh; display: grid; place-items: center; }
+.rd-auth-badge { width: 56px; height: 56px; border-radius: 50%; background: #ccfbf1; color: var(--rd-primary); display: grid; place-items: center; font-size: 1.6rem; }
+.rd-otp { letter-spacing: .5rem; font-weight: 700; text-align: center; }
+
+/* ---- Live offers (Blinkit/Zomato-style) ---- */
+.rd-offer { background: #fff; border: 1.5px solid var(--rd-primary); border-radius: .85rem; padding: .85rem; margin-bottom: .75rem; box-shadow: 0 8px 24px rgba(13,148,136,.15); animation: rdpop .2s ease-out; }
+@keyframes rdpop { from { transform: scale(.97); opacity: .6; } to { transform: scale(1); opacity: 1; } }
+.rd-offer-top { display: flex; align-items: center; justify-content: space-between; }
+.rd-offer-badge { background: #ef4444; color: #fff; font-size: .62rem; font-weight: 800; letter-spacing: .05em; padding: .15rem .45rem; border-radius: 999px; }
+.rd-cd { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--rd-primary); background: #ccfbf1; border-radius: 999px; padding: .1rem .55rem; font-size: .85rem; }
+.rd-cd-urgent { color: #b91c1c; background: #fee2e2; }
+.rd-chip { background: #f1f5f9; border-radius: 999px; padding: .2rem .6rem; font-size: .75rem; font-weight: 600; color: var(--rd-ink); }
+.rd-chip-cod { background: #fef3c7; color: #92400e; }
+
+/* ---- Performance metric icon ---- */
+.rd-perf-ic { width: 38px; height: 38px; flex: 0 0 auto; border-radius: 10px; background: #ccfbf1; color: var(--rd-primary); display: grid; place-items: center; font-size: 1.15rem; }
+
+/* tighter 4-up stat row */
+.rd-stat .n { font-weight: 800; font-size: 1.05rem; line-height: 1.1; }
+.rd-stat .l { font-size: .68rem; color: #64748b; }

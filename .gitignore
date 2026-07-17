@@ -1,0 +1,10 @@
+/.env
+/*.sql
+/vendor/
+/public/uploads/
+/writable/uploads/
+/writable/cache/*
+/writable/logs/*
+/writable/session/*
+/writable/debugbar/*
+.DS_Store
