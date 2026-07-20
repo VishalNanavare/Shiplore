@@ -31,9 +31,19 @@ class Exceptions extends BaseConfig
      * Any status codes here will NOT be logged if logging is turned on.
      * By default, only 404 (Page Not Found) exceptions are ignored.
      *
+     * 400 is ignored too: BadRequestException ("The URI you submitted has
+     * disallowed characters") fires on every crawler hit to a legacy CI3 URL
+     * still in Google's index — products/category/Honey-&-Maple-Syrup,
+     * products/tags/75 gm (Pack of 6) — plus vulnerability scanners probing
+     * paths like /@vite/env. Those are malformed CLIENT requests that the
+     * router correctly rejects before any controller runs; they say nothing
+     * about the health of this application. Logging them at CRITICAL buried a
+     * real SMTP delivery failure under dozens of entries, which is the actual
+     * cost. Genuine server faults (500) are unaffected.
+     *
      * @var list<int>
      */
-    public array $ignoreCodes = [404];
+    public array $ignoreCodes = [400, 404];
 
     /**
      * --------------------------------------------------------------------------

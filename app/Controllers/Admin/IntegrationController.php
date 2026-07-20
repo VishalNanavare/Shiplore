@@ -37,13 +37,17 @@ final class IntegrationController extends BaseController
             ],
         ],
         'email' => [
-            'provider' => 'smtp', 'label' => 'Email (SMTP)', 'icon' => 'bi-envelope',
-            'blurb'    => 'Transactional email — order updates, password resets, invoices.',
+            'provider' => 'smtp', 'label' => 'Email', 'icon' => 'bi-envelope',
+            'blurb'    => 'Transactional email — order updates, password resets, invoices. Use "sendmail" when outbound SMTP is blocked or intercepted by the host.',
             'fields'   => [
-                ['host', 'SMTP Host', 'text', true],
-                ['port', 'Port', 'text', true],
-                ['username', 'Username', 'text', true],
-                ['password', 'Password', 'password', true],
+                ['protocol', 'Transport', 'select', false, ['smtp', 'sendmail', 'mail']],
+                // Host/credentials only apply to the smtp transport; sendmail/mail hand
+                // off to the local MTA, so these stay optional and Mailer::configured()
+                // enforces what each transport actually needs.
+                ['host', 'SMTP Host', 'text', false],
+                ['port', 'Port', 'text', false],
+                ['username', 'Username', 'text', false],
+                ['password', 'Password', 'password', false],
                 ['encryption', 'Encryption', 'select', false, ['tls', 'ssl', 'none']],
                 ['from_email', 'From Email', 'text', true],
                 ['from_name', 'From Name', 'text', false],

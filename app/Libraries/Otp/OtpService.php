@@ -34,8 +34,52 @@ final class OtpService
         return $code;
     }
 
+    /**
+     * Invalidate every live code for an identifier/purpose. Called before re-issuing so
+     * that exactly one code is ever live: verify() already honours only the newest row,
+     * so this makes that implicit contract explicit and keeps the MAX_ATTEMPTS budget
+     * meaningful (N live codes would otherwise mean N x MAX_ATTEMPTS guesses).
+     *
+     * @return int rows invalidated
+     */
+    public function invalidate(string $identifier, string $purpose = 'verify'): int
+    {
+        $db = Database::connect();
+        $db->table('auth_otp')
+            ->where('identifier', mb_substr($identifier, 0, 191))
+            ->where('purpose', $purpose)
+            ->where('consumed_at', null)
+            ->update(['consumed_at' => date('Y-m-d H:i:s')]);
+
+        return $db->affectedRows();
+    }
+
+    /** Invalidate any live code, then issue a fresh one. Used by "resend". */
+    public function reissue(string $identifier, string $purpose = 'verify'): string
+    {
+        $this->invalidate($identifier, $purpose);
+
+        return $this->issue($identifier, $purpose);
+    }
+
+    /**
+     * Validate a code WITHOUT consuming it. Wrong guesses still count towards
+     * MAX_ATTEMPTS, so this is not a free brute-force oracle. Use it when a later step
+     * can still fail (GST lookup, vendor insert) and the code must survive for a retry;
+     * call verify() to consume once every step has succeeded.
+     */
+    public function check(string $identifier, string $code, string $purpose = 'verify'): bool
+    {
+        return $this->match($identifier, $code, $purpose, false);
+    }
+
     /** Verify a code; consumes it on success. */
     public function verify(string $identifier, string $code, string $purpose = 'verify'): bool
+    {
+        return $this->match($identifier, $code, $purpose, true);
+    }
+
+    private function match(string $identifier, string $code, string $purpose, bool $consume): bool
     {
         $db  = Database::connect();
         $row = $db->table('auth_otp')
@@ -63,7 +107,9 @@ final class OtpService
             return false;
         }
 
-        $db->table('auth_otp')->where('id', $row['id'])->update(['consumed_at' => date('Y-m-d H:i:s')]);
+        if ($consume) {
+            $db->table('auth_otp')->where('id', $row['id'])->update(['consumed_at' => date('Y-m-d H:i:s')]);
+        }
 
         return true;
     }

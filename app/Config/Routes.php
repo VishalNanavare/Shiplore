@@ -26,9 +26,12 @@ $routes->post('logout', 'Auth\LoginController::logout', ['filter' => 'csrf']);
 $routes->get('notifications/feed', 'NotificationFeedController::feed', ['filter' => 'webAuth']);
 $routes->addRedirect('admin', 'admin/dashboard');          // bare /admin -> dashboard (webAuth-guarded)
 
-// Vendor self-registration (OTP + email + GST-API verification)
+// Vendor self-registration (Firebase mobile auth + email code + GST-API verification)
 $routes->get('register', 'Auth\RegisterController::show');
 $routes->post('register/send-codes', 'Auth\RegisterController::sendCodes', ['filter' => 'csrf']);
+$routes->post('register/otp-ticket', 'Auth\RegisterController::mobileOtpTicket', ['filter' => 'csrf']);
+$routes->post('register/verify-mobile', 'Auth\RegisterController::verifyMobile', ['filter' => 'csrf']);
+$routes->post('register/resend/email', 'Auth\RegisterController::resendEmail', ['filter' => 'csrf']);
 $routes->post('register/complete', 'Auth\RegisterController::complete', ['filter' => 'csrf']);
 $routes->post('register/cancel', 'Auth\RegisterController::cancel', ['filter' => 'csrf']);
 
