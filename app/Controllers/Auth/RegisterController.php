@@ -331,13 +331,20 @@ final class RegisterController extends BaseController
         );
 
         if (! $sent) {
-            // Mailer returns false both when SMTP is unconfigured (silently) and when the
-            // send fails (logged at error). Either way the user must not be left staring
-            // at a success message waiting for mail that will never arrive.
+            // Mailer returns false both when the transport is unconfigured and when the
+            // send fails. Either way the user must not be left staring at a success
+            // message waiting for mail that will never arrive.
             log_message('error', 'Register: verification email to ' . $email . ' could not be sent.');
 
-            return redirect()->to('register')
-                ->with('error', 'We could not send the verification email. Please try again, or contact support.');
+            // A reissue invalidated the previous code BEFORE this send was attempted, so
+            // on failure the user now holds a code that no longer works. Say so, rather
+            // than letting them keep typing a code the server has already voided.
+            return redirect()->to('register')->with(
+                'error',
+                $reissue
+                    ? 'We could not send the new verification email, and your previous code is no longer valid. Please request another code, or contact support.'
+                    : 'We could not send the verification email. Please try again, or contact support.',
+            );
         }
 
         $redirect = redirect()->to('register')->with('status', $successMessage);

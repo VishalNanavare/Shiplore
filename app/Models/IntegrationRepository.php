@@ -22,14 +22,28 @@ final class IntegrationRepository
             $row = Database::connect()->table('integration_accounts')
                 ->where('provider', $provider)->where('owner_type', 'platform')->where('deleted_at', null)
                 ->get()->getRowArray();
-        } catch (\Throwable) {
-            return null; // store unavailable — callers degrade to "not configured"
+        } catch (\Throwable $e) {
+            // Callers degrade to "not configured", which is the safe behaviour — but it
+            // is indistinguishable from a genuinely absent row unless we say so. A
+            // transient DB fault here silently disables email/SMS on a system that was
+            // working minutes earlier, so it must leave a trace at error level.
+            log_message('error', 'IntegrationRepository: could not read provider "' . $provider . '": ' . $e->getMessage());
+
+            return null;
         }
 
         if ($row === null) {
             return null;
         }
-        $row['config_arr'] = json_decode((string) ($row['config'] ?? '{}'), true) ?: [];
+
+        $decoded = json_decode((string) ($row['config'] ?? '{}'), true);
+        if (! is_array($decoded)) {
+            // Corrupt/truncated JSON degrades to "not configured" the same way; without
+            // this the operator sees an integration saved in the admin that never works.
+            log_message('error', 'IntegrationRepository: provider "' . $provider . '" has unreadable config JSON.');
+            $decoded = [];
+        }
+        $row['config_arr'] = $decoded;
 
         return $row;
     }

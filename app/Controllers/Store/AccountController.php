@@ -88,10 +88,25 @@ final class AccountController extends BaseStoreController
         session()->set('login_phone', $phone);
         session()->set('login_name', $name);
 
-        $r = redirect()->to('store/login')->with('status', 'Code sent to ' . $phone . '.');
+        // SmsSender reports dev=true whenever no gateway is configured — which is the
+        // normal state in production. Surfacing the code on that flag alone printed a
+        // live login OTP on screen to anyone who typed a phone number: a complete
+        // bypass of phone ownership. The dev fallback is now gated on the environment,
+        // never on the gateway's own report.
+        if (! ($sms['ok'] ?? false)) {
+            log_message('error', 'Store login: SMS to ' . $phone . ' undeliverable (provider=' . ($sms['provider'] ?? '?') . ') ' . ($sms['message'] ?? ''));
 
-        // No live SMS gateway? surface the code so the flow is testable in dev.
-        return ($sms['dev'] ?? false) ? $r->with('dev_codes', 'DEV — SMS OTP: ' . $code) : $r;
+            if (ENVIRONMENT === 'production') {
+                return redirect()->to('store/login')
+                    ->with('error', 'We could not send your code right now. Please try again shortly.');
+            }
+
+            return redirect()->to('store/login')
+                ->with('status', 'Code generated (no SMS gateway configured).')
+                ->with('dev_codes', 'DEV — SMS OTP: ' . $code);
+        }
+
+        return redirect()->to('store/login')->with('status', 'Code sent to ' . $phone . '.');
     }
 
     /** Email OTP — alternate path (existing accounts only). */

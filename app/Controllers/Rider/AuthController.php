@@ -52,9 +52,24 @@ final class AuthController extends BaseRiderController
         $code = service('otpService')->issue($phone, 'login');
         $sms  = service('smsSender')->send($phone, 'Your rider sign-in code is ' . $code . '. Valid 10 minutes.');
         session()->set('rider_login_phone', $phone);
-        $r = redirect()->to('rider/login')->with('status', 'Code sent to ' . $phone . '.');
 
-        return ($sms['dev'] ?? false) ? $r->with('dev_codes', 'DEV — OTP: ' . $code) : $r;
+        // Gate the code on the ENVIRONMENT, not on the gateway's dev flag: SmsSender
+        // reports dev=true whenever no gateway is configured, which is production's
+        // normal state, so this printed a live rider login OTP on screen to anyone.
+        if (! ($sms['ok'] ?? false)) {
+            log_message('error', 'Rider login: SMS to ' . $phone . ' undeliverable (provider=' . ($sms['provider'] ?? '?') . ') ' . ($sms['message'] ?? ''));
+
+            if (ENVIRONMENT === 'production') {
+                return redirect()->to('rider/login')
+                    ->with('error', 'We could not send your code right now. Please try again shortly.');
+            }
+
+            return redirect()->to('rider/login')
+                ->with('status', 'Code generated (no SMS gateway configured).')
+                ->with('dev_codes', 'DEV — OTP: ' . $code);
+        }
+
+        return redirect()->to('rider/login')->with('status', 'Code sent to ' . $phone . '.');
     }
 
     /** Dev fallback verify. */

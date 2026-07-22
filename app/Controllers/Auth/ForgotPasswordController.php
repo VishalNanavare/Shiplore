@@ -37,13 +37,27 @@ final class ForgotPasswordController extends BaseController
             $sent = service('mailer')->send($email, 'Reset your password', $this->resetEmail($link));
 
             // If SMTP isn't configured (or the send failed) keep the flow usable:
-            // always log the link, and surface it on-screen ONLY outside production
-            // (showing it in production would bypass email verification entirely).
+            // surface the link on-screen ONLY outside production (showing it in
+            // production would bypass email verification entirely).
+            //
+            // The failure MUST be logged at error: logger.threshold is 4, so the
+            // 'info' this used to use was discarded outright. Combined with the
+            // production gate below, a failed reset left no trace on screen, in the
+            // log, or in the response — the user was told "a reset link has been
+            // sent" while nothing had been sent and nothing was recorded.
             if (! $sent) {
-                log_message('info', 'Password reset link for {email}: {link}', ['email' => $email, 'link' => $link]);
+                log_message('error', 'Password reset email to ' . $email . ' could not be sent.');
+                log_message('error', 'Password reset link for {email}: {link}', ['email' => $email, 'link' => $link]);
                 if (ENVIRONMENT !== 'production') {
                     session()->setFlashdata('reset_link', $link);
                 }
+
+                // Tell the user the truth. The uniform message below exists to prevent
+                // account enumeration, but it must not also hide a transport outage:
+                // this branch is only reachable AFTER the address matched a real user,
+                // so saying "we could not send" leaks nothing a successful send wouldn't.
+                return redirect()->to('forgot-password')
+                    ->with('error', 'We could not send the reset email right now. Please try again shortly, or contact support.');
             }
         }
 

@@ -166,14 +166,21 @@ final class VendorPosController extends BaseApiController
         $code   = (new OtpService())->issue($phone, 'login');
         $result = (new SmsSender())->send($phone, 'Your Shiplore POS login code is ' . $code . '. Valid for 10 minutes.');
 
-        // In dev (no SMS gateway configured) surface the code directly so
-        // the setup wizard can be tested without an SMS provider.
-        $payload = ['sent' => true];
-        if ($result['dev'] ?? false) {
-            $payload['dev_code'] = $code;
+        // `sent` must reflect reality: it was hardcoded true even when nothing left the
+        // building. And dev_code was gated on the gateway's own dev flag, which is true
+        // whenever no gateway is configured — production's normal state — so this
+        // endpoint handed a live POS login code to any unauthenticated caller.
+        if (! ($result['ok'] ?? false)) {
+            log_message('error', 'POS OTP: SMS to ' . $phone . ' undeliverable (provider=' . ($result['provider'] ?? '?') . ') ' . ($result['message'] ?? ''));
+
+            if (ENVIRONMENT === 'production') {
+                return $this->failWith('DEPENDENCY_UNAVAILABLE', 'Could not send the verification code. Please try again shortly.');
+            }
+
+            return $this->ok(['sent' => false], ['dev_code' => $code]);
         }
 
-        return $this->ok($payload);
+        return $this->ok(['sent' => true]);
     }
 
     // -------------------------------------------------------------------------

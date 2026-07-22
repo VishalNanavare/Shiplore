@@ -64,7 +64,25 @@ final class Mailer
     /** Send one HTML email. Returns true on success; never throws. */
     public function send(string $to, string $subject, string $htmlBody): bool
     {
-        if ($to === '' || ! $this->configured()) {
+        // Never refuse silently. This branch used to `return false` with no log at all,
+        // which made "email isn't arriving" indistinguishable from "email was never
+        // attempted" — callers only see a bool, and logger.threshold=4 discards anything
+        // below error, so an unconfigured mailer left no trace anywhere.
+        if ($to === '') {
+            log_message('error', 'Mailer: refusing to send — empty recipient.');
+
+            return false;
+        }
+        if (! $this->configured()) {
+            log_message('error', sprintf(
+                'Mailer: refusing to send to %s — transport "%s" is not configured (%s).',
+                $to,
+                $this->protocol(),
+                $this->protocol() === 'smtp'
+                    ? 'smtp needs a non-empty host and username'
+                    : $this->protocol() . ' needs a non-empty from_email',
+            ));
+
             return false;
         }
 
@@ -81,10 +99,17 @@ final class Mailer
         ];
 
         if ($protocol === 'smtp') {
-            $crypto   = $this->str('encryption') ?: 'tls';
+            $crypto = $this->str('encryption') ?: 'tls';
+            // `?? 587` never fired: a blank admin Port field saves "" (not null), and
+            // (int) "" is 0, so the connection went to port 0 and always failed. Treat
+            // any non-positive/absent value as "use the default for this encryption".
+            $port = (int) $this->str('port');
+            if ($port <= 0) {
+                $port = $crypto === 'ssl' ? 465 : 587;
+            }
             $settings += [
                 'SMTPHost'    => $this->str('host'),
-                'SMTPPort'    => (int) ($this->cfg['port'] ?? 587),
+                'SMTPPort'    => $port,
                 'SMTPUser'    => $this->str('username'),
                 'SMTPPass'    => $this->str('password'),
                 'SMTPCrypto'  => $crypto === 'none' ? '' : $crypto,
