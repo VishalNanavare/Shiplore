@@ -47,6 +47,21 @@ final class AdminUserRepository
     }
 
     /**
+     * uq_users_phone spans every principal_type, so a customer or rider already holding
+     * this number blocks a staff insert. Checked up front so the operator sees a message
+     * instead of a swallowed constraint violation.
+     */
+    public function phoneExists(?string $e164): bool
+    {
+        if ($e164 === null || $e164 === '') {
+            return false;
+        }
+
+        return (bool) Database::connect()->table('users')
+            ->where('phone', $e164)->where('deleted_at', null)->countAllResults();
+    }
+
+    /**
      * Roles assignable to a PLATFORM staff user.
      *
      * `vendor_id IS NULL` alone was not enough: it also matches the vendor-, shop- and
@@ -145,7 +160,12 @@ final class AdminUserRepository
         try {
             $db->table('users')->insert([
                 'uuid' => bin2hex(random_bytes(18)), 'principal_type' => 'platform',
-                'name' => mb_substr((string) $d['name'], 0, 191), 'email' => $d['email'], 'phone' => $d['phone'] ?: null,
+                // Normalise to E.164 like every other flow. Storing the raw input meant a
+                // staff row could hold "9768181958" while a customer row held
+                // "+919768181958" for the same human — findByPhone() then matches two rows
+                // and returns null, silently breaking phone login for BOTH.
+                'name' => mb_substr((string) $d['name'], 0, 191), 'email' => $d['email'],
+                'phone' => StoreCustomerRepository::normalizePhone((string) ($d['phone'] ?? '')),
                 'password_hash' => password_hash((string) $d['password'], PASSWORD_BCRYPT),
                 'status' => 'active', 'created_by' => $actorId,
             ]);
@@ -179,18 +199,65 @@ final class AdminUserRepository
     }
 
     /** Update name and email for own profile. Returns false if email is taken by another user. */
-    public function updateProfile(int $id, string $name, string $email): bool
+    /**
+     * Update a staff user's profile.
+     *
+     * `$phone` is E.164-normalised before it is stored and compared, because every other
+     * flow (registration, rider, store login) stores +91XXXXXXXXXX. Two spellings of one
+     * human number both landing in `users` makes UserRepository::findByPhone() match two
+     * rows, and it only returns a user when EXACTLY one matched — so both people silently
+     * lose phone login. Pass null for $phone to leave it untouched.
+     *
+     * Changing the number clears phone_verified_at: a staff phone is a login credential
+     * (LoginController::otpLogin resolves it to a session), so carrying the old verified
+     * flag onto a new, unproven number would be a verification bypass.
+     *
+     * @return true on success, false when the email or phone belongs to another user
+     */
+    public function updateProfile(int $id, string $name, string $email, ?string $phone = null, ?int $actorId = null): bool
     {
         $db = Database::connect();
+
         if ($email !== '' && $db->table('users')
                 ->where('email', $email)->where('id !=', $id)->where('deleted_at', null)
                 ->countAllResults() > 0) {
             return false;
         }
-        $patch = ['name' => mb_substr($name, 0, 191), 'updated_by' => $id];
+
+        // updated_by recorded the EDITED user's id, so the audit trail claimed every
+        // change was self-made. Record the acting admin; fall back to $id only if unknown.
+        $patch = ['name' => mb_substr($name, 0, 191), 'updated_by' => $actorId ?? $id];
         if ($email !== '') {
             $patch['email'] = $email;
         }
+
+        if ($phone !== null) {
+            $clean = trim($phone);
+            if ($clean === '') {
+                // Clearing the number must clear its verification too.
+                $patch['phone']             = null;
+                $patch['phone_verified_at'] = null;
+            } else {
+                $e164 = StoreCustomerRepository::normalizePhone($clean);
+                if ($e164 === null) {
+                    return false;
+                }
+                // uq_users_phone is global across principal_type, so a customer or vendor
+                // already holding this number would make the UPDATE throw. Check first and
+                // report it, rather than surfacing a raw DB error.
+                if ($db->table('users')->where('phone', $e164)->where('id !=', $id)
+                        ->where('deleted_at', null)->countAllResults() > 0) {
+                    return false;
+                }
+
+                $current = $db->table('users')->select('phone')->where('id', $id)->get()->getRowArray();
+                if (($current['phone'] ?? null) !== $e164) {
+                    $patch['phone']             = $e164;
+                    $patch['phone_verified_at'] = null;
+                }
+            }
+        }
+
         $db->table('users')->where('id', $id)->update($patch);
 
         return true;

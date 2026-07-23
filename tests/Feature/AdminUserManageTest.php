@@ -50,10 +50,17 @@ final class AdminUserManageTest extends CIUnitTestCase
                 // user 7 is the acting admin in these tests; others follow targetIsSuper
                 return $userId === 7 ? $this->actorIsSuper : $this->targetIsSuper;
             }
+            public bool $phoneTaken = false;
+            public function phoneExists(?string $e164): bool { return $this->phoneTaken; }
             public function create(array $d, ?int $a = null): ?int { $this->created[] = $d; return $this->createReturns; }
             public function setRole(int $u, int $r, ?int $a = null): bool { $this->roleSet[] = [$u, $r]; return true; }
             public function setStatus(int $id, string $s, ?int $a = null): bool { $this->status[] = [$id, $s]; return true; }
-            public function updateProfile(int $id, string $n, string $e): bool { $this->profile[] = [$id, $n, $e]; return true; }
+            public bool $profileReturns = true;
+            public function updateProfile(int $id, string $n, string $e, ?string $p = null, ?int $actor = null): bool
+            {
+                $this->profile[] = [$id, $n, $e, $p, $actor];
+                return $this->profileReturns;
+            }
             public function updatePassword(int $id, string $h): void {}
         };
         Services::injectMock('adminUserRepository', $this->repo);
@@ -150,7 +157,7 @@ final class AdminUserManageTest extends CIUnitTestCase
         $data = $this->csrf() + ['name' => 'Renamed', 'email' => 'r@x.com', 'password' => '', 'role_id' => '3'];
         $this->withSession($this->sess())->post('admin/users/5/update', $data)->assertRedirect();
 
-        $this->assertSame([[5, 'Renamed', 'r@x.com']], $this->repo->profile);
+        $this->assertSame([[5, 'Renamed', 'r@x.com', '', 7]], $this->repo->profile);
         $this->assertSame([[5, 3]], $this->repo->roleSet);
     }
 
@@ -168,6 +175,83 @@ final class AdminUserManageTest extends CIUnitTestCase
     {
         $this->grant(['user.view']);
         $this->withSession($this->sess())->get('admin/users/5/edit')->assertRedirect();
+    }
+
+    // ------------------------------------------------------------------ phone
+
+    /** The mobile must be editable — it was previously hidden on the edit form. */
+    public function testEditFormShowsMobile(): void
+    {
+        $this->repo->user = ['id' => 5, 'name' => 'Staff', 'email' => 's@x.com', 'status' => 'active', 'role_id' => 3, 'phone' => '+919812345678', 'phone_verified_at' => null];
+        $this->grant(['user.update']);
+
+        $body = (string) $this->withSession($this->sess())->get('admin/users/5/edit')->getBody();
+
+        $this->assertStringContainsString('name="phone"', $body, 'the edit form must expose the mobile field');
+        $this->assertStringContainsString('+919812345678', $body, 'and prefill the current number');
+        $this->assertStringContainsString('Mobile not verified', $body);
+    }
+
+    public function testEditFormShowsVerifiedBadge(): void
+    {
+        $this->repo->user = ['id' => 5, 'name' => 'Staff', 'email' => 's@x.com', 'status' => 'active', 'role_id' => 3, 'phone' => '+919812345678', 'phone_verified_at' => '2026-07-01 10:00:00'];
+        $this->grant(['user.update']);
+
+        $body = (string) $this->withSession($this->sess())->get('admin/users/5/edit')->getBody();
+        $this->assertStringContainsString('Mobile verified', $body);
+    }
+
+    /** The phone reaches the repository on update so it can actually be saved. */
+    public function testUpdatePassesPhoneThrough(): void
+    {
+        $this->grant(['user.update']);
+        $data = $this->csrf() + ['name' => 'X', 'email' => 'r@x.com', 'password' => '', 'role_id' => '3', 'phone' => '9812345678'];
+        $this->withSession($this->sess())->post('admin/users/5/update', $data)->assertRedirect();
+
+        $this->assertSame('9812345678', $this->repo->profile[0][3]);
+        $this->assertSame(7, $this->repo->profile[0][4], 'updated_by must be the acting admin, not the edited user');
+    }
+
+    /** An unparseable mobile is refused with a message that names the mobile. */
+    public function testInvalidMobileRejectedOnUpdate(): void
+    {
+        $this->grant(['user.update']);
+        $data = $this->csrf() + ['name' => 'X', 'email' => 'r@x.com', 'password' => '', 'role_id' => '3', 'phone' => '12345'];
+        $this->withSession($this->sess())->post('admin/users/5/update', $data)->assertRedirect();
+
+        $this->assertCount(0, $this->repo->profile, 'a bad mobile must abort before any write');
+    }
+
+    public function testInvalidMobileRejectedOnCreate(): void
+    {
+        $this->grant(['user.create']);
+        $data = $this->csrf() + ['name' => 'N', 'email' => 'n@x.com', 'password' => 'secret123', 'role_id' => '3', 'phone' => 'abc'];
+        $this->withSession($this->sess())->post('admin/users/store', $data)->assertRedirect();
+
+        $this->assertCount(0, $this->repo->created);
+    }
+
+    /** uq_users_phone spans all principal types — a taken number must be caught up front. */
+    public function testDuplicateMobileRejectedOnCreate(): void
+    {
+        $this->repo->phoneTaken = true;
+        $this->grant(['user.create']);
+        $data = $this->csrf() + ['name' => 'N', 'email' => 'n@x.com', 'password' => 'secret123', 'role_id' => '3', 'phone' => '9812345678'];
+        $this->withSession($this->sess())->post('admin/users/store', $data)->assertRedirect();
+
+        $this->assertCount(0, $this->repo->created, 'a phone already in users must not reach the INSERT');
+    }
+
+    /** A clash reported by updateProfile must surface, not be swallowed. */
+    public function testProfileClashOnUpdateIsReported(): void
+    {
+        $this->repo->profileReturns = false;
+        $this->grant(['user.update']);
+        $data = $this->csrf() + ['name' => 'X', 'email' => 'r@x.com', 'password' => '', 'role_id' => '3', 'phone' => '9812345678'];
+        $this->withSession($this->sess())->post('admin/users/5/update', $data)->assertRedirect();
+
+        $this->assertNotEmpty(session('error'));
+        $this->assertCount(0, $this->repo->roleSet, 'a failed profile save must not still apply the role');
     }
 
     // ------------------------------------------------------- lock-out guards

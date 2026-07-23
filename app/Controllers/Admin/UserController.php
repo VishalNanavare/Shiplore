@@ -50,9 +50,20 @@ final class UserController extends BaseController
         if ($name === '' || ! filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($pass) < 8) {
             return redirect()->back()->withInput()->with('error', 'Name, valid email and an 8+ char password are required.');
         }
+        $phone = trim((string) $this->request->getPost('phone'));
+        if ($phone !== '' && \App\Models\StoreCustomerRepository::normalizePhone($phone) === null) {
+            return redirect()->back()->withInput()
+                ->with('error', 'Enter a valid 10-digit Indian mobile number, or leave it blank.');
+        }
         $repo = service('adminUserRepository');
         if ($repo->emailExists($email)) {
             return redirect()->back()->withInput()->with('error', 'Email already in use.');
+        }
+        // uq_users_phone is global across principal_type, so a customer already holding
+        // this number would make the INSERT throw and create() would return null with only
+        // a log line. Check first so the operator gets a message naming the cause.
+        if ($phone !== '' && $repo->phoneExists(\App\Models\StoreCustomerRepository::normalizePhone($phone))) {
+            return redirect()->back()->withInput()->with('error', 'That mobile number is already used by another account.');
         }
         // A staff account with no role can sign in but can do nothing — it looks broken
         // rather than restricted. Require an explicit choice.
@@ -65,7 +76,7 @@ final class UserController extends BaseController
         }
 
         $newId = $repo->create([
-            'name' => $name, 'email' => $email, 'phone' => trim((string) $this->request->getPost('phone')),
+            'name' => $name, 'email' => $email, 'phone' => $phone,
             'password' => $pass, 'role_id' => $roleId,
         ], (int) session()->get('user_id'));
 
@@ -113,11 +124,18 @@ final class UserController extends BaseController
         $name   = trim((string) $this->request->getPost('name'));
         $email  = trim((string) $this->request->getPost('email'));
         $pass   = (string) $this->request->getPost('password');
+        $phone  = trim((string) $this->request->getPost('phone'));
         $roleId = (int) $this->request->getPost('role_id');
         $selfId = (int) session()->get('user_id');
 
         if ($name === '' || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return redirect()->back()->withInput()->with('error', 'Name and a valid email are required.');
+        }
+        // Reject a bad number here so the failure names the mobile: updateProfile()
+        // returns false for email clash, phone clash AND unparseable phone alike.
+        if ($phone !== '' && \App\Models\StoreCustomerRepository::normalizePhone($phone) === null) {
+            return redirect()->back()->withInput()
+                ->with('error', 'Enter a valid 10-digit Indian mobile number, or leave it blank.');
         }
         if ($pass !== '' && strlen($pass) < 8) {
             return redirect()->back()->withInput()->with('error', 'A new password must be at least 8 characters.');
@@ -138,8 +156,9 @@ final class UserController extends BaseController
                 ->with('error', 'You cannot remove your own Super Admin role.');
         }
 
-        if (! $repo->updateProfile($id, $name, $email)) {
-            return redirect()->back()->withInput()->with('error', 'That email is already used by another user.');
+        if (! $repo->updateProfile($id, $name, $email, $phone, $selfId)) {
+            return redirect()->back()->withInput()
+                ->with('error', 'That email or mobile number is already used by another account.');
         }
         if ($pass !== '') {
             $repo->updatePassword($id, password_hash($pass, PASSWORD_BCRYPT));

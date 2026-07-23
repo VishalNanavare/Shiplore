@@ -17,16 +17,30 @@ $val     = static fn (string $k, string $fallback = ''): string => (string) (old
             <div class="mb-3"><label class="form-label">Email <span class="text-danger">*</span></label>
                 <input type="email" name="email" class="form-control" value="<?= esc($val('email', $editing ? (string) $user['email'] : ''), 'attr') ?>" required></div>
             <div class="row g-3">
-                <?php if (! $editing): ?>
-                    <div class="col-6"><label class="form-label">Phone</label>
-                        <input name="phone" class="form-control" value="<?= esc($val('phone'), 'attr') ?>"></div>
-                <?php endif; ?>
+                <div class="col-6">
+                    <label class="form-label">Mobile</label>
+                    <input name="phone" class="form-control" placeholder="+91…"
+                           value="<?= esc($val('phone', $editing ? (string) ($user['phone'] ?? '') : ''), 'attr') ?>">
+                    <div class="form-text">
+                        Stored as +91XXXXXXXXXX. This number can be used to sign in with a phone OTP,
+                        so changing it clears the verified flag.
+                    </div>
+                </div>
                 <div class="col-6">
                     <label class="form-label">Password <?php if (! $editing): ?><span class="text-danger">*</span><?php endif; ?></label>
                     <input type="password" name="password" class="form-control" minlength="8" <?= $editing ? '' : 'required' ?>>
                     <?php if ($editing): ?><div class="form-text">Leave blank to keep the current password.</div><?php endif; ?>
                 </div>
             </div>
+            <?php if ($editing): ?>
+                <div class="mt-2">
+                    <?php if (($user['phone_verified_at'] ?? null) !== null): ?>
+                        <span class="badge text-bg-success"><i class="bi bi-patch-check"></i> Mobile verified</span>
+                    <?php elseif (trim((string) ($user['phone'] ?? '')) !== ''): ?>
+                        <span class="badge text-bg-secondary"><i class="bi bi-patch-exclamation"></i> Mobile not verified</span>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
             <div class="mb-3 mt-3"><label class="form-label">Role <span class="text-danger">*</span></label>
                 <select name="role_id" class="form-select" required>
                     <option value="">— choose a role —</option>
