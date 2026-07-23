@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers\Store;
 
+use App\Libraries\Money;
 use CodeIgniter\HTTP\RedirectResponse;
 
 /**
@@ -74,7 +75,27 @@ final class PaymentController extends BaseStoreController
         if ($status !== 'success' || ! $payu->verifyResponse($post)) {
             return redirect()->to('store/order/' . $orderNo)->with('error', 'Payment could not be verified. If money was deducted it will be refunded within 5–7 days.');
         }
-        service('storeOrderRepository')->markPaid($orderNo, (string) ($post['mihpayid'] ?? $orderNo));
+
+        // The reverse hash proves PayU sent this, not that it settles THIS order in
+        // full. Re-check the amount against the order before capturing: a forward
+        // hash signed for a smaller amount (see the oracle closed in
+        // Api\V1\CustomerApiController::payuHash) would otherwise arrive here as a
+        // genuinely-valid short payment and mark the order paid.
+        $repo    = service('storeOrderRepository');
+        $summary = $repo->paymentSummary($orderNo);
+        try {
+            $paid = Money::of((string) ($post['amount'] ?? ''));
+            $owed = Money::of((string) ($summary['grand_total'] ?? '0'));
+        } catch (\InvalidArgumentException $e) {
+            $paid = $owed = null;
+        }
+        if ($paid === null || $owed === null || ! $paid->equals($owed)) {
+            log_message('critical', 'PayU amount mismatch on order ' . $orderNo . ' — payment not captured.');
+
+            return redirect()->to('store/order/' . $orderNo)->with('error', 'Payment could not be verified. If money was deducted it will be refunded within 5–7 days.');
+        }
+
+        $repo->markPaid($orderNo, (string) ($post['mihpayid'] ?? $orderNo));
 
         return redirect()->to('store/order/' . $orderNo)->with('success', 'Payment successful — your order is confirmed!');
     }

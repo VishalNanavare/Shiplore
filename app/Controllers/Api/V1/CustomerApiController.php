@@ -6,6 +6,7 @@ namespace App\Controllers\Api\V1;
 
 use App\Controllers\BaseApiController;
 use App\Libraries\Catalog\PurchaseRules;
+use App\Libraries\Money;
 use App\Libraries\Store\CartService;
 
 /**
@@ -764,7 +765,71 @@ final class CustomerApiController extends BaseApiController
             return $this->failWith('VALIDATION_ERROR', 'hash_string is required.');
         }
 
+        // PayuClient::hash() is sha512($hs . $salt) — salt APPENDED. That is exactly
+        // the shape of PayU's forward *payment* hash
+        // (key|txnid|amount|productinfo|firstname|email|udf1..udf5|||||salt), so an
+        // unrestricted endpoint here is a signing oracle: a customer could mint a
+        // valid payment hash for any amount, pay 1.00 against a 10,000.00 order, and
+        // PayU would return a genuinely-valid success response for that 1.00.
+        //
+        // The SDK's other hashes (payment_related_details_for_mobile_sdk etc.) are
+        // short "key|command|var1|" strings that carry no amount and stay allowed, so
+        // the app's generateHash callback keeps working unchanged.
+        $parts = explode('|', $hs);
+        if (count($parts) >= 16) {
+            $denied = $this->assertPayableAmount((string) ($parts[1] ?? ''), (string) ($parts[2] ?? ''), $cid);
+            if ($denied !== null) {
+                return $denied;
+            }
+        } elseif (($parts[0] ?? '') !== $payu->key()) {
+            // Not payment-shaped, so it carries no amount and cannot move money.
+            // Log rather than block: blocking an unrecognised-but-legitimate SDK hash
+            // would break checkout in already-shipped apps.
+            log_message('warning', 'payuHash: signing a string that does not start with the merchant key.');
+        }
+
         return $this->ok(['hash' => $payu->hash($hs)]);
+    }
+
+    /**
+     * Guard for anything that signs or accepts a PayU amount: the txnid must name
+     * an order this customer owns, and the amount must equal that order's total.
+     *
+     * @return object|null a failure response, or null when the pair is acceptable
+     */
+    private function assertPayableAmount(string $txnid, string $amount, int $customerId)
+    {
+        $repo = service('storeOrderRepository');
+        if ($txnid === '' || ! $repo->customerOwns($txnid, $customerId)) {
+            return $this->failWith('NOT_FOUND', 'Order not found.');
+        }
+        $summary = $repo->paymentSummary($txnid);
+        if ($summary === null) {
+            return $this->failWith('NOT_FOUND', 'Order not found.');
+        }
+
+        // Compare via Money: exact integer units, never float equality. The amount is
+        // attacker-controlled, so a malformed value must be rejected, not fatal.
+        try {
+            $claimed = Money::of($amount);
+            $owed    = Money::of((string) $summary['grand_total']);
+        } catch (\InvalidArgumentException $e) {
+            return $this->failWith('VALIDATION_ERROR', 'Invalid amount.');
+        }
+
+        if (! $claimed->equals($owed)) {
+            log_message('critical', sprintf(
+                'PayU amount mismatch on order %s: claimed %s, owed %s (customer %d).',
+                $txnid,
+                $claimed->amount(),
+                $owed->amount(),
+                $customerId,
+            ));
+
+            return $this->failWith('VALIDATION_ERROR', 'Payment amount does not match the order total.');
+        }
+
+        return null;
     }
 
     /** Verify a PayU success callback (reverse hash) and mark the order paid. */
@@ -784,6 +849,19 @@ final class CustomerApiController extends BaseApiController
         if ($status !== 'success' || ! $payu->verifyResponse($resp)) {
             return $this->failWith('VALIDATION_ERROR', 'Payment could not be verified. If money was deducted it will be refunded.');
         }
+
+        // The reverse hash proves PayU sent this payload — it does NOT prove the
+        // payload belongs to the order in the URL. Without the txnid check a genuine
+        // receipt for a cheap order could be replayed against an expensive one (both
+        // owned by the same customer), and without the amount check a short payment
+        // would still mark the order paid in full.
+        if (! hash_equals($orderNo, (string) ($resp['txnid'] ?? ''))) {
+            return $this->failWith('VALIDATION_ERROR', 'Payment does not belong to this order.');
+        }
+        if ($denied = $this->assertPayableAmount($orderNo, (string) ($resp['amount'] ?? ''), $cid)) {
+            return $denied;
+        }
+
         $repo->markPaid($orderNo, (string) ($resp['mihpayid'] ?? $resp['txnid'] ?? $orderNo));
 
         return $this->ok(['payment_status' => 'paid', 'order_no' => $orderNo]);
