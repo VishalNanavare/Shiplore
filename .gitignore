@@ -7,5 +7,6 @@
 /writable/logs/*
 /writable/session/*
 /writable/debugbar/*
-.DS_Store/build/logs/
+.DS_Store
+/build/logs/
 /build/.phpunit.cache/
