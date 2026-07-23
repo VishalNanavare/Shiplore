@@ -29,8 +29,33 @@ final class BannerController extends BaseApiController
 
     private ?string $_uploadError = null;
 
+    /**
+     * RBAC gate. `banner.manage` is a platform-scope permission (seeded in
+     * database/sql/11_seed.sql), held by super_admin and platform_admin but by no
+     * vendor or shop role — which matters because the admin route group is guarded
+     * only by `webAuth`, and webAuth proves a session is logged in, not that it
+     * belongs to an admin. Before this, every method here was reachable by any
+     * logged-in vendor or shop staffer.
+     *
+     * Returns a JSON error because this controller is BaseApiController-based and
+     * the mutating endpoints are called over AJAX. index() redirects instead, since
+     * it renders a page.
+     */
+    private function guard(): ?object
+    {
+        if (! service('policyEngine')->can(service('scopeContext')->all(), 'banner.manage')) {
+            return $this->failWith('FORBIDDEN', 'You do not have permission to manage banners.');
+        }
+
+        return null;
+    }
+
     public function index()
     {
+        if (! service('policyEngine')->can(service('scopeContext')->all(), 'banner.manage')) {
+            return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
+        }
+
         $db = db_connect();
         return view('admin/banners/index', [
             'title'      => 'Banners · Admin',
@@ -46,6 +71,10 @@ final class BannerController extends BaseApiController
 
     public function store()
     {
+        if ($denied = $this->guard()) {
+            return $denied;
+        }
+
         $data = $this->_fields();
         if ($data === null) {
             return $this->failWith('VALIDATION', 'Title is required.');
@@ -69,6 +98,10 @@ final class BannerController extends BaseApiController
 
     public function update($id = null)
     {
+        if ($denied = $this->guard()) {
+            return $denied;
+        }
+
         $id = (int) $id;
         $banner = service('bannerRepository')->find($id);
         if ($banner === null) {
@@ -102,6 +135,10 @@ final class BannerController extends BaseApiController
 
     public function delete($id = null)
     {
+        if ($denied = $this->guard()) {
+            return $denied;
+        }
+
         $id = (int) $id;
         $banner = service('bannerRepository')->find($id);
         if ($banner === null) {
@@ -119,6 +156,10 @@ final class BannerController extends BaseApiController
 
     public function toggle($id = null)
     {
+        if ($denied = $this->guard()) {
+            return $denied;
+        }
+
         $id = (int) $id;
         $banner = service('bannerRepository')->find($id);
         if ($banner === null) {
@@ -137,6 +178,10 @@ final class BannerController extends BaseApiController
     /** GET admin/banners/brands?category={slug} — brands with product counts in scope (for filter builder cascade). */
     public function brands()
     {
+        if ($denied = $this->guard()) {
+            return $denied;
+        }
+
         $category = trim((string) $this->request->getGet('category'));
         $opts     = $category !== '' ? ['category' => $category] : [];
 
@@ -146,6 +191,10 @@ final class BannerController extends BaseApiController
     /** GET admin/banners/discount-tiers?category={slug}&brand={id} — discount tier distribution (for filter builder context). */
     public function discountTiers()
     {
+        if ($denied = $this->guard()) {
+            return $denied;
+        }
+
         $category = trim((string) $this->request->getGet('category'));
         $brandId  = (int) $this->request->getGet('brand');
         $opts     = [];

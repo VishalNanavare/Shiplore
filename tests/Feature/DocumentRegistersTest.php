@@ -63,7 +63,9 @@ final class DocumentRegistersTest extends CIUnitTestCase
 
     public function testAdminInvoiceRegister(): void
     {
-        $this->grantAdmin(['invoice.view']);
+        // payment.view is platform-scoped. It replaced the vendor-scoped
+        // invoice.view this register used to gate on — see the negative case below.
+        $this->grantAdmin(['payment.view']);
 
         $r = $this->withSession($this->adminSess())->get('admin/invoices');
 
@@ -74,13 +76,44 @@ final class DocumentRegistersTest extends CIUnitTestCase
 
     public function testAdminCommissionHoldQueue(): void
     {
-        $this->grantAdmin(['commission.hold.view']);
+        $this->grantAdmin(['commission.view']);
 
         $r = $this->withSession($this->adminSess())->get('admin/commission-holds');
 
         $r->assertStatus(200);
         $r->assertSee('SO-9');
         $r->assertSee('100.00');
+    }
+
+    /**
+     * The platform-wide registers must NOT open to a vendor-scoped permission.
+     *
+     * invoice.view / creditnote.view / commission.hold.view are all scope_class
+     * 'vendor' in database/sql/11_seed.sql and are granted to vendor_manager and
+     * vendor_finance_viewer. Because the admin route group carries only `webAuth`
+     * (which does not distinguish an admin from a vendor staffer) and
+     * PolicyEngine::can() ignores scope, gating these registers on those codes let
+     * any such vendor user read every vendor's invoices and commission holds.
+     *
+     * @dataProvider vendorScopedDocumentPermissions
+     */
+    public function testVendorScopedPermissionCannotOpenAdminRegisters(string $perm, string $url): void
+    {
+        $this->grantAdmin([$perm]);
+
+        $r = $this->withSession($this->adminSess())->get($url);
+
+        $r->assertStatus(302);
+        $r->assertRedirectTo(site_url('admin/dashboard'));
+    }
+
+    public static function vendorScopedDocumentPermissions(): array
+    {
+        return [
+            'invoice register'    => ['invoice.view', 'admin/invoices'],
+            'credit-note register' => ['creditnote.view', 'admin/credit-notes'],
+            'commission holds'    => ['commission.hold.view', 'admin/commission-holds'],
+        ];
     }
 
     public function testVendorInvoiceRegisterIsTenantScoped(): void
