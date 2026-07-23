@@ -414,6 +414,8 @@ $routes->group('admin', ['filter' => 'webAuth'], static function (RouteCollectio
     $routes->get('users', 'Admin\UserController::index');
     $routes->get('users/new', 'Admin\UserController::new');
     $routes->post('users/store', 'Admin\UserController::store', ['filter' => 'csrf']);
+    $routes->get('users/(:num)/edit', 'Admin\UserController::edit/$1');
+    $routes->post('users/(:num)/update', 'Admin\UserController::update/$1', ['filter' => 'csrf']);
     $routes->post('users/(:num)/suspend', 'Admin\UserController::suspend/$1', ['filter' => 'csrf']);
     $routes->post('users/(:num)/activate', 'Admin\UserController::activate/$1', ['filter' => 'csrf']);
     $routes->get('feature-flags', 'Admin\FeatureFlagController::index');

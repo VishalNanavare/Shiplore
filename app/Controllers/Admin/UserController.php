@@ -32,7 +32,8 @@ final class UserController extends BaseController
         return view('admin/users/form', [
             'title' => 'New Staff User · Admin', 'pageTitle' => 'New Staff User', 'active' => 'users',
             'userName' => session()->get('user_name') ?: 'User',
-            'roles' => service('adminUserRepository')->platformRoles(),
+            'roles' => service('adminUserRepository')->platformRoles($this->canGrantSuperAdmin()),
+            'user'  => null,
         ]);
     }
 
@@ -41,9 +42,11 @@ final class UserController extends BaseController
         if ($denied = $this->guard('user.create')) {
             return $denied;
         }
-        $name  = trim((string) $this->request->getPost('name'));
-        $email = trim((string) $this->request->getPost('email'));
-        $pass  = (string) $this->request->getPost('password');
+        $name   = trim((string) $this->request->getPost('name'));
+        $email  = trim((string) $this->request->getPost('email'));
+        $pass   = (string) $this->request->getPost('password');
+        $roleId = (int) $this->request->getPost('role_id');
+
         if ($name === '' || ! filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($pass) < 8) {
             return redirect()->back()->withInput()->with('error', 'Name, valid email and an 8+ char password are required.');
         }
@@ -51,12 +54,107 @@ final class UserController extends BaseController
         if ($repo->emailExists($email)) {
             return redirect()->back()->withInput()->with('error', 'Email already in use.');
         }
-        $repo->create([
+        // A staff account with no role can sign in but can do nothing — it looks broken
+        // rather than restricted. Require an explicit choice.
+        if ($roleId <= 0) {
+            return redirect()->back()->withInput()->with('error', 'Choose a role for this staff user.');
+        }
+        // Only someone who already holds super_admin may mint another one.
+        if ($repo->isSuperAdminRole($roleId) && ! $this->canGrantSuperAdmin()) {
+            return redirect()->back()->withInput()->with('error', 'Only a Super Admin can grant the Super Admin role.');
+        }
+
+        $newId = $repo->create([
             'name' => $name, 'email' => $email, 'phone' => trim((string) $this->request->getPost('phone')),
-            'password' => $pass, 'role_id' => (int) $this->request->getPost('role_id'),
+            'password' => $pass, 'role_id' => $roleId,
         ], (int) session()->get('user_id'));
 
+        // create() returns null on failure. Discarding it reported "Staff user created."
+        // for a rolled-back transaction, so the operator went looking for a user that
+        // was never written.
+        if ($newId === null) {
+            return redirect()->back()->withInput()
+                ->with('error', 'Could not create the staff user. Please try again — see the log for details.');
+        }
+
         return redirect()->to('admin/users')->with('success', 'Staff user created.');
+    }
+
+    public function edit(int $id)
+    {
+        if ($denied = $this->guard('user.update')) {
+            return $denied;
+        }
+        $repo = service('adminUserRepository');
+        $user = $repo->find($id);
+        if ($user === null) {
+            return redirect()->to('admin/users')->with('error', 'User not found.');
+        }
+
+        return view('admin/users/form', [
+            'title' => 'Edit Staff User · Admin', 'pageTitle' => 'Edit Staff User', 'active' => 'users',
+            'userName' => session()->get('user_name') ?: 'User',
+            'roles' => $repo->platformRoles($this->canGrantSuperAdmin()),
+            'user'  => $user,
+        ]);
+    }
+
+    public function update(int $id): RedirectResponse
+    {
+        if ($denied = $this->guard('user.update')) {
+            return $denied;
+        }
+        $repo = service('adminUserRepository');
+        $user = $repo->find($id);
+        if ($user === null) {
+            return redirect()->to('admin/users')->with('error', 'User not found.');
+        }
+
+        $name   = trim((string) $this->request->getPost('name'));
+        $email  = trim((string) $this->request->getPost('email'));
+        $pass   = (string) $this->request->getPost('password');
+        $roleId = (int) $this->request->getPost('role_id');
+        $selfId = (int) session()->get('user_id');
+
+        if ($name === '' || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return redirect()->back()->withInput()->with('error', 'Name and a valid email are required.');
+        }
+        if ($pass !== '' && strlen($pass) < 8) {
+            return redirect()->back()->withInput()->with('error', 'A new password must be at least 8 characters.');
+        }
+        if ($roleId > 0 && $repo->isSuperAdminRole($roleId) && ! $this->canGrantSuperAdmin()) {
+            return redirect()->back()->withInput()->with('error', 'Only a Super Admin can grant the Super Admin role.');
+        }
+        // Removing the last active Super Admin would lock everyone out of role
+        // management permanently, with no way back through the UI.
+        if ($repo->hasSuperAdmin($id)
+            && ! $repo->isSuperAdminRole($roleId)
+            && $repo->activeSuperAdminCount() <= 1) {
+            return redirect()->back()->withInput()
+                ->with('error', 'This is the last Super Admin — assign the role to someone else first.');
+        }
+        if ($id === $selfId && $repo->hasSuperAdmin($id) && ! $repo->isSuperAdminRole($roleId)) {
+            return redirect()->back()->withInput()
+                ->with('error', 'You cannot remove your own Super Admin role.');
+        }
+
+        if (! $repo->updateProfile($id, $name, $email)) {
+            return redirect()->back()->withInput()->with('error', 'That email is already used by another user.');
+        }
+        if ($pass !== '') {
+            $repo->updatePassword($id, password_hash($pass, PASSWORD_BCRYPT));
+        }
+        if (! $repo->setRole($id, $roleId, $selfId)) {
+            return redirect()->back()->withInput()->with('error', 'Saved the profile, but the role could not be updated — see the log.');
+        }
+
+        return redirect()->to('admin/users')->with('success', 'Staff user updated.');
+    }
+
+    /** Only an actor who holds super_admin may create or grant super_admin. */
+    private function canGrantSuperAdmin(): bool
+    {
+        return service('adminUserRepository')->hasSuperAdmin((int) session()->get('user_id'));
     }
 
     public function suspend(int $id): RedirectResponse
@@ -80,7 +178,14 @@ final class UserController extends BaseController
         if ($id === (int) session()->get('user_id')) {
             return redirect()->to('admin/users')->with('error', 'You cannot change your own status.');
         }
-        service('adminUserRepository')->setStatus($id, $status, (int) session()->get('user_id'));
+        // Suspending the last active Super Admin locks the platform out of role and
+        // user management with no route back through the UI.
+        $repo = service('adminUserRepository');
+        if ($status === 'suspended' && $repo->hasSuperAdmin($id) && $repo->activeSuperAdminCount() <= 1) {
+            return redirect()->to('admin/users')
+                ->with('error', 'This is the last active Super Admin — promote someone else before suspending them.');
+        }
+        $repo->setStatus($id, $status, (int) session()->get('user_id'));
 
         return redirect()->to('admin/users')->with('success', $msg);
     }

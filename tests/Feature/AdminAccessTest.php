@@ -80,7 +80,8 @@ final class AdminAccessTest extends CIUnitTestCase
     {
         $this->grant(['user.create']);
         Services::injectMock('adminUserRepository', new class {
-            public function platformRoles(): array { return [['id' => 3, 'name' => 'Ops']]; }
+            public function platformRoles(bool $includeSuperAdmin = false): array { return [['id' => 3, 'name' => 'Ops', 'code' => 'ops_manager']]; }
+            public function hasSuperAdmin(int $userId): bool { return false; }
         });
         $r = $this->withSession($this->sess())->get('admin/users/new');
         $r->assertStatus(200);

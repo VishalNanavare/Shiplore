@@ -18,7 +18,13 @@
                 <td class="small text-secondary"><?= esc($u['roles'] ?? '—') ?></td>
                 <td><span class="badge text-bg-<?= $u['status'] === 'active' ? 'success' : 'secondary' ?>"><?= esc($u['status']) ?></span></td>
                 <td class="text-end">
-                    <?php if ($u['status'] === 'active'): ?>
+                    <a href="<?= site_url('admin/users/' . $u['id'] . '/edit') ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i> Edit</a>
+                    <?php if ((int) $u['id'] === (int) session()->get('user_id')): ?>
+                        <?php // Own account: the server refuses a self status change anyway
+                              // (UserController::setStatus), so offering the button only
+                              // produced an error. Say why instead. ?>
+                        <span class="badge text-bg-light text-secondary border ms-1" title="You cannot suspend your own account">This is you</span>
+                    <?php elseif ($u['status'] === 'active'): ?>
                         <form method="post" action="<?= site_url('admin/users/' . $u['id'] . '/suspend') ?>" class="d-inline" data-ajax-refresh><?= csrf_field() ?><button class="btn btn-sm btn-outline-warning"><i class="bi bi-pause"></i> Suspend</button></form>
                     <?php else: ?>
                         <form method="post" action="<?= site_url('admin/users/' . $u['id'] . '/activate') ?>" class="d-inline" data-ajax-refresh><?= csrf_field() ?><button class="btn btn-sm btn-outline-success"><i class="bi bi-check2"></i> Activate</button></form>
