@@ -142,7 +142,10 @@ $routes->group('rider', ['filter' => 'riderAuth'], static function (RouteCollect
 });
 
 // ---- Authenticated admin web pages (session-guarded) ----
-$routes->group('admin', ['filter' => 'webAuth'], static function (RouteCollection $routes): void {
+// `webAuth:platform` pins this group to platform principals. The session cookie is
+// domain-wide (.shiplore.in), so without the argument a vendor login is accepted
+// here too. Log-only until auth.enforcePrincipalType=true — see App\Filters\WebAuthFilter.
+$routes->group('admin', ['filter' => 'webAuth:platform'], static function (RouteCollection $routes): void {
     $routes->get('dashboard', 'AdminController::dashboard');
 
     // "Go to Portal" — admin impersonation into vendor/shop/rider portals + return.
@@ -528,7 +531,9 @@ $routes->group('admin', ['filter' => 'webAuth'], static function (RouteCollectio
 });
 
 // ---- Vendor panel (Phase 7) — session-guarded; tenant-isolated in controllers ----
-$routes->group('vendor', ['filter' => 'webAuth'], static function (RouteCollection $routes): void {
+// Pinned to vendor principals. An admin reaches this group through
+// Admin\PortalController, which rewrites principal_type to 'vendor' on enter.
+$routes->group('vendor', ['filter' => 'webAuth:vendor'], static function (RouteCollection $routes): void {
     $routes->get('me',           'Vendor\MeController::index');
     $routes->post('me',          'Vendor\MeController::save',         ['filter' => 'csrf']);
     $routes->post('me/password', 'Vendor\MeController::savePassword', ['filter' => 'csrf']);
