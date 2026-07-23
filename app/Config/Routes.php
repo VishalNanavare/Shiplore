@@ -537,7 +537,10 @@ $routes->group('vendor', ['filter' => 'webAuth'], static function (RouteCollecti
     // KYC / vendor document uploads (presigned S3, or local dummy when unconfigured)
     $routes->get('kyc', 'Vendor\DocumentUploadController::index');
     $routes->post('kyc/presign', 'Vendor\DocumentUploadController::presign', ['filter' => 'csrf']);
-    $routes->put('kyc/put', 'Vendor\DocumentUploadController::put');
+    // Raw PUT receiver for the local (non-S3) upload fallback. Same-origin and
+    // session-authenticated, so it needs CSRF like every other write. The token
+    // travels in the X-CSRF-TOKEN header, handed to the uploader by presign().
+    $routes->put('kyc/put', 'Vendor\DocumentUploadController::put', ['filter' => 'csrf']);
     $routes->get('kyc/file', 'Vendor\DocumentUploadController::file');
     $routes->get('kyc/(:num)/view', 'Vendor\DocumentUploadController::view/$1');
     $routes->post('kyc/confirm', 'Vendor\DocumentUploadController::confirm', ['filter' => 'csrf']);
@@ -550,7 +553,8 @@ $routes->group('vendor', ['filter' => 'webAuth'], static function (RouteCollecti
     // Media library (general vendor/shop files)
     $routes->get('media', 'Vendor\MediaController::index');
     $routes->post('media/presign', 'Vendor\MediaController::presign', ['filter' => 'csrf']);
-    $routes->put('media/put', 'Vendor\MediaController::put');
+    // See the note on kyc/put above — same raw-PUT fallback, same CSRF need.
+    $routes->put('media/put', 'Vendor\MediaController::put', ['filter' => 'csrf']);
     $routes->get('media/file', 'Vendor\MediaController::file');
     $routes->get('media/(:num)/view', 'Vendor\MediaController::view/$1');
     $routes->post('media/confirm', 'Vendor\MediaController::confirm', ['filter' => 'csrf']);

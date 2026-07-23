@@ -161,7 +161,16 @@ final class DocumentStorage
             }
         }
 
-        return ['ok' => true, 'mode' => 'dummy', 'key' => $key, 'url' => site_url($dummyPutRoute . '?key=' . rawurlencode($key)), 'method' => 'PUT', 'headers' => ['Content-Type' => $mime]];
+        // Dummy mode PUTs land on OUR origin with the session cookie attached, so
+        // they are state-changing same-origin requests and must carry CSRF like
+        // any other. The uploader in app/Views/vendor/{documents/upload,media/index}.php
+        // already forwards this array verbatim as the fetch() headers, so handing
+        // the token back here is all that is needed on the client side.
+        //
+        // Deliberately NOT added to the s3 branch above: that PUT goes to AWS, and
+        // sending our CSRF token would both leak it to a third party and break the
+        // presigned signature, which covers the header set.
+        return ['ok' => true, 'mode' => 'dummy', 'key' => $key, 'url' => site_url($dummyPutRoute . '?key=' . rawurlencode($key)), 'method' => 'PUT', 'headers' => ['Content-Type' => $mime, csrf_header() => csrf_hash()]];
     }
 
     /**
