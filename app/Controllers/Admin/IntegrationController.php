@@ -51,6 +51,10 @@ final class IntegrationController extends BaseController
                 ['encryption', 'Encryption', 'select', false, ['tls', 'ssl', 'none']],
                 ['from_email', 'From Email', 'text', true],
                 ['from_name', 'From Name', 'text', false],
+                // Where "Test connection" delivers. Kept as a saved field so the operator
+                // does not retype it on every attempt; from_email is a poor default
+                // because no_reply@ mailboxes are typically never read.
+                ['test_to', 'Send test email to', 'text', false],
             ],
         ],
         'gst-api' => [
@@ -129,22 +133,41 @@ final class IntegrationController extends BaseController
             return redirect()->to('admin/integrations/' . $slug)->with('error', 'Missing: ' . implode(', ', $missing));
         }
 
-        // The SMTP provider is proven by actually sending a test email to the
-        // configured From address — not just by checking the fields are present.
+        // The email provider is proven by actually sending — not by checking that the
+        // fields are non-empty. The recipient is the "Send test email to" box so the
+        // operator can direct it at a mailbox they actually read: defaulting to
+        // from_email meant testing a no_reply@ address nobody opens, which proves the
+        // transport accepted the message but not that it was delivered.
         if ($spec['provider'] === 'smtp') {
-            $to = trim((string) ($config['from_email'] ?? '')) ?: trim((string) ($config['username'] ?? ''));
+            $to = trim((string) $this->request->getPost('test_to'))
+                ?: trim((string) ($config['test_to'] ?? ''))
+                ?: trim((string) ($config['from_email'] ?? ''))
+                ?: trim((string) ($config['username'] ?? ''));
+
+            if ($to === '' || ! filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                return redirect()->to('admin/integrations/' . $slug)
+                    ->with('error', 'Enter a valid email address to send the test to.');
+            }
+
+            $brand    = service('settingsRepository')->brandName();
+            $transport = trim((string) ($config['protocol'] ?? '')) ?: 'smtp';
+            $stamp    = date('Y-m-d H:i:s');
+
             $ok = service('mailer')->send(
                 $to,
-                service('settingsRepository')->brandName() . ' SMTP test',
-                '<p>Your SMTP settings work — this is a test email from ' . service('settingsRepository')->brandName() . '.</p>'
+                $brand . ' email test — ' . $stamp,
+                '<p>This is a test email from ' . esc($brand) . '.</p>'
+                . '<p>If you are reading this, outbound email is working.</p>'
+                . '<ul><li>Transport: <b>' . esc($transport) . '</b></li>'
+                . '<li>Sent at: ' . esc($stamp) . ' UTC</li></ul>',
             );
             service('integrationRepository')->setStatus($spec['provider'], $ok ? 'connected' : 'error', (int) session()->get('user_id'));
 
             return redirect()->to('admin/integrations/' . $slug)->with(
                 $ok ? 'success' : 'error',
                 $ok
-                    ? 'Test email sent to ' . $to . ' — check that inbox to confirm delivery.'
-                    : 'Could not send a test email. Check host/port/username/password (Gmail needs an App Password, not your login password) — see writable/logs for the exact SMTP error.'
+                    ? 'Test email sent to ' . $to . ' via "' . $transport . '" — check that inbox (and spam) to confirm delivery.'
+                    : 'Could not send a test email via "' . $transport . '". If the log shows a certificate mismatch, this host is intercepting outbound SMTP — switch Transport to "sendmail". See writable/logs for the exact error.'
             );
         }
 
