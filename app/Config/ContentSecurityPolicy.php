@@ -21,8 +21,24 @@ class ContentSecurityPolicy extends BaseConfig
 
     /**
      * Default CSP report context
+     *
+     * REPORT-ONLY, deliberately. This emits `Content-Security-Policy-Report-Only`,
+     * which browsers never enforce — it only reports what WOULD have been blocked.
+     * That matters twice over here:
+     *
+     *  1. The app relies heavily on inline <script> blocks and inline event handlers
+     *     (onsubmit/onclick in the admin portal views). An enforcing CSP without
+     *     nonces would break those pages instantly.
+     *  2. It is a different header from the `Content-Security-Policy: frame-ancestors
+     *     'self'` that the project-root .htaccess sets with `Header always set`, so
+     *     the two do not fight. An enforcing policy here would simply be replaced by
+     *     Apache's and silently do nothing.
+     *
+     * Collect the violations from a real traffic day, use them to build the script
+     * allow-list (autoNonce below is already on, so {csp-script-nonce} placeholders
+     * can be added to the inline blocks), then flip this to false to enforce.
      */
-    public bool $reportOnly = false;
+    public bool $reportOnly = true;
 
     /**
      * Specifies a URL where a browser will send reports
@@ -59,7 +75,17 @@ class ContentSecurityPolicy extends BaseConfig
      *
      * @var list<string>|string
      */
-    public $scriptSrc = 'self';
+    /**
+     * Third-party script hosts actually referenced by app/Views:
+     *   www.gstatic.com     — Firebase JS SDK (phone auth on all four sign-in pages)
+     *   www.google.com      — reCAPTCHA, required by Firebase phone auth
+     *   maps.googleapis.com — address picker on checkout / store location
+     *
+     * Inline <script> blocks and inline handlers are deliberately NOT allowed here.
+     * While reportOnly is true they cost nothing and each violation report is the
+     * inventory needed to add {csp-script-nonce} placeholders before enforcing.
+     */
+    public $scriptSrc = ['self', 'https://www.gstatic.com', 'https://www.google.com', 'https://maps.googleapis.com'];
 
     /**
      * Specifies valid sources for JavaScript <script> elements.
@@ -127,7 +153,8 @@ class ContentSecurityPolicy extends BaseConfig
      *
      * @var list<string>|string
      */
-    public $connectSrc = 'self';
+    /** Firebase auth and the Maps/Places APIs are called via XHR from the browser. */
+    public $connectSrc = ['self', 'https://identitytoolkit.googleapis.com', 'https://securetoken.googleapis.com', 'https://maps.googleapis.com'];
 
     /**
      * Specifies the origins that can serve web fonts.

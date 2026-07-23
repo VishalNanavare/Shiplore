@@ -204,5 +204,11 @@ class App extends BaseConfig
      * @see http://www.html5rocks.com/en/tutorials/security/content-security-policy/
      * @see http://www.w3.org/TR/CSP/
      */
-    public bool $CSPEnabled = false;
+    /**
+     * Enabled in REPORT-ONLY mode — see app/Config/ContentSecurityPolicy.php
+     * ($reportOnly = true). Browsers will report violations but never block, so this
+     * cannot break a page. Its job right now is to produce the inventory of inline
+     * scripts and third-party hosts needed before an enforcing policy is safe.
+     */
+    public bool $CSPEnabled = true;
 }

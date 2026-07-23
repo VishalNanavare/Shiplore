@@ -87,7 +87,16 @@ class Filters extends BaseFilters
         ],
         'after' => [
             // 'honeypot',
-            // 'secureheaders',
+            // X-Frame-Options, X-Content-Type-Options, Referrer-Policy,
+            // X-Download-Options, X-Permitted-Cross-Domain-Policies on every response.
+            //
+            // The project-root .htaccess already sets equivalents, but only while the
+            // vhost keeps serving that file: it stops applying the moment the
+            // DocumentRoot moves to public/ (the planned change) or the file is lost.
+            // Setting them in the app too means the headers travel with the code.
+            // Where both set the same header, Apache's `Header always set` wins, and
+            // the two agree, so enabling this changes no effective behaviour today.
+            'secureheaders',
             // Turn redirect responses into JSON for AJAX form posts (web only;
             // the JSON-native API under api/* keeps its own envelope).
             'ajaxRedirect' => ['except' => 'api/*'],

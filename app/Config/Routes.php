@@ -28,16 +28,16 @@ $routes->addRedirect('admin', 'admin/dashboard');          // bare /admin -> das
 
 // Vendor self-registration (Firebase mobile auth + email code + GST-API verification)
 $routes->get('register', 'Auth\RegisterController::show');
-$routes->post('register/send-codes', 'Auth\RegisterController::sendCodes', ['filter' => 'csrf']);
-$routes->post('register/otp-ticket', 'Auth\RegisterController::mobileOtpTicket', ['filter' => 'csrf']);
-$routes->post('register/verify-mobile', 'Auth\RegisterController::verifyMobile', ['filter' => 'csrf']);
-$routes->post('register/resend/email', 'Auth\RegisterController::resendEmail', ['filter' => 'csrf']);
+$routes->post('register/send-codes', 'Auth\RegisterController::sendCodes', ['filter' => ['csrf', 'throttle:5,60']]);
+$routes->post('register/otp-ticket', 'Auth\RegisterController::mobileOtpTicket', ['filter' => ['csrf', 'throttle:5,60']]);
+$routes->post('register/verify-mobile', 'Auth\RegisterController::verifyMobile', ['filter' => ['csrf', 'throttle:10,60']]);
+$routes->post('register/resend/email', 'Auth\RegisterController::resendEmail', ['filter' => ['csrf', 'throttle:3,300']]);
 $routes->post('register/complete', 'Auth\RegisterController::complete', ['filter' => 'csrf']);
 $routes->post('register/cancel', 'Auth\RegisterController::cancel', ['filter' => 'csrf']);
 
 // Password reset (Phase 5, web)
 $routes->get('forgot-password', 'Auth\ForgotPasswordController::showForgot');
-$routes->post('forgot-password', 'Auth\ForgotPasswordController::sendReset', ['filter' => 'csrf']);
+$routes->post('forgot-password', 'Auth\ForgotPasswordController::sendReset', ['filter' => ['csrf', 'throttle:5,300']]);
 $routes->get('reset-password', 'Auth\ForgotPasswordController::showReset');
 $routes->post('reset-password', 'Auth\ForgotPasswordController::doReset', ['filter' => 'csrf']);
 
@@ -407,7 +407,7 @@ $routes->group('admin', ['filter' => 'webAuth:platform'], static function (Route
     $routes->post('payment-gateways/(:num)/update', 'Admin\PaymentGatewayController::update/$1', ['filter' => 'csrf']);
     $routes->post('payment-gateways/(:num)/enable', 'Admin\PaymentGatewayController::enable/$1', ['filter' => 'csrf']);
     $routes->post('payment-gateways/(:num)/disable', 'Admin\PaymentGatewayController::disable/$1', ['filter' => 'csrf']);
-    $routes->post('payment-gateways/(:num)/test', 'Admin\PaymentGatewayController::test/$1', ['filter' => 'csrf']);
+    $routes->post('payment-gateways/(:num)/test', 'Admin\PaymentGatewayController::test/$1', ['filter' => ['csrf', 'throttle:5,300']]);
     $routes->post('payment-gateways/(:num)/delete', 'Admin\PaymentGatewayController::delete/$1', ['filter' => 'csrf']);
 
     // Access control & config (Batch 6)
@@ -441,10 +441,10 @@ $routes->group('admin', ['filter' => 'webAuth:platform'], static function (Route
     // Integrations — Firebase / Email / GST API config
     $routes->get('integrations/aws', 'Admin\AwsSettingsController::index');
     $routes->post('integrations/aws/save', 'Admin\AwsSettingsController::save', ['filter' => 'csrf']);
-    $routes->post('integrations/aws/test', 'Admin\AwsSettingsController::test', ['filter' => 'csrf']);
+    $routes->post('integrations/aws/test', 'Admin\AwsSettingsController::test', ['filter' => ['csrf', 'throttle:5,300']]);
     $routes->get('integrations/(:segment)', 'Admin\IntegrationController::show/$1');
     $routes->post('integrations/(:segment)', 'Admin\IntegrationController::save/$1', ['filter' => 'csrf']);
-    $routes->post('integrations/(:segment)/test', 'Admin\IntegrationController::test/$1', ['filter' => 'csrf']);
+    $routes->post('integrations/(:segment)/test', 'Admin\IntegrationController::test/$1', ['filter' => ['csrf', 'throttle:5,300']]);
 
     // Firebase Phone-OTP test page (validates the saved Firebase config end-to-end)
     $routes->get('firebase-otp-test', 'Auth\FirebaseOtpController::show');
@@ -653,7 +653,7 @@ $routes->group('vendor', ['filter' => 'webAuth:vendor'], static function (RouteC
     $routes->post('orders/(:num)/status', 'Vendor\OrderController::updateStatus/$1', ['filter' => 'csrf']);
     $routes->post('orders/(:num)/heartbeat', 'Vendor\OrderController::heartbeat/$1', ['filter' => 'csrf']);
     $routes->post('orders/(:num)/verify-otp', 'Vendor\OrderController::verifyOtp/$1', ['filter' => 'csrf']);
-    $routes->post('orders/(:num)/regenerate-otp', 'Vendor\OrderController::regenerateOtp/$1', ['filter' => 'csrf']);
+    $routes->post('orders/(:num)/regenerate-otp', 'Vendor\OrderController::regenerateOtp/$1', ['filter' => ['csrf', 'throttle:5,300']]);
     $routes->post('orders/(:num)/assign-delivery', 'Vendor\OrderController::assignDelivery/$1', ['filter' => 'csrf']);
     $routes->get('refunds', 'Vendor\RefundController::index');
 
@@ -801,7 +801,7 @@ $routes->group('api/v1', static function (RouteCollection $routes): void {
     $routes->put('customer/addresses/(:num)', 'Api\V1\CustomerApiController::updateAddress/$1', ['filter' => 'jwtAuth']);
     $routes->delete('customer/addresses/(:num)', 'Api\V1\CustomerApiController::deleteAddress/$1', ['filter' => 'jwtAuth']);
     $routes->post('customer/device-token', 'Api\V1\CustomerApiController::registerDeviceToken', ['filter' => 'jwtAuth']);
-    $routes->post('customer/test-notification', 'Api\V1\CustomerApiController::sendTestNotification', ['filter' => 'jwtAuth']);
+    $routes->post('customer/test-notification', 'Api\V1\CustomerApiController::sendTestNotification', ['filter' => ['jwtAuth', 'throttle:3,300']]);
     $routes->get('customer/notifications', 'Api\V1\CustomerApiController::notifications', ['filter' => 'jwtAuth']);
     $routes->get('customer/notifications/unread-count', 'Api\V1\CustomerApiController::notificationsUnreadCount', ['filter' => 'jwtAuth']);
     $routes->post('customer/notifications/(:num)/read', 'Api\V1\CustomerApiController::markNotificationRead/$1', ['filter' => 'jwtAuth']);
@@ -853,7 +853,7 @@ $routes->group('api/v1', static function (RouteCollection $routes): void {
     $routes->post('vendor/orders/(:num)/verify-otp',      'Api\V1\VendorApiController::verifyDeliveryOtp/$1',   ['filter' => 'jwtAuth']);
     $routes->post('vendor/orders/(:num)/assign-delivery', 'Api\V1\VendorApiController::assignOrderDelivery/$1', ['filter' => 'jwtAuth']);
     $routes->post('vendor/orders/(:num)/heartbeat',       'Api\V1\VendorApiController::orderHeartbeat/$1',      ['filter' => 'jwtAuth']);
-    $routes->post('vendor/orders/(:num)/regenerate-otp',  'Api\V1\VendorApiController::regenerateOtp/$1',       ['filter' => 'jwtAuth']);
+    $routes->post('vendor/orders/(:num)/regenerate-otp',  'Api\V1\VendorApiController::regenerateOtp/$1',       ['filter' => ['jwtAuth', 'throttle:5,300']]);
     $routes->get('vendor/riders',     'Api\V1\VendorApiController::riders',     ['filter' => 'jwtAuth']);
     $routes->get('vendor/deliveries',          'Api\V1\VendorApiController::deliveries',      ['filter' => 'jwtAuth']);
     $routes->get('vendor/deliveries/reports', 'Api\V1\VendorApiController::deliveryReports', ['filter' => 'jwtAuth']);
