@@ -142,11 +142,19 @@ final class VendorPosController extends BaseApiController
 
     public function otpSend()
     {
-        $body  = $this->input();
-        $phone = trim((string) ($body['phone'] ?? ''));
+        $body = $this->input();
+        $raw  = trim((string) ($body['phone'] ?? ''));
 
-        if ($phone === '') {
+        if ($raw === '') {
             return $this->failWith('VALIDATION_ERROR', 'phone is required.');
+        }
+        // Canonicalise once and use the SAME value for the account lookup, the OTP
+        // identifier and the SMS destination. Using the caller's raw string for delivery
+        // while resolving the account fuzzily let the code be delivered to one number
+        // and the token be minted for another.
+        $phone = \App\Models\StoreCustomerRepository::normalizePhone($raw);
+        if ($phone === null) {
+            return $this->failWith('VALIDATION_ERROR', 'Enter a valid 10-digit Indian mobile number.');
         }
 
         $user = service('userRepository')->findByPhone($phone);
@@ -189,12 +197,18 @@ final class VendorPosController extends BaseApiController
 
     public function otpVerify()
     {
-        $body  = $this->input();
-        $phone = trim((string) ($body['phone'] ?? ''));
-        $code  = trim((string) ($body['code']  ?? ''));
+        $body = $this->input();
+        $raw  = trim((string) ($body['phone'] ?? ''));
+        $code = trim((string) ($body['code']  ?? ''));
 
-        if ($phone === '' || $code === '') {
+        if ($raw === '' || $code === '') {
             return $this->failWith('VALIDATION_ERROR', 'phone and code are required.');
+        }
+        // Must canonicalise identically to otpSend(), or a code requested as
+        // "9812345678" could not be verified as "+919812345678" and vice versa.
+        $phone = \App\Models\StoreCustomerRepository::normalizePhone($raw);
+        if ($phone === null) {
+            return $this->failWith('VALIDATION_ERROR', 'Enter a valid 10-digit Indian mobile number.');
         }
 
         if (!(new OtpService())->verify($phone, $code, 'login')) {

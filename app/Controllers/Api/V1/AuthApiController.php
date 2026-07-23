@@ -86,6 +86,16 @@ final class AuthApiController extends BaseApiController
             return $this->failWith('UNAUTHENTICATED', 'Account not available.');
         }
 
+        // SECURITY: this is the PUBLIC storefront-app auth endpoint and it had no
+        // principal_type gate at all, so an identifier belonging to a platform admin
+        // would mint them a 30-day admin JWT. The web equivalent
+        // (LoginController::otpLogin) has always restricted itself to platform/vendor;
+        // this one restricted nothing. Staff must not be reachable through the
+        // consumer app's auth, which is also the only path that auto-provisions.
+        if (($user['principal_type'] ?? '') !== 'customer') {
+            return $this->failWith('FORBIDDEN', 'This sign-in is for customer accounts only.');
+        }
+
         return $this->ok($this->session($user));
     }
 
@@ -126,6 +136,15 @@ final class AuthApiController extends BaseApiController
         $user     = $identity !== null ? service('apiAuthRepository')->findById((int) $identity['user_id']) : null;
         if ($user === null || $user['status'] !== 'active') {
             return $this->failWith('UNAUTHENTICATED', 'Account not available.');
+        }
+
+        // Same gate as otpVerify(): findOrCreateByPhone() resolves an existing users row
+        // by number, so a staff or vendor member whose phone also has a customers row
+        // would be issued a JWT carrying THEIR principal_type — a consumer-app login
+        // silently escalating into staff access. The storefront app only ever needs a
+        // customer session.
+        if (($user['principal_type'] ?? '') !== 'customer') {
+            return $this->failWith('FORBIDDEN', 'This sign-in is for customer accounts only.');
         }
 
         return $this->ok($this->session($user));

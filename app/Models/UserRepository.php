@@ -41,15 +41,25 @@ final class UserRepository
      */
     public function findByPhone(string $phone): ?array
     {
-        $digits = preg_replace('/\D+/', '', $phone) ?? '';
-        if ($digits === '') {
+        // SECURITY: this used to strip the country code and fan out on the last 10
+        // digits, synthesising '+91'.$last10 as a candidate. That made any foreign
+        // number whose trailing 10 digits matched an Indian one resolve to that Indian
+        // account: an attacker holding +1 917 818 1958 could complete Firebase Phone
+        // Auth on their OWN number, and LoginController::otpLogin() would resolve it to
+        // +91 9178 181 958 and start that user's session. Proving you own one number
+        // must never authenticate you as the owner of a different one.
+        //
+        // Canonicalise first and refuse anything that is not a valid Indian mobile.
+        $e164 = StoreCustomerRepository::normalizePhone($phone);
+        if ($e164 === null) {
             return null;
         }
-        $last10 = strlen($digits) >= 10 ? substr($digits, -10) : $digits;
 
-        $candidates = array_values(array_unique(array_filter([
-            $phone, $digits, '+' . $digits, $last10, '0' . $last10, '91' . $last10, '+91' . $last10,
-        ])));
+        // Legacy spellings of THIS SAME number only — historic rows predate
+        // normalisation, so 9812345678 / 09812345678 / 919812345678 must still resolve.
+        // Every candidate below denotes the same +91 subscriber; none crosses countries.
+        $last10     = substr($e164, -10);
+        $candidates = [$e164, $last10, '0' . $last10, '91' . $last10, '+91 ' . $last10];
 
         $rows = Database::connect()->table('users')
             ->select('id, name, email, phone, status, principal_type')
@@ -58,6 +68,8 @@ final class UserRepository
             ->limit(2)
             ->get()->getResultArray();
 
+        // Two rows means two accounts spell the same number differently — refuse rather
+        // than guess which one to sign in.
         return count($rows) === 1 ? $rows[0] : null;
     }
 
