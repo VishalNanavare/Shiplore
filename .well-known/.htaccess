@@ -1,0 +1,24 @@
+# This directory MUST stay publicly readable.
+#
+#   assetlinks.json  — Android App Links verification for the shipped mobile
+#                      apps. If this 404s, deep links stop opening in the app.
+#   acme-challenge/  — Let's Encrypt HTTP-01 validation. If this 404s, TLS
+#                      certificate renewal fails and the site goes to expired HTTPS.
+#
+# The project-root .htaccess denies dotfiles. Apache matches <FilesMatch> against
+# the basename, so files in here are not affected — but this makes the intent
+# explicit so a future tightening of that rule cannot silently break app deep
+# links or certificate renewal.
+<IfModule authz_core_module>
+	Require all granted
+</IfModule>
+<IfModule !authz_core_module>
+	Allow from all
+</IfModule>
+
+# Serve ACME challenge tokens (extensionless) as plain text.
+<IfModule mod_mime.c>
+	<FilesMatch "^[A-Za-z0-9_-]+$">
+		ForceType text/plain
+	</FilesMatch>
+</IfModule>

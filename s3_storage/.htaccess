@@ -1,3 +1,18 @@
+# --- Security: deny all web access. ---------------------------------------
+# This is a second, separate CodeIgniter application nested inside the web root.
+# It ships its own git-tracked .env containing live object-store credentials
+# (s3.accessKey / s3.secretKey), shared with the main app's aws_settings. Those
+# bytes were retrievable over plain HTTP.
+#
+# This deny stops the disclosure immediately. The credentials must still be
+# ROTATED — assume them compromised.
+<IfModule authz_core_module>
+	Require all denied
+</IfModule>
+<IfModule !authz_core_module>
+	Deny from all
+</IfModule>
+# --------------------------------------------------------------------------
 
 # BEGIN cPanel-generated php ini directives, do not edit
 # Manual editing of this file may result in unexpected behavior.

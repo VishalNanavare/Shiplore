@@ -17,6 +17,16 @@
  */
 
 declare(strict_types=1);
+
+// CLI only. This script issues mass DELETE statements against the live database;
+// served over HTTP it is an unauthenticated data-destruction endpoint. The
+// database/.htaccess deny is the primary control — this is defence in depth for
+// the case where that file is lost or the DocumentRoot changes.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 mt_srand(20260614); // deterministic "randomness"
 
 /* ----------------------------------------------------------------------- *

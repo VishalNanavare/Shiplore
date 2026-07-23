@@ -11,6 +11,14 @@ declare(strict_types=1);
  * Usage: php database/apply_sql.php database/sql/30_governance.sql [more.sql ...]
  */
 
+// CLI only — see the note in database/seed_big.php. This script executes
+// arbitrary .sql files against the live database. It previously only failed
+// closed by accident (undefined $argc under the web SAPI); make it explicit.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 if ($argc < 2) {
     fwrite(STDERR, "usage: php database/apply_sql.php <file.sql> [...]\n");
     exit(1);

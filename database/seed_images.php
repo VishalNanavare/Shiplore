@@ -21,6 +21,13 @@
 
 declare(strict_types=1);
 
+// CLI only — see the note in database/seed_big.php. This script also performs
+// outbound HTTP fetches, so over the web it doubles as an SSRF primitive.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 $root = dirname(__DIR__);
 $env  = [];
 foreach (file($root . '/.env') as $line) {

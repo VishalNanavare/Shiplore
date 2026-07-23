@@ -1,3 +1,18 @@
+# --- Security: deny all web access. ---------------------------------------
+# This is a full phpMyAdmin 5.2.3 install sitting at the public web root. It was
+# reachable at https://<host>/pma/ — including its setup wizard — by anyone,
+# because the root .htaccess serves any path that exists on disk directly.
+#
+# This deny is the reversible stop-gap. phpMyAdmin should be removed from the
+# web root entirely, or moved behind HTTP Basic auth + an IP allowlist on a
+# non-public vhost. Do not delete this block to "re-enable" it.
+<IfModule authz_core_module>
+	Require all denied
+</IfModule>
+<IfModule !authz_core_module>
+	Deny from all
+</IfModule>
+# --------------------------------------------------------------------------
 
 # BEGIN cPanel-generated php ini directives, do not edit
 # Manual editing of this file may result in unexpected behavior.
