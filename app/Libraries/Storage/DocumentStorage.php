@@ -257,7 +257,15 @@ final class DocumentStorage
 
             return;
         }
-        $path = $this->dummyPath($key);
+        // A stored object_key that escapes the upload root would turn delete()
+        // into an arbitrary file-deletion primitive. Refuse rather than unlink.
+        try {
+            $path = $this->dummyPath($key);
+        } catch (\InvalidArgumentException $e) {
+            log_message('error', 'DocumentStorage delete refused unsafe key: ' . $key);
+
+            return;
+        }
         if (is_file($path)) {
             @unlink($path);
         }
@@ -266,7 +274,13 @@ final class DocumentStorage
     /** Dummy receiver: persist the uploaded bytes locally. */
     public function saveDummy(string $key, $stream): bool
     {
-        $path = $this->dummyPath($key);
+        try {
+            $path = $this->dummyPath($key);
+        } catch (\InvalidArgumentException $e) {
+            log_message('error', 'DocumentStorage write refused unsafe key: ' . $key);
+
+            return false;
+        }
         @mkdir(dirname($path), 0775, true);
         $out = @fopen($path, 'wb');
         if (! is_resource($out)) {
@@ -281,11 +295,64 @@ final class DocumentStorage
         return is_file($path);
     }
 
+    /**
+     * Local filesystem path for a storage key, guaranteed to stay inside
+     * WRITEPATH/uploads.
+     *
+     * The previous sanitiser was `preg_replace('#[^a-zA-Z0-9_\-/.]#', '_', $key)`,
+     * whose character class whitelists BOTH '.' and '/'. A key of
+     * "vendors/7/../../../../s3_storage/.env" therefore survived it byte for byte
+     * and resolved outside the upload root. Because the vendor `ownsKey()` checks
+     * are prefix-only ("starts with vendors/{id}/"), that gave any vendor-panel
+     * user an arbitrary file READ through the /vendor/{kyc,media}/file endpoints
+     * and an arbitrary file WRITE — i.e. remote code execution — through the raw
+     * PUT upload endpoints, which reach saveDummy().
+     *
+     * Keys are now normalised segment by segment and any attempt to traverse
+     * above the root is rejected outright rather than sanitised into something
+     * that still escapes. Legitimate generated keys (vendors/7/media/2026/07/
+     * ab12cd34.jpg) are unaffected — they contain no '..' segment.
+     *
+     * @throws \InvalidArgumentException when the key escapes the upload root.
+     */
     public function dummyPath(string $key): string
     {
-        $safe = (string) preg_replace('#[^a-zA-Z0-9_\-/.]#', '_', $key);
+        return rtrim(WRITEPATH, '/\\') . '/uploads/' . $this->safeKey($key);
+    }
 
-        return rtrim(WRITEPATH, '/\\') . '/uploads/' . $safe;
+    /**
+     * Normalise a storage key to a relative path that cannot escape its root.
+     *
+     * @throws \InvalidArgumentException on traversal, null bytes, or an empty key.
+     */
+    private function safeKey(string $key): string
+    {
+        // A null byte truncates the path in the underlying C calls.
+        if (str_contains($key, "\0")) {
+            throw new \InvalidArgumentException('Invalid storage key.');
+        }
+
+        $segments = [];
+        foreach (explode('/', str_replace('\\', '/', $key)) as $segment) {
+            // Empty ("a//b", or a leading "/" making the path absolute) and "."
+            // segments are noise: drop them rather than reject the whole key.
+            if ($segment === '' || $segment === '.') {
+                continue;
+            }
+            // "..": the only segment that can climb out. Never rewrite it — a
+            // rewrite is what made the original sanitiser exploitable.
+            if ($segment === '..') {
+                throw new \InvalidArgumentException('Invalid storage key.');
+            }
+            // Same character class as before, minus the separators already handled.
+            $segments[] = (string) preg_replace('#[^a-zA-Z0-9_\-.]#', '_', $segment);
+        }
+
+        if ($segments === []) {
+            throw new \InvalidArgumentException('Invalid storage key.');
+        }
+
+        return implode('/', $segments);
     }
 
     private function client(): \Aws\S3\S3Client

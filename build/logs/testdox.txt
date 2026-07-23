@@ -1,3 +1,46 @@
+Admin Access
+ [x] Roles index renders
+ [x] Role edit renders matrix
+ [x] Super admin role protected from edit
+ [x] User new form renders
+ [x] Users denied without permission
+
+Admin Attribute
+ [x] List renders
+ [x] Activate redirects back to list
+ [x] Permission denied redirects to dashboard
+
+Admin Business Type
+ [x] List renders
+ [x] Deactivate redirects back to list
+ [x] Permission denied redirects to dashboard
+
+Admin Category
+ [x] List renders
+ [x] Activate redirects back to list
+ [x] Permission denied redirects to dashboard
+
+Admin Commission
+ [x] List renders
+ [x] Activate redirects back to list
+ [x] Permission denied redirects to dashboard
+
+Admin Crud
+ [x] Vendor new renders
+ [x] Vendor store creates
+ [x] Vendor store denied without permission
+ [x] Shop store creates
+ [ ] Product new shows gated categories
+ [x] Duplicate clones and redirects to edit
+ [x] Duplicate to allowed target vendor
+ [x] Duplicate to vendor rejects disallowed category
+ [ ] Product store rejects category outside business type
+ [ ] Product store succeeds for allowed category
+ [x] Import upload runs service
+ [x] Import template downloads
+ [x] Media serve rejects non uuid
+ [x] Media serve 404 for unknown
+
 Admin Crud Core
  [x] Media allows images under 5mb
  [ ] Media rejects bad mime and size
@@ -13,12 +56,147 @@ Admin Crud Core
  [x] Import rejects unknown vendor and dup sku
  [x] Import rejects missing fields
 
+Admin Customer
+ [x] List renders
+ [x] Detail renders
+ [x] Block redirects to detail
+ [x] Permission denied redirects to dashboard
+
+Admin Integration
+ [x] Gateway list renders
+ [x] Gateway new form renders
+ [x] Gateway store creates
+ [x] Gateway test uses manager
+ [x] Gateway denied
+ [x] Firebase form renders
+ [x] Email settings save
+ [x] Email test sends real email
+ [x] Gst api test
+ [x] Unknown integration is 404
+ [x] Integration denied
+
+Admin Master
+ [x] Unit new form renders
+ [x] Brand new form renders
+ [x] Attribute new form renders
+ [x] Tax class store denied without permission
+ [x] Hsn new form renders
+
+Admin Order
+ [x] List requires login
+ [ ] List renders
+ [ ] Detail renders
+ [x] Detail unknown redirects
+ [x] Cancel redirects to detail
+ [x] Permission denied redirects to dashboard
+
+Admin Payment
+ [x] List requires login
+ [x] List renders
+ [x] Detail renders
+ [x] Permission denied redirects to dashboard
+
+Admin Phase6Batch
+ [x] Brands list
+ [x] Brand approve
+ [x] Brands denied
+ [x] Promotions list
+ [x] Promotion pause
+ [x] Reviews list
+ [x] Review publish
+ [x] Review restore from rejected goes to pending
+ [x] Review publish blocked from rejected
+ [x] Review restore from published goes to pending
+ [x] Warehouses list
+ [x] Warehouse deactivate
+ [x] Transfers list
+ [x] Transfer approve overrides via engine
+ [x] Coupons list
+ [x] Notifications list
+ [x] Audit logs list
+ [x] Deliveries list
+ [x] Imports list
+ [ ] Settings page
+ [x] Reports page
+ [x] Read only modules denied
+
+Admin Product Approval
+ [x] List requires login
+ [ ] List renders
+ [x] Approve redirects back to list
+ [x] Reject unknown product shows error
+ [x] Permission denied redirects to dashboard
+
+Admin Refund
+ [x] List renders
+ [x] Process redirects back to list
+ [x] Permission denied redirects to dashboard
+
+Admin Returns
+ [x] Register lists returns
+ [x] Transition posts to repository
+ [x] Blocked without permission
+ [x] State machine is forward only
+
+Admin Settlement
+ [x] List renders
+ [ ] Detail renders
+ [x] Approve redirects to detail
+ [x] Permission denied redirects to dashboard
+
+Admin Shop
+ [x] List requires login
+ [ ] List renders
+ [x] Activate redirects back to list
+ [x] Permission denied redirects to dashboard
+
+Admin Support Backup
+ [x] Support list renders
+ [x] Support detail renders
+ [x] Support reply redirects
+ [x] Support close redirects
+ [x] Support denied
+ [x] Backups list renders
+ [x] Backups denied
+
+Admin User Manage
+ [x] Super admin can create another super admin
+ [x] Non super admin cannot grant super admin
+ [x] Role is required
+ [x] Failed create is reported
+ [x] Edit form renders
+ [x] Update saves profile and role
+ [x] Short password on edit is rejected
+ [x] Edit requires update permission
+ [x] Edit form shows mobile
+ [x] Edit form shows verified badge
+ [x] Update passes phone through
+ [x] Invalid mobile rejected on update
+ [x] Invalid mobile rejected on create
+ [x] Duplicate mobile rejected on create
+ [x] Profile clash on update is reported
+ [x] Cannot remove role from last super admin
+ [x] Can remove super admin when another exists
+ [x] Cannot suspend last super admin
+ [x] Cannot suspend self
+ [x] Index hides suspend on own row
+
+Admin Vendor
+ [x] List requires login
+ [ ] List renders for permitted admin
+ [x] Approve redirects back to list
+ [x] Permission denied redirects to dashboard
+
 Ai Product Assistant
  [x] Stub seo composes from fields
  [x] Stub seo is deterministic
  [x] Stub tags drop short and stop words
  [x] Stub description mentions title and brand
  [x] Suggest dispatches by kind
+
+Ajax Form
+ [x] Non ajax post still redirects
+ [x] Ajax post returns json envelope
 
 Api Response
  [x] Success envelope
@@ -31,6 +209,15 @@ Audit Writer
  [x] Chain links on prev hash
  [x] Hash ignores existing hash columns
  [x] Any field change changes hash
+
+Auth Reset
+ [x] Forgot page renders
+ [x] Send reset redirects uniformly
+ [x] Send reset emails the link
+ [x] No email for unknown address
+ [x] Reset page renders
+ [x] Valid reset updates password
+ [x] Invalid token does not update password
 
 Barcode
  [x] Valid ean 13
@@ -159,6 +346,11 @@ Document Pdf Service
  [x] Receipt paper is 80mm roll
  [x] Utf 8 survives
 
+Document Registers
+ [x] Admin invoice register
+ [x] Admin commission hold queue
+ [x] Vendor invoice register is tenant scoped
+
 Document Storage
  [x] Rejects non pdf or image
  [x] Rejects too large
@@ -171,6 +363,37 @@ Document Storage
  [x] Media shop key prefix
  [x] Media rejects over size and bad type
 
+Document Storage Key
+ [x] Legitimate generated key is preserved
+ [x] Legitimate document key is preserved
+ [x] Traversal is rejected with data set "escape to tracked s3 env"
+ [x] Traversal is rejected with data set "escape to app config"
+ [x] Traversal is rejected with data set "escape to session files"
+ [x] Traversal is rejected with data set "write a shell to webroot"
+ [x] Traversal is rejected with data set "single parent"
+ [x] Traversal is rejected with data set "bare parent"
+ [x] Traversal is rejected with data set "trailing parent"
+ [x] Traversal is rejected with data set "windows separators"
+ [x] Traversal is rejected with data set "mixed separators"
+ [x] Traversal is rejected with data set "parent after empty seg"
+ [x] Null byte is rejected
+ [x] Empty key is rejected with data set "empty"
+ [x] Empty key is rejected with data set "slash"
+ [x] Empty key is rejected with data set "dot"
+ [x] Empty key is rejected with data set "slashes"
+ [x] Leading slash does not escape root
+ [x] Redundant segments are normalised
+ [x] Dotted filenames are not confused with traversal
+ [x] Disallowed characters are replaced
+ [x] Resolved path never escapes root
+
+Example Database
+ [x] Model find all
+ [x] Soft delete leaves row
+
+Example Session
+ [x] Session simple
+
 Firebase Id Token Verifier
  [x] Valid token returns claims
  [x] Wrong audience rejected
@@ -181,6 +404,14 @@ Firebase Id Token Verifier
  [x] Unknown kid rejected
  [x] Tampered signature rejected
  [x] Empty project id rejects
+
+Governance Approvals
+ [x] Staff hours change becomes change request
+ [x] Vendor inbox lists pending requests
+ [x] Vendor decide routes to engine as vendor role
+ [x] Staff without approve perm cannot open inbox
+ [x] Admin queue lists and decides
+ [x] Admin queue blocked without permission
 
 Gst Calculator
  [x] Exclusive intra state
@@ -218,10 +449,32 @@ Location Service
  [x] Andheri to powai about eight km
  [x] Within radius
 
+Me Capabilities
+ [x] Unauthenticated request is rejected
+ [ ] Authenticated request returns capabilities
+
 Media Helper
  [x] Icon by mime
  [x] Human size
  [x] Name falls back to basename
+
+Mobile Api
+ [ ] Otp request and verify returns token
+ [x] Login rejects bad password
+ [ ] Unauthenticated rider is 401
+ [ ] Rider me
+ [ ] Non rider forbidden
+ [ ] Rider assigned orders
+ [ ] Rider status update
+ [ ] Rider status validation
+ [ ] Rider failed requires reason
+ [ ] Rider proof of delivery
+ [ ] Rider cod collection
+ [ ] Rider earnings
+ [ ] Vendor dashboard
+ [ ] Vendor order status rejects illegal transition
+ [ ] Non vendor forbidden
+ [ ] Customer home public
 
 Money
  [x] Parses and formats to four decimals
@@ -231,6 +484,10 @@ Money
  [x] Multiply by quantity
  [x] Round half up to two decimals
  [x] Equals
+
+Notification Feed
+ [x] Feed requires login
+ [x] Feed returns scoped json
 
 Notification Presenter
  [x] Icon maps known categories
@@ -245,6 +502,14 @@ Notification Service
  [x] Allowed channels honours opt out
  [x] Allowed channels keeps all when no opt out
 
+Otp Login
+ [x] Valid otp signs in platform admin
+ [x] Vendor lands in vendor panel
+ [x] Invalid token rejected
+ [x] No account rejected
+ [x] Inactive account rejected
+ [x] Customer rejected from staff login
+
 Password Reset Service
  [x] Generated token verifies against its hash
  [x] Expired token fails
@@ -257,6 +522,29 @@ Payment Gateway Manager
  [x] Unknown provider is rejected
  [x] Fields are exposed for form rendering
 
+Phone Lookup Security
+ [x] Foreign number cannot resolve indian account
+ [x] Foreign number yields no candidates
+ [x] Legacy spellings of same number still match
+ [x] All spellings of one number agree
+ [x] No candidate escapes the input subscriber
+ [x] Garbage yields no candidates
+
+Pos Pdf
+ [x] Receipt pdf renders
+ [x] Credit note pdf renders
+
+Pos Sync
+ [ ] Activate binds terminal
+ [ ] Activate rejects bad code
+ [ ] Bootstrap downloads catalog and stock
+ [ ] Pull returns anchor
+ [ ] Push is idempotent
+ [ ] Push rejects empty
+ [ ] Shift open and close
+ [ ] Customer lookup needs three chars
+ [ ] Unauthenticated is rejected
+
 Price Resolver
  [x] Base when no candidates
  [x] Flash overlay wins over base
@@ -265,6 +553,64 @@ Price Resolver
  [x] Customer group price applies only to that group
  [x] Qty tier requires min qty
  [x] Highest priority wins then lowest price
+
+Product Ai
+ [x] Seo suggest returns json
+ [x] Tags suggest returns list
+ [x] Denied without product permission
+
+Product Approval Flow
+ [x] Vendor submit wires to repo for own product
+ [x] Vendor cannot submit another vendors product
+ [x] Vendor publish wires for own approved product
+ [x] Vendor cannot publish another vendors product
+ [x] Admin publish wires
+ [x] Admin publish denied without permission
+
+Product Draft
+ [x] Draft creates and returns id
+ [x] Draft rejects category outside vendor
+ [x] Autosave section wires
+ [x] Draft denied without permission
+
+Product Inventory
+ [x] Inventory page renders
+ [x] Receive wires to service
+ [x] Adjust wires to service
+ [x] Denied without permission
+
+Product Lookup
+ [x] Admin shops returns vendor shops
+ [x] Admin category defaults returns tax and hsn
+ [x] Admin lookup denied without permission
+ [x] Vendor shops forces own vendor id
+ [x] Vendor attributes rejects foreign category
+
+Product Media
+ [x] Reorder returns json
+ [x] Set primary wires
+ [x] Reorder denied without permission
+
+Product Pricing
+ [x] Pricing page renders with effective preview
+ [x] Add special wires to repo for owned variant
+ [x] Add tier wires to repo
+ [x] Denied without permission
+
+Product Type
+ [x] Combo page shows components
+ [x] Giftcard page shows settings
+ [x] Bundle add wires to repo for same vendor component
+ [x] Bundle add rejects foreign vendor component
+ [x] Denied without permission
+
+Product Variant
+ [ ] Variants page renders
+ [x] Generate parses selections and forces vendor
+ [x] Update variant wires through
+ [x] Variants denied without permission
+ [x] Bulk update wires with product vendor
+ [x] Save variant barcodes wires
 
 Purchase Rules
  [x] No rules allows any positive qty
@@ -309,6 +655,51 @@ Shop Bill Settings
  [x] Merge coerces types
  [x] Merge ignores unknown keys
 
+Shop Combo
+ [x] Staff pos combo needs vendor only
+ [x] Staff online combo needs vendor then admin
+ [x] Owner combo created directly
+ [x] Combo needs at least two components
+
+Shop Pos Credit Note
+ [x] Credit note screen renders
+ [x] Standalone credit note posts and redirects to receipt
+ [x] Credit note receipt prints
+ [x] Credit note denied without permission
+
+Shop Product Approval
+ [x] Staff submit becomes change request
+ [x] Owner submit goes direct to approval gate
+ [ ] Staff editing live product becomes change request
+ [ ] Staff editing draft writes direct
+ [x] Staff stock receive becomes change request
+ [x] Staff stock adjust becomes change request
+ [x] Owner stock receive writes direct
+
+Shop Report Export
+ [x] Manager exports own store csv
+ [x] Export denied without permission
+
+Shop Scoping
+ [x] Manager sees only assigned shop
+ [x] Owner still sees all shops
+ [x] Zero shop staff sees no shops
+ [x] Manager blocked from foreign shop manage
+ [x] Manager blocked from foreign shop edit
+ [x] Manager with staff request can open staff form
+ [x] Manager without staff request is blocked from staff form
+ [x] Manager blocked from foreign shop close
+ [x] Manager can open own shop pages
+ [x] Single shop manager sees shop chip
+ [x] Multi shop manager gets switcher
+ [x] Owner has no shop chip
+ [x] Manager pos sale at foreign shop rejected
+
+Shop Transfer
+ [x] Staff pull from sibling becomes vendor request
+ [x] Staff destination must be own store
+ [x] Owner transfers directly
+
 Status Machine
  [x] Sub order forward allowed
  [x] Sub order backward rejected
@@ -326,6 +717,31 @@ Stock Valuation
  [x] Lifo consumes newest first
  [x] Wavg consumes at average
  [x] Shortage is reported not invented
+
+Storefront
+ [ ] Home renders
+ [ ] Root serves storefront
+ [ ] Products browse renders
+ [ ] Product detail has schema json ld
+ [ ] Nearby shops render
+ [ ] Set location redirects to shops
+ [ ] Cart add redirects
+ [ ] Empty cart renders
+ [x] Checkout empty redirects to cart
+ [ ] Track form renders
+ [ ] Login form renders
+ [x] Account requires login
+
+Sync Engine
+ [x] Dashboard renders
+ [x] Dashboard denied
+ [x] Manual trigger queues job
+ [ ] Api pull known entity
+ [ ] Api pull unknown entity rejected
+ [ ] Api push idempotent batch
+ [ ] Api push requires idempotency key
+ [ ] Api entities list
+ [ ] Api unauthenticated
 
 Sync Engine Core
  [x] New row applies
@@ -350,6 +766,101 @@ Token Service
  [x] Wrong secret throws
  [x] Malformed token throws
 
+Ui Render
+ [x] Login page renders with local assets
+ [x] Ui kit home renders standalone shell
+ [x] Ui kit dashboard page renders
+ [x] Ui kit data table page loads plugin
+ [x] Ui kit unknown page is 404
+ [x] Every ui kit page renders with data set #0
+ [x] Every ui kit page renders with data set #1
+ [x] Every ui kit page renders with data set #2
+ [x] Every ui kit page renders with data set #3
+ [x] Every ui kit page renders with data set #4
+ [x] Every ui kit page renders with data set #5
+ [x] Every ui kit page renders with data set #6
+ [x] Every ui kit page renders with data set #7
+ [x] Every ui kit page renders with data set #8
+ [x] Every ui kit page renders with data set #9
+ [x] Every ui kit page renders with data set #10
+ [x] Every ui kit page renders with data set #11
+ [x] Every ui kit page renders with data set #12
+ [x] Every ui kit page renders with data set #13
+ [x] Every ui kit page renders with data set #14
+ [x] Every ui kit page renders with data set #15
+ [x] Every ui kit page renders with data set #16
+ [x] Every ui kit page renders with data set #17
+ [x] Every ui kit page renders with data set #18
+ [x] Every ui kit page renders with data set #19
+ [x] Every ui kit page renders with data set #20
+ [x] Every ui kit page renders with data set #21
+ [x] Every ui kit page renders with data set #22
+ [x] Every ui kit page renders with data set #23
+ [x] Every ui kit page renders with data set #24
+ [x] Every ui kit page renders with data set #25
+ [x] Every ui kit page renders with data set #26
+ [x] Every ui kit page renders with data set #27
+ [x] Every ui kit page renders with data set #28
+ [x] Every ui kit page renders with data set #29
+ [x] Every ui kit page renders with data set #30
+ [x] Every ui kit page renders with data set #31
+ [x] Every ui kit page renders with data set #32
+ [x] Every ui kit page renders with data set #33
+ [x] Every ui kit page renders with data set #34
+ [x] Every ui kit page renders with data set #35
+ [x] Every ui kit page renders with data set #36
+ [x] Every ui kit page renders with data set #37
+ [x] Every ui kit page renders with data set #38
+ [x] Every ui kit page renders with data set #39
+ [x] Every ui kit page renders with data set #40
+ [x] Every ui kit page renders with data set #41
+ [x] Every ui kit page renders with data set #42
+ [x] Every ui kit page renders with data set #43
+ [x] Every ui kit page renders with data set #44
+ [x] Every ui kit page renders with data set #45
+ [x] Every ui kit page renders with data set #46
+ [x] Every ui kit page renders with data set #47
+ [x] Every ui kit page renders with data set #48
+ [x] Every ui kit page renders with data set #49
+ [x] Every ui kit page renders with data set #50
+ [x] Every ui kit page renders with data set #51
+ [x] Every ui kit page renders with data set #52
+ [x] Every ui kit page renders with data set #53
+ [x] Every ui kit page renders with data set #54
+ [x] Every ui kit page renders with data set #55
+ [x] Every ui kit page renders with data set #56
+ [x] Every ui kit page renders with data set #57
+ [x] Every ui kit page renders with data set #58
+ [x] Every ui kit page renders with data set #59
+ [x] Every ui kit page renders with data set #60
+ [x] Every ui kit page renders with data set #61
+ [x] Every ui kit page renders with data set #62
+ [x] Every ui kit page renders with data set #63
+ [x] Every ui kit page renders with data set #64
+ [x] Every ui kit page renders with data set #65
+ [x] Every ui kit page renders with data set #66
+ [x] Every ui kit page renders with data set #67
+ [x] Every ui kit page renders with data set #68
+ [x] Every ui kit page renders with data set #69
+ [x] Every ui kit page renders with data set #70
+ [x] Every ui kit page renders with data set #71
+ [x] Every ui kit page renders with data set #72
+ [x] Every ui kit page renders with data set #73
+ [x] Every ui kit page renders with data set #74
+ [x] Every ui kit page renders with data set #75
+ [x] Every ui kit page renders with data set #76
+ [x] Every ui kit page renders with data set #77
+ [x] Every ui kit page renders with data set #78
+ [x] Every ui kit page renders with data set #79
+ [x] Every ui kit page renders with data set #80
+ [x] Every ui kit page renders with data set #81
+ [x] Every ui kit page renders with data set #82
+ [x] Every ui kit page renders with data set #83
+ [x] Every ui kit page renders with data set #84
+ [x] Every ui kit page renders with data set #85
+ [x] Every ui kit page renders with data set #86
+ [x] Every ui kit page renders with data set #87
+
 Variant Combinator
  [x] Cartesian product size by color
  [x] Single attribute yields one per value
@@ -358,6 +869,97 @@ Variant Combinator
  [x] Duplicate values are deduped
  [x] Signature is order independent
  [x] Sku suffix sanitizes
+
+Vendor Delivery
+ [x] List renders with sla and masked contact
+ [x] Detail renders
+ [x] Manual assign
+ [x] Auto assign
+ [x] Auto assign no rider
+ [x] Mark failed
+ [x] Foreign vendor blocked
+
+Vendor Panel
+ [x] Dashboard requires login
+ [x] Non vendor is rejected
+ [x] Dashboard renders
+ [x] Staff member sees shop scoped sidebar
+ [x] Shops list scoped to vendor
+ [x] Foreign shop is not accessible
+ [x] Shop edit renders hours for owner
+ [x] Save hours wires seven days
+ [x] Holiday add wires
+ [x] Hours by staff without permission becomes change request
+ [x] Orders shop filter scoping
+ [x] Staff orders default to their shop
+ [ ] Foreign order is not accessible
+ [x] Shop close scoped
+ [x] Products and staff render
+ [x] Inventory list and scoped update
+ [x] Transfers list and create
+ [x] Refunds gst notifications warehouses render
+
+Vendor Pos
+ [x] Pos screen renders
+ [x] Search returns items
+ [x] Sale resolves server side and writes
+ [x] Credit sale resolves customer and sets mode
+ [x] Credit sale without customer rejected
+ [x] Repay wires to repo
+ [x] Sale denied without pos sell
+ [x] Discount denied without permission
+ [x] Credit denied without permission
+ [x] Scan returns multiple for barcode conflict
+ [x] Process return wires with vendor scope
+ [x] Returns denied without permission
+ [x] Reports page renders
+ [x] Delivery sale creates delivery with fee
+ [x] Delivery sale without customer details rejected
+ [x] Discount within cap allowed
+ [x] Discount over cap rejected
+ [x] Sale rejects foreign shop
+
+Vendor Product
+ [x] New form renders
+ [ ] Store rejects foreign category
+ [ ] Store succeeds
+ [x] Cannot edit foreign vendor product
+
+Vendor Registration
+ [x] Form renders
+ [x] Send codes proceeds
+ [x] Duplicate mobile rejected
+ [x] Invalid gstin format rejected
+ [ ] Complete creates vendor
+ [x] Wrong otp stops registration
+ [x] Gst mismatch stops registration
+
+Vendor Staff
+ [x] Add rider succeeds
+ [x] Add rider rejects bad phone
+ [x] Add rider rejects duplicate phone
+ [x] Staff list and new form render for owner
+ [x] Create constrains shops to own vendor
+ [x] Create rejects role with no shop
+ [x] Staff management denied for non owner without permission
+
+Vendor Transfer
+ [x] Approve wires with vendor scope
+ [x] Dispatch wires
+ [x] Receive passes quantity
+ [x] Find stock page shows other stores
+ [x] Transfer action denied when not a vendor
+
+Web Auth
+ [x] Login page renders
+ [x] Dashboard redirects when not logged in
+ [x] Valid login redirects to dashboard
+ [x] Vendor login lands on vendor panel
+ [x] Invalid password does not reach dashboard
+ [x] Unknown user does not reach dashboard
+ [x] Missing csrf token is rejected
+ [x] Brute force lockout
+ [x] Dashboard renders with session
 
 Web Authenticator
  [x] Valid credentials return user

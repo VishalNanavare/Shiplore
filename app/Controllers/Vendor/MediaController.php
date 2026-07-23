@@ -147,7 +147,13 @@ final class MediaController extends BaseVendorController
         if (! $this->ownsKey($key)) {
             return $this->response->setStatusCode(403)->setBody('');
         }
-        $path = service('documentStorage')->dummyPath($key);
+        // ownsKey() is a prefix check, so a key like "vendors/7/../../.." still
+        // passes it. dummyPath() rejects traversal; treat that as a 403.
+        try {
+            $path = service('documentStorage')->dummyPath($key);
+        } catch (\InvalidArgumentException $e) {
+            return $this->response->setStatusCode(403)->setBody('');
+        }
         if (! is_file($path)) {
             return $this->response->setStatusCode(404)->setBody('Not found');
         }

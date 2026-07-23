@@ -51,6 +51,55 @@
         </style>
     </head>
     <body>
+        <h2>Admin Access</h2>
+        <ul>
+            <li class="success">Roles index renders</li>
+            <li class="success">Role edit renders matrix</li>
+            <li class="success">Super admin role protected from edit</li>
+            <li class="success">User new form renders</li>
+            <li class="success">Users denied without permission</li>
+        </ul>
+        <h2>Admin Attribute</h2>
+        <ul>
+            <li class="success">List renders</li>
+            <li class="success">Activate redirects back to list</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Business Type</h2>
+        <ul>
+            <li class="success">List renders</li>
+            <li class="success">Deactivate redirects back to list</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Category</h2>
+        <ul>
+            <li class="success">List renders</li>
+            <li class="success">Activate redirects back to list</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Commission</h2>
+        <ul>
+            <li class="success">List renders</li>
+            <li class="success">Activate redirects back to list</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Crud</h2>
+        <ul>
+            <li class="success">Vendor new renders</li>
+            <li class="success">Vendor store creates</li>
+            <li class="success">Vendor store denied without permission</li>
+            <li class="success">Shop store creates</li>
+            <li class="defect">Product new shows gated categories</li>
+            <li class="success">Duplicate clones and redirects to edit</li>
+            <li class="success">Duplicate to allowed target vendor</li>
+            <li class="success">Duplicate to vendor rejects disallowed category</li>
+            <li class="defect">Product store rejects category outside business type</li>
+            <li class="defect">Product store succeeds for allowed category</li>
+            <li class="success">Import upload runs service</li>
+            <li class="success">Import template downloads</li>
+            <li class="success">Media serve rejects non uuid</li>
+            <li class="success">Media serve 404 for unknown</li>
+        </ul>
         <h2>Admin Crud Core</h2>
         <ul>
             <li class="success">Media allows images under 5mb</li>
@@ -67,6 +116,151 @@
             <li class="success">Import rejects unknown vendor and dup sku</li>
             <li class="success">Import rejects missing fields</li>
         </ul>
+        <h2>Admin Customer</h2>
+        <ul>
+            <li class="success">List renders</li>
+            <li class="success">Detail renders</li>
+            <li class="success">Block redirects to detail</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Integration</h2>
+        <ul>
+            <li class="success">Gateway list renders</li>
+            <li class="success">Gateway new form renders</li>
+            <li class="success">Gateway store creates</li>
+            <li class="success">Gateway test uses manager</li>
+            <li class="success">Gateway denied</li>
+            <li class="success">Firebase form renders</li>
+            <li class="success">Email settings save</li>
+            <li class="success">Email test sends real email</li>
+            <li class="success">Gst api test</li>
+            <li class="success">Unknown integration is 404</li>
+            <li class="success">Integration denied</li>
+        </ul>
+        <h2>Admin Master</h2>
+        <ul>
+            <li class="success">Unit new form renders</li>
+            <li class="success">Brand new form renders</li>
+            <li class="success">Attribute new form renders</li>
+            <li class="success">Tax class store denied without permission</li>
+            <li class="success">Hsn new form renders</li>
+        </ul>
+        <h2>Admin Order</h2>
+        <ul>
+            <li class="success">List requires login</li>
+            <li class="defect">List renders</li>
+            <li class="defect">Detail renders</li>
+            <li class="success">Detail unknown redirects</li>
+            <li class="success">Cancel redirects to detail</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Payment</h2>
+        <ul>
+            <li class="success">List requires login</li>
+            <li class="success">List renders</li>
+            <li class="success">Detail renders</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Phase6Batch</h2>
+        <ul>
+            <li class="success">Brands list</li>
+            <li class="success">Brand approve</li>
+            <li class="success">Brands denied</li>
+            <li class="success">Promotions list</li>
+            <li class="success">Promotion pause</li>
+            <li class="success">Reviews list</li>
+            <li class="success">Review publish</li>
+            <li class="success">Review restore from rejected goes to pending</li>
+            <li class="success">Review publish blocked from rejected</li>
+            <li class="success">Review restore from published goes to pending</li>
+            <li class="success">Warehouses list</li>
+            <li class="success">Warehouse deactivate</li>
+            <li class="success">Transfers list</li>
+            <li class="success">Transfer approve overrides via engine</li>
+            <li class="success">Coupons list</li>
+            <li class="success">Notifications list</li>
+            <li class="success">Audit logs list</li>
+            <li class="success">Deliveries list</li>
+            <li class="success">Imports list</li>
+            <li class="defect">Settings page</li>
+            <li class="success">Reports page</li>
+            <li class="success">Read only modules denied</li>
+        </ul>
+        <h2>Admin Product Approval</h2>
+        <ul>
+            <li class="success">List requires login</li>
+            <li class="defect">List renders</li>
+            <li class="success">Approve redirects back to list</li>
+            <li class="success">Reject unknown product shows error</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Refund</h2>
+        <ul>
+            <li class="success">List renders</li>
+            <li class="success">Process redirects back to list</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Returns</h2>
+        <ul>
+            <li class="success">Register lists returns</li>
+            <li class="success">Transition posts to repository</li>
+            <li class="success">Blocked without permission</li>
+            <li class="success">State machine is forward only</li>
+        </ul>
+        <h2>Admin Settlement</h2>
+        <ul>
+            <li class="success">List renders</li>
+            <li class="defect">Detail renders</li>
+            <li class="success">Approve redirects to detail</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Shop</h2>
+        <ul>
+            <li class="success">List requires login</li>
+            <li class="defect">List renders</li>
+            <li class="success">Activate redirects back to list</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
+        <h2>Admin Support Backup</h2>
+        <ul>
+            <li class="success">Support list renders</li>
+            <li class="success">Support detail renders</li>
+            <li class="success">Support reply redirects</li>
+            <li class="success">Support close redirects</li>
+            <li class="success">Support denied</li>
+            <li class="success">Backups list renders</li>
+            <li class="success">Backups denied</li>
+        </ul>
+        <h2>Admin User Manage</h2>
+        <ul>
+            <li class="success">Super admin can create another super admin</li>
+            <li class="success">Non super admin cannot grant super admin</li>
+            <li class="success">Role is required</li>
+            <li class="success">Failed create is reported</li>
+            <li class="success">Edit form renders</li>
+            <li class="success">Update saves profile and role</li>
+            <li class="success">Short password on edit is rejected</li>
+            <li class="success">Edit requires update permission</li>
+            <li class="success">Edit form shows mobile</li>
+            <li class="success">Edit form shows verified badge</li>
+            <li class="success">Update passes phone through</li>
+            <li class="success">Invalid mobile rejected on update</li>
+            <li class="success">Invalid mobile rejected on create</li>
+            <li class="success">Duplicate mobile rejected on create</li>
+            <li class="success">Profile clash on update is reported</li>
+            <li class="success">Cannot remove role from last super admin</li>
+            <li class="success">Can remove super admin when another exists</li>
+            <li class="success">Cannot suspend last super admin</li>
+            <li class="success">Cannot suspend self</li>
+            <li class="success">Index hides suspend on own row</li>
+        </ul>
+        <h2>Admin Vendor</h2>
+        <ul>
+            <li class="success">List requires login</li>
+            <li class="defect">List renders for permitted admin</li>
+            <li class="success">Approve redirects back to list</li>
+            <li class="success">Permission denied redirects to dashboard</li>
+        </ul>
         <h2>Ai Product Assistant</h2>
         <ul>
             <li class="success">Stub seo composes from fields</li>
@@ -74,6 +268,11 @@
             <li class="success">Stub tags drop short and stop words</li>
             <li class="success">Stub description mentions title and brand</li>
             <li class="success">Suggest dispatches by kind</li>
+        </ul>
+        <h2>Ajax Form</h2>
+        <ul>
+            <li class="success">Non ajax post still redirects</li>
+            <li class="success">Ajax post returns json envelope</li>
         </ul>
         <h2>Api Response</h2>
         <ul>
@@ -88,6 +287,16 @@
             <li class="success">Chain links on prev hash</li>
             <li class="success">Hash ignores existing hash columns</li>
             <li class="success">Any field change changes hash</li>
+        </ul>
+        <h2>Auth Reset</h2>
+        <ul>
+            <li class="success">Forgot page renders</li>
+            <li class="success">Send reset redirects uniformly</li>
+            <li class="success">Send reset emails the link</li>
+            <li class="success">No email for unknown address</li>
+            <li class="success">Reset page renders</li>
+            <li class="success">Valid reset updates password</li>
+            <li class="success">Invalid token does not update password</li>
         </ul>
         <h2>Barcode</h2>
         <ul>
@@ -228,6 +437,12 @@
             <li class="success">Receipt paper is 80mm roll</li>
             <li class="success">Utf 8 survives</li>
         </ul>
+        <h2>Document Registers</h2>
+        <ul>
+            <li class="success">Admin invoice register</li>
+            <li class="success">Admin commission hold queue</li>
+            <li class="success">Vendor invoice register is tenant scoped</li>
+        </ul>
         <h2>Document Storage</h2>
         <ul>
             <li class="success">Rejects non pdf or image</li>
@@ -241,6 +456,40 @@
             <li class="success">Media shop key prefix</li>
             <li class="success">Media rejects over size and bad type</li>
         </ul>
+        <h2>Document Storage Key</h2>
+        <ul>
+            <li class="success">Legitimate generated key is preserved</li>
+            <li class="success">Legitimate document key is preserved</li>
+            <li class="success">Traversal is rejected with data set "escape to tracked s3 env"</li>
+            <li class="success">Traversal is rejected with data set "escape to app config"</li>
+            <li class="success">Traversal is rejected with data set "escape to session files"</li>
+            <li class="success">Traversal is rejected with data set "write a shell to webroot"</li>
+            <li class="success">Traversal is rejected with data set "single parent"</li>
+            <li class="success">Traversal is rejected with data set "bare parent"</li>
+            <li class="success">Traversal is rejected with data set "trailing parent"</li>
+            <li class="success">Traversal is rejected with data set "windows separators"</li>
+            <li class="success">Traversal is rejected with data set "mixed separators"</li>
+            <li class="success">Traversal is rejected with data set "parent after empty seg"</li>
+            <li class="success">Null byte is rejected</li>
+            <li class="success">Empty key is rejected with data set "empty"</li>
+            <li class="success">Empty key is rejected with data set "slash"</li>
+            <li class="success">Empty key is rejected with data set "dot"</li>
+            <li class="success">Empty key is rejected with data set "slashes"</li>
+            <li class="success">Leading slash does not escape root</li>
+            <li class="success">Redundant segments are normalised</li>
+            <li class="success">Dotted filenames are not confused with traversal</li>
+            <li class="success">Disallowed characters are replaced</li>
+            <li class="success">Resolved path never escapes root</li>
+        </ul>
+        <h2>Example Database</h2>
+        <ul>
+            <li class="success">Model find all</li>
+            <li class="success">Soft delete leaves row</li>
+        </ul>
+        <h2>Example Session</h2>
+        <ul>
+            <li class="success">Session simple</li>
+        </ul>
         <h2>Firebase Id Token Verifier</h2>
         <ul>
             <li class="success">Valid token returns claims</li>
@@ -252,6 +501,15 @@
             <li class="success">Unknown kid rejected</li>
             <li class="success">Tampered signature rejected</li>
             <li class="success">Empty project id rejects</li>
+        </ul>
+        <h2>Governance Approvals</h2>
+        <ul>
+            <li class="success">Staff hours change becomes change request</li>
+            <li class="success">Vendor inbox lists pending requests</li>
+            <li class="success">Vendor decide routes to engine as vendor role</li>
+            <li class="success">Staff without approve perm cannot open inbox</li>
+            <li class="success">Admin queue lists and decides</li>
+            <li class="success">Admin queue blocked without permission</li>
         </ul>
         <h2>Gst Calculator</h2>
         <ul>
@@ -295,11 +553,35 @@
             <li class="success">Andheri to powai about eight km</li>
             <li class="success">Within radius</li>
         </ul>
+        <h2>Me Capabilities</h2>
+        <ul>
+            <li class="success">Unauthenticated request is rejected</li>
+            <li class="defect">Authenticated request returns capabilities</li>
+        </ul>
         <h2>Media Helper</h2>
         <ul>
             <li class="success">Icon by mime</li>
             <li class="success">Human size</li>
             <li class="success">Name falls back to basename</li>
+        </ul>
+        <h2>Mobile Api</h2>
+        <ul>
+            <li class="defect">Otp request and verify returns token</li>
+            <li class="success">Login rejects bad password</li>
+            <li class="defect">Unauthenticated rider is 401</li>
+            <li class="defect">Rider me</li>
+            <li class="defect">Non rider forbidden</li>
+            <li class="defect">Rider assigned orders</li>
+            <li class="defect">Rider status update</li>
+            <li class="defect">Rider status validation</li>
+            <li class="defect">Rider failed requires reason</li>
+            <li class="defect">Rider proof of delivery</li>
+            <li class="defect">Rider cod collection</li>
+            <li class="defect">Rider earnings</li>
+            <li class="defect">Vendor dashboard</li>
+            <li class="defect">Vendor order status rejects illegal transition</li>
+            <li class="defect">Non vendor forbidden</li>
+            <li class="defect">Customer home public</li>
         </ul>
         <h2>Money</h2>
         <ul>
@@ -310,6 +592,11 @@
             <li class="success">Multiply by quantity</li>
             <li class="success">Round half up to two decimals</li>
             <li class="success">Equals</li>
+        </ul>
+        <h2>Notification Feed</h2>
+        <ul>
+            <li class="success">Feed requires login</li>
+            <li class="success">Feed returns scoped json</li>
         </ul>
         <h2>Notification Presenter</h2>
         <ul>
@@ -326,6 +613,15 @@
             <li class="success">Allowed channels honours opt out</li>
             <li class="success">Allowed channels keeps all when no opt out</li>
         </ul>
+        <h2>Otp Login</h2>
+        <ul>
+            <li class="success">Valid otp signs in platform admin</li>
+            <li class="success">Vendor lands in vendor panel</li>
+            <li class="success">Invalid token rejected</li>
+            <li class="success">No account rejected</li>
+            <li class="success">Inactive account rejected</li>
+            <li class="success">Customer rejected from staff login</li>
+        </ul>
         <h2>Password Reset Service</h2>
         <ul>
             <li class="success">Generated token verifies against its hash</li>
@@ -340,6 +636,32 @@
             <li class="success">Unknown provider is rejected</li>
             <li class="success">Fields are exposed for form rendering</li>
         </ul>
+        <h2>Phone Lookup Security</h2>
+        <ul>
+            <li class="success">Foreign number cannot resolve indian account</li>
+            <li class="success">Foreign number yields no candidates</li>
+            <li class="success">Legacy spellings of same number still match</li>
+            <li class="success">All spellings of one number agree</li>
+            <li class="success">No candidate escapes the input subscriber</li>
+            <li class="success">Garbage yields no candidates</li>
+        </ul>
+        <h2>Pos Pdf</h2>
+        <ul>
+            <li class="success">Receipt pdf renders</li>
+            <li class="success">Credit note pdf renders</li>
+        </ul>
+        <h2>Pos Sync</h2>
+        <ul>
+            <li class="defect">Activate binds terminal</li>
+            <li class="defect">Activate rejects bad code</li>
+            <li class="defect">Bootstrap downloads catalog and stock</li>
+            <li class="defect">Pull returns anchor</li>
+            <li class="defect">Push is idempotent</li>
+            <li class="defect">Push rejects empty</li>
+            <li class="defect">Shift open and close</li>
+            <li class="defect">Customer lookup needs three chars</li>
+            <li class="defect">Unauthenticated is rejected</li>
+        </ul>
         <h2>Price Resolver</h2>
         <ul>
             <li class="success">Base when no candidates</li>
@@ -349,6 +671,73 @@
             <li class="success">Customer group price applies only to that group</li>
             <li class="success">Qty tier requires min qty</li>
             <li class="success">Highest priority wins then lowest price</li>
+        </ul>
+        <h2>Product Ai</h2>
+        <ul>
+            <li class="success">Seo suggest returns json</li>
+            <li class="success">Tags suggest returns list</li>
+            <li class="success">Denied without product permission</li>
+        </ul>
+        <h2>Product Approval Flow</h2>
+        <ul>
+            <li class="success">Vendor submit wires to repo for own product</li>
+            <li class="success">Vendor cannot submit another vendors product</li>
+            <li class="success">Vendor publish wires for own approved product</li>
+            <li class="success">Vendor cannot publish another vendors product</li>
+            <li class="success">Admin publish wires</li>
+            <li class="success">Admin publish denied without permission</li>
+        </ul>
+        <h2>Product Draft</h2>
+        <ul>
+            <li class="success">Draft creates and returns id</li>
+            <li class="success">Draft rejects category outside vendor</li>
+            <li class="success">Autosave section wires</li>
+            <li class="success">Draft denied without permission</li>
+        </ul>
+        <h2>Product Inventory</h2>
+        <ul>
+            <li class="success">Inventory page renders</li>
+            <li class="success">Receive wires to service</li>
+            <li class="success">Adjust wires to service</li>
+            <li class="success">Denied without permission</li>
+        </ul>
+        <h2>Product Lookup</h2>
+        <ul>
+            <li class="success">Admin shops returns vendor shops</li>
+            <li class="success">Admin category defaults returns tax and hsn</li>
+            <li class="success">Admin lookup denied without permission</li>
+            <li class="success">Vendor shops forces own vendor id</li>
+            <li class="success">Vendor attributes rejects foreign category</li>
+        </ul>
+        <h2>Product Media</h2>
+        <ul>
+            <li class="success">Reorder returns json</li>
+            <li class="success">Set primary wires</li>
+            <li class="success">Reorder denied without permission</li>
+        </ul>
+        <h2>Product Pricing</h2>
+        <ul>
+            <li class="success">Pricing page renders with effective preview</li>
+            <li class="success">Add special wires to repo for owned variant</li>
+            <li class="success">Add tier wires to repo</li>
+            <li class="success">Denied without permission</li>
+        </ul>
+        <h2>Product Type</h2>
+        <ul>
+            <li class="success">Combo page shows components</li>
+            <li class="success">Giftcard page shows settings</li>
+            <li class="success">Bundle add wires to repo for same vendor component</li>
+            <li class="success">Bundle add rejects foreign vendor component</li>
+            <li class="success">Denied without permission</li>
+        </ul>
+        <h2>Product Variant</h2>
+        <ul>
+            <li class="defect">Variants page renders</li>
+            <li class="success">Generate parses selections and forces vendor</li>
+            <li class="success">Update variant wires through</li>
+            <li class="success">Variants denied without permission</li>
+            <li class="success">Bulk update wires with product vendor</li>
+            <li class="success">Save variant barcodes wires</li>
         </ul>
         <h2>Purchase Rules</h2>
         <ul>
@@ -400,6 +789,57 @@
             <li class="success">Merge coerces types</li>
             <li class="success">Merge ignores unknown keys</li>
         </ul>
+        <h2>Shop Combo</h2>
+        <ul>
+            <li class="success">Staff pos combo needs vendor only</li>
+            <li class="success">Staff online combo needs vendor then admin</li>
+            <li class="success">Owner combo created directly</li>
+            <li class="success">Combo needs at least two components</li>
+        </ul>
+        <h2>Shop Pos Credit Note</h2>
+        <ul>
+            <li class="success">Credit note screen renders</li>
+            <li class="success">Standalone credit note posts and redirects to receipt</li>
+            <li class="success">Credit note receipt prints</li>
+            <li class="success">Credit note denied without permission</li>
+        </ul>
+        <h2>Shop Product Approval</h2>
+        <ul>
+            <li class="success">Staff submit becomes change request</li>
+            <li class="success">Owner submit goes direct to approval gate</li>
+            <li class="defect">Staff editing live product becomes change request</li>
+            <li class="defect">Staff editing draft writes direct</li>
+            <li class="success">Staff stock receive becomes change request</li>
+            <li class="success">Staff stock adjust becomes change request</li>
+            <li class="success">Owner stock receive writes direct</li>
+        </ul>
+        <h2>Shop Report Export</h2>
+        <ul>
+            <li class="success">Manager exports own store csv</li>
+            <li class="success">Export denied without permission</li>
+        </ul>
+        <h2>Shop Scoping</h2>
+        <ul>
+            <li class="success">Manager sees only assigned shop</li>
+            <li class="success">Owner still sees all shops</li>
+            <li class="success">Zero shop staff sees no shops</li>
+            <li class="success">Manager blocked from foreign shop manage</li>
+            <li class="success">Manager blocked from foreign shop edit</li>
+            <li class="success">Manager with staff request can open staff form</li>
+            <li class="success">Manager without staff request is blocked from staff form</li>
+            <li class="success">Manager blocked from foreign shop close</li>
+            <li class="success">Manager can open own shop pages</li>
+            <li class="success">Single shop manager sees shop chip</li>
+            <li class="success">Multi shop manager gets switcher</li>
+            <li class="success">Owner has no shop chip</li>
+            <li class="success">Manager pos sale at foreign shop rejected</li>
+        </ul>
+        <h2>Shop Transfer</h2>
+        <ul>
+            <li class="success">Staff pull from sibling becomes vendor request</li>
+            <li class="success">Staff destination must be own store</li>
+            <li class="success">Owner transfers directly</li>
+        </ul>
         <h2>Status Machine</h2>
         <ul>
             <li class="success">Sub order forward allowed</li>
@@ -419,6 +859,33 @@
             <li class="success">Lifo consumes newest first</li>
             <li class="success">Wavg consumes at average</li>
             <li class="success">Shortage is reported not invented</li>
+        </ul>
+        <h2>Storefront</h2>
+        <ul>
+            <li class="defect">Home renders</li>
+            <li class="defect">Root serves storefront</li>
+            <li class="defect">Products browse renders</li>
+            <li class="defect">Product detail has schema json ld</li>
+            <li class="defect">Nearby shops render</li>
+            <li class="defect">Set location redirects to shops</li>
+            <li class="defect">Cart add redirects</li>
+            <li class="defect">Empty cart renders</li>
+            <li class="success">Checkout empty redirects to cart</li>
+            <li class="defect">Track form renders</li>
+            <li class="defect">Login form renders</li>
+            <li class="success">Account requires login</li>
+        </ul>
+        <h2>Sync Engine</h2>
+        <ul>
+            <li class="success">Dashboard renders</li>
+            <li class="success">Dashboard denied</li>
+            <li class="success">Manual trigger queues job</li>
+            <li class="defect">Api pull known entity</li>
+            <li class="defect">Api pull unknown entity rejected</li>
+            <li class="defect">Api push idempotent batch</li>
+            <li class="defect">Api push requires idempotency key</li>
+            <li class="defect">Api entities list</li>
+            <li class="defect">Api unauthenticated</li>
         </ul>
         <h2>Sync Engine Core</h2>
         <ul>
@@ -446,6 +913,102 @@
             <li class="success">Wrong secret throws</li>
             <li class="success">Malformed token throws</li>
         </ul>
+        <h2>Ui Render</h2>
+        <ul>
+            <li class="success">Login page renders with local assets</li>
+            <li class="success">Ui kit home renders standalone shell</li>
+            <li class="success">Ui kit dashboard page renders</li>
+            <li class="success">Ui kit data table page loads plugin</li>
+            <li class="success">Ui kit unknown page is 404</li>
+            <li class="success">Every ui kit page renders with data set #0</li>
+            <li class="success">Every ui kit page renders with data set #1</li>
+            <li class="success">Every ui kit page renders with data set #2</li>
+            <li class="success">Every ui kit page renders with data set #3</li>
+            <li class="success">Every ui kit page renders with data set #4</li>
+            <li class="success">Every ui kit page renders with data set #5</li>
+            <li class="success">Every ui kit page renders with data set #6</li>
+            <li class="success">Every ui kit page renders with data set #7</li>
+            <li class="success">Every ui kit page renders with data set #8</li>
+            <li class="success">Every ui kit page renders with data set #9</li>
+            <li class="success">Every ui kit page renders with data set #10</li>
+            <li class="success">Every ui kit page renders with data set #11</li>
+            <li class="success">Every ui kit page renders with data set #12</li>
+            <li class="success">Every ui kit page renders with data set #13</li>
+            <li class="success">Every ui kit page renders with data set #14</li>
+            <li class="success">Every ui kit page renders with data set #15</li>
+            <li class="success">Every ui kit page renders with data set #16</li>
+            <li class="success">Every ui kit page renders with data set #17</li>
+            <li class="success">Every ui kit page renders with data set #18</li>
+            <li class="success">Every ui kit page renders with data set #19</li>
+            <li class="success">Every ui kit page renders with data set #20</li>
+            <li class="success">Every ui kit page renders with data set #21</li>
+            <li class="success">Every ui kit page renders with data set #22</li>
+            <li class="success">Every ui kit page renders with data set #23</li>
+            <li class="success">Every ui kit page renders with data set #24</li>
+            <li class="success">Every ui kit page renders with data set #25</li>
+            <li class="success">Every ui kit page renders with data set #26</li>
+            <li class="success">Every ui kit page renders with data set #27</li>
+            <li class="success">Every ui kit page renders with data set #28</li>
+            <li class="success">Every ui kit page renders with data set #29</li>
+            <li class="success">Every ui kit page renders with data set #30</li>
+            <li class="success">Every ui kit page renders with data set #31</li>
+            <li class="success">Every ui kit page renders with data set #32</li>
+            <li class="success">Every ui kit page renders with data set #33</li>
+            <li class="success">Every ui kit page renders with data set #34</li>
+            <li class="success">Every ui kit page renders with data set #35</li>
+            <li class="success">Every ui kit page renders with data set #36</li>
+            <li class="success">Every ui kit page renders with data set #37</li>
+            <li class="success">Every ui kit page renders with data set #38</li>
+            <li class="success">Every ui kit page renders with data set #39</li>
+            <li class="success">Every ui kit page renders with data set #40</li>
+            <li class="success">Every ui kit page renders with data set #41</li>
+            <li class="success">Every ui kit page renders with data set #42</li>
+            <li class="success">Every ui kit page renders with data set #43</li>
+            <li class="success">Every ui kit page renders with data set #44</li>
+            <li class="success">Every ui kit page renders with data set #45</li>
+            <li class="success">Every ui kit page renders with data set #46</li>
+            <li class="success">Every ui kit page renders with data set #47</li>
+            <li class="success">Every ui kit page renders with data set #48</li>
+            <li class="success">Every ui kit page renders with data set #49</li>
+            <li class="success">Every ui kit page renders with data set #50</li>
+            <li class="success">Every ui kit page renders with data set #51</li>
+            <li class="success">Every ui kit page renders with data set #52</li>
+            <li class="success">Every ui kit page renders with data set #53</li>
+            <li class="success">Every ui kit page renders with data set #54</li>
+            <li class="success">Every ui kit page renders with data set #55</li>
+            <li class="success">Every ui kit page renders with data set #56</li>
+            <li class="success">Every ui kit page renders with data set #57</li>
+            <li class="success">Every ui kit page renders with data set #58</li>
+            <li class="success">Every ui kit page renders with data set #59</li>
+            <li class="success">Every ui kit page renders with data set #60</li>
+            <li class="success">Every ui kit page renders with data set #61</li>
+            <li class="success">Every ui kit page renders with data set #62</li>
+            <li class="success">Every ui kit page renders with data set #63</li>
+            <li class="success">Every ui kit page renders with data set #64</li>
+            <li class="success">Every ui kit page renders with data set #65</li>
+            <li class="success">Every ui kit page renders with data set #66</li>
+            <li class="success">Every ui kit page renders with data set #67</li>
+            <li class="success">Every ui kit page renders with data set #68</li>
+            <li class="success">Every ui kit page renders with data set #69</li>
+            <li class="success">Every ui kit page renders with data set #70</li>
+            <li class="success">Every ui kit page renders with data set #71</li>
+            <li class="success">Every ui kit page renders with data set #72</li>
+            <li class="success">Every ui kit page renders with data set #73</li>
+            <li class="success">Every ui kit page renders with data set #74</li>
+            <li class="success">Every ui kit page renders with data set #75</li>
+            <li class="success">Every ui kit page renders with data set #76</li>
+            <li class="success">Every ui kit page renders with data set #77</li>
+            <li class="success">Every ui kit page renders with data set #78</li>
+            <li class="success">Every ui kit page renders with data set #79</li>
+            <li class="success">Every ui kit page renders with data set #80</li>
+            <li class="success">Every ui kit page renders with data set #81</li>
+            <li class="success">Every ui kit page renders with data set #82</li>
+            <li class="success">Every ui kit page renders with data set #83</li>
+            <li class="success">Every ui kit page renders with data set #84</li>
+            <li class="success">Every ui kit page renders with data set #85</li>
+            <li class="success">Every ui kit page renders with data set #86</li>
+            <li class="success">Every ui kit page renders with data set #87</li>
+        </ul>
         <h2>Variant Combinator</h2>
         <ul>
             <li class="success">Cartesian product size by color</li>
@@ -455,6 +1018,105 @@
             <li class="success">Duplicate values are deduped</li>
             <li class="success">Signature is order independent</li>
             <li class="success">Sku suffix sanitizes</li>
+        </ul>
+        <h2>Vendor Delivery</h2>
+        <ul>
+            <li class="success">List renders with sla and masked contact</li>
+            <li class="success">Detail renders</li>
+            <li class="success">Manual assign</li>
+            <li class="success">Auto assign</li>
+            <li class="success">Auto assign no rider</li>
+            <li class="success">Mark failed</li>
+            <li class="success">Foreign vendor blocked</li>
+        </ul>
+        <h2>Vendor Panel</h2>
+        <ul>
+            <li class="success">Dashboard requires login</li>
+            <li class="success">Non vendor is rejected</li>
+            <li class="success">Dashboard renders</li>
+            <li class="success">Staff member sees shop scoped sidebar</li>
+            <li class="success">Shops list scoped to vendor</li>
+            <li class="success">Foreign shop is not accessible</li>
+            <li class="success">Shop edit renders hours for owner</li>
+            <li class="success">Save hours wires seven days</li>
+            <li class="success">Holiday add wires</li>
+            <li class="success">Hours by staff without permission becomes change request</li>
+            <li class="success">Orders shop filter scoping</li>
+            <li class="success">Staff orders default to their shop</li>
+            <li class="defect">Foreign order is not accessible</li>
+            <li class="success">Shop close scoped</li>
+            <li class="success">Products and staff render</li>
+            <li class="success">Inventory list and scoped update</li>
+            <li class="success">Transfers list and create</li>
+            <li class="success">Refunds gst notifications warehouses render</li>
+        </ul>
+        <h2>Vendor Pos</h2>
+        <ul>
+            <li class="success">Pos screen renders</li>
+            <li class="success">Search returns items</li>
+            <li class="success">Sale resolves server side and writes</li>
+            <li class="success">Credit sale resolves customer and sets mode</li>
+            <li class="success">Credit sale without customer rejected</li>
+            <li class="success">Repay wires to repo</li>
+            <li class="success">Sale denied without pos sell</li>
+            <li class="success">Discount denied without permission</li>
+            <li class="success">Credit denied without permission</li>
+            <li class="success">Scan returns multiple for barcode conflict</li>
+            <li class="success">Process return wires with vendor scope</li>
+            <li class="success">Returns denied without permission</li>
+            <li class="success">Reports page renders</li>
+            <li class="success">Delivery sale creates delivery with fee</li>
+            <li class="success">Delivery sale without customer details rejected</li>
+            <li class="success">Discount within cap allowed</li>
+            <li class="success">Discount over cap rejected</li>
+            <li class="success">Sale rejects foreign shop</li>
+        </ul>
+        <h2>Vendor Product</h2>
+        <ul>
+            <li class="success">New form renders</li>
+            <li class="defect">Store rejects foreign category</li>
+            <li class="defect">Store succeeds</li>
+            <li class="success">Cannot edit foreign vendor product</li>
+        </ul>
+        <h2>Vendor Registration</h2>
+        <ul>
+            <li class="success">Form renders</li>
+            <li class="success">Send codes proceeds</li>
+            <li class="success">Duplicate mobile rejected</li>
+            <li class="success">Invalid gstin format rejected</li>
+            <li class="defect">Complete creates vendor</li>
+            <li class="success">Wrong otp stops registration</li>
+            <li class="success">Gst mismatch stops registration</li>
+        </ul>
+        <h2>Vendor Staff</h2>
+        <ul>
+            <li class="success">Add rider succeeds</li>
+            <li class="success">Add rider rejects bad phone</li>
+            <li class="success">Add rider rejects duplicate phone</li>
+            <li class="success">Staff list and new form render for owner</li>
+            <li class="success">Create constrains shops to own vendor</li>
+            <li class="success">Create rejects role with no shop</li>
+            <li class="success">Staff management denied for non owner without permission</li>
+        </ul>
+        <h2>Vendor Transfer</h2>
+        <ul>
+            <li class="success">Approve wires with vendor scope</li>
+            <li class="success">Dispatch wires</li>
+            <li class="success">Receive passes quantity</li>
+            <li class="success">Find stock page shows other stores</li>
+            <li class="success">Transfer action denied when not a vendor</li>
+        </ul>
+        <h2>Web Auth</h2>
+        <ul>
+            <li class="success">Login page renders</li>
+            <li class="success">Dashboard redirects when not logged in</li>
+            <li class="success">Valid login redirects to dashboard</li>
+            <li class="success">Vendor login lands on vendor panel</li>
+            <li class="success">Invalid password does not reach dashboard</li>
+            <li class="success">Unknown user does not reach dashboard</li>
+            <li class="success">Missing csrf token is rejected</li>
+            <li class="success">Brute force lockout</li>
+            <li class="success">Dashboard renders with session</li>
         </ul>
         <h2>Web Authenticator</h2>
         <ul>
