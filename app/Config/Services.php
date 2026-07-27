@@ -741,6 +741,22 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('manufacturerRegistrationRepository') : new \App\Models\ManufacturerRegistrationRepository();
     }
 
+    // ---- msonline B2B marketplace ----
+    public static function purchaseOrderRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('purchaseOrderRepository') : new \App\Models\PurchaseOrderRepository();
+    }
+
+    public static function msonlineCatalogRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('msonlineCatalogRepository') : new \App\Models\MsonlineCatalogRepository();
+    }
+
+    public static function msonlineCart($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('msonlineCart') : new \App\Libraries\Msonline\MsonlineCart();
+    }
+
     // ---- Vendor panel (Phase 7) ----
     public static function vendorAccountRepository($getShared = true)
     {

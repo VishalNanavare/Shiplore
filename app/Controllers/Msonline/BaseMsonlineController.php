@@ -30,6 +30,8 @@ abstract class BaseMsonlineController extends BaseController
     /** @var array<string,mixed>|null */
     private ?array $buyerRow = null;
     private bool $resolved = false;
+    /** @var list<int>|null */
+    private ?array $shopIds = null;
 
     /**
      * The vendor this visitor buys on behalf of, or null when not signed in as one.
@@ -68,6 +70,57 @@ abstract class BaseMsonlineController extends BaseController
     protected function isBuyer(): bool
     {
         return $this->buyerVendorId() !== null;
+    }
+
+    /**
+     * Shops this buyer may route stock into.
+     *
+     * Mirrors BaseVendorController's rule: an owner gets every shop of their vendor,
+     * assigned staff get only theirs. A branch manager must not be able to order goods
+     * into a sibling branch, so this is the allow-list `place()` checks against.
+     *
+     * @return list<int>
+     */
+    protected function buyerShopIds(): array
+    {
+        if ($this->shopIds === null) {
+            $vid = $this->buyerVendorId();
+            if ($vid === null) {
+                return $this->shopIds = [];
+            }
+
+            $repo  = service('vendorAccountRepository');
+            $staff = $this->buyer()['vendor_staff_id'] ?? null;
+
+            $this->shopIds = $staff === null
+                ? $repo->shopIdsForVendor($vid)
+                : $repo->shopIdsForStaff((int) $staff);
+        }
+
+        return $this->shopIds;
+    }
+
+    /** id => name for the destination picker. @return array<int,string> */
+    protected function buyerShops(): array
+    {
+        $allowed = $this->buyerShopIds();
+        if ($allowed === []) {
+            return [];
+        }
+
+        $rows = \Config\Database::connect()->table('shops')
+            ->select('id, name')
+            ->whereIn('id', $allowed)
+            ->where('deleted_at', null)
+            ->orderBy('name')
+            ->get()->getResultArray();
+
+        $out = [];
+        foreach ($rows as $r) {
+            $out[(int) $r['id']] = (string) $r['name'];
+        }
+
+        return $out;
     }
 
     /** Common chrome for every msonline view. */

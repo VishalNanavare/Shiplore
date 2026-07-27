@@ -786,6 +786,35 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer'], static func
     $routes->post('products/(:num)/update', 'Manufacturer\ProductController::update/$1', ['filter' => 'csrf']);
     $routes->post('products/(:num)/autosave/(:segment)', 'Manufacturer\ProductController::autosave/$1/$2', ['filter' => 'csrf']);
     $routes->post('products/(:num)/submit', 'Manufacturer\ProductController::submit/$1', ['filter' => 'csrf']);
+
+    // Incoming msonline purchase orders (seller side). The buyer confirms receipt on
+    // their side — a manufacturer cannot mark its own delivery received.
+    $routes->get('purchase-orders', 'Manufacturer\PurchaseOrderController::index');
+    $routes->get('purchase-orders/(:num)', 'Manufacturer\PurchaseOrderController::show/$1');
+    $routes->post('purchase-orders/(:num)/(:alpha)', 'Manufacturer\PurchaseOrderController::transition/$1/$2', ['filter' => 'csrf']);
+});
+
+// ---- msonline.shiplore.in — the B2B marketplace ----
+// Path-based like every other panel, so it also resolves on the apex; the subdomain
+// simply lands visitors on '/'. Browsing is public but PRICE-FREE — pricing and every
+// ordering route require a resolved vendor buyer, enforced in the controllers.
+$routes->group('msonline', static function (RouteCollection $routes): void {
+    $routes->get('/', 'Msonline\CatalogController::home');
+    $routes->get('browse', 'Msonline\CatalogController::browse');
+    $routes->get('product/(:segment)', 'Msonline\CatalogController::product/$1');
+
+    // Cart + checkout — buyers only.
+    $routes->get('cart', 'Msonline\OrderController::cart');
+    $routes->post('cart/add', 'Msonline\OrderController::add', ['filter' => 'csrf']);
+    $routes->post('cart/update', 'Msonline\OrderController::update', ['filter' => 'csrf']);
+    $routes->post('cart/remove/(:num)', 'Msonline\OrderController::remove/$1', ['filter' => 'csrf']);
+    $routes->post('place', 'Msonline\OrderController::place', ['filter' => 'csrf']);
+
+    // Purchase orders (buyer side).
+    $routes->get('orders', 'Msonline\OrderController::orders');
+    $routes->get('orders/(:num)', 'Msonline\OrderController::show/$1');
+    $routes->post('orders/(:num)/receive', 'Msonline\OrderController::receive/$1', ['filter' => 'csrf']);
+    $routes->post('orders/(:num)/cancel', 'Msonline\OrderController::cancel/$1', ['filter' => 'csrf']);
 });
 
 // UI Kit — standalone design reference (own shell + menu; not wired to the app).

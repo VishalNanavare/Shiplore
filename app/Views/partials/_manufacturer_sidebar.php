@@ -15,6 +15,9 @@ $groups = [
         ['units', 'Units', 'bi-buildings', 'manufacturer/units', 'mfg.unit.view'],
         ['products', 'Products', 'bi-box-seam', 'manufacturer/products', 'mfg.product.view'],
     ]],
+    ['Sales', 'bi-bag', [
+        ['orders', 'Purchase Orders', 'bi-receipt', 'manufacturer/purchase-orders', 'mfg.po.view'],
+    ]],
 ];
 
 // Fall back to the current URL when a controller didn't set $active.

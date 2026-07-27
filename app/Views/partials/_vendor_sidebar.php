@@ -31,6 +31,15 @@ $groups = [
         ['transfers', 'Stock Transfers', 'bi-arrow-left-right', 'vendor/transfers', 'transfer.view'],
         ['warehouses', 'Warehouses', 'bi-buildings', 'vendor/warehouses', 'warehouse.view'],
     ]],
+    // Procurement — buying stock IN, as opposed to selling it. The purchase-intake
+    // screens below were routed and built but had no nav entry at all, so they were
+    // reachable only by typing the URL; msonline gives them a natural home.
+    ['Procurement', 'bi-cart-plus', [
+        ['msonline', 'Buy on msonline', 'bi-shop-window', 'msonline/browse', 'msonline.browse'],
+        ['po', 'Purchase Orders', 'bi-receipt', 'msonline/orders', 'msonline.po.view'],
+        ['purchase', 'Add Inventory', 'bi-box-arrow-in-down', 'vendor/purchase/add', 'inventory.adjust'],
+        ['purchase-history', 'Purchase History', 'bi-clock-history', 'vendor/purchase/history', 'inventory.view'],
+    ]],
     ['Team', 'bi-people', [
         ['staff', 'Staff & Riders', 'bi-people', 'vendor/staff', 'staff.request'],
         ['media', 'Media Library', 'bi-folder2-open', 'vendor/media', 'media.view'],

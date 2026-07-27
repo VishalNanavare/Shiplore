@@ -30,6 +30,23 @@ final class StatusMachine
         'delivered' => [], 'cancelled' => [],
     ];
 
+    /**
+     * msonline B2B purchase orders. Modelled on TRANSFER — it already encodes
+     * "goods move between two locations, with an approval and a receipt" — but the
+     * two parties are different tenants (a vendor buying from a manufacturer), and
+     * the seller may reject a placed order outright.
+     */
+    private const PURCHASE_ORDER = [
+        'draft'              => ['placed', 'cancelled'],
+        'placed'             => ['accepted', 'rejected', 'cancelled'],
+        'accepted'           => ['packed', 'dispatched', 'cancelled'],
+        'packed'             => ['dispatched', 'cancelled'],
+        'dispatched'         => ['received', 'partially_received'],
+        'partially_received' => ['received', 'closed'],
+        'received'           => ['closed'],
+        'rejected'           => [], 'cancelled' => [], 'closed' => [],
+    ];
+
     private const DELIVERY = [
         'pending' => ['assigned', 'failed'],
         'assigned' => ['picked_up', 'failed', 'reassigned'],
@@ -89,6 +106,12 @@ final class StatusMachine
     public static function canOrder(string $from, string $to): bool
     {
         return self::allowed(self::ORDER, $from, $to);
+    }
+
+    /** msonline B2B purchase orders. */
+    public static function canPurchaseOrder(string $from, string $to): bool
+    {
+        return self::allowed(self::PURCHASE_ORDER, $from, $to);
     }
 
     public static function canSubOrder(string $from, string $to): bool

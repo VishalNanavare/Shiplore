@@ -18,6 +18,32 @@
     <?php endforeach; ?>
 </div>
 
+<?php
+/*
+ * msonline — the wholesale marketplace where this vendor buys stock from manufacturers.
+ * A banner rather than a 5th KPI card: it is a call to action, not a metric, and the
+ * card grid above renders every link through site_url(), which would be wrong for a
+ * cross-subdomain destination.
+ *
+ * The link is relative on purpose. msonline is path-routed as well as subdomain-routed,
+ * so /msonline resolves on whatever host the vendor is already signed in on — no
+ * absolute URL to keep in step with the environment, and no re-login.
+ */
+?>
+<div class="card mb-3 border-primary-subtle">
+    <div class="card-body d-flex flex-wrap align-items-center gap-3">
+        <span class="rounded d-grid bg-primary-subtle text-primary" style="width:48px;height:48px;place-items:center;font-size:1.3rem">
+            <i class="bi bi-shop-window"></i>
+        </span>
+        <div class="flex-grow-1">
+            <div class="fw-semibold">Buy stock on msonline</div>
+            <div class="text-secondary small">Order directly from manufacturers at wholesale prices.</div>
+        </div>
+        <a class="btn btn-outline-primary" href="<?= site_url('msonline/orders') ?>">My purchase orders</a>
+        <a class="btn btn-primary" href="<?= site_url('msonline/browse') ?>">Browse catalogue</a>
+    </div>
+</div>
+
 <?php if (! empty($perShop) && count($perShop) > 1): ?>
 <div class="card mb-3">
     <div class="card-header fw-semibold">By store</div>
