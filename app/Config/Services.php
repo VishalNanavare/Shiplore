@@ -712,6 +712,30 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('escalationService') : new \App\Libraries\Orders\EscalationService();
     }
 
+    // ---- Manufacturer panel ----
+    // Separate from the vendor repositories on purpose: every lookup is additionally
+    // constrained to vendors.party_type='manufacturer', which is what stops the two
+    // panels resolving each other's tenants out of the shared `vendors` table.
+    public static function manufacturerAccountRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('manufacturerAccountRepository') : new \App\Models\ManufacturerAccountRepository();
+    }
+
+    public static function manufacturerUnitRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('manufacturerUnitRepository') : new \App\Models\ManufacturerUnitRepository();
+    }
+
+    public static function manufacturerProductRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('manufacturerProductRepository') : new \App\Models\ManufacturerProductRepository();
+    }
+
+    public static function manufacturerDashboardRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('manufacturerDashboardRepository') : new \App\Models\ManufacturerDashboardRepository();
+    }
+
     // ---- Vendor panel (Phase 7) ----
     public static function vendorAccountRepository($getShared = true)
     {

@@ -747,6 +747,34 @@ $routes->group('vendor', ['filter' => 'webAuth:vendor'], static function (RouteC
     $routes->get('commission-holds', 'Vendor\DocumentController::commissionHolds');
 });
 
+// ---- Manufacturer panel — session-guarded, tenant-isolated in controllers ----
+// Reached from manufacturer.shiplore.in (owner) and mshop.shiplore.in (unit staff);
+// both land here, exactly as vendor./shop. both land in the vendor panel.
+//
+// `webAuth:manufacturer` pins the principal, but that pin is LOG-ONLY until
+// auth.enforcePrincipalType is turned on — so the real gate is the party_type
+// constraint in ManufacturerAccountRepository, applied via requireManufacturer().
+$routes->group('manufacturer', ['filter' => 'webAuth:manufacturer'], static function (RouteCollection $routes): void {
+    $routes->get('dashboard', 'Manufacturer\ManufacturerDashboardController::index');
+
+    // Units (factories). No delivery-range routes — mshops has no such columns.
+    $routes->get('units', 'Manufacturer\UnitController::index');
+    $routes->get('units/new', 'Manufacturer\UnitController::new');
+    $routes->post('units/store', 'Manufacturer\UnitController::store', ['filter' => 'csrf']);
+    $routes->get('units/(:num)/edit', 'Manufacturer\UnitController::edit/$1');
+    $routes->post('units/(:num)/update', 'Manufacturer\UnitController::update/$1', ['filter' => 'csrf']);
+    $routes->post('units/(:num)/toggle', 'Manufacturer\UnitController::toggle/$1', ['filter' => 'csrf']);
+
+    // Products — making price + selling price.
+    $routes->get('products', 'Manufacturer\ProductController::index');
+    $routes->get('products/new', 'Manufacturer\ProductController::new');
+    $routes->post('products/store', 'Manufacturer\ProductController::store', ['filter' => 'csrf']);
+    $routes->get('products/(:num)/edit', 'Manufacturer\ProductController::edit/$1');
+    $routes->post('products/(:num)/update', 'Manufacturer\ProductController::update/$1', ['filter' => 'csrf']);
+    $routes->post('products/(:num)/autosave/(:segment)', 'Manufacturer\ProductController::autosave/$1/$2', ['filter' => 'csrf']);
+    $routes->post('products/(:num)/submit', 'Manufacturer\ProductController::submit/$1', ['filter' => 'csrf']);
+});
+
 // UI Kit — standalone design reference (own shell + menu; not wired to the app).
 $routes->get('ui-kit', 'UiKitController::index');
 $routes->get('ui-kit/(:segment)', 'UiKitController::show/$1');
