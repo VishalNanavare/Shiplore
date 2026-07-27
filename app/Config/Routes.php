@@ -18,10 +18,11 @@ $routes->get('/', 'Rider\AuthController::loginForm', ['subdomain' => 'rider']); 
 // with overwrite, but the bare '/' below does not, so whichever is declared first wins.
 $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'manufacturer']); // manufacturer. -> staff login
 $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'mshop']);        // mshop. -> unit-staff login
-// NOTE: msonline. deliberately has NO root route yet — its controller lands in phase B.
-// The hostname is allow-listed in Config\App so links resolve, but until phase B ships
-// point its DNS/vhost elsewhere: with no route here it would fall through to the apex
-// storefront and serve the consumer shop on a B2B hostname.
+// msonline. MUST have its own root route. Without one the bare '/' falls through to the
+// apex route below and serves the CONSUMER storefront on the B2B hostname — wrong
+// catalogue, wrong audience, consumer pricing. The full marketplace lands in phase B;
+// this entry point is deliberately live ahead of it so the subdomain is never wrong.
+$routes->get('/', 'Msonline\CatalogController::home', ['subdomain' => 'msonline']);   // msonline. -> B2B marketplace
 $routes->get('/', 'Store\StoreController::home');                                  // apex shiplorelocal.in -> ecommerce homepage
 
 // ---- Media (private files served by uuid) ----
