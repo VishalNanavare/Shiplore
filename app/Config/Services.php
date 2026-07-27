@@ -736,6 +736,11 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('manufacturerDashboardRepository') : new \App\Models\ManufacturerDashboardRepository();
     }
 
+    public static function manufacturerRegistrationRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('manufacturerRegistrationRepository') : new \App\Models\ManufacturerRegistrationRepository();
+    }
+
     // ---- Vendor panel (Phase 7) ----
     public static function vendorAccountRepository($getShared = true)
     {

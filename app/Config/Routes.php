@@ -45,6 +45,18 @@ $routes->post('register/resend/email', 'Auth\RegisterController::resendEmail', [
 $routes->post('register/complete', 'Auth\RegisterController::complete', ['filter' => 'csrf']);
 $routes->post('register/cancel', 'Auth\RegisterController::cancel', ['filter' => 'csrf']);
 
+// Manufacturer self-registration. Mirrors the vendor flow above (Firebase mobile OTP +
+// emailed code + GST verification) but collects NO delivery range and creates a
+// principal_type='manufacturer' account whose first location is an `mshops` row.
+// Same throttles as the vendor flow — these send SMS and email to a third party.
+$routes->get('manufacturer-register', 'Auth\ManufacturerRegisterController::show');
+$routes->post('manufacturer-register/send-codes', 'Auth\ManufacturerRegisterController::sendCodes', ['filter' => ['csrf', 'throttle:5,60']]);
+$routes->post('manufacturer-register/otp-ticket', 'Auth\ManufacturerRegisterController::mobileOtpTicket', ['filter' => ['csrf', 'throttle:5,60']]);
+$routes->post('manufacturer-register/verify-mobile', 'Auth\ManufacturerRegisterController::verifyMobile', ['filter' => ['csrf', 'throttle:10,60']]);
+$routes->post('manufacturer-register/resend/email', 'Auth\ManufacturerRegisterController::resendEmail', ['filter' => ['csrf', 'throttle:3,300']]);
+$routes->post('manufacturer-register/complete', 'Auth\ManufacturerRegisterController::complete', ['filter' => 'csrf']);
+$routes->post('manufacturer-register/cancel', 'Auth\ManufacturerRegisterController::cancel', ['filter' => 'csrf']);
+
 // Password reset (Phase 5, web)
 $routes->get('forgot-password', 'Auth\ForgotPasswordController::showForgot');
 $routes->post('forgot-password', 'Auth\ForgotPasswordController::sendReset', ['filter' => ['csrf', 'throttle:5,300']]);
