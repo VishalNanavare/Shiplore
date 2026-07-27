@@ -82,10 +82,31 @@ final class HardeningConfigTest extends CIUnitTestCase
      */
     public function testTlsEnforcementIsLeftToTheOperator(): void
     {
+        $app = new App();
+
         $this->assertFalse(
-            (new App())->forceGlobalSecureRequests,
-            'enabling this also enables HSTS — confirm certs on all five subdomains first',
+            $app->forceGlobalSecureRequests,
+            'enabling this also enables HSTS — confirm a valid certificate on EVERY host '
+            . 'in allowedHostnames first. HSTS is cached by the browser for max-age, so a '
+            . 'host without one becomes permanently unreachable to anyone who has visited.',
         );
-        $this->assertCount(5, (new App())->allowedHostnames);
+
+        // Every allow-listed host needs its own certificate before HSTS can be enabled.
+        // Asserted as a property of the list rather than a fixed count, so adding a
+        // hostname does not fail this test — it just widens what must be checked.
+        $this->assertNotEmpty($app->allowedHostnames);
+        foreach ($app->allowedHostnames as $host) {
+            $this->assertMatchesRegularExpression('/^[a-z0-9.-]+$/', $host, 'malformed hostname: ' . $host);
+        }
+    }
+
+    /** The manufacturer surfaces must be reachable, or site_url() misbehaves on them. */
+    public function testManufacturerHostnamesAreAllowed(): void
+    {
+        $hosts = (new App())->allowedHostnames;
+
+        foreach (['manufacturer.shiplore.in', 'mshop.shiplore.in', 'msonline.shiplore.in'] as $host) {
+            $this->assertContains($host, $hosts, $host . ' must be allow-listed');
+        }
     }
 }

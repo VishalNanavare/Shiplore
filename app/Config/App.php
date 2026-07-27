@@ -35,6 +35,12 @@ class App extends BaseConfig
         'vendor.shiplore.in',
         'shop.shiplore.in',
         'rider.shiplore.in',
+        // Manufacturer surfaces. manufacturer. and mshop. mirror vendor. and shop.
+        // (owner login vs unit-staff login); msonline. is the B2B marketplace where
+        // vendors and shops buy from manufacturers.
+        'manufacturer.shiplore.in',
+        'mshop.shiplore.in',
+        'msonline.shiplore.in',
     ];
 
     /**

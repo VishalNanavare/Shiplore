@@ -22,7 +22,11 @@ final class WebAuthFilter implements FilterInterface
      * Panels this filter can pin a route group to, mapped to the landing page a
      * mismatched principal is sent back to. Mirrors Auth\LoginController::landingFor().
      */
-    private const LANDING = ['platform' => 'admin/dashboard', 'vendor' => 'vendor/dashboard'];
+    private const LANDING = [
+        'platform'     => 'admin/dashboard',
+        'vendor'       => 'vendor/dashboard',
+        'manufacturer' => 'manufacturer/dashboard',
+    ];
 
     public function before(RequestInterface $request, $arguments = null)
     {

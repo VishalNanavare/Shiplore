@@ -99,6 +99,29 @@ final class Money
         return $this->units === $other->units;
     }
 
+    /**
+     * Ordering comparisons on exact integer units — never float.
+     *
+     * Added for the manufacturer price invariant (making_price < selling_price).
+     * Comparing the amount() strings would be wrong ("9.0000" > "10.0000"
+     * lexicographically) and casting to float reintroduces the representation error
+     * this class exists to avoid.
+     */
+    public function lessThan(self $other): bool
+    {
+        return $this->units < $other->units;
+    }
+
+    public function greaterThan(self $other): bool
+    {
+        return $this->units > $other->units;
+    }
+
+    public function isPositive(): bool
+    {
+        return $this->units > 0;
+    }
+
     /** Canonical 4-decimal string ("47.6190"). */
     public function amount(): string
     {

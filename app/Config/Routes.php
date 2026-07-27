@@ -12,6 +12,16 @@ $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'admin']); 
 $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'vendor']);  // vendor. -> staff login (-> vendor dashboard if authed)
 $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'shop']);    // shop.   -> staff login (shop managers are vendor-panel staff)
 $routes->get('/', 'Rider\AuthController::loginForm', ['subdomain' => 'rider']);   // rider.  -> rider login
+// Manufacturer surfaces. manufacturer./mshop. mirror vendor./shop. — owner login vs
+// unit-staff login, both landing in the manufacturer panel. msonline. is the B2B
+// marketplace. These MUST stay above the apex fallback: a subdomain route registers
+// with overwrite, but the bare '/' below does not, so whichever is declared first wins.
+$routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'manufacturer']); // manufacturer. -> staff login
+$routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'mshop']);        // mshop. -> unit-staff login
+// NOTE: msonline. deliberately has NO root route yet — its controller lands in phase B.
+// The hostname is allow-listed in Config\App so links resolve, but until phase B ships
+// point its DNS/vhost elsewhere: with no route here it would fall through to the apex
+// storefront and serve the consumer shop on a B2B hostname.
 $routes->get('/', 'Store\StoreController::home');                                  // apex shiplorelocal.in -> ecommerce homepage
 
 // ---- Media (private files served by uuid) ----

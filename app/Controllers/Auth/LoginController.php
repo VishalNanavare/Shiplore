@@ -47,10 +47,27 @@ final class LoginController extends BaseController
         ]);
     }
 
-    /** Staff land in their own panel: vendors -> vendor panel, platform staff -> admin. */
+    /**
+     * Staff land in their own panel.
+     *
+     * Keep in step with App\Filters\WebAuthFilter::LANDING, which redirects here on a
+     * principal-type mismatch.
+     *
+     * The 'admin/dashboard' default is deliberate and must NOT be tightened to 'login'.
+     * attempt() does not gate principal_type, so a customer/rider password login reaches
+     * this method; returning 'login' would infinite-loop, because show() calls
+     * landingFor() again whenever isLoggedIn is set. Those principals landing on the
+     * admin dashboard is a pre-existing oddity, already contained by the admin group's
+     * webAuth:platform pin and the per-controller permission guards — it is not made
+     * worse here. Fixing it belongs with enforcing auth.enforcePrincipalType.
+     */
     private function landingFor(?string $principalType): string
     {
-        return $principalType === 'vendor' ? 'vendor/dashboard' : 'admin/dashboard';
+        return match ($principalType) {
+            'vendor'       => 'vendor/dashboard',
+            'manufacturer' => 'manufacturer/dashboard',
+            default        => 'admin/dashboard',
+        };
     }
 
     public function attempt()
@@ -122,7 +139,8 @@ final class LoginController extends BaseController
             return $this->response->setStatusCode(404)
                 ->setJSON(['ok' => false, 'message' => 'No staff account is registered with ' . $phone . '.', 'csrf' => csrf_hash()]);
         }
-        if (! in_array($user['principal_type'] ?? '', ['platform', 'vendor'], true)) {
+        // Staff principals only — customers and riders have their own OTP entry points.
+        if (! in_array($user['principal_type'] ?? '', ['platform', 'vendor', 'manufacturer'], true)) {
             $attempts->record($phone, false, 'not_staff', (int) $user['id'], $ip, $ua);
 
             return $this->response->setStatusCode(403)

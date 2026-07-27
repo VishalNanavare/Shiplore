@@ -159,6 +159,10 @@ final class CartService
             ->groupStart()->where('p.available_from', null)->orWhere('p.available_from <=', $today)->groupEnd()
             ->groupStart()->where('p.available_to', null)->orWhere('p.available_to >=', $today)->groupEnd()
             ->where('pv.status', 'active')->where('pv.deleted_at', null)
+            // Manufacturers sell B2B only (msonline). The browse queries already exclude
+            // them, but this method resolves by raw variant_id straight from the session
+            // cart — so without this a guessed id would still price into a consumer cart.
+            ->where("COALESCE(v.party_type,'vendor') <> 'manufacturer'", null, false)
             ->get()->getResultArray();
 
         $lines = [];

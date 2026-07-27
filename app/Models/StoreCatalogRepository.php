@@ -91,7 +91,10 @@ final class StoreCatalogRepository
             ->select('p.category_id AS cid, COUNT(*) AS cnt')
             ->where('p.status', 'published')
             ->where('p.deleted_at', null)
-            ->where($notHotelSql, null, false);
+            ->where($notHotelSql, null, false)
+            // No `vendors` join here — this query stays join-free so the covering
+            // index can serve it — so exclude manufacturers with the EXISTS form.
+            ->where(self::NOT_MANUFACTURER_EXISTS, null, false);
         if (array_key_exists('shop_ids', $opts)) {
             $ids = array_values(array_filter(array_map('intval', (array) $opts['shop_ids'])));
             $in  = implode(',', $ids ?: [0]);
@@ -129,6 +132,22 @@ final class StoreCatalogRepository
 
     /** Hotels are excluded from the customer storefront (separate future vertical). */
     private const NOT_HOTEL = "COALESCE(c.path,'') NOT LIKE 'hotels-hospitality%'";
+
+    /**
+     * Manufacturers sell B2B only — their products must never reach the consumer
+     * storefront or the customer apps. Requires the `vendors v` join (every query
+     * using this already has it, except publishedTitle() where it was added).
+     *
+     * Written as COALESCE(...) so a product whose vendor row is missing (LEFT JOIN
+     * miss) is still treated as a normal vendor product rather than silently dropped.
+     */
+    private const NOT_MANUFACTURER = "COALESCE(v.party_type,'vendor') <> 'manufacturer'";
+
+    /**
+     * Same rule for queries that cannot join `vendors` — e.g. computeTree(), which
+     * stays join-free so it can be served by the covering index.
+     */
+    private const NOT_MANUFACTURER_EXISTS = "NOT EXISTS (SELECT 1 FROM vendors mv WHERE mv.id = p.vendor_id AND mv.party_type = 'manufacturer')";
 
     /**
      * Browse published products.
@@ -216,7 +235,8 @@ final class StoreCatalogRepository
             ->join('vendors v', 'v.id = p.vendor_id', 'left')
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
             ->where('p.status', 'published')->where('p.deleted_at', null)
-            ->where(self::NOT_HOTEL, null, false);   // hotels are out of the storefront/order process
+            ->where(self::NOT_HOTEL, null, false)    // hotels are out of the storefront/order process
+            ->where(self::NOT_MANUFACTURER, null, false); // manufacturers are B2B-only (msonline)
     }
 
     /**
@@ -319,7 +339,8 @@ final class StoreCatalogRepository
             ->join('vendors v', 'v.id = p.vendor_id', 'left')
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
             ->where('p.status', 'published')->where('p.deleted_at', null)
-            ->where(self::NOT_HOTEL, null, false);   // hotels excluded from storefront
+            ->where(self::NOT_HOTEL, null, false)    // hotels excluded from storefront
+            ->where(self::NOT_MANUFACTURER, null, false); // manufacturers are B2B-only (msonline)
     }
 
     /**
@@ -474,7 +495,8 @@ final class StoreCatalogRepository
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
             ->join('tax_classes tc', 'tc.id = p.tax_class_id', 'left')
             ->where('p.slug', $slug)->where('p.status', 'published')->where('p.deleted_at', null)
-            ->where(self::NOT_HOTEL, null, false);   // hotel product pages are 404 (vertical removed)
+            ->where(self::NOT_HOTEL, null, false)    // hotel product pages are 404 (vertical removed)
+            ->where(self::NOT_MANUFACTURER, null, false); // manufacturer product pages are 404 on the storefront
         $this->visibleScope($row);
         $row = $row->get()->getRowArray();
 
@@ -525,6 +547,7 @@ final class StoreCatalogRepository
             ->where('p.is_online_enabled', 1)
             ->whereIn('p.visibility', ['public', 'logged_in'])
             ->where(self::NOT_HOTEL, null, false)
+            ->where(self::NOT_MANUFACTURER_EXISTS, null, false)
             ->get()->getRowArray();
 
         return $row['title'] ?? null;
@@ -702,7 +725,11 @@ final class StoreCatalogRepository
             ->join('vendors v', 'v.id = p.vendor_id', 'left')
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
             ->where('pr.product_id', $productId)->whereIn('pr.relation_type', $types)
-            ->where('p.status', 'published')->where('p.deleted_at', null);
+            ->where('p.status', 'published')->where('p.deleted_at', null)
+            // A curated relation must not become a back door onto the storefront:
+            // without this a vendor product could link to a manufacturer's.
+            ->where(self::NOT_HOTEL, null, false)
+            ->where(self::NOT_MANUFACTURER, null, false);
         $this->visibleScope($b);
 
         return $b->orderBy('pr.sort_order')->limit($limit)->get()->getResultArray();
