@@ -6,18 +6,20 @@
    Built on Bootstrap 5 + Bootstrap Icons.
    ============================================================ */
 :root {
-    --mo-primary: #0f3d5c;       /* ledger navy */
-    --mo-primary-2: #155178;
-    --mo-accent: #c9821b;        /* ochre — CTAs, price, "wholesale" emphasis */
-    --mo-accent-2: #a86a10;
+    --mo-primary: #1B3358;       /* logo navy, verbatim */
+    --mo-primary-2: #26487D;     /* navy +10L, same hue/sat — hover/active, hero mid-stop */
+    --mo-accent: #C87828;        /* logo ochre, verbatim — CTAs, price, "wholesale" emphasis */
+    --mo-accent-2: #864D13;      /* ochre darkened — hover/active, and the only accent shade
+                                     safe for small white-on-color text */
     --mo-bg: #f2f4f7;
     --mo-card: #ffffff;
     --mo-border: #dde3ea;
+    --mo-tint: #ECF1F9;          /* light navy tint for hover surfaces */
     --mo-ink: #172230;
     --mo-muted: #5b6b7a;
-    --mo-success: #1a7a4c;
+    --mo-success: #3B7A58;       /* logo green, verbatim */
     --mo-radius: .5rem;
-    --mo-shadow: 0 1px 2px rgba(15,61,92,.05), 0 4px 12px rgba(15,61,92,.07);
+    --mo-shadow: 0 1px 2px rgba(27,51,88,.05), 0 4px 12px rgba(27,51,88,.07);
 }
 
 body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Segoe UI", "Inter", system-ui, -apple-system, Roboto, Arial, sans-serif; }
@@ -43,7 +45,7 @@ body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Seg
 .mo-signin-cta { --bs-btn-bg: var(--mo-accent); --bs-btn-border-color: var(--mo-accent); --bs-btn-hover-bg: var(--mo-accent-2); --bs-btn-hover-border-color: var(--mo-accent-2); }
 
 /* ---- Hero ---- */
-.mo-hero { background: linear-gradient(115deg, #0f3d5c, #155178 60%, #1c6088); color: #fff; border-radius: var(--mo-radius); box-shadow: var(--mo-shadow); }
+.mo-hero { background: linear-gradient(115deg, #1B3358, #26487D 60%, #3260A4); color: #fff; border-radius: var(--mo-radius); box-shadow: var(--mo-shadow); }
 .mo-hero .mo-eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; color: var(--mo-accent); font-weight: 700; }
 
 .mo-section-title { font-size: 1.05rem; font-weight: 700; margin-bottom: .9rem; color: var(--mo-ink); }
@@ -62,7 +64,7 @@ body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Seg
 .mo-moq { font-size: .72rem; color: var(--mo-muted); }
 .mo-price { font-size: 1.15rem; font-weight: 700; color: var(--mo-accent-2); }
 .mo-gate { display: inline-flex; align-items: center; gap: .35rem; font-size: .78rem; font-weight: 600; color: var(--mo-primary); text-decoration: none; border: 1px dashed var(--mo-primary); border-radius: var(--mo-radius); padding: .3rem .6rem; }
-.mo-gate:hover { background: #eef4f8; }
+.mo-gate:hover { background: var(--mo-tint); }
 
 /* ---- Data-dense tables (orders, cart) ---- */
 .mo-table thead th { text-transform: uppercase; letter-spacing: .03em; font-size: .68rem; color: var(--mo-muted); font-weight: 700; border-bottom-width: 1px; }
