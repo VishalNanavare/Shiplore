@@ -4,6 +4,7 @@ $active = $active ?? '';
 $groups = [
     ['Marketplace', 'bi-shop', [
         ['vendors', 'Vendors', 'bi-shop', 'admin/vendors'],
+        ['manufacturers', 'Manufacturers', 'bi-building', 'admin/manufacturers'],
         ['shops', 'Shops', 'bi-geo-alt', 'admin/shops'],
         ['products', 'Products', 'bi-box-seam', 'admin/products'],
         ['product-approvals', 'Product Approvals', 'bi-patch-check', 'admin/product-approvals'],
@@ -21,6 +22,7 @@ $groups = [
     ]],
     ['Sales', 'bi-bag', [
         ['orders', 'Orders', 'bi-bag', 'admin/orders'],
+        ['purchase-orders', 'B2B Purchase Orders', 'bi-receipt', 'admin/purchase-orders'],
         ['deliveries', 'Deliveries', 'bi-truck', 'admin/deliveries'],
         ['riders', 'Riders', 'bi-scooter', 'admin/riders'],
         ['payments', 'Payments', 'bi-credit-card', 'admin/payments'],

@@ -15,6 +15,9 @@
         ['Pending Approvals', (int) ($metrics['pending_vendors'] ?? 0), 'bi-patch-question', site_url('admin/vendors?status=submitted')],
         ['Orders', (int) ($metrics['orders'] ?? 0), 'bi-bag-check', null],
         ['Customers', (int) ($metrics['customers'] ?? 0), 'bi-people', null],
+        ['Manufacturers', (int) ($metrics['manufacturers'] ?? 0), 'bi-building', site_url('admin/manufacturers')],
+        ['Pending Manufacturers', (int) ($metrics['pending_manufacturers'] ?? 0), 'bi-patch-exclamation', site_url('admin/manufacturers?status=submitted')],
+        ['Open B2B Orders', (int) ($metrics['open_purchase_orders'] ?? 0), 'bi-receipt', site_url('admin/purchase-orders')],
     ] as [$label, $value, $icon, $link]): ?>
         <div class="col-6 col-xl-3">
             <div class="card kpi-card h-100">

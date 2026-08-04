@@ -62,6 +62,14 @@ final class NotificationService
         'transfer.rejected'   => ['transactional', ['in_app'], 'Stock transfer rejected', 'Stock transfer #{{transfer_id}} was rejected.'],
         'transfer.dispatched' => ['transactional', ['in_app'], 'Stock transfer dispatched', 'Stock transfer #{{transfer_id}} has been dispatched.'],
         'transfer.received'   => ['transactional', ['in_app'], 'Stock transfer received', 'Stock transfer #{{transfer_id}} was received.'],
+        // monline B2B purchase orders (PurchaseOrderRepository) — var: po_no.
+        // in_app only, like transfer.* — this is a back-office trade flow between two
+        // businesses, not a consumer order that warrants a push.
+        'po.placed'     => ['transactional', ['in_app'], 'New purchase order {{po_no}}', 'Purchase order {{po_no}} was placed — please accept or reject it.'],
+        'po.accepted'   => ['transactional', ['in_app'], 'Purchase order {{po_no}} accepted', 'Your purchase order {{po_no}} was accepted.'],
+        'po.rejected'   => ['transactional', ['in_app'], 'Purchase order {{po_no}} rejected', 'Your purchase order {{po_no}} was rejected — open it to see the reason.'],
+        'po.dispatched' => ['transactional', ['in_app'], 'Purchase order {{po_no}} dispatched', 'Purchase order {{po_no}} has been dispatched.'],
+        'po.received'   => ['transactional', ['in_app'], 'Purchase order {{po_no}} received', 'Purchase order {{po_no}} was marked received by the buyer.'],
     ];
 
     /** Render a {{placeholder}} template. Pure. */

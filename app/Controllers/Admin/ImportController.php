@@ -103,7 +103,10 @@ final class ImportController extends BaseController
                 'tax'      => $col($db->table('tax_classes')->select('code')->orderBy('code')->get()->getResultArray(), 'code'),
                 'unit'     => $col($db->table('units')->select('code')->orderBy('code')->get()->getResultArray(), 'code'),
                 'category' => $col($db->table('categories')->select('slug')->where('status', 'active')->where('deleted_at', null)->orderBy('slug')->get(40)->getResultArray(), 'slug'),
-                'vendor'   => $col($db->table('vendors')->select('slug')->where('deleted_at', null)->orderBy('slug')->get(40)->getResultArray(), 'slug'),
+                // Vendors only: bulk import writes products.vendor_id, and manufacturer
+                // catalogues are created through the manufacturer panel's making/selling
+                // price form, which this template has no columns for.
+                'vendor'   => $col($db->table('vendors')->select('slug')->where('deleted_at', null)->where('party_type', 'vendor')->orderBy('slug')->get(40)->getResultArray(), 'slug'),
                 'brand'    => $col($db->table('brands')->select('slug')->where('status', 'active')->orderBy('slug')->get(40)->getResultArray(), 'slug'),
             ];
         } catch (\Throwable) {

@@ -54,6 +54,49 @@ final class PortalController extends BaseController
         return redirect()->to($this->portalUrl('vendor', 'vendor/dashboard'));
     }
 
+    /**
+     * Enter a manufacturer's portal as its owner.
+     *
+     * Parallel to enterVendor() rather than folded into it: a manufacturer owner has
+     * principal_type='manufacturer', so both the user lookup and the session's
+     * principal_type must differ. Routing manufacturers through enterVendor() is what
+     * made this silently fail with "no active owner login" before.
+     */
+    public function enterManufacturer(int $manufacturerId): RedirectResponse
+    {
+        if ($denied = $this->adminGuard('manufacturer.view')) {
+            return $denied;
+        }
+        if ($busy = $this->blockIfImpersonating()) {
+            return $busy;
+        }
+
+        $m = Database::connect()->table('vendors')->select('id, display_name, owner_user_id, status')
+            ->where('id', $manufacturerId)->where('party_type', 'manufacturer')->where('deleted_at', null)
+            ->get()->getRowArray();
+        if ($m === null) {
+            return redirect()->to('admin/manufacturers')->with('error', 'Manufacturer not found.');
+        }
+        if ($m['status'] === 'terminated') {
+            return redirect()->to('admin/manufacturers/' . $manufacturerId)->with('error', 'This manufacturer is terminated and cannot be entered.');
+        }
+        $owner = $this->activeUser((int) $m['owner_user_id'], 'manufacturer');
+        if ($owner === null) {
+            return redirect()->to('admin/manufacturers/' . $manufacturerId)->with('error', 'This manufacturer has no active owner login to enter as.');
+        }
+
+        $this->startStaffImpersonation(
+            'manufacturer',
+            (int) $owner['id'],
+            (string) $owner['name'],
+            'Manufacturer · ' . (string) $m['display_name'],
+            $manufacturerId,
+            'manufacturer',
+        );
+
+        return redirect()->to($this->portalUrl('manufacturer', 'manufacturer/dashboard'));
+    }
+
     /** Enter a shop's portal as its vendor, focused on that shop. */
     public function enterShop(int $shopId): RedirectResponse
     {
@@ -168,7 +211,7 @@ final class PortalController extends BaseController
     // ---- helpers -----------------------------------------------------------
 
     /** Stash the admin, then SWAP the staff session to act as a vendor user. */
-    private function startStaffImpersonation(string $kind, int $userId, string $userName, string $label, int $entityId): void
+    private function startStaffImpersonation(string $kind, int $userId, string $userName, string $label, int $entityId, string $principalType = 'vendor'): void
     {
         $session = session();
         $this->audit('start', $kind, $entityId, $userId);
@@ -187,7 +230,7 @@ final class PortalController extends BaseController
             // Swap the acting identity:
             'user_id'                 => $userId,
             'user_name'               => $userName,
-            'principal_type'          => 'vendor',
+            'principal_type'          => $principalType,
         ]);
     }
 

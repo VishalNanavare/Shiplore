@@ -47,7 +47,7 @@ final class VendorRepository
     private function baseVendorQuery(): object
     {
         return Database::connect()->table('vendors v')
-            ->select('v.id, v.display_name, v.slug, v.gstin, v.gstin_status, v.status, v.created_at, v.business_type_id, bt.name AS business_type')
+            ->select('v.id, v.display_name, v.slug, v.gstin, v.gstin_status, v.status, v.created_at, v.party_type, v.business_type_id, bt.name AS business_type')
             ->join('business_types bt', 'bt.id = v.business_type_id', 'left')
             ->where('v.deleted_at', null)
             ->orderBy('v.created_at', 'DESC');
@@ -58,6 +58,11 @@ final class VendorRepository
     {
         if (! empty($f['status'])) {
             $b->where('v.status', $f['status']);
+        }
+        // Manufacturers live in this same table under party_type='manufacturer'. Admin
+        // screens must say which they want, or the two seller kinds mix silently.
+        if (! empty($f['party_type'])) {
+            $b->where('v.party_type', $f['party_type']);
         }
         if (isset($f['type']) && $f['type'] === 'unassigned') {
             $b->where('v.business_type_id', null);
@@ -88,7 +93,7 @@ final class VendorRepository
     public function find(int $id): ?array
     {
         $row = Database::connect()->table('vendors v')
-            ->select('v.id, v.legal_name, v.display_name, v.business_type_id, v.gstin, v.status, v.owner_user_id, u.email AS owner_email, u.phone AS owner_phone')
+            ->select('v.id, v.legal_name, v.display_name, v.business_type_id, v.gstin, v.gstin_status, v.status, v.party_type, v.state_code, v.created_at, v.owner_user_id, u.email AS owner_email, u.phone AS owner_phone')
             ->join('users u', 'u.id = v.owner_user_id', 'left')
             ->where('v.id', $id)->where('v.deleted_at', null)
             ->get()->getRowArray();

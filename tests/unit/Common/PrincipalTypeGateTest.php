@@ -114,12 +114,31 @@ final class PrincipalTypeGateTest extends TestCase
         );
     }
 
-    /** Impersonation must keep working: PortalController swaps principal_type both ways. */
+    /**
+     * Impersonation must keep working: PortalController swaps principal_type both ways.
+     *
+     * The entry side is parameterised rather than a 'vendor' literal — a manufacturer
+     * owner is principal_type='manufacturer', and hardcoding 'vendor' is what made
+     * entering a manufacturer portal fail. 'vendor' remains the default so the existing
+     * vendor and shop call sites are unchanged.
+     */
     public function testImpersonationSwapsPrincipalType(): void
     {
         $portal = (string) file_get_contents(APPPATH . 'Controllers/Admin/PortalController.php');
 
-        $this->assertStringContainsString("'principal_type'          => 'vendor'", $portal);
+        $this->assertStringContainsString("'principal_type'          => \$principalType,", $portal);
+        $this->assertStringContainsString("string \$principalType = 'vendor'", $portal);
+        // Returning to admin always restores the platform principal, whatever was entered.
         $this->assertStringContainsString("'principal_type' => 'platform'", $portal);
+    }
+
+    /** Every principal type that can be impersonated must be resolvable as that type. */
+    public function testEachPortalEntryResolvesItsOwnPrincipalType(): void
+    {
+        $portal = (string) file_get_contents(APPPATH . 'Controllers/Admin/PortalController.php');
+
+        $this->assertStringContainsString("activeUser((int) \$vendor['owner_user_id'], 'vendor')", $portal);
+        $this->assertStringContainsString("activeUser((int) \$m['owner_user_id'], 'manufacturer')", $portal);
+        $this->assertStringContainsString("activeUser((int) \$rider['user_id'], 'rider')", $portal);
     }
 }

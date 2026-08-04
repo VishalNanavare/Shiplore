@@ -14,14 +14,23 @@ use Throwable;
  */
 final class DashboardRepository
 {
-    /** @return array{vendors:int,pending_vendors:int,orders:int,customers:int} */
+    /**
+     * Vendors and manufacturers share the `vendors` table, split by party_type. The
+     * vendor counts are filtered so manufacturers are not silently reported as vendors.
+     *
+     * @return array{vendors:int,pending_vendors:int,orders:int,customers:int,manufacturers:int,pending_manufacturers:int,open_purchase_orders:int}
+     */
     public function metrics(): array
     {
         return [
-            'vendors'         => $this->safeCount(static fn ($db) => $db->table('vendors')->where('deleted_at', null)),
-            'pending_vendors' => $this->safeCount(static fn ($db) => $db->table('vendors')->where('deleted_at', null)->whereIn('status', ['submitted', 'under_review'])),
+            'vendors'         => $this->safeCount(static fn ($db) => $db->table('vendors')->where('deleted_at', null)->where('party_type', 'vendor')),
+            'pending_vendors' => $this->safeCount(static fn ($db) => $db->table('vendors')->where('deleted_at', null)->where('party_type', 'vendor')->whereIn('status', ['submitted', 'under_review'])),
             'orders'          => $this->safeCount(static fn ($db) => $db->table('orders')->where('deleted_at', null)),
             'customers'       => $this->safeCount(static fn ($db) => $db->table('customers')->where('deleted_at', null)),
+
+            'manufacturers'         => $this->safeCount(static fn ($db) => $db->table('vendors')->where('deleted_at', null)->where('party_type', 'manufacturer')),
+            'pending_manufacturers' => $this->safeCount(static fn ($db) => $db->table('vendors')->where('deleted_at', null)->where('party_type', 'manufacturer')->whereIn('status', ['submitted', 'under_review'])),
+            'open_purchase_orders'  => $this->safeCount(static fn ($db) => $db->table('mfg_purchase_orders')->where('deleted_at', null)->whereNotIn('status', ['received', 'closed', 'cancelled', 'rejected'])),
         ];
     }
 

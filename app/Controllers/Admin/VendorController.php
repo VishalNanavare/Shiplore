@@ -31,7 +31,10 @@ final class VendorController extends BaseController
         $perPage = in_array((int) $perRaw, [25, 50, 100, 200], true) ? (int) $perRaw : 50;
         $page    = max(1, (int) $req->getGet('page'));
 
-        $f     = ['status' => $status ?: null, 'q' => $q, 'type' => $type ?: null];
+        // Hard-scoped to vendors. Manufacturers share this table under
+        // party_type='manufacturer' and have their own screens — they must never appear
+        // here unlabelled, and this screen's shop/settlement panels are meaningless for them.
+        $f     = ['status' => $status ?: null, 'q' => $q, 'type' => $type ?: null, 'party_type' => 'vendor'];
         $repo  = service('vendorRepository');
         $total = $repo->countList($f);
         $f['limit']  = $perPage;
@@ -68,6 +71,9 @@ final class VendorController extends BaseController
         $vendor = service('vendorRepository')->find($id);
         if ($vendor === null) {
             return redirect()->to('admin/vendors')->with('error', 'Vendor not found.');
+        }
+        if ($wrong = $this->rejectManufacturer($vendor, $id)) {
+            return $wrong;
         }
 
         $db   = \Config\Database::connect();
@@ -118,6 +124,9 @@ final class VendorController extends BaseController
         if ($vendor === null) {
             return redirect()->to('admin/vendors')->with('error', 'Vendor not found.');
         }
+        if ($wrong = $this->rejectManufacturer($vendor, $id)) {
+            return $wrong;
+        }
 
         return $this->form($vendor);
     }
@@ -158,9 +167,14 @@ final class VendorController extends BaseController
         if ($denied = $this->guard('vendor.settings.manage')) {
             return $denied;
         }
-        $repo = service('vendorRepository');
-        if ($repo->find($id) === null) {
+        $repo   = service('vendorRepository');
+        $vendor = $repo->find($id);
+        if ($vendor === null) {
             return redirect()->to('admin/vendors')->with('error', 'Vendor not found.');
+        }
+        // Also guarded here, not just in edit() — otherwise a direct POST bypasses it.
+        if ($wrong = $this->rejectManufacturer($vendor, $id)) {
+            return $wrong;
         }
         $legal   = trim((string) $this->request->getPost('legal_name'));
         $display = trim((string) $this->request->getPost('display_name'));
@@ -388,6 +402,10 @@ final class VendorController extends BaseController
         if ($vendor === null) {
             return redirect()->to('admin/vendors')->with('error', 'Vendor not found.');
         }
+        // The important one: without it, vendor.approve would also approve manufacturers.
+        if ($wrong = $this->rejectManufacturer($vendor, $id)) {
+            return $wrong;
+        }
 
         $repo->updateStatus($id, $status, session()->get('user_id'));
 
@@ -397,6 +415,27 @@ final class VendorController extends BaseController
         }
 
         return redirect()->to('admin/vendors')->with('success', $okMessage);
+    }
+
+    /**
+     * Refuse to act on a manufacturer through the vendor screens.
+     *
+     * Manufacturers share the `vendors` table under party_type='manufacturer' but have
+     * their own admin screens and their own permissions. Without this, an admin holding
+     * only vendor.approve could approve a manufacturer via the vendor route and bypass
+     * manufacturer.approve entirely — the same "one grant silently covers two things"
+     * failure the manufacturer scope classes were created to prevent.
+     *
+     * @param array<string,mixed> $row
+     */
+    private function rejectManufacturer(array $row, int $id): ?RedirectResponse
+    {
+        if (($row['party_type'] ?? 'vendor') === 'manufacturer') {
+            return redirect()->to('admin/manufacturers/' . $id)
+                ->with('error', 'That is a manufacturer — manage it from the Manufacturers screen.');
+        }
+
+        return null;
     }
 
     /** RBAC guard for web pages: returns a redirect if the actor lacks $permission, else null. */

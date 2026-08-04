@@ -56,16 +56,23 @@ final class OrderController extends BaseMonlineController
 
         // MOQ is checked here for an immediate message, and AGAIN at placement — the
         // cart sits in a session that can go stale while the product's rules change.
+        //
+        // A null lookup is a REJECTION, not a reason to skip validation: findBySlug()
+        // returns null precisely when the item is unpublished or its manufacturer is no
+        // longer approved/active. Falling through would put an unvalidated, raw POSTed
+        // variant_id into the cart.
         $rules = service('monlineCatalogRepository')->findBySlug((string) $this->request->getPost('slug'), false);
-        if ($rules !== null) {
-            $check = PurchaseRules::validate($qty, [
-                'min_purchase_qty' => $rules['min_purchase_qty'] ?? null,
-                'max_purchase_qty' => $rules['max_purchase_qty'] ?? null,
-                'qty_step'         => $rules['qty_step'] ?? null,
-            ]);
-            if (! $check['ok']) {
-                return redirect()->back()->with('error', $check['message']);
-            }
+        if ($rules === null) {
+            return redirect()->back()->with('error', 'That item is no longer available.');
+        }
+
+        $check = PurchaseRules::validate($qty, [
+            'min_purchase_qty' => $rules['min_purchase_qty'] ?? null,
+            'max_purchase_qty' => $rules['max_purchase_qty'] ?? null,
+            'qty_step'         => $rules['qty_step'] ?? null,
+        ]);
+        if (! $check['ok']) {
+            return redirect()->back()->with('error', $check['message']);
         }
 
         service('monlineCart')->add($variantId, $qty);
@@ -149,6 +156,7 @@ final class OrderController extends BaseMonlineController
                 $this->buyerShopIds(),
                 trim((string) $this->request->getGet('status')) ?: null,
             ),
+            'cartCount' => service('monlineCart')->count(),
         ]);
     }
 
@@ -164,8 +172,9 @@ final class OrderController extends BaseMonlineController
         }
 
         return $this->render('monline/order_detail', $found['po']['po_no'], [
-            'po'    => $found['po'],
-            'items' => $found['items'],
+            'po'        => $found['po'],
+            'items'     => $found['items'],
+            'cartCount' => service('monlineCart')->count(),
         ]);
     }
 

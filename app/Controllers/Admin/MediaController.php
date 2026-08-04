@@ -20,7 +20,10 @@ final class MediaController extends BaseController
             return $denied;
         }
         $db      = Database::connect();
+        // Vendors only — the drill-down below rolls up `shops`, which manufacturers do
+        // not have (their locations are `mshops`), so they would open an empty folder.
         $vendors = $db->table('vendors')->select('id, display_name')->where('deleted_at', null)
+            ->where('party_type', 'vendor')
             ->orderBy('display_name', 'ASC')->get()->getResultArray();
         $vendorIds = array_map(static fn ($v) => (int) $v['id'], $vendors);
 
@@ -58,7 +61,8 @@ final class MediaController extends BaseController
             return $denied;
         }
         $db     = Database::connect();
-        $vendor = $db->table('vendors')->select('id, display_name')->where('id', $vendorId)->get()->getRowArray();
+        $vendor = $db->table('vendors')->select('id, display_name')->where('id', $vendorId)
+            ->where('party_type', 'vendor')->get()->getRowArray();
         if ($vendor === null) {
             return redirect()->to('admin/media')->with('error', 'Vendor not found.');
         }
@@ -108,7 +112,7 @@ final class MediaController extends BaseController
         }
         $db     = Database::connect();
         $exists = $owner === 'vendor'
-            ? $db->table('vendors')->where('id', $ownerId)->where('deleted_at', null)->countAllResults()
+            ? $db->table('vendors')->where('id', $ownerId)->where('party_type', 'vendor')->where('deleted_at', null)->countAllResults()
             : $db->table('shops')->where('id', $ownerId)->where('deleted_at', null)->countAllResults();
         if (! $exists) {
             return redirect()->to('admin/media')->with('error', ucfirst($owner) . ' not found.');

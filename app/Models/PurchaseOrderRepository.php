@@ -66,17 +66,26 @@ final class PurchaseOrderRepository
             $bySeller[(int) $r['seller_vendor_id']][] = $r;
         }
 
-        $poIds = [];
+        $poIds  = [];
+        $placed = []; // seller notifications, queued here and fired only after the commit
         $db->transBegin();
 
         try {
             foreach ($bySeller as $sellerId => $rows) {
-                $poIds[] = $this->insertPo($db, $buyerVendorId, $buyerShopId, (int) $sellerId, $rows, $shop, $notes, $actorId);
+                $r        = $this->insertPo($db, $buyerVendorId, $buyerShopId, (int) $sellerId, $rows, $shop, $notes, $actorId);
+                $poIds[]  = $r['id'];
+                $placed[] = ['seller_vendor_id' => (int) $sellerId, 'po_no' => $r['po_no']];
             }
             $db->transComplete();
 
             if (! $db->transStatus()) {
                 return ['ok' => false, 'error' => 'Could not place the order.', 'po_ids' => []];
+            }
+
+            // Only after the commit is confirmed — a rolled-back placement must never
+            // tell a manufacturer they have a new order.
+            foreach ($placed as $p) {
+                $this->notifyVendorOwner($p['seller_vendor_id'], 'po.placed', ['po_no' => $p['po_no']]);
             }
 
             return ['ok' => true, 'error' => '', 'po_ids' => $poIds];
@@ -128,6 +137,10 @@ final class PurchaseOrderRepository
             // Only manufacturers sell on monline.
             ->where('v.party_type', 'manufacturer')
             ->where('v.deleted_at', null)
+            // Same account-status gate MonlineCatalogRepository::base() applies to browsing.
+            // Without it, a stale or guessed variant id could be ordered from a manufacturer
+            // that is still submitted, or was rejected/suspended after the cart was filled.
+            ->whereIn('v.status', ['approved', 'active'])
             ->get()->getResultArray();
 
         $byId = [];
@@ -164,8 +177,10 @@ final class PurchaseOrderRepository
     /**
      * @param list<array<string,mixed>> $rows
      * @param array<string,mixed>       $shop
+     * @return array{id:int,po_no:string} po_no is returned so the caller can notify the
+     *                                    seller AFTER the transaction commits
      */
-    private function insertPo(object $db, int $buyerVendorId, int $buyerShopId, int $sellerId, array $rows, array $shop, ?string $notes, ?int $actorId): int
+    private function insertPo(object $db, int $buyerVendorId, int $buyerShopId, int $sellerId, array $rows, array $shop, ?string $notes, ?int $actorId): array
     {
         $gst         = service('gstCalculator');
         $placeOf     = (string) ($shop['state_code'] ?? '');
@@ -240,7 +255,7 @@ final class PurchaseOrderRepository
             'grand_total'   => $grand->amount(),
         ]);
 
-        return $poId;
+        return ['id' => $poId, 'po_no' => $poNo];
     }
 
     /** POs placed BY this vendor. @return list<array<string,mixed>> */
@@ -285,6 +300,129 @@ final class PurchaseOrderRepository
         }
 
         return $b->orderBy('po.id', 'DESC')->limit(200)->get()->getResultArray();
+    }
+
+    // ---- Platform oversight ------------------------------------------------
+    // Unscoped to either trading party. Only ever reached from the admin panel,
+    // behind monline.po.oversight.* permissions.
+
+    /** @param array<string,mixed> $f keys: status, q, buyer_vendor_id, seller_vendor_id */
+    private function adminBaseQuery(array $f): object
+    {
+        $b = Database::connect()->table('mfg_purchase_orders po')
+            ->select('po.*, bv.display_name AS buyer_name, sv.display_name AS seller_name, s.name AS buyer_shop_name')
+            ->join('vendors bv', 'bv.id = po.buyer_vendor_id', 'left')
+            ->join('vendors sv', 'sv.id = po.seller_vendor_id', 'left')
+            ->join('shops s', 's.id = po.buyer_shop_id', 'left')
+            ->where('po.deleted_at', null);
+
+        if (! empty($f['status'])) {
+            $b->where('po.status', $f['status']);
+        }
+        if (! empty($f['buyer_vendor_id'])) {
+            $b->where('po.buyer_vendor_id', (int) $f['buyer_vendor_id']);
+        }
+        if (! empty($f['seller_vendor_id'])) {
+            $b->where('po.seller_vendor_id', (int) $f['seller_vendor_id']);
+        }
+        if (! empty($f['q'])) {
+            $b->groupStart()
+                ->like('po.po_no', $f['q'])
+                ->orLike('bv.display_name', $f['q'])
+                ->orLike('sv.display_name', $f['q'])
+                ->groupEnd();
+        }
+
+        return $b;
+    }
+
+    /** @return list<array<string,mixed>> */
+    public function listForAdmin(array $f = [], int $limit = 50, int $offset = 0): array
+    {
+        return $this->adminBaseQuery($f)->orderBy('po.id', 'DESC')->limit($limit, $offset)->get()->getResultArray();
+    }
+
+    public function countForAdmin(array $f = []): int
+    {
+        return $this->adminBaseQuery($f)->countAllResults();
+    }
+
+    /**
+     * A PO with its lines, for platform staff. Unlike findFor(), cancelled lines are
+     * included — oversight should see what was removed, not a tidied-up version.
+     *
+     * @return array{po:array<string,mixed>,items:list<array<string,mixed>>}|null
+     */
+    public function findForAdmin(int $poId): ?array
+    {
+        $po = Database::connect()->table('mfg_purchase_orders po')
+            ->select('po.*, bv.display_name AS buyer_name, bv.gstin AS buyer_vendor_gstin, bv.owner_user_id AS buyer_owner_user_id,
+                      sv.display_name AS seller_name, sv.gstin AS seller_gstin, sv.owner_user_id AS seller_owner_user_id,
+                      s.name AS buyer_shop_name')
+            ->join('vendors bv', 'bv.id = po.buyer_vendor_id', 'left')
+            ->join('vendors sv', 'sv.id = po.seller_vendor_id', 'left')
+            ->join('shops s', 's.id = po.buyer_shop_id', 'left')
+            ->where('po.id', $poId)->where('po.deleted_at', null)
+            ->get()->getRowArray();
+        if ($po === null) {
+            return null;
+        }
+
+        $items = Database::connect()->table('mfg_purchase_order_items')
+            ->where('po_id', $poId)->orderBy('id')->get()->getResultArray();
+
+        return ['po' => $po, 'items' => $items];
+    }
+
+    /**
+     * Platform force-cancel — the only write oversight has, for an order stuck between
+     * two parties who will not move it.
+     *
+     * Deliberately delegated to the same StatusMachine gate everyone else uses, so it
+     * cannot cancel a dispatched or received order: stock has moved by then and nothing
+     * here would unwind it. The reason is stored in the existing reject_reason column,
+     * prefixed, rather than adding a schema column for a rare action.
+     *
+     * @return array{ok:bool,error:string}
+     */
+    public function adminCancel(int $poId, ?int $actorId, string $reason): array
+    {
+        $po = Database::connect()->table('mfg_purchase_orders')
+            ->where('id', $poId)->where('deleted_at', null)->get()->getRowArray();
+        if ($po === null) {
+            return ['ok' => false, 'error' => 'Purchase order not found.'];
+        }
+
+        $from = (string) $po['status'];
+        if (! StatusMachine::canPurchaseOrder($from, 'cancelled')) {
+            return ['ok' => false, 'error' => 'A ' . $from . ' order cannot be cancelled — the goods have already moved.'];
+        }
+
+        Database::connect()->table('mfg_purchase_orders')->where('id', $poId)->update([
+            'status'        => 'cancelled',
+            'reject_reason' => mb_substr('[Admin] ' . $reason, 0, 255),
+            'updated_by'    => $actorId,
+        ]);
+
+        foreach ([(int) $po['buyer_vendor_id'], (int) $po['seller_vendor_id']] as $vid) {
+            $this->notifyVendorOwner($vid, 'po.rejected', ['po_no' => $po['po_no']]);
+        }
+
+        return ['ok' => true, 'error' => ''];
+    }
+
+    /** GST totals across a manufacturer's settled B2B orders. @return array<string,mixed> */
+    public function sellerGstSummary(int $sellerVendorId): array
+    {
+        $row = Database::connect()->table('mfg_purchase_orders')
+            ->select('COUNT(*) AS orders, COALESCE(SUM(taxable_value),0) AS taxable, COALESCE(SUM(cgst),0) AS cgst,
+                      COALESCE(SUM(sgst),0) AS sgst, COALESCE(SUM(igst),0) AS igst, COALESCE(SUM(grand_total),0) AS grand', false)
+            ->where('seller_vendor_id', $sellerVendorId)
+            ->where('deleted_at', null)
+            ->whereNotIn('status', ['draft', 'cancelled', 'rejected'])
+            ->get()->getRowArray();
+
+        return $row ?: ['orders' => 0, 'taxable' => '0', 'cgst' => '0', 'sgst' => '0', 'igst' => '0', 'grand' => '0'];
     }
 
     /**
@@ -339,6 +477,12 @@ final class PurchaseOrderRepository
         }
 
         Database::connect()->table('mfg_purchase_orders')->where('id', $poId)->update($set);
+
+        // Only the seller ever drives these three; the buyer's only transition is
+        // 'cancelled'. So branching on $to alone is enough — no $side check needed.
+        if (in_array($to, ['accepted', 'rejected', 'dispatched'], true)) {
+            $this->notifyVendorOwner((int) $found['po']['buyer_vendor_id'], 'po.' . $to, ['po_no' => $found['po']['po_no']]);
+        }
 
         return ['ok' => true, 'error' => ''];
     }
@@ -397,14 +541,38 @@ final class PurchaseOrderRepository
 
             $db->transComplete();
 
-            return $db->transStatus()
-                ? ['ok' => true, 'error' => '']
-                : ['ok' => false, 'error' => 'Could not record the receipt.'];
+            if (! $db->transStatus()) {
+                return ['ok' => false, 'error' => 'Could not record the receipt.'];
+            }
+
+            $this->notifyVendorOwner((int) $po['seller_vendor_id'], 'po.received', ['po_no' => $po['po_no']]);
+
+            return ['ok' => true, 'error' => ''];
         } catch (Throwable $e) {
             $db->transRollback();
             log_message('error', 'monline PO receive failed for PO ' . $poId . ': ' . $e->getMessage());
 
             return ['ok' => false, 'error' => 'Could not record the receipt.'];
+        }
+    }
+
+    /**
+     * Best-effort notification to a vendor's or manufacturer's owner.
+     *
+     * Mirrors TransferService::notifyShop(): silent no-op if the owner cannot be
+     * resolved, and never throws — a notification failure must not roll back or block
+     * a purchase order that has already been committed.
+     */
+    private function notifyVendorOwner(int $vendorId, string $eventCode, array $vars): void
+    {
+        try {
+            $row = Database::connect()->table('vendors')->select('owner_user_id')
+                ->where('id', $vendorId)->get()->getRowArray();
+            $uid = $row['owner_user_id'] ?? null;
+            if ($uid) {
+                service('notificationService')->notify((int) $uid, $eventCode, $vars);
+            }
+        } catch (Throwable) {
         }
     }
 

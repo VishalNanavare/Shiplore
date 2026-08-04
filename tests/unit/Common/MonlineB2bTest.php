@@ -65,10 +65,16 @@ final class MonlineB2bTest extends CIUnitTestCase
         $this->assertStringContainsString('buyerVendorId() !== null', $base);
     }
 
-    /** No monline view may print a price outside a showPrices guard. */
+    /**
+     * No monline view may print a price outside a showPrices guard.
+     *
+     * Covers '_product_card' and 'home' too: once the catalogue becomes publicly
+     * browsable, price markup moves into the shared card partial and onto the landing
+     * page, and this test must follow it there or it silently stops asserting anything.
+     */
     public function testViewsGatePriceOutputOnShowPrices(): void
     {
-        foreach (['browse', 'product'] as $view) {
+        foreach (['browse', 'product', '_product_card', 'home'] as $view) {
             $src = (string) file_get_contents(APPPATH . "Views/monline/{$view}.php");
 
             $this->assertStringContainsString(
@@ -83,6 +89,27 @@ final class MonlineB2bTest extends CIUnitTestCase
                 $this->assertLessThan($price, $guard, "monline/{$view}.php echoes a price before the guard");
             }
         }
+    }
+
+    /**
+     * Browsing must be public. home() used to render nothing but a sign-in wall for a
+     * logged-out visitor — no catalogue call at all — which contradicts the requirement
+     * that anyone can browse products and only the price stays gated.
+     */
+    public function testHomeShowsCatalogueToEveryVisitor(): void
+    {
+        $src = $this->read('Controllers/Monline/CatalogController.php');
+
+        $this->assertStringNotContainsString(
+            "if (! \$this->isBuyer()) {\n            return \$this->render('monline/home', 'Wholesale marketplace');",
+            $src,
+            'home() must not gate the whole catalogue behind isBuyer() — only the price may be gated',
+        );
+
+        $body = $this->methodBody($src, 'home');
+        $this->assertStringContainsString('$withPrices = $this->isBuyer();', $body);
+        $this->assertStringContainsString('$repo->products(', $body, 'home() must fetch products unconditionally');
+        $this->assertStringContainsString("'showPrices'", $body);
     }
 
     // ------------------------------------------------------- making price containment
@@ -138,6 +165,49 @@ final class MonlineB2bTest extends CIUnitTestCase
         // The cart is variantId => qty only; no price travels in it.
         $cart = $this->read('Libraries/Monline/MonlineCart.php');
         $this->assertStringNotContainsString('price', $cart, 'the cart must carry quantities only, never prices');
+    }
+
+    /**
+     * Placement must re-check the manufacturer's ACCOUNT status, not just party_type.
+     *
+     * MonlineCatalogRepository::base() already hides an unapproved/rejected/suspended
+     * manufacturer from browsing. Without the same predicate at placement, a buyer
+     * holding a stale or guessed variant id can still place a real purchase order
+     * against one — the catalogue gate is not a security boundary on its own.
+     */
+    public function testPlacementRejectsAnUnapprovedManufacturer(): void
+    {
+        $src = $this->read('Models/PurchaseOrderRepository.php');
+
+        $this->assertStringContainsString(
+            "whereIn('v.status', ['approved', 'active'])",
+            $this->methodBody($src, 'resolveLines'),
+            'resolveLines() must reject a variant whose manufacturer is not approved/active — '
+            . 'browsing already hides these, and placement must match or the gate is bypassable',
+        );
+    }
+
+    /** A cart add for an unresolvable product must be REJECTED, never silently accepted. */
+    public function testAddRejectsWhenTheProductCannotBeResolved(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/OrderController.php'), 'add');
+
+        $this->assertStringContainsString(
+            'if ($rules === null)',
+            $body,
+            'add() must reject when findBySlug() returns null (e.g. an unapproved manufacturer) '
+            . 'rather than falling through and adding the raw POSTed variant_id unvalidated',
+        );
+
+        // The rejection must return BEFORE the raw POSTed variant/qty reaches the cart.
+        $nullCheck = strpos($body, 'if ($rules === null)');
+        $cartAdd   = strpos($body, "service('monlineCart')->add(");
+        $this->assertNotFalse($nullCheck);
+        $this->assertNotFalse($cartAdd);
+        $this->assertLessThan($nullCheck === false ? 0 : $cartAdd, $nullCheck, 'the null guard must precede the cart write');
+
+        $between = substr($body, $nullCheck, $cartAdd - $nullCheck);
+        $this->assertStringContainsString('return redirect()', $between, 'the null branch must return, not merely check');
     }
 
     /** Only manufacturers may be sold on monline. */

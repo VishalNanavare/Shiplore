@@ -77,7 +77,7 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
     /** Nothing in the panel may be reachable without resolving a manufacturer first. */
     public function testEveryPublicControllerMethodRequiresAManufacturer(): void
     {
-        foreach (['ManufacturerDashboardController', 'UnitController', 'ProductController'] as $ctrl) {
+        foreach (['ManufacturerDashboardController', 'UnitController', 'ProductController', 'PurchaseOrderController'] as $ctrl) {
             $src = $this->read("Controllers/Manufacturer/{$ctrl}.php");
             preg_match_all('/public function (\w+)\s*\(/', $src, $m);
 

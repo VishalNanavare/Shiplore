@@ -25,7 +25,7 @@ final class ReportRepository
             'commission_earned' => $this->safeSum('sub_orders', 'commission_amount'),
             'refunds_total'     => $this->safeSum('refunds', 'amount', ['status' => 'completed']),
             'settlements_due'   => $this->safeSum('settlements', 'net_payable', ['status' => 'approved']),
-            'active_vendors'    => $this->safe(fn () => $this->db()->table('vendors')->where('status', 'active')->where('deleted_at', null)->countAllResults()),
+            'active_vendors'    => $this->safe(fn () => $this->db()->table('vendors')->where('status', 'active')->where('party_type', 'vendor')->where('deleted_at', null)->countAllResults()),
             'customers'         => $this->safe(fn () => $this->db()->table('customers')->where('deleted_at', null)->countAllResults()),
             'pending_reviews'   => $this->safe(fn () => $this->db()->table('products')->whereIn('status', ['submitted', 'under_review'])->where('deleted_at', null)->countAllResults()),
         ];
@@ -45,6 +45,9 @@ final class ReportRepository
         return $this->safe(fn () => $this->db()->table('sub_orders so')
             ->select('v.display_name AS vendor, COUNT(*) AS orders, COALESCE(SUM(so.grand_total),0) AS revenue')
             ->join('vendors v', 'v.id = so.vendor_id', 'left')
+            // Manufacturers are kept off the consumer storefront by policy, not by a DB
+            // constraint — so guard the report rather than trust that they never appear.
+            ->where('v.party_type', 'vendor')
             ->where('so.deleted_at', null)->groupBy('so.vendor_id')
             ->orderBy('revenue', 'DESC')->limit($limit)->get()->getResultArray(), []);
     }

@@ -173,6 +173,7 @@ $routes->group('admin', ['filter' => 'webAuth:platform'], static function (Route
 
     // "Go to Portal" — admin impersonation into vendor/shop/rider portals + return.
     $routes->post('portal/enter/vendor/(:num)', 'Admin\PortalController::enterVendor/$1', ['filter' => 'csrf']);
+    $routes->post('portal/enter/manufacturer/(:num)', 'Admin\PortalController::enterManufacturer/$1', ['filter' => 'csrf']);
     $routes->post('portal/enter/shop/(:num)', 'Admin\PortalController::enterShop/$1', ['filter' => 'csrf']);
     $routes->post('portal/enter/rider/(:num)', 'Admin\PortalController::enterRider/$1', ['filter' => 'csrf']);
     $routes->post('portal/leave', 'Admin\PortalController::leave', ['filter' => 'csrf']);
@@ -194,6 +195,19 @@ $routes->group('admin', ['filter' => 'webAuth:platform'], static function (Route
     $routes->get('vendors/(:num)/product-mismatches', 'Admin\VendorTypeMismatchController::show/$1');
     $routes->post('vendors/(:num)/product-mismatches/reassign', 'Admin\VendorTypeMismatchController::reassign/$1', ['filter' => 'csrf']);
     $routes->post('vendors/auto-fix-type-mismatches', 'Admin\VendorTypeMismatchController::autoFix', ['filter' => 'csrf']);
+
+    // Manufacturer management. Separate from vendors: they share the `vendors` table but
+    // not the screens, and deliberately not the permissions — manufacturer.approve must
+    // not be implied by vendor.approve.
+    $routes->get('manufacturers', 'Admin\ManufacturerController::index');
+    $routes->get('manufacturers/(:num)', 'Admin\ManufacturerController::show/$1');
+    $routes->post('manufacturers/(:num)/approve', 'Admin\ManufacturerController::approve/$1', ['filter' => 'csrf']);
+    $routes->post('manufacturers/(:num)/reject', 'Admin\ManufacturerController::reject/$1', ['filter' => 'csrf']);
+
+    // monline B2B purchase-order oversight. Read-first; the one write is a force-cancel.
+    $routes->get('purchase-orders', 'Admin\PurchaseOrderController::index');
+    $routes->get('purchase-orders/(:num)', 'Admin\PurchaseOrderController::show/$1');
+    $routes->post('purchase-orders/(:num)/cancel', 'Admin\PurchaseOrderController::cancel/$1', ['filter' => 'csrf']);
 
     // Shop management
     $routes->get('shops', 'Admin\ShopController::index');
