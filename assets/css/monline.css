@@ -1,0 +1,71 @@
+/* ============================================================
+   monline — B2B wholesale marketplace (manufacturer -> vendor/shop).
+   Deliberately its own design system: not the consumer storefront's
+   violet (store.css) and not the vendor panel's blue sidebar (app.css).
+   Trade-portal feel — navy + ochre, top nav, data-dense tables.
+   Built on Bootstrap 5 + Bootstrap Icons.
+   ============================================================ */
+:root {
+    --mo-primary: #0f3d5c;       /* ledger navy */
+    --mo-primary-2: #155178;
+    --mo-accent: #c9821b;        /* ochre — CTAs, price, "wholesale" emphasis */
+    --mo-accent-2: #a86a10;
+    --mo-bg: #f2f4f7;
+    --mo-card: #ffffff;
+    --mo-border: #dde3ea;
+    --mo-ink: #172230;
+    --mo-muted: #5b6b7a;
+    --mo-success: #1a7a4c;
+    --mo-radius: .5rem;
+    --mo-shadow: 0 1px 2px rgba(15,61,92,.05), 0 4px 12px rgba(15,61,92,.07);
+}
+
+body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Segoe UI", "Inter", system-ui, -apple-system, Roboto, Arial, sans-serif; }
+
+.mo-body .btn-primary { --bs-btn-bg: var(--mo-accent); --bs-btn-border-color: var(--mo-accent); --bs-btn-hover-bg: var(--mo-accent-2); --bs-btn-hover-border-color: var(--mo-accent-2); --bs-btn-active-bg: var(--mo-accent-2); }
+.mo-body .btn-outline-primary { --bs-btn-color: var(--mo-primary); --bs-btn-border-color: var(--mo-primary); --bs-btn-hover-bg: var(--mo-primary); --bs-btn-hover-border-color: var(--mo-primary); }
+.mo-body .text-primary { color: var(--mo-primary) !important; }
+.mo-body a { color: var(--mo-primary); }
+.mo-body .card { border-color: var(--mo-border); border-radius: var(--mo-radius); background: var(--mo-card); }
+
+/* ---- Top nav ---- */
+.mo-header { background: var(--mo-primary); border-bottom: 3px solid var(--mo-accent); position: sticky; top: 0; z-index: 1030; }
+.mo-brand { font-weight: 800; font-size: 1.2rem; color: #fff; text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: .5rem; }
+.mo-brand span { color: #fff; }
+.mo-brand .mo-tag { color: var(--mo-accent); font-weight: 700; }
+.mo-navlink { color: rgba(255,255,255,.85); text-decoration: none; font-size: .88rem; font-weight: 500; padding: .4rem .2rem; }
+.mo-navlink:hover { color: #fff; }
+.mo-search { max-width: 380px; }
+.mo-search .form-control { border-color: transparent; }
+.mo-search .form-control:focus { box-shadow: none; }
+.mo-cartbtn { position: relative; }
+.mo-cartbtn .badge { position: absolute; top: -7px; right: -7px; background: var(--mo-accent); }
+.mo-signin-cta { --bs-btn-bg: var(--mo-accent); --bs-btn-border-color: var(--mo-accent); --bs-btn-hover-bg: var(--mo-accent-2); --bs-btn-hover-border-color: var(--mo-accent-2); }
+
+/* ---- Hero ---- */
+.mo-hero { background: linear-gradient(115deg, #0f3d5c, #155178 60%, #1c6088); color: #fff; border-radius: var(--mo-radius); box-shadow: var(--mo-shadow); }
+.mo-hero .mo-eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; color: var(--mo-accent); font-weight: 700; }
+
+.mo-section-title { font-size: 1.05rem; font-weight: 700; margin-bottom: .9rem; color: var(--mo-ink); }
+
+/* ---- Product card ---- */
+.mo-pcard { border: 1px solid var(--mo-border); border-radius: var(--mo-radius); transition: .15s; }
+.mo-pcard:hover { box-shadow: var(--mo-shadow); border-color: var(--mo-primary); }
+.mo-thumb-wrap { display: block; position: relative; background: #eef1f5; border-radius: var(--mo-radius) var(--mo-radius) 0 0; overflow: hidden; aspect-ratio: 1/1; }
+.mo-thumb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mo-thumb-ph { width: 100%; height: 100%; display: grid; place-items: center; background: var(--mo-primary); }
+.mo-thumb-ph span { color: #fff; font-weight: 700; font-size: 1.8rem; opacity: .85; }
+.mo-cat-label { text-transform: uppercase; letter-spacing: .03em; font-size: .68rem; color: var(--mo-muted); font-weight: 600; }
+.mo-ptitle { color: var(--mo-ink); text-decoration: none; font-weight: 600; font-size: .92rem; line-height: 1.3; }
+.mo-ptitle:hover { color: var(--mo-primary); }
+.mo-vendor { font-size: .78rem; color: var(--mo-muted); }
+.mo-moq { font-size: .72rem; color: var(--mo-muted); }
+.mo-price { font-size: 1.15rem; font-weight: 700; color: var(--mo-accent-2); }
+.mo-gate { display: inline-flex; align-items: center; gap: .35rem; font-size: .78rem; font-weight: 600; color: var(--mo-primary); text-decoration: none; border: 1px dashed var(--mo-primary); border-radius: var(--mo-radius); padding: .3rem .6rem; }
+.mo-gate:hover { background: #eef4f8; }
+
+/* ---- Data-dense tables (orders, cart) ---- */
+.mo-table thead th { text-transform: uppercase; letter-spacing: .03em; font-size: .68rem; color: var(--mo-muted); font-weight: 700; border-bottom-width: 1px; }
+.mo-table td, .mo-table th { border-color: var(--mo-border); }
+
+.mo-footer { border-top: 1px solid var(--mo-border); color: var(--mo-muted); font-size: .78rem; }

@@ -1,7 +1,7 @@
 <?= $this->extend('monline/_layout') ?>
 <?= $this->section('content') ?>
 
-<h5 class="mb-3">Your order</h5>
+<h2 class="mo-section-title">Your order</h2>
 
 <?php if (empty($lines)): ?>
     <div class="card"><div class="card-body text-center text-secondary py-5">
@@ -12,11 +12,18 @@
         <?= csrf_field() ?>
         <div class="card mb-3">
             <div class="table-responsive">
-                <table class="table mb-0 align-middle">
-                    <thead><tr><th>Product</th><th>Manufacturer</th><th style="width:150px">Qty</th><th class="text-end">Unit</th><th class="text-end">Total</th><th></th></tr></thead>
+                <table class="table mo-table mb-0 align-middle">
+                    <thead><tr><th></th><th>Product</th><th>Manufacturer</th><th style="width:150px">Qty</th><th class="text-end">Unit</th><th class="text-end">Total</th><th></th></tr></thead>
                     <tbody>
                         <?php foreach ($lines as $l): ?>
                             <tr>
+                                <td style="width:56px">
+                                    <?php if (! empty($l['image_uuid'])): ?>
+                                        <img src="<?= esc(site_url('media/' . $l['image_uuid']), 'attr') ?>" alt="" width="44" height="44" style="object-fit:cover;border-radius:var(--mo-radius)">
+                                    <?php else: ?>
+                                        <div class="mo-thumb-ph" style="width:44px;height:44px;border-radius:var(--mo-radius)"><span style="font-size:1rem"><?= esc(mb_strtoupper(mb_substr((string) ($l['title'] ?? ''), 0, 1))) ?></span></div>
+                                    <?php endif; ?>
+                                </td>
                                 <td>
                                     <?= esc($l['title'] ?? '') ?>
                                     <div class="small text-secondary"><?= esc((string) ($l['sku'] ?? '')) ?></div>
@@ -63,7 +70,7 @@
                 <div class="col-12 d-flex justify-content-between align-items-center border-top pt-3">
                     <div>
                         <div class="text-secondary small">Subtotal (excl. GST)</div>
-                        <div class="fs-4 fw-semibold">₹<?= esc(number_format((float) $subtotal, 2)) ?></div>
+                        <div class="mo-price fs-4">₹<?= esc(number_format((float) $subtotal, 2)) ?></div>
                         <div class="small text-secondary">GST is calculated per manufacturer when the order is placed.</div>
                     </div>
                     <button class="btn btn-primary btn-lg">Place purchase order</button>

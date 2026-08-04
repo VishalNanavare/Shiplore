@@ -7,25 +7,24 @@ namespace App\Controllers\Monline;
 /**
  * Monline\CatalogController — the monline.shiplore.in entry point.
  *
- * This exists NOW, ahead of the full B2B marketplace, for a specific reason: without a
- * route bound to the `monline` subdomain, the bare '/' falls through to the apex
- * route (Store\StoreController::home) and monline.shiplore.in serves the CONSUMER
- * storefront — wrong catalogue, wrong audience, and consumer pricing on a B2B hostname.
- *
- * So home() is a deliberate, honest placeholder: it identifies the surface, signs
- * buyers in, and shows nothing it cannot yet show correctly. Ordering, cart and catalog
- * browse land with the rest of phase B.
+ * Browsing is public: anyone can see manufacturer products, images, categories and MOQ.
+ * The price is the only thing gated, and only behind a resolved buyer session — same
+ * rule as browse() and product() below.
  */
 final class CatalogController extends BaseMonlineController
 {
     public function home(): string
     {
-        // Signed-out visitors get the sign-in gate; buyers go straight to the catalogue.
-        if (! $this->isBuyer()) {
-            return $this->render('monline/home', 'Wholesale marketplace');
-        }
+        $opts       = ['limit' => 24]; // landing teaser, smaller than browse()'s 48
+        $repo       = service('monlineCatalogRepository');
+        $withPrices = $this->isBuyer(); // the ONLY gate — unchanged from browse()/product()
 
-        return $this->browse();
+        return $this->render('monline/home', 'Wholesale marketplace', [
+            'products'   => $repo->products($opts, $withPrices),
+            'total'      => $repo->countProducts($opts),
+            'showPrices' => $withPrices,
+            'cartCount'  => $this->isBuyer() ? service('monlineCart')->count() : 0,
+        ]);
     }
 
     public function browse(): string

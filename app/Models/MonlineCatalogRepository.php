@@ -26,6 +26,9 @@ use Config\Database;
  */
 final class MonlineCatalogRepository
 {
+    /** Mirrors StoreCatalogRepository::IMG_SUBQUERY — a product's primary image, if any. */
+    private const IMG_SUBQUERY = "(SELECT ma.uuid FROM product_media pm JOIN media_assets ma ON ma.id = pm.media_id WHERE pm.product_id = p.id AND pm.deleted_at IS NULL AND ma.deleted_at IS NULL AND ma.status = 'active' ORDER BY pm.is_primary DESC, pm.sort_order ASC LIMIT 1) AS image_uuid";
+
     /** Only published products belonging to an active manufacturer. */
     private function base(): object
     {
@@ -56,7 +59,7 @@ final class MonlineCatalogRepository
             $cols .= ', pv.base_price';
         }
 
-        $b = $this->base()->select($cols);
+        $b = $this->base()->select($cols)->select(self::IMG_SUBQUERY, false);
 
         if (! empty($opts['q'])) {
             $b->groupStart()->like('p.title', $opts['q'])->orLike('v.display_name', $opts['q'])->orLike('pv.sku', $opts['q'])->groupEnd();
@@ -105,7 +108,7 @@ final class MonlineCatalogRepository
             $cols .= ', pv.base_price';
         }
 
-        return $this->base()->select($cols)->where('p.slug', $slug)->get()->getRowArray();
+        return $this->base()->select($cols)->select(self::IMG_SUBQUERY, false)->where('p.slug', $slug)->get()->getRowArray();
     }
 
     /**
@@ -125,6 +128,7 @@ final class MonlineCatalogRepository
         $rows = $this->base()
             ->select('pv.id AS variant_id, pv.base_price, pv.sku, p.title, p.min_purchase_qty, p.max_purchase_qty, p.qty_step,
                       v.id AS manufacturer_id, v.display_name AS manufacturer')
+            ->select(self::IMG_SUBQUERY, false)
             ->whereIn('pv.id', $ids)
             ->where('pv.status', 'active')
             ->where('pv.deleted_at', null)

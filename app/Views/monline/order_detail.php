@@ -4,13 +4,13 @@
 <a class="small text-decoration-none" href="<?= site_url('monline/orders') ?>">&larr; All purchase orders</a>
 
 <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-    <h5 class="mb-0"><?= esc($po['po_no']) ?></h5>
+    <h2 class="mo-section-title mb-0"><?= esc($po['po_no']) ?></h2>
     <span class="badge bg-secondary fs-6"><?= esc(str_replace('_', ' ', (string) $po['status'])) ?></span>
 </div>
 
 <div class="card mb-3">
     <div class="table-responsive">
-        <table class="table mb-0 align-middle">
+        <table class="table mo-table mb-0 align-middle">
             <thead><tr><th>Product</th><th>SKU</th><th class="text-end">Qty</th><th class="text-end">Unit</th><th class="text-end">Line total</th></tr></thead>
             <tbody>
                 <?php foreach ($items as $i): ?>
@@ -30,7 +30,7 @@
                 <?php else: ?>
                     <tr><td colspan="4" class="text-end text-secondary">CGST + SGST</td><td class="text-end">₹<?= esc(number_format((float) $po['cgst'] + (float) $po['sgst'], 2)) ?></td></tr>
                 <?php endif; ?>
-                <tr class="fw-semibold"><td colspan="4" class="text-end">Grand total</td><td class="text-end">₹<?= esc(number_format((float) $po['grand_total'], 2)) ?></td></tr>
+                <tr class="fw-semibold"><td colspan="4" class="text-end">Grand total</td><td class="text-end mo-price">₹<?= esc(number_format((float) $po['grand_total'], 2)) ?></td></tr>
             </tfoot>
         </table>
     </div>

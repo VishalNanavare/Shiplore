@@ -1,11 +1,11 @@
 <?= $this->extend('monline/_layout') ?>
 <?= $this->section('content') ?>
 
-<h5 class="mb-3">Purchase orders</h5>
+<h2 class="mo-section-title">Purchase orders</h2>
 
 <div class="card">
     <div class="table-responsive">
-        <table class="table mb-0 align-middle">
+        <table class="table mo-table mb-0 align-middle">
             <thead><tr><th>PO</th><th>Manufacturer</th><th>Deliver to</th><th class="text-end">Total</th><th>Status</th><th>Placed</th></tr></thead>
             <tbody>
                 <?php if (empty($orders)): ?>
