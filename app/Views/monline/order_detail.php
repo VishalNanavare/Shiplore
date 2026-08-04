@@ -51,8 +51,10 @@
     <?php endif; ?>
 </div>
 
-<?php if ((string) $po['status'] === 'rejected' && ! empty($po['reject_reason'])): ?>
-    <div class="alert alert-warning mt-3 mb-0">Rejected by the manufacturer: <?= esc($po['reject_reason']) ?></div>
+<?php if (in_array((string) $po['status'], ['rejected', 'cancelled'], true) && ! empty($po['reject_reason'])): ?>
+    <div class="alert alert-warning mt-3 mb-0">
+        <?= (string) $po['status'] === 'cancelled' ? 'Cancelled' : 'Rejected by the manufacturer' ?>: <?= esc($po['reject_reason']) ?>
+    </div>
 <?php endif; ?>
 
 <?= $this->endSection() ?>

@@ -88,7 +88,7 @@ final class PurchaseOrderRepository
                 $this->notifyVendorOwner($p['seller_vendor_id'], 'po.placed', ['po_no' => $p['po_no']]);
             }
 
-            return ['ok' => true, 'error' => '', 'po_ids' => $poIds];
+            return ['ok' => true, 'error' => '', 'po_ids' => $poIds, 'dropped' => $lines['dropped']];
         } catch (Throwable $e) {
             $db->transRollback();
             log_message('error', 'monline PO placement failed: ' . $e->getMessage());
@@ -100,16 +100,22 @@ final class PurchaseOrderRepository
     /**
      * Resolve cart variant ids to priced, MOQ-checked lines.
      *
+     * An id that no longer resolves (unpublished, deleted, its manufacturer no longer
+     * approved) is DROPPED rather than failing the whole cart — the buyer cannot fix that
+     * by editing a quantity, so blocking every other, perfectly valid line over it would
+     * be a dead end with no way out. A quantity that fails MOQ/step IS fixable by the
+     * buyer, so that stays a hard error naming the specific line, not a silent drop.
+     *
      * Note what is selected: base_price (the SELLING price) and never making_price.
      *
      * @param array<int,float> $cart
-     * @return array{error:string,rows:list<array<string,mixed>>}
+     * @return array{error:string,rows:list<array<string,mixed>>,dropped:list<int>}
      */
     private function resolveLines(array $cart): array
     {
         $ids = array_values(array_filter(array_map('intval', array_keys($cart))));
         if ($ids === []) {
-            return ['error' => 'Your order is empty.', 'rows' => []];
+            return ['error' => 'Your order is empty.', 'rows' => [], 'dropped' => []];
         }
 
         // The GST rate comes from `tax_rates`, the dated source of truth, not from
@@ -148,12 +154,14 @@ final class PurchaseOrderRepository
             $byId[(int) $r['id']] = $r;
         }
 
-        $out = [];
+        $out     = [];
+        $dropped = [];
         foreach ($cart as $variantId => $qty) {
             $vid = (int) $variantId;
             $qty = (float) $qty;
             if (! isset($byId[$vid])) {
-                return ['error' => 'One of the items is no longer available.', 'rows' => []];
+                $dropped[] = $vid;
+                continue;
             }
             $r = $byId[$vid];
 
@@ -164,14 +172,18 @@ final class PurchaseOrderRepository
                 'qty_step'         => $r['qty_step'],
             ]);
             if (! $check['ok']) {
-                return ['error' => $r['title'] . ': ' . $check['message'], 'rows' => []];
+                return ['error' => $r['title'] . ': ' . $check['message'], 'rows' => [], 'dropped' => []];
             }
 
             $r['qty'] = $qty;
             $out[]    = $r;
         }
 
-        return ['error' => '', 'rows' => $out];
+        if ($out === []) {
+            return ['error' => 'None of the items in your order are available anymore.', 'rows' => [], 'dropped' => $dropped];
+        }
+
+        return ['error' => '', 'rows' => $out, 'dropped' => $dropped];
     }
 
     /**
@@ -405,7 +417,7 @@ final class PurchaseOrderRepository
         ]);
 
         foreach ([(int) $po['buyer_vendor_id'], (int) $po['seller_vendor_id']] as $vid) {
-            $this->notifyVendorOwner($vid, 'po.rejected', ['po_no' => $po['po_no']]);
+            $this->notifyVendorOwner($vid, 'po.cancelled', ['po_no' => $po['po_no']]);
         }
 
         return ['ok' => true, 'error' => ''];
@@ -503,8 +515,13 @@ final class PurchaseOrderRepository
         if ($found === null) {
             return ['ok' => false, 'error' => 'Purchase order not found.'];
         }
-        $po = $found['po'];
-        if (! StatusMachine::canPurchaseOrder((string) $po['status'], 'received')) {
+        $po   = $found['po'];
+        $from = (string) $po['status'];
+        // Explicit status check, not StatusMachine::canPurchaseOrder() alone: that helper
+        // treats $from === $to as an idempotent no-op, which is fine for a transition that
+        // just rewrites a timestamp but wrong here — a second call on an already-'received'
+        // order would otherwise pass the guard and credit stock a second time.
+        if ($from !== 'dispatched') {
             return ['ok' => false, 'error' => 'Only a dispatched order can be received.'];
         }
 

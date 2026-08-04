@@ -35,13 +35,26 @@ final class OrderController extends BaseMonlineController
             return $denied;
         }
 
-        $lines = service('monlineCatalogRepository')->cartLines(service('monlineCart')->raw());
+        $cartSvc = service('monlineCart');
+        $raw     = $cartSvc->raw();
+        $lines   = service('monlineCatalogRepository')->cartLines($raw);
+
+        // A line that no longer resolves (unpublished, its manufacturer no longer
+        // approved) used to sit invisibly in the session forever — the buyer had no way
+        // to see or remove it, and a future placement would silently exclude it with no
+        // explanation. Purge it here, on view, and say so.
+        $resolvedIds = array_map(static fn ($l) => (int) $l['variant_id'], $lines);
+        $stale       = array_diff(array_keys($raw), $resolvedIds);
+        foreach ($stale as $vid) {
+            $cartSvc->remove((int) $vid);
+        }
 
         return $this->render('monline/cart', 'Your order', [
-            'lines'     => $lines,
-            'subtotal'  => array_sum(array_column($lines, 'line_total')),
-            'shops'     => $this->buyerShops(),
-            'cartCount' => count($lines),
+            'lines'        => $lines,
+            'subtotal'     => array_sum(array_column($lines, 'line_total')),
+            'shops'        => $this->buyerShops(),
+            'cartCount'    => $cartSvc->count(),
+            'removedCount' => count($stale),
         ]);
     }
 
@@ -63,6 +76,12 @@ final class OrderController extends BaseMonlineController
         // variant_id into the cart.
         $rules = service('monlineCatalogRepository')->findBySlug((string) $this->request->getPost('slug'), false);
         if ($rules === null) {
+            return redirect()->back()->with('error', 'That item is no longer available.');
+        }
+        // The hidden variant_id and slug fields are independently POSTed; nothing else
+        // ties them together. Without this, a tampered variant_id could validate against
+        // one product's MOQ while enqueuing a completely different variant.
+        if ((int) ($rules['variant_id'] ?? 0) !== $variantId) {
             return redirect()->back()->with('error', 'That item is no longer available.');
         }
 
@@ -87,8 +106,46 @@ final class OrderController extends BaseMonlineController
         }
 
         $cart = service('monlineCart');
+
+        // Re-validate against each variant's current rules — add() does this, update()
+        // must too, or a buyer can set a quantity below MOQ or off-step with no error
+        // until placement rejects the whole cart.
+        $rulesByVariant = [];
+        foreach (service('monlineCatalogRepository')->cartLines($cart->raw()) as $l) {
+            $rulesByVariant[(int) $l['variant_id']] = $l;
+        }
+
+        $errors = [];
         foreach ((array) $this->request->getPost('qty') as $variantId => $qty) {
-            $cart->setQty((int) $variantId, (float) $qty);
+            $vid = (int) $variantId;
+            $qty = (float) $qty;
+
+            if ($qty <= 0) {
+                $cart->setQty($vid, 0);
+                continue;
+            }
+
+            $rules = $rulesByVariant[$vid] ?? null;
+            if ($rules !== null) {
+                $check = PurchaseRules::validate($qty, [
+                    'min_purchase_qty' => $rules['min_purchase_qty'] ?? null,
+                    'max_purchase_qty' => $rules['max_purchase_qty'] ?? null,
+                    'qty_step'         => $rules['qty_step'] ?? null,
+                ]);
+                if (! $check['ok']) {
+                    // Leave the existing quantity in place rather than reject the whole
+                    // batch — the buyer can still act on the other lines they changed.
+                    $errors[] = ($rules['title'] ?? 'Item') . ': ' . $check['message'];
+
+                    continue;
+                }
+            }
+
+            $cart->setQty($vid, $qty);
+        }
+
+        if ($errors !== []) {
+            return redirect()->to('monline/cart')->with('error', implode(' ', $errors));
         }
 
         return redirect()->to('monline/cart')->with('success', 'Order updated.');
@@ -136,12 +193,16 @@ final class OrderController extends BaseMonlineController
         $cart->clear();
         $n = count($res['po_ids']);
 
-        return redirect()->to('monline/orders')->with(
-            'success',
-            $n === 1
-                ? 'Purchase order placed.'
-                : $n . ' purchase orders placed — one per manufacturer.',
-        );
+        $msg = $n === 1
+            ? 'Purchase order placed.'
+            : $n . ' purchase orders placed — one per manufacturer.';
+
+        $droppedCount = count($res['dropped'] ?? []);
+        if ($droppedCount > 0) {
+            $msg .= ' ' . $droppedCount . ' item(s) were not included because they are no longer available.';
+        }
+
+        return redirect()->to('monline/orders')->with('success', $msg);
     }
 
     public function orders()

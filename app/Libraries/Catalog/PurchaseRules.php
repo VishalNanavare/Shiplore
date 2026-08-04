@@ -35,7 +35,7 @@ final class PurchaseRules
         if ($max !== null && $max > 0 && $qty > $max) {
             return ['ok' => false, 'message' => 'Maximum purchase quantity is ' . self::fmt($max) . '.'];
         }
-        if ($step !== null && $step > 1) {
+        if ($step !== null && $step > 0) {
             $base = $min !== null && $min > 0 ? $min : 0.0;
             $rem  = fmod($qty - $base, $step);
             if (abs($rem) > 1e-9 && abs($rem - $step) > 1e-9) {

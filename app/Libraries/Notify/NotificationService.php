@@ -70,6 +70,9 @@ final class NotificationService
         'po.rejected'   => ['transactional', ['in_app'], 'Purchase order {{po_no}} rejected', 'Your purchase order {{po_no}} was rejected — open it to see the reason.'],
         'po.dispatched' => ['transactional', ['in_app'], 'Purchase order {{po_no}} dispatched', 'Purchase order {{po_no}} has been dispatched.'],
         'po.received'   => ['transactional', ['in_app'], 'Purchase order {{po_no}} received', 'Purchase order {{po_no}} was marked received by the buyer.'],
+        // A platform force-cancel is distinct from a manufacturer rejection — it must say
+        // so, not "rejected", which is both inaccurate and implies the wrong party acted.
+        'po.cancelled'  => ['transactional', ['in_app'], 'Purchase order {{po_no}} cancelled', 'Purchase order {{po_no}} was cancelled by the platform — see the order for the reason.'],
     ];
 
     /** Render a {{placeholder}} template. Pure. */

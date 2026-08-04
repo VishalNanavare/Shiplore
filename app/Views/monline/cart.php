@@ -3,6 +3,12 @@
 
 <h2 class="mo-section-title">Your order</h2>
 
+<?php if (! empty($removedCount)): ?>
+    <div class="alert alert-warning py-2">
+        <?= (int) $removedCount ?> item<?= (int) $removedCount === 1 ? '' : 's' ?> removed from your order — no longer available.
+    </div>
+<?php endif; ?>
+
 <?php if (empty($lines)): ?>
     <div class="card"><div class="card-body text-center text-secondary py-5">
         Your order is empty. <a href="<?= site_url('monline/browse') ?>">Browse the catalogue</a>.

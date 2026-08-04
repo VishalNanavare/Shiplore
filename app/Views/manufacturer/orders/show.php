@@ -77,4 +77,10 @@ $status = (string) $po['status'];
     </div>
 </div>
 
+<?php if (in_array($status, ['rejected', 'cancelled'], true) && ! empty($po['reject_reason'])): ?>
+    <div class="alert alert-warning mt-3 mb-0">
+        <?= $status === 'cancelled' ? 'Cancelled' : 'Rejected' ?>: <?= esc($po['reject_reason']) ?>
+    </div>
+<?php endif; ?>
+
 <?= $this->endSection() ?>

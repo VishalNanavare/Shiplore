@@ -32,6 +32,22 @@
             </div>
         <?php endforeach; ?>
     </div>
+
+    <?php if (($pages ?? 1) > 1): ?>
+        <?php
+        $pageBase = array_filter([
+            'q'            => $filters['q'] ?? '',
+            'category'     => $filters['category'] ?? '',
+            'manufacturer' => ! empty($filters['manufacturer_id']) ? (int) $filters['manufacturer_id'] : '',
+        ], static fn ($v) => $v !== '');
+        $pageUrl = static fn (int $n) => site_url('monline/browse') . '?' . http_build_query($pageBase + ['page' => $n]);
+        ?>
+        <nav class="d-flex justify-content-between align-items-center mt-4">
+            <a class="btn btn-outline-secondary btn-sm <?= $page <= 1 ? 'disabled' : '' ?>" href="<?= $pageUrl(max(1, $page - 1)) ?>">&larr; Previous</a>
+            <span class="small text-secondary">Page <?= (int) $page ?> of <?= (int) $pages ?></span>
+            <a class="btn btn-outline-secondary btn-sm <?= $page >= $pages ? 'disabled' : '' ?>" href="<?= $pageUrl(min($pages, $page + 1)) ?>">Next &rarr;</a>
+        </nav>
+    <?php endif; ?>
 <?php endif; ?>
 
 <?= $this->endSection() ?>

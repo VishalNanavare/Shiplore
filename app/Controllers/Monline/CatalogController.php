@@ -29,11 +29,15 @@ final class CatalogController extends BaseMonlineController
 
     public function browse(): string
     {
+        $limit = 48;
+        $page  = max(1, (int) $this->request->getGet('page'));
+
         $opts = [
             'q'               => trim((string) $this->request->getGet('q')),
             'category'        => trim((string) $this->request->getGet('category')),
             'manufacturer_id' => (int) $this->request->getGet('manufacturer'),
-            'limit'           => 48,
+            'limit'           => $limit,
+            'offset'          => ($page - 1) * $limit,
         ];
 
         $repo = service('monlineCatalogRepository');
@@ -41,14 +45,17 @@ final class CatalogController extends BaseMonlineController
         // The ONLY place prices are opted into: a resolved buyer. A logged-out visitor
         // gets rows with no price keys at all — not zeroed, not hidden by the template.
         $withPrices = $this->isBuyer();
+        $total      = $repo->countProducts($opts);
 
         return $this->render('monline/browse', 'Wholesale catalogue', [
             'products'      => $repo->products($opts, $withPrices),
-            'total'         => $repo->countProducts($opts),
+            'total'         => $total,
             'manufacturers' => $repo->manufacturers(),
             'filters'       => $opts,
             'showPrices'    => $withPrices,
             'cartCount'     => $this->isBuyer() ? service('monlineCart')->count() : 0,
+            'page'          => $page,
+            'pages'         => $limit > 0 ? (int) ceil($total / $limit) : 1,
         ]);
     }
 

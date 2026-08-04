@@ -187,6 +187,44 @@ final class MonlineB2bTest extends CIUnitTestCase
         );
     }
 
+    /**
+     * A single unavailable cart line must not block every other line in the order.
+     *
+     * resolveLines() used to hard-fail the WHOLE cart the moment any one variant id
+     * failed to resolve — and because the cart page itself never removed the bad id
+     * either, the buyer had no way to discover or clear it. Every future "Place" click
+     * failed identically, forever. Unresolvable ids must now be dropped and reported,
+     * not treated as a reason to refuse everything else.
+     */
+    public function testAnUnresolvableLineDoesNotBlockTheRestOfTheOrder(): void
+    {
+        $body = $this->methodBody($this->read('Models/PurchaseOrderRepository.php'), 'resolveLines');
+
+        $this->assertStringNotContainsString(
+            "return ['error' => 'One of the items is no longer available.', 'rows' => []];",
+            $body,
+            'an unresolvable id must no longer hard-fail the entire cart',
+        );
+        $this->assertStringContainsString('$dropped[] = $vid;', $body);
+        $this->assertStringContainsString('continue;', $body);
+
+        // placeFromCart() must surface what got dropped so the controller can act on it.
+        $this->assertStringContainsString(
+            "'dropped' => \$lines['dropped']",
+            $this->methodBody($this->read('Models/PurchaseOrderRepository.php'), 'placeFromCart'),
+        );
+    }
+
+    /** The cart page must purge stale lines on view, not just silently omit them. */
+    public function testCartViewPurgesLinesThatNoLongerResolve(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/OrderController.php'), 'cart');
+
+        $this->assertStringContainsString('array_diff(array_keys($raw)', $body, 'the cart must detect ids present in session but absent from the resolved lines');
+        $this->assertStringContainsString('$cartSvc->remove(', $body, 'a stale id must actually be removed from the session cart');
+        $this->assertStringContainsString("'removedCount'", $body, 'the view needs to be told something was removed, or it stays silent');
+    }
+
     /** A cart add for an unresolvable product must be REJECTED, never silently accepted. */
     public function testAddRejectsWhenTheProductCannotBeResolved(): void
     {
@@ -208,6 +246,66 @@ final class MonlineB2bTest extends CIUnitTestCase
 
         $between = substr($body, $nullCheck, $cartAdd - $nullCheck);
         $this->assertStringContainsString('return redirect()', $between, 'the null branch must return, not merely check');
+    }
+
+    /**
+     * add() must reject a variant id that doesn't actually belong to the posted slug.
+     *
+     * The MOQ check validates $qty against $rules (derived from slug), but nothing
+     * compared $rules['variant_id'] to the independently-posted variant_id — a tampered
+     * hidden field could validate against one product's MOQ while enqueuing a different
+     * variant entirely.
+     */
+    public function testAddRejectsAMismatchedVariantIdAndSlug(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/OrderController.php'), 'add');
+
+        $this->assertStringContainsString(
+            "(int) (\$rules['variant_id'] ?? 0) !== \$variantId",
+            $body,
+            'add() must verify the posted variant_id actually belongs to the posted slug',
+        );
+    }
+
+    /** cart/update must re-validate MOQ/step — add() does, update() must too. */
+    public function testCartUpdateValidatesMoqAndStep(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/OrderController.php'), 'update');
+
+        $this->assertStringContainsString(
+            'PurchaseRules::validate',
+            $body,
+            'update() must validate the new quantity — a buyer could otherwise set a qty below '
+            . 'MOQ or off-step with no error until placement',
+        );
+    }
+
+    /**
+     * browse() must support paging — otherwise a catalogue past the first 48 products
+     * (the default limit()) has no UI path to reach the rest at all.
+     */
+    public function testBrowseSupportsPagination(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/CatalogController.php'), 'browse');
+
+        $this->assertStringContainsString("getGet('page')", $body, 'browse() never reads a page parameter');
+        $this->assertStringContainsString("'offset'", $body, "the page must translate into MonlineCatalogRepository's offset option");
+
+        $view = $this->read('Views/monline/browse.php');
+        $this->assertStringContainsString('page', $view, 'browse.php has no pagination controls at all');
+    }
+
+    /** The cart badge must read from one source everywhere, not disagree page to page. */
+    public function testCartCountIsConsistentAcrossPages(): void
+    {
+        $cartBody = $this->methodBody($this->read('Controllers/Monline/OrderController.php'), 'cart');
+
+        $this->assertStringNotContainsString(
+            'count($lines)',
+            $cartBody,
+            "cart() must not report a different count than every other page's nav badge",
+        );
+        $this->assertStringContainsString('$cartSvc->count()', $cartBody);
     }
 
     /** Only manufacturers may be sold on monline. */
@@ -309,6 +407,36 @@ final class MonlineB2bTest extends CIUnitTestCase
         $this->assertStringContainsString("'ref_type' => 'mfg_purchase_order'", $body, 'the ledger row must reference the PO');
         $this->assertStringContainsString('buyer_shop_id', $body, 'stock must land at the destination shop');
         $this->assertStringContainsString('transBegin', $body, 'stock-in and status must move together');
+    }
+
+    /**
+     * receive() must not be callable twice.
+     *
+     * StatusMachine::allowed() has an idempotent `$from === $to` shortcut — fine for
+     * transitions that just rewrite a timestamp, but receive()'s side effect
+     * (crediting stock via InventoryService) is NOT idempotent. Guarding solely with
+     * canPurchaseOrder($from, 'received') lets a second call on an already-'received'
+     * order pass that shortcut and credit stock a second time. receive() must check
+     * the starting status explicitly rather than rely on that shortcut.
+     */
+    public function testReceiptCannotBeAppliedTwice(): void
+    {
+        $body = $this->methodBody($this->read('Models/PurchaseOrderRepository.php'), 'receive');
+
+        $this->assertStringContainsString(
+            "\$from !== 'dispatched'",
+            $body,
+            "receive() must explicitly require status === 'dispatched' — canPurchaseOrder() alone "
+            . "would let a second call on an already-'received' order through its idempotent "
+            . '$from===$to shortcut and double-credit stock',
+        );
+
+        // The guard must run before InventoryService is ever touched.
+        $guard  = strpos($body, "\$from !== 'dispatched'");
+        $credit = strpos($body, "service('inventoryService')");
+        $this->assertNotFalse($guard);
+        $this->assertNotFalse($credit);
+        $this->assertLessThan($credit, $guard, 'the status guard must precede the stock credit');
     }
 
     /** A buyer may only route stock into a shop they are allowed to act on. */

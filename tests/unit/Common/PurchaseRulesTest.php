@@ -40,6 +40,33 @@ final class PurchaseRulesTest extends TestCase
         $this->assertFalse(PurchaseRules::validate(7, $rules)['ok']);
     }
 
+    /**
+     * qty_step=1 — "whole units only" — is the schema default
+     * (products.qty_step DECIMAL(12,3) NOT NULL DEFAULT 1.000) for every product that
+     * hasn't had a custom step configured. It must still reject a fractional quantity
+     * submitted via a raw request that bypasses the HTML5 step="1" constraint.
+     */
+    public function testStepOfOneRejectsFractionalQuantities(): void
+    {
+        $rules = ['qty_step' => 1];
+        $this->assertTrue(PurchaseRules::validate(5, $rules)['ok']);
+        $this->assertFalse(PurchaseRules::validate(5.37, $rules)['ok']);
+    }
+
+    /** A sub-1 step (weight-based wholesale, e.g. quarter-kilo packs) must also be enforced. */
+    public function testFractionalStepIsEnforced(): void
+    {
+        $rules = ['qty_step' => 0.25];
+        $this->assertTrue(PurchaseRules::validate(0.5, $rules)['ok']);
+        $this->assertFalse(PurchaseRules::validate(0.6, $rules)['ok']);
+    }
+
+    /** qty_step=0 (or absent) still means "no constraint" — the documented contract. */
+    public function testStepOfZeroMeansNoConstraint(): void
+    {
+        $this->assertTrue(PurchaseRules::validate(5.37, ['qty_step' => 0])['ok']);
+    }
+
     public function testPaymentRestriction(): void
     {
         $this->assertTrue(PurchaseRules::paymentAllowed('cod', 'both'));

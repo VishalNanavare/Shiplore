@@ -154,6 +154,46 @@ final class AdminManufacturerIntegrationTest extends CIUnitTestCase
         );
     }
 
+    /**
+     * adminCancel() must notify with an event that actually says "cancelled" — not
+     * "rejected", which is both factually wrong (nobody rejected it, the state machine
+     * doesn't even permit a 'rejected' status from 'accepted'/'packed') and misleading
+     * about who acted (the platform, not the counterparty).
+     */
+    public function testAdminCancelUsesAnAccurateNotificationEvent(): void
+    {
+        $body = $this->methodBody($this->read('Models/PurchaseOrderRepository.php'), 'adminCancel');
+
+        $this->assertStringContainsString("'po.cancelled'", $body);
+        $this->assertStringNotContainsString(
+            "'po.rejected'",
+            $body,
+            'a platform force-cancel is not a rejection by the manufacturer',
+        );
+
+        $events = $this->read('Libraries/Notify/NotificationService.php');
+        $this->assertStringContainsString("'po.cancelled'", $events, 'the po.cancelled event must be registered');
+    }
+
+    /** Both trading parties must be able to see WHY an order was cancelled, not just admin. */
+    public function testCancellationReasonIsVisibleToBothParties(): void
+    {
+        $buyerView = (string) file_get_contents(APPPATH . 'Views/monline/order_detail.php');
+        $this->assertMatchesRegularExpression(
+            "/\\['rejected', 'cancelled'\\]/",
+            $buyerView,
+            "order_detail.php's reason box must render for 'cancelled' too, not only 'rejected'",
+        );
+
+        $sellerView = (string) file_get_contents(APPPATH . 'Views/manufacturer/orders/show.php');
+        $this->assertStringContainsString(
+            'reject_reason',
+            $sellerView,
+            'the manufacturer-facing PO page never shows reject_reason for any status — a '
+            . 'seller whose order is admin-cancelled has no way to see why',
+        );
+    }
+
     /** Admin routes exist for every new screen. */
     public function testAdminRoutesAreRegistered(): void
     {
