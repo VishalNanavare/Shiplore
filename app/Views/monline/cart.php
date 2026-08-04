@@ -1,14 +1,14 @@
-<?= $this->extend('msonline/_layout') ?>
+<?= $this->extend('monline/_layout') ?>
 <?= $this->section('content') ?>
 
 <h5 class="mb-3">Your order</h5>
 
 <?php if (empty($lines)): ?>
     <div class="card"><div class="card-body text-center text-secondary py-5">
-        Your order is empty. <a href="<?= site_url('msonline/browse') ?>">Browse the catalogue</a>.
+        Your order is empty. <a href="<?= site_url('monline/browse') ?>">Browse the catalogue</a>.
     </div></div>
 <?php else: ?>
-    <form method="post" action="<?= site_url('msonline/cart/update') ?>">
+    <form method="post" action="<?= site_url('monline/cart/update') ?>">
         <?= csrf_field() ?>
         <div class="card mb-3">
             <div class="table-responsive">
@@ -31,7 +31,7 @@
                                 <td class="text-end">₹<?= esc(number_format((float) $l['base_price'], 2)) ?></td>
                                 <td class="text-end">₹<?= esc(number_format((float) $l['line_total'], 2)) ?></td>
                                 <td class="text-end">
-                                    <button class="btn btn-sm btn-link text-danger p-0" formaction="<?= site_url('msonline/cart/remove/' . (int) $l['variant_id']) ?>" formmethod="post">Remove</button>
+                                    <button class="btn btn-sm btn-link text-danger p-0" formaction="<?= site_url('monline/cart/remove/' . (int) $l['variant_id']) ?>" formmethod="post">Remove</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -44,7 +44,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form method="post" action="<?= site_url('msonline/place') ?>" class="row g-3">
+            <form method="post" action="<?= site_url('monline/place') ?>" class="row g-3">
                 <?= csrf_field() ?>
                 <div class="col-md-6">
                     <label class="form-label">Deliver to <span class="text-danger">*</span></label>

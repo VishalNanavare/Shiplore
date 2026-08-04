@@ -105,7 +105,7 @@ final class HardeningConfigTest extends CIUnitTestCase
     {
         $hosts = (new App())->allowedHostnames;
 
-        foreach (['manufacturer.shiplore.in', 'mshop.shiplore.in', 'msonline.shiplore.in'] as $host) {
+        foreach (['manufacturer.shiplore.in', 'mshop.shiplore.in', 'monline.shiplore.in'] as $host) {
             $this->assertContains($host, $hosts, $host . ' must be allow-listed');
         }
     }

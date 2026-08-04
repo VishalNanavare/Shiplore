@@ -13,7 +13,7 @@ use Config\App;
  * root route silently falls through to the apex — which is Store\StoreController::home,
  * the consumer storefront.
  *
- * That failure mode is invisible in code review and total in effect: msonline.shiplore.in
+ * That failure mode is invisible in code review and total in effect: monline.shiplore.in
  * would have served the consumer shop, with consumer pricing, on the B2B hostname.
  *
  * This test makes the omission impossible to ship: add a hostname to
@@ -73,7 +73,7 @@ final class SubdomainRootRouteTest extends CIUnitTestCase
             'rider'        => 'Rider\AuthController::loginForm',
             'manufacturer' => 'Auth\LoginController::show',
             'mshop'        => 'Auth\LoginController::show',
-            'msonline'     => 'Msonline\CatalogController::home',
+            'monline'     => 'Monline\CatalogController::home',
         ];
 
         foreach ($expected as $label => $handler) {
@@ -105,11 +105,11 @@ final class SubdomainRootRouteTest extends CIUnitTestCase
         }
     }
 
-    /** msonline must never render a price to a visitor who is not a signed-in buyer. */
-    public function testMsonlineGatesPricingOnABuyerSession(): void
+    /** monline must never render a price to a visitor who is not a signed-in buyer. */
+    public function testMonlineGatesPricingOnABuyerSession(): void
     {
-        $base = (string) file_get_contents(APPPATH . 'Controllers/Msonline/BaseMsonlineController.php');
-        $home = (string) file_get_contents(APPPATH . 'Views/msonline/home.php');
+        $base = (string) file_get_contents(APPPATH . 'Controllers/Monline/BaseMonlineController.php');
+        $home = (string) file_get_contents(APPPATH . 'Views/monline/home.php');
 
         // The gate must be derived from a resolved vendor, not from a bare login check.
         $this->assertStringContainsString('function isBuyer', $base);
@@ -123,10 +123,10 @@ final class SubdomainRootRouteTest extends CIUnitTestCase
         $this->assertStringNotContainsString('making_price', $loggedOut);
     }
 
-    /** Making price is the manufacturer's internal cost — it must not reach msonline at all. */
-    public function testMakingPriceIsNeverExposedOnMsonline(): void
+    /** Making price is the manufacturer's internal cost — it must not reach monline at all. */
+    public function testMakingPriceIsNeverExposedOnMonline(): void
     {
-        foreach (glob(APPPATH . 'Controllers/Msonline/*.php') ?: [] as $file) {
+        foreach (glob(APPPATH . 'Controllers/Monline/*.php') ?: [] as $file) {
             $this->assertStringNotContainsString(
                 'making_price',
                 (string) file_get_contents($file),
@@ -134,7 +134,7 @@ final class SubdomainRootRouteTest extends CIUnitTestCase
                 . 'internal production cost and must never be served to a buyer',
             );
         }
-        foreach (glob(APPPATH . 'Views/msonline/*.php') ?: [] as $file) {
+        foreach (glob(APPPATH . 'Views/monline/*.php') ?: [] as $file) {
             $this->assertStringNotContainsString('making_price', (string) file_get_contents($file), basename($file));
         }
     }

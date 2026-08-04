@@ -1,11 +1,11 @@
-<?= $this->extend('msonline/_layout') ?>
+<?= $this->extend('monline/_layout') ?>
 <?= $this->section('content') ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">Wholesale catalogue <span class="text-secondary fw-normal small">(<?= (int) $total ?> products)</span></h5>
 </div>
 
-<form method="get" action="<?= site_url('msonline/browse') ?>" class="row g-2 mb-4">
+<form method="get" action="<?= site_url('monline/browse') ?>" class="row g-2 mb-4">
     <div class="col-md-5">
         <input name="q" class="form-control" placeholder="Search products, SKU or manufacturer…" value="<?= esc($filters['q'] ?? '', 'attr') ?>">
     </div>
@@ -31,7 +31,7 @@
                 <div class="card h-100">
                     <div class="card-body d-flex flex-column">
                         <div class="small text-secondary mb-1"><?= esc($p['manufacturer'] ?? '') ?></div>
-                        <a class="fw-semibold text-decoration-none mb-1" href="<?= site_url('msonline/product/' . rawurlencode((string) $p['slug'])) ?>">
+                        <a class="fw-semibold text-decoration-none mb-1" href="<?= site_url('monline/product/' . rawurlencode((string) $p['slug'])) ?>">
                             <?= esc($p['title'] ?? '') ?>
                         </a>
                         <div class="small text-secondary mb-2"><?= esc($p['category'] ?? '') ?></div>

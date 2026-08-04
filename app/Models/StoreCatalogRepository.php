@@ -236,7 +236,7 @@ final class StoreCatalogRepository
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
             ->where('p.status', 'published')->where('p.deleted_at', null)
             ->where(self::NOT_HOTEL, null, false)    // hotels are out of the storefront/order process
-            ->where(self::NOT_MANUFACTURER, null, false); // manufacturers are B2B-only (msonline)
+            ->where(self::NOT_MANUFACTURER, null, false); // manufacturers are B2B-only (monline)
     }
 
     /**
@@ -340,7 +340,7 @@ final class StoreCatalogRepository
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
             ->where('p.status', 'published')->where('p.deleted_at', null)
             ->where(self::NOT_HOTEL, null, false)    // hotels excluded from storefront
-            ->where(self::NOT_MANUFACTURER, null, false); // manufacturers are B2B-only (msonline)
+            ->where(self::NOT_MANUFACTURER, null, false); // manufacturers are B2B-only (monline)
     }
 
     /**

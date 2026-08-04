@@ -31,7 +31,7 @@ final class StatusMachine
     ];
 
     /**
-     * msonline B2B purchase orders. Modelled on TRANSFER — it already encodes
+     * monline B2B purchase orders. Modelled on TRANSFER — it already encodes
      * "goods move between two locations, with an approval and a receipt" — but the
      * two parties are different tenants (a vendor buying from a manufacturer), and
      * the seller may reject a placed order outright.
@@ -108,7 +108,7 @@ final class StatusMachine
         return self::allowed(self::ORDER, $from, $to);
     }
 
-    /** msonline B2B purchase orders. */
+    /** monline B2B purchase orders. */
     public static function canPurchaseOrder(string $from, string $to): bool
     {
         return self::allowed(self::PURCHASE_ORDER, $from, $to);

@@ -1,6 +1,6 @@
--- 71_msonline_b2b.sql  |  msonline B2B purchase orders (phase B).
+-- 71_monline_b2b.sql  |  monline B2B purchase orders (phase B).
 --
--- The marketplace at msonline.shiplore.in where VENDORS and SHOPS buy from
+-- The marketplace at monline.shiplore.in where VENDORS and SHOPS buy from
 -- MANUFACTURERS. Deliberately separate tables from the consumer `orders` /
 -- `sub_orders` pipeline:
 --
@@ -21,7 +21,7 @@
 --
 -- Fully idempotent — safe to re-run.
 --
--- Apply: php database/apply_sql.php database/sql/71_msonline_b2b.sql
+-- Apply: php database/apply_sql.php database/sql/71_monline_b2b.sql
 
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -130,10 +130,10 @@ CREATE TABLE IF NOT EXISTS `mfg_purchase_order_items` (
 -- the existing bulk grant. Seller-side (mfg.po.*) already exist from 70_manufacturer.
 -- ---------------------------------------------------------------------
 INSERT IGNORE INTO `permissions` (`code`,`module`,`action`,`scope_class`,`description`) VALUES
- ('msonline.browse','msonline','browse','vendor','Browse the wholesale marketplace'),
- ('msonline.order','msonline','order','vendor','Place wholesale purchase orders'),
- ('msonline.po.view','msonline','po.view','vendor','View own purchase orders'),
- ('msonline.po.receive','msonline','po.receive','shop','Mark a purchase order received');
+ ('monline.browse','monline','browse','vendor','Browse the wholesale marketplace'),
+ ('monline.order','monline','order','vendor','Place wholesale purchase orders'),
+ ('monline.po.view','monline','po.view','vendor','View own purchase orders'),
+ ('monline.po.receive','monline','po.receive','shop','Mark a purchase order received');
 
 -- vendor_owner: bulk-granted by scope_class IN ('vendor','shop') — re-run so the new
 -- codes above are picked up (11_seed.sql:232-239 does the same after each batch).
@@ -143,15 +143,15 @@ INSERT IGNORE INTO `role_permissions` (`role_id`,`permission_id`)
 
 INSERT IGNORE INTO `role_permissions` (`role_id`,`permission_id`)
  SELECT r.id, p.id FROM `roles` r JOIN `permissions` p ON p.code IN
-  ('msonline.browse','msonline.order','msonline.po.view','msonline.po.receive')
+  ('monline.browse','monline.order','monline.po.view','monline.po.receive')
  WHERE r.code = 'vendor_manager';
 
 -- A branch manager receives stock into their own shop but does not order.
 INSERT IGNORE INTO `role_permissions` (`role_id`,`permission_id`)
  SELECT r.id, p.id FROM `roles` r JOIN `permissions` p ON p.code IN
-  ('msonline.browse','msonline.po.view','msonline.po.receive')
+  ('monline.browse','monline.po.view','monline.po.receive')
  WHERE r.code = 'vendor_shop_manager';
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-SELECT 'msonline B2B purchase-order migration applied' AS result;
+SELECT 'monline B2B purchase-order migration applied' AS result;

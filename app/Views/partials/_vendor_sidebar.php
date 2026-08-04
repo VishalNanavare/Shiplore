@@ -33,10 +33,10 @@ $groups = [
     ]],
     // Procurement — buying stock IN, as opposed to selling it. The purchase-intake
     // screens below were routed and built but had no nav entry at all, so they were
-    // reachable only by typing the URL; msonline gives them a natural home.
+    // reachable only by typing the URL; monline gives them a natural home.
     ['Procurement', 'bi-cart-plus', [
-        ['msonline', 'Buy on msonline', 'bi-shop-window', 'msonline/browse', 'msonline.browse'],
-        ['po', 'Purchase Orders', 'bi-receipt', 'msonline/orders', 'msonline.po.view'],
+        ['monline', 'Buy on monline', 'bi-shop-window', 'monline/browse', 'monline.browse'],
+        ['po', 'Purchase Orders', 'bi-receipt', 'monline/orders', 'monline.po.view'],
         ['purchase', 'Add Inventory', 'bi-box-arrow-in-down', 'vendor/purchase/add', 'inventory.adjust'],
         ['purchase-history', 'Purchase History', 'bi-clock-history', 'vendor/purchase/history', 'inventory.view'],
     ]],

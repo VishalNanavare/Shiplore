@@ -741,20 +741,20 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('manufacturerRegistrationRepository') : new \App\Models\ManufacturerRegistrationRepository();
     }
 
-    // ---- msonline B2B marketplace ----
+    // ---- monline B2B marketplace ----
     public static function purchaseOrderRepository($getShared = true)
     {
         return $getShared ? static::getSharedInstance('purchaseOrderRepository') : new \App\Models\PurchaseOrderRepository();
     }
 
-    public static function msonlineCatalogRepository($getShared = true)
+    public static function monlineCatalogRepository($getShared = true)
     {
-        return $getShared ? static::getSharedInstance('msonlineCatalogRepository') : new \App\Models\MsonlineCatalogRepository();
+        return $getShared ? static::getSharedInstance('monlineCatalogRepository') : new \App\Models\MonlineCatalogRepository();
     }
 
-    public static function msonlineCart($getShared = true)
+    public static function monlineCart($getShared = true)
     {
-        return $getShared ? static::getSharedInstance('msonlineCart') : new \App\Libraries\Msonline\MsonlineCart();
+        return $getShared ? static::getSharedInstance('monlineCart') : new \App\Libraries\Monline\MonlineCart();
     }
 
     // ---- Vendor panel (Phase 7) ----

@@ -11,7 +11,7 @@ use InvalidArgumentException;
  * ManufacturerPricing — the making-price / selling-price invariant.
  *
  * A manufacturer product carries a MAKING price (what it costs them to produce) and a
- * SELLING price (what a vendor/shop pays on msonline). Vendors instead carry MRP +
+ * SELLING price (what a vendor/shop pays on monline). Vendors instead carry MRP +
  * selling price; manufacturers have no MRP concept.
  *
  * The rule: 0 < making_price < selling_price. Equal is rejected too — selling at cost

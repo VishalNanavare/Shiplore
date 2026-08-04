@@ -7,7 +7,7 @@ namespace App\Models;
 use Config\Database;
 
 /**
- * MsonlineCatalogRepository — the manufacturer catalogue shown on msonline.shiplore.in.
+ * MonlineCatalogRepository — the manufacturer catalogue shown on monline.shiplore.in.
  *
  * The mirror image of StoreCatalogRepository: that one EXCLUDES manufacturers, this one
  * shows ONLY manufacturers. Kept separate rather than parameterising the consumer
@@ -24,7 +24,7 @@ use Config\Database;
  *      production cost; a buyer must not see it, and the safest way to guarantee that is
  *      for the query never to fetch it.
  */
-final class MsonlineCatalogRepository
+final class MonlineCatalogRepository
 {
     /** Only published products belonging to an active manufacturer. */
     private function base(): object

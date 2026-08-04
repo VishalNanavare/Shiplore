@@ -13,16 +13,16 @@ $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'vendor']);
 $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'shop']);    // shop.   -> staff login (shop managers are vendor-panel staff)
 $routes->get('/', 'Rider\AuthController::loginForm', ['subdomain' => 'rider']);   // rider.  -> rider login
 // Manufacturer surfaces. manufacturer./mshop. mirror vendor./shop. — owner login vs
-// unit-staff login, both landing in the manufacturer panel. msonline. is the B2B
+// unit-staff login, both landing in the manufacturer panel. monline. is the B2B
 // marketplace. These MUST stay above the apex fallback: a subdomain route registers
 // with overwrite, but the bare '/' below does not, so whichever is declared first wins.
 $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'manufacturer']); // manufacturer. -> staff login
 $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'mshop']);        // mshop. -> unit-staff login
-// msonline. MUST have its own root route. Without one the bare '/' falls through to the
+// monline. MUST have its own root route. Without one the bare '/' falls through to the
 // apex route below and serves the CONSUMER storefront on the B2B hostname — wrong
 // catalogue, wrong audience, consumer pricing. The full marketplace lands in phase B;
 // this entry point is deliberately live ahead of it so the subdomain is never wrong.
-$routes->get('/', 'Msonline\CatalogController::home', ['subdomain' => 'msonline']);   // msonline. -> B2B marketplace
+$routes->get('/', 'Monline\CatalogController::home', ['subdomain' => 'monline']);   // monline. -> B2B marketplace
 $routes->get('/', 'Store\StoreController::home');                                  // apex shiplorelocal.in -> ecommerce homepage
 
 // ---- Media (private files served by uuid) ----
@@ -787,34 +787,34 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer'], static func
     $routes->post('products/(:num)/autosave/(:segment)', 'Manufacturer\ProductController::autosave/$1/$2', ['filter' => 'csrf']);
     $routes->post('products/(:num)/submit', 'Manufacturer\ProductController::submit/$1', ['filter' => 'csrf']);
 
-    // Incoming msonline purchase orders (seller side). The buyer confirms receipt on
+    // Incoming monline purchase orders (seller side). The buyer confirms receipt on
     // their side — a manufacturer cannot mark its own delivery received.
     $routes->get('purchase-orders', 'Manufacturer\PurchaseOrderController::index');
     $routes->get('purchase-orders/(:num)', 'Manufacturer\PurchaseOrderController::show/$1');
     $routes->post('purchase-orders/(:num)/(:alpha)', 'Manufacturer\PurchaseOrderController::transition/$1/$2', ['filter' => 'csrf']);
 });
 
-// ---- msonline.shiplore.in — the B2B marketplace ----
+// ---- monline.shiplore.in — the B2B marketplace ----
 // Path-based like every other panel, so it also resolves on the apex; the subdomain
 // simply lands visitors on '/'. Browsing is public but PRICE-FREE — pricing and every
 // ordering route require a resolved vendor buyer, enforced in the controllers.
-$routes->group('msonline', static function (RouteCollection $routes): void {
-    $routes->get('/', 'Msonline\CatalogController::home');
-    $routes->get('browse', 'Msonline\CatalogController::browse');
-    $routes->get('product/(:segment)', 'Msonline\CatalogController::product/$1');
+$routes->group('monline', static function (RouteCollection $routes): void {
+    $routes->get('/', 'Monline\CatalogController::home');
+    $routes->get('browse', 'Monline\CatalogController::browse');
+    $routes->get('product/(:segment)', 'Monline\CatalogController::product/$1');
 
     // Cart + checkout — buyers only.
-    $routes->get('cart', 'Msonline\OrderController::cart');
-    $routes->post('cart/add', 'Msonline\OrderController::add', ['filter' => 'csrf']);
-    $routes->post('cart/update', 'Msonline\OrderController::update', ['filter' => 'csrf']);
-    $routes->post('cart/remove/(:num)', 'Msonline\OrderController::remove/$1', ['filter' => 'csrf']);
-    $routes->post('place', 'Msonline\OrderController::place', ['filter' => 'csrf']);
+    $routes->get('cart', 'Monline\OrderController::cart');
+    $routes->post('cart/add', 'Monline\OrderController::add', ['filter' => 'csrf']);
+    $routes->post('cart/update', 'Monline\OrderController::update', ['filter' => 'csrf']);
+    $routes->post('cart/remove/(:num)', 'Monline\OrderController::remove/$1', ['filter' => 'csrf']);
+    $routes->post('place', 'Monline\OrderController::place', ['filter' => 'csrf']);
 
     // Purchase orders (buyer side).
-    $routes->get('orders', 'Msonline\OrderController::orders');
-    $routes->get('orders/(:num)', 'Msonline\OrderController::show/$1');
-    $routes->post('orders/(:num)/receive', 'Msonline\OrderController::receive/$1', ['filter' => 'csrf']);
-    $routes->post('orders/(:num)/cancel', 'Msonline\OrderController::cancel/$1', ['filter' => 'csrf']);
+    $routes->get('orders', 'Monline\OrderController::orders');
+    $routes->get('orders/(:num)', 'Monline\OrderController::show/$1');
+    $routes->post('orders/(:num)/receive', 'Monline\OrderController::receive/$1', ['filter' => 'csrf']);
+    $routes->post('orders/(:num)/cancel', 'Monline\OrderController::cancel/$1', ['filter' => 'csrf']);
 });
 
 // UI Kit — standalone design reference (own shell + menu; not wired to the app).

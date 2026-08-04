@@ -9,7 +9,7 @@ $navPerms   = $navPerms ?? [];
 $visible = static fn (string $perm): bool => $perm === 'OWNER' ? $navIsOwner : ($navIsOwner || $perm === '' || isset($navPerms[$perm]));
 
 // Deliberately NO delivery, rider, POS or serviceability entries — manufacturers
-// do none of those. Orders arrive as msonline purchase orders (phase B).
+// do none of those. Orders arrive as monline purchase orders (phase B).
 $groups = [
     ['Catalog', 'bi-grid', [
         ['units', 'Units', 'bi-buildings', 'manufacturer/units', 'mfg.unit.view'],

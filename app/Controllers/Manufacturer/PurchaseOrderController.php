@@ -7,7 +7,7 @@ namespace App\Controllers\Manufacturer;
 use CodeIgniter\HTTP\RedirectResponse;
 
 /**
- * Manufacturer\PurchaseOrderController — the seller side of msonline.
+ * Manufacturer\PurchaseOrderController — the seller side of monline.
  *
  * Incoming purchase orders from vendors and shops: accept or reject, then pack and
  * dispatch. The buyer confirms receipt on their side, which is what raises their stock —

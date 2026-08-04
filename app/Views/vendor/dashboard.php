@@ -20,13 +20,13 @@
 
 <?php
 /*
- * msonline — the wholesale marketplace where this vendor buys stock from manufacturers.
+ * monline — the wholesale marketplace where this vendor buys stock from manufacturers.
  * A banner rather than a 5th KPI card: it is a call to action, not a metric, and the
  * card grid above renders every link through site_url(), which would be wrong for a
  * cross-subdomain destination.
  *
- * The link is relative on purpose. msonline is path-routed as well as subdomain-routed,
- * so /msonline resolves on whatever host the vendor is already signed in on — no
+ * The link is relative on purpose. monline is path-routed as well as subdomain-routed,
+ * so /monline resolves on whatever host the vendor is already signed in on — no
  * absolute URL to keep in step with the environment, and no re-login.
  */
 ?>
@@ -36,11 +36,11 @@
             <i class="bi bi-shop-window"></i>
         </span>
         <div class="flex-grow-1">
-            <div class="fw-semibold">Buy stock on msonline</div>
+            <div class="fw-semibold">Buy stock on monline</div>
             <div class="text-secondary small">Order directly from manufacturers at wholesale prices.</div>
         </div>
-        <a class="btn btn-outline-primary" href="<?= site_url('msonline/orders') ?>">My purchase orders</a>
-        <a class="btn btn-primary" href="<?= site_url('msonline/browse') ?>">Browse catalogue</a>
+        <a class="btn btn-outline-primary" href="<?= site_url('monline/orders') ?>">My purchase orders</a>
+        <a class="btn btn-primary" href="<?= site_url('monline/browse') ?>">Browse catalogue</a>
     </div>
 </div>
 

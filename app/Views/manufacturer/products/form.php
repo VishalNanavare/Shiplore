@@ -45,7 +45,7 @@ $selling = old('base_price', $isEdit ? ($product['base_price'] ?? '') : '');
              * enforcement is server-side in ManufacturerPricing, applied by the
              * controller, the repository and the autosave path alike.
              *
-             * Making price is INTERNAL. It must never be shown to a buyer on msonline.
+             * Making price is INTERNAL. It must never be shown to a buyer on monline.
              */
             ?>
             <div class="col-12"><hr class="my-1"><h6 class="mb-0">Pricing</h6></div>
@@ -60,7 +60,7 @@ $selling = old('base_price', $isEdit ? ($product['base_price'] ?? '') : '');
                 <label class="form-label">Selling price (₹) <span class="text-danger">*</span></label>
                 <input name="base_price" id="mfgSelling" type="number" step="0.01" min="0" class="form-control"
                        required value="<?= esc((string) $selling, 'attr') ?>">
-                <div class="form-text">What a vendor or shop pays on msonline.</div>
+                <div class="form-text">What a vendor or shop pays on monline.</div>
             </div>
             <div class="col-md-4">
                 <label class="form-label">Margin</label>

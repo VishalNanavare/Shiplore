@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Controllers\Msonline;
+namespace App\Controllers\Monline;
 
 use App\Controllers\BaseController;
 
 /**
- * BaseMsonlineController — shared base for msonline.shiplore.in, the B2B marketplace
+ * BaseMonlineController — shared base for monline.shiplore.in, the B2B marketplace
  * where vendors and shops buy from manufacturers.
  *
  * Buyers are EXISTING vendor-panel users (principal_type='vendor') with a resolvable
- * vendor — there is no separate msonline account. Identity is resolved from the session
+ * vendor — there is no separate monline account. Identity is resolved from the session
  * user via VendorAccountRepository (read-only use; that class is not modified).
  *
  * Two rules this class exists to make hard to break:
@@ -20,12 +20,12 @@ use App\Controllers\BaseController;
  *      omitted SERVER-SIDE unless isBuyer() is true. Never hidden with CSS — a price in
  *      the HTML is a price that has been disclosed.
  *   2. MAKING PRICE NEVER LEAVES THE MANUFACTURER. It is their internal production cost
- *      and must not appear in any msonline response, for any viewer.
+ *      and must not appear in any monline response, for any viewer.
  *
  * Follows the rider-panel precedent: a standalone surface with its own session handling
  * rather than reusing the vendor route group's webAuth pin.
  */
-abstract class BaseMsonlineController extends BaseController
+abstract class BaseMonlineController extends BaseController
 {
     /** @var array<string,mixed>|null */
     private ?array $buyerRow = null;
@@ -61,7 +61,7 @@ abstract class BaseMsonlineController extends BaseController
     }
 
     /**
-     * The single gate for showing any price on msonline.
+     * The single gate for showing any price on monline.
      *
      * Manufacturers are explicitly NOT buyers: they sell here. A manufacturer session
      * has principal_type='manufacturer', so buyer() returns null for it already, but
@@ -123,13 +123,13 @@ abstract class BaseMsonlineController extends BaseController
         return $out;
     }
 
-    /** Common chrome for every msonline view. */
+    /** Common chrome for every monline view. */
     protected function render(string $view, string $pageTitle, array $data = []): string
     {
         $b = $this->buyer();
 
         return view($view, array_merge([
-            'title'      => $pageTitle . ' · msonline',
+            'title'      => $pageTitle . ' · monline',
             'pageTitle'  => $pageTitle,
             'isBuyer'    => $this->isBuyer(),
             'buyerName'  => $b['display_name'] ?? null,

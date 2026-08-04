@@ -7,15 +7,15 @@ use App\Libraries\Workflow\StatusMachine;
 use CodeIgniter\Test\CIUnitTestCase;
 
 /**
- * msonline B2B marketplace invariants.
+ * monline B2B marketplace invariants.
  *
  * The three that would cost real money or leak commercially sensitive data if broken:
  *
  *   1. Prices are never rendered to a visitor who is not a resolved buyer.
- *   2. `making_price` — the manufacturer's production cost — never reaches msonline.
+ *   2. `making_price` — the manufacturer's production cost — never reaches monline.
  *   3. Order totals are computed from DB prices, never from client input.
  */
-final class MsonlineB2bTest extends CIUnitTestCase
+final class MonlineB2bTest extends CIUnitTestCase
 {
     private function read(string $rel): string
     {
@@ -31,7 +31,7 @@ final class MsonlineB2bTest extends CIUnitTestCase
      */
     public function testCatalogRepositoryWithholdsPricesByDefault(): void
     {
-        $src = $this->read('Models/MsonlineCatalogRepository.php');
+        $src = $this->read('Models/MonlineCatalogRepository.php');
 
         $this->assertMatchesRegularExpression(
             '/function products\(array \$opts = \[\], bool \$withPrices = false\)/',
@@ -54,8 +54,8 @@ final class MsonlineB2bTest extends CIUnitTestCase
     /** The controller must derive that flag from a resolved buyer, not a bare login. */
     public function testControllerOptsIntoPricesOnlyForAResolvedBuyer(): void
     {
-        $ctrl = $this->read('Controllers/Msonline/CatalogController.php');
-        $base = $this->read('Controllers/Msonline/BaseMsonlineController.php');
+        $ctrl = $this->read('Controllers/Monline/CatalogController.php');
+        $base = $this->read('Controllers/Monline/BaseMonlineController.php');
 
         $this->assertStringContainsString('$withPrices = $this->isBuyer();', $ctrl);
 
@@ -65,35 +65,35 @@ final class MsonlineB2bTest extends CIUnitTestCase
         $this->assertStringContainsString('buyerVendorId() !== null', $base);
     }
 
-    /** No msonline view may print a price outside a showPrices guard. */
+    /** No monline view may print a price outside a showPrices guard. */
     public function testViewsGatePriceOutputOnShowPrices(): void
     {
         foreach (['browse', 'product'] as $view) {
-            $src = (string) file_get_contents(APPPATH . "Views/msonline/{$view}.php");
+            $src = (string) file_get_contents(APPPATH . "Views/monline/{$view}.php");
 
             $this->assertStringContainsString(
                 'showPrices',
                 $src,
-                "msonline/{$view}.php prints prices without checking showPrices",
+                "monline/{$view}.php prints prices without checking showPrices",
             );
             // Every base_price echo must sit after a showPrices check in the same file.
             $guard = strpos($src, 'showPrices');
             $price = strpos($src, 'base_price');
             if ($price !== false) {
-                $this->assertLessThan($price, $guard, "msonline/{$view}.php echoes a price before the guard");
+                $this->assertLessThan($price, $guard, "monline/{$view}.php echoes a price before the guard");
             }
         }
     }
 
     // ------------------------------------------------------- making price containment
 
-    /** making_price must appear nowhere in the msonline surface — controllers or views. */
-    public function testMakingPriceNeverReachesMsonline(): void
+    /** making_price must appear nowhere in the monline surface — controllers or views. */
+    public function testMakingPriceNeverReachesMonline(): void
     {
         $files = array_merge(
-            glob(APPPATH . 'Controllers/Msonline/*.php') ?: [],
-            glob(APPPATH . 'Views/msonline/*.php') ?: [],
-            [APPPATH . 'Models/MsonlineCatalogRepository.php'],
+            glob(APPPATH . 'Controllers/Monline/*.php') ?: [],
+            glob(APPPATH . 'Views/monline/*.php') ?: [],
+            [APPPATH . 'Models/MonlineCatalogRepository.php'],
         );
 
         foreach ($files as $file) {
@@ -136,11 +136,11 @@ final class MsonlineB2bTest extends CIUnitTestCase
         $this->assertStringNotContainsString('$_POST', $src);
 
         // The cart is variantId => qty only; no price travels in it.
-        $cart = $this->read('Libraries/Msonline/MsonlineCart.php');
+        $cart = $this->read('Libraries/Monline/MonlineCart.php');
         $this->assertStringNotContainsString('price', $cart, 'the cart must carry quantities only, never prices');
     }
 
-    /** Only manufacturers may be sold on msonline. */
+    /** Only manufacturers may be sold on monline. */
     public function testOnlyManufacturerProductsAreSellable(): void
     {
         $this->assertStringContainsString(
@@ -150,7 +150,7 @@ final class MsonlineB2bTest extends CIUnitTestCase
         );
         $this->assertStringContainsString(
             "where('v.party_type', 'manufacturer')",
-            $this->read('Models/MsonlineCatalogRepository.php'),
+            $this->read('Models/MonlineCatalogRepository.php'),
             'the catalogue must show manufacturers only',
         );
     }
@@ -160,21 +160,21 @@ final class MsonlineB2bTest extends CIUnitTestCase
     /**
      * The B2B cart must NOT reuse the consumer cart's session key. The cookie is
      * domain-wide, so one browser shares a session between shiplore.in and
-     * msonline.shiplore.in — the same key would merge a shopper's basket with a
+     * monline.shiplore.in — the same key would merge a shopper's basket with a
      * vendor's wholesale order.
      */
     public function testB2bCartUsesItsOwnSessionKey(): void
     {
-        $b2b      = $this->read('Libraries/Msonline/MsonlineCart.php');
+        $b2b      = $this->read('Libraries/Monline/MonlineCart.php');
         $consumer = $this->read('Libraries/Store/CartService.php');
 
         // Anchor to the real declaration (line-start + indentation), not a docblock
-        // mention — MsonlineCart's docblock quotes 'store_cart' while explaining why it
+        // mention — MonlineCart's docblock quotes 'store_cart' while explaining why it
         // is deliberately NOT reused, and an unanchored match grabs that instead.
         preg_match("/^\s+private const KEY = '([a-z_]+)'/m", $b2b, $mB2b);
         preg_match("/^\s+private const KEY = '([a-z_]+)'/m", $consumer, $mCon);
 
-        $this->assertNotEmpty($mB2b, 'MsonlineCart has no KEY constant');
+        $this->assertNotEmpty($mB2b, 'MonlineCart has no KEY constant');
         $this->assertNotEmpty($mCon, 'CartService has no KEY constant');
         $this->assertNotSame(
             $mCon[1],
@@ -244,7 +244,7 @@ final class MsonlineB2bTest extends CIUnitTestCase
     /** A buyer may only route stock into a shop they are allowed to act on. */
     public function testDestinationShopIsCheckedAgainstTheBuyersAllowedShops(): void
     {
-        $body = $this->methodBody($this->read('Controllers/Msonline/OrderController.php'), 'place');
+        $body = $this->methodBody($this->read('Controllers/Monline/OrderController.php'), 'place');
 
         $this->assertStringContainsString(
             'in_array($shopId, $this->buyerShopIds(), true)',
@@ -256,7 +256,7 @@ final class MsonlineB2bTest extends CIUnitTestCase
     /** Every ordering action requires a buyer; browsing is the only anonymous surface. */
     public function testEveryOrderingActionRequiresABuyer(): void
     {
-        $src = $this->read('Controllers/Msonline/OrderController.php');
+        $src = $this->read('Controllers/Monline/OrderController.php');
         preg_match_all('/public function (\w+)\s*\(/', $src, $m);
 
         $this->assertNotEmpty($m[1]);
@@ -264,7 +264,7 @@ final class MsonlineB2bTest extends CIUnitTestCase
             $this->assertStringContainsString(
                 'requireBuyer',
                 $this->methodBody($src, $method),
-                "Msonline\\OrderController::{$method}() does not require a buyer",
+                "Monline\\OrderController::{$method}() does not require a buyer",
             );
         }
     }

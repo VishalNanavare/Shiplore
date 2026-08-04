@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Controllers\Msonline;
+namespace App\Controllers\Monline;
 
 use App\Libraries\Catalog\PurchaseRules;
 use CodeIgniter\HTTP\RedirectResponse;
 
 /**
- * Msonline\OrderController — the B2B cart and checkout.
+ * Monline\OrderController — the B2B cart and checkout.
  *
  * Every method here requires a resolved buyer. Browsing may be anonymous; ordering
  * never is, and neither is seeing a price.
@@ -17,13 +17,13 @@ use CodeIgniter\HTTP\RedirectResponse;
  * placement by PurchaseOrderRepository — a client-supplied price is never accepted
  * anywhere in this flow, so there is nothing to tamper with.
  */
-final class OrderController extends BaseMsonlineController
+final class OrderController extends BaseMonlineController
 {
     /** Guard: must be a signed-in vendor/shop buyer. */
     private function requireBuyer(): ?RedirectResponse
     {
         if (! $this->isBuyer()) {
-            return redirect()->to('msonline')->with('error', 'Sign in with your vendor account to order.');
+            return redirect()->to('monline')->with('error', 'Sign in with your vendor account to order.');
         }
 
         return null;
@@ -35,9 +35,9 @@ final class OrderController extends BaseMsonlineController
             return $denied;
         }
 
-        $lines = service('msonlineCatalogRepository')->cartLines(service('msonlineCart')->raw());
+        $lines = service('monlineCatalogRepository')->cartLines(service('monlineCart')->raw());
 
-        return $this->render('msonline/cart', 'Your order', [
+        return $this->render('monline/cart', 'Your order', [
             'lines'     => $lines,
             'subtotal'  => array_sum(array_column($lines, 'line_total')),
             'shops'     => $this->buyerShops(),
@@ -56,7 +56,7 @@ final class OrderController extends BaseMsonlineController
 
         // MOQ is checked here for an immediate message, and AGAIN at placement — the
         // cart sits in a session that can go stale while the product's rules change.
-        $rules = service('msonlineCatalogRepository')->findBySlug((string) $this->request->getPost('slug'), false);
+        $rules = service('monlineCatalogRepository')->findBySlug((string) $this->request->getPost('slug'), false);
         if ($rules !== null) {
             $check = PurchaseRules::validate($qty, [
                 'min_purchase_qty' => $rules['min_purchase_qty'] ?? null,
@@ -68,9 +68,9 @@ final class OrderController extends BaseMsonlineController
             }
         }
 
-        service('msonlineCart')->add($variantId, $qty);
+        service('monlineCart')->add($variantId, $qty);
 
-        return redirect()->to('msonline/cart')->with('success', 'Added to your order.');
+        return redirect()->to('monline/cart')->with('success', 'Added to your order.');
     }
 
     public function update(): RedirectResponse
@@ -79,12 +79,12 @@ final class OrderController extends BaseMsonlineController
             return $denied;
         }
 
-        $cart = service('msonlineCart');
+        $cart = service('monlineCart');
         foreach ((array) $this->request->getPost('qty') as $variantId => $qty) {
             $cart->setQty((int) $variantId, (float) $qty);
         }
 
-        return redirect()->to('msonline/cart')->with('success', 'Order updated.');
+        return redirect()->to('monline/cart')->with('success', 'Order updated.');
     }
 
     public function remove(int $variantId): RedirectResponse
@@ -93,9 +93,9 @@ final class OrderController extends BaseMsonlineController
             return $denied;
         }
 
-        service('msonlineCart')->remove($variantId);
+        service('monlineCart')->remove($variantId);
 
-        return redirect()->to('msonline/cart');
+        return redirect()->to('monline/cart');
     }
 
     public function place(): RedirectResponse
@@ -110,10 +110,10 @@ final class OrderController extends BaseMsonlineController
         // or a branch manager's assigned shops only. Without this a manager could route
         // stock into a sibling branch.
         if (! in_array($shopId, $this->buyerShopIds(), true)) {
-            return redirect()->to('msonline/cart')->with('error', 'Choose a delivery destination from your own shops.');
+            return redirect()->to('monline/cart')->with('error', 'Choose a delivery destination from your own shops.');
         }
 
-        $cart = service('msonlineCart');
+        $cart = service('monlineCart');
         $res  = service('purchaseOrderRepository')->placeFromCart(
             (int) $this->buyerVendorId(),
             $shopId,
@@ -123,13 +123,13 @@ final class OrderController extends BaseMsonlineController
         );
 
         if (! $res['ok']) {
-            return redirect()->to('msonline/cart')->with('error', $res['error']);
+            return redirect()->to('monline/cart')->with('error', $res['error']);
         }
 
         $cart->clear();
         $n = count($res['po_ids']);
 
-        return redirect()->to('msonline/orders')->with(
+        return redirect()->to('monline/orders')->with(
             'success',
             $n === 1
                 ? 'Purchase order placed.'
@@ -143,7 +143,7 @@ final class OrderController extends BaseMsonlineController
             return $denied;
         }
 
-        return $this->render('msonline/orders', 'Purchase orders', [
+        return $this->render('monline/orders', 'Purchase orders', [
             'orders' => service('purchaseOrderRepository')->listForBuyer(
                 (int) $this->buyerVendorId(),
                 $this->buyerShopIds(),
@@ -160,10 +160,10 @@ final class OrderController extends BaseMsonlineController
 
         $found = service('purchaseOrderRepository')->findFor($id, (int) $this->buyerVendorId(), 'buyer');
         if ($found === null) {
-            return redirect()->to('msonline/orders')->with('error', 'Purchase order not found.');
+            return redirect()->to('monline/orders')->with('error', 'Purchase order not found.');
         }
 
-        return $this->render('msonline/order_detail', $found['po']['po_no'], [
+        return $this->render('monline/order_detail', $found['po']['po_no'], [
             'po'    => $found['po'],
             'items' => $found['items'],
         ]);
@@ -179,8 +179,8 @@ final class OrderController extends BaseMsonlineController
         $res = service('purchaseOrderRepository')->receive($id, (int) $this->buyerVendorId(), (int) session()->get('user_id'));
 
         return $res['ok']
-            ? redirect()->to('msonline/orders/' . $id)->with('success', 'Received — stock has been added to the destination shop.')
-            : redirect()->to('msonline/orders/' . $id)->with('error', $res['error']);
+            ? redirect()->to('monline/orders/' . $id)->with('success', 'Received — stock has been added to the destination shop.')
+            : redirect()->to('monline/orders/' . $id)->with('error', $res['error']);
     }
 
     public function cancel(int $id): RedirectResponse
@@ -198,7 +198,7 @@ final class OrderController extends BaseMsonlineController
         );
 
         return $res['ok']
-            ? redirect()->to('msonline/orders/' . $id)->with('success', 'Purchase order cancelled.')
-            : redirect()->to('msonline/orders/' . $id)->with('error', $res['error']);
+            ? redirect()->to('monline/orders/' . $id)->with('success', 'Purchase order cancelled.')
+            : redirect()->to('monline/orders/' . $id)->with('error', $res['error']);
     }
 }

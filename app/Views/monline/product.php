@@ -1,7 +1,7 @@
-<?= $this->extend('msonline/_layout') ?>
+<?= $this->extend('monline/_layout') ?>
 <?= $this->section('content') ?>
 
-<a class="small text-decoration-none" href="<?= site_url('msonline/browse') ?>">&larr; Back to catalogue</a>
+<a class="small text-decoration-none" href="<?= site_url('monline/browse') ?>">&larr; Back to catalogue</a>
 
 <div class="card mt-3">
     <div class="card-body">
@@ -14,7 +14,7 @@
         <?php if (! empty($showPrices) && isset($product['base_price'])): ?>
             <div class="fs-3 fw-semibold text-primary mb-3">₹<?= esc(number_format((float) $product['base_price'], 2)) ?></div>
 
-            <form method="post" action="<?= site_url('msonline/cart/add') ?>" class="row g-2 align-items-end" style="max-width:420px">
+            <form method="post" action="<?= site_url('monline/cart/add') ?>" class="row g-2 align-items-end" style="max-width:420px">
                 <?= csrf_field() ?>
                 <input type="hidden" name="variant_id" value="<?= (int) ($product['variant_id'] ?? 0) ?>">
                 <input type="hidden" name="slug" value="<?= esc($product['slug'] ?? '', 'attr') ?>">

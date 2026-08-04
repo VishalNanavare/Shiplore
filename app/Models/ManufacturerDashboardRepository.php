@@ -11,7 +11,7 @@ use Config\Database;
  *
  * Deliberately narrow: units, products and stock. There are no order or sales metrics
  * yet because manufacturers do not sell to consumers — their sales arrive through
- * msonline purchase orders, which land in phase B.
+ * monline purchase orders, which land in phase B.
  */
 final class ManufacturerDashboardRepository
 {

@@ -11,7 +11,7 @@ use Config\Database;
 use Throwable;
 
 /**
- * PurchaseOrderRepository — msonline B2B purchase orders.
+ * PurchaseOrderRepository — monline B2B purchase orders.
  *
  * A vendor/shop buys from a manufacturer. One PO per manufacturer: a cart spanning two
  * manufacturers is split at placement, because each is fulfilled and received separately.
@@ -82,7 +82,7 @@ final class PurchaseOrderRepository
             return ['ok' => true, 'error' => '', 'po_ids' => $poIds];
         } catch (Throwable $e) {
             $db->transRollback();
-            log_message('error', 'msonline PO placement failed: ' . $e->getMessage());
+            log_message('error', 'monline PO placement failed: ' . $e->getMessage());
 
             return ['ok' => false, 'error' => 'Could not place the order.', 'po_ids' => []];
         }
@@ -125,7 +125,7 @@ final class PurchaseOrderRepository
             ->whereIn('pv.id', $ids)
             ->where('pv.deleted_at', null)->where('pv.status', 'active')
             ->where('p.deleted_at', null)->where('p.status', 'published')
-            // Only manufacturers sell on msonline.
+            // Only manufacturers sell on monline.
             ->where('v.party_type', 'manufacturer')
             ->where('v.deleted_at', null)
             ->get()->getResultArray();
@@ -402,7 +402,7 @@ final class PurchaseOrderRepository
                 : ['ok' => false, 'error' => 'Could not record the receipt.'];
         } catch (Throwable $e) {
             $db->transRollback();
-            log_message('error', 'msonline PO receive failed for PO ' . $poId . ': ' . $e->getMessage());
+            log_message('error', 'monline PO receive failed for PO ' . $poId . ': ' . $e->getMessage());
 
             return ['ok' => false, 'error' => 'Could not record the receipt.'];
         }

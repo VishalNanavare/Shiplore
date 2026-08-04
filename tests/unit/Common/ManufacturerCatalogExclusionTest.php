@@ -123,11 +123,11 @@ final class ManufacturerCatalogExclusionTest extends CIUnitTestCase
         $hosts  = (new App())->allowedHostnames;
         $routes = (string) file_get_contents(APPPATH . 'Config/Routes.php');
 
-        foreach (['manufacturer.shiplore.in', 'mshop.shiplore.in', 'msonline.shiplore.in'] as $h) {
+        foreach (['manufacturer.shiplore.in', 'mshop.shiplore.in', 'monline.shiplore.in'] as $h) {
             $this->assertContains($h, $hosts);
         }
 
-        // manufacturer. and mshop. resolve; msonline. deliberately does not yet (phase B).
+        // manufacturer. and mshop. resolve; monline. deliberately does not yet (phase B).
         $this->assertStringContainsString("'subdomain' => 'manufacturer'", $routes);
         $this->assertStringContainsString("'subdomain' => 'mshop'", $routes);
     }

@@ -2,15 +2,15 @@
 <body class="bg-body-tertiary">
 <nav class="navbar navbar-expand-lg bg-white border-bottom mb-4">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center gap-2" href="<?= site_url('msonline') ?>">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="<?= site_url('monline') ?>">
             <img src="<?= asset('images/logo.svg') ?>" alt="" width="28" height="28">
-            <span><?= esc(service('settingsRepository')->brandName()) ?> <span class="text-primary fw-semibold">msonline</span></span>
+            <span><?= esc(service('settingsRepository')->brandName()) ?> <span class="text-primary fw-semibold">monline</span></span>
         </a>
         <div class="ms-auto d-flex align-items-center gap-3">
             <?php if (! empty($isBuyer)): ?>
-                <a class="text-decoration-none small" href="<?= site_url('msonline/browse') ?>">Catalogue</a>
-                <a class="text-decoration-none small" href="<?= site_url('msonline/orders') ?>">My orders</a>
-                <a class="btn btn-sm btn-outline-primary" href="<?= site_url('msonline/cart') ?>">
+                <a class="text-decoration-none small" href="<?= site_url('monline/browse') ?>">Catalogue</a>
+                <a class="text-decoration-none small" href="<?= site_url('monline/orders') ?>">My orders</a>
+                <a class="btn btn-sm btn-outline-primary" href="<?= site_url('monline/cart') ?>">
                     <i class="bi bi-cart"></i> Order
                     <?php if (! empty($cartCount)): ?><span class="badge bg-primary ms-1"><?= (int) $cartCount ?></span><?php endif; ?>
                 </a>

@@ -1,7 +1,7 @@
-<?= $this->extend('msonline/_layout') ?>
+<?= $this->extend('monline/_layout') ?>
 <?= $this->section('content') ?>
 
-<a class="small text-decoration-none" href="<?= site_url('msonline/orders') ?>">&larr; All purchase orders</a>
+<a class="small text-decoration-none" href="<?= site_url('monline/orders') ?>">&larr; All purchase orders</a>
 
 <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
     <h5 class="mb-0"><?= esc($po['po_no']) ?></h5>
@@ -38,13 +38,13 @@
 
 <div class="d-flex gap-2">
     <?php if ((string) $po['status'] === 'dispatched'): ?>
-        <form method="post" action="<?= site_url('msonline/orders/' . (int) $po['id'] . '/receive') ?>">
+        <form method="post" action="<?= site_url('monline/orders/' . (int) $po['id'] . '/receive') ?>">
             <?= csrf_field() ?>
             <button class="btn btn-primary">Mark received &amp; add to stock</button>
         </form>
     <?php endif; ?>
     <?php if (in_array((string) $po['status'], ['placed', 'accepted'], true)): ?>
-        <form method="post" action="<?= site_url('msonline/orders/' . (int) $po['id'] . '/cancel') ?>">
+        <form method="post" action="<?= site_url('monline/orders/' . (int) $po['id'] . '/cancel') ?>">
             <?= csrf_field() ?>
             <button class="btn btn-outline-danger">Cancel order</button>
         </form>

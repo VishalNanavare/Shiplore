@@ -1,4 +1,4 @@
-<?= $this->extend('msonline/_layout') ?>
+<?= $this->extend('monline/_layout') ?>
 <?= $this->section('content') ?>
 
 <h5 class="mb-3">Purchase orders</h5>
@@ -10,12 +10,12 @@
             <tbody>
                 <?php if (empty($orders)): ?>
                     <tr><td colspan="6" class="text-center text-secondary py-4">
-                        No purchase orders yet. <a href="<?= site_url('msonline/browse') ?>">Browse the catalogue</a>.
+                        No purchase orders yet. <a href="<?= site_url('monline/browse') ?>">Browse the catalogue</a>.
                     </td></tr>
                 <?php else: ?>
                     <?php foreach ($orders as $o): ?>
                         <tr>
-                            <td><a href="<?= site_url('msonline/orders/' . (int) $o['id']) ?>"><?= esc($o['po_no']) ?></a></td>
+                            <td><a href="<?= site_url('monline/orders/' . (int) $o['id']) ?>"><?= esc($o['po_no']) ?></a></td>
                             <td class="small"><?= esc((string) ($o['seller_name'] ?? '')) ?></td>
                             <td class="small"><?= esc((string) ($o['shop_name'] ?? '')) ?></td>
                             <td class="text-end">₹<?= esc(number_format((float) $o['grand_total'], 2)) ?></td>
