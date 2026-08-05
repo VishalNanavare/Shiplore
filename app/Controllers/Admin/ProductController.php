@@ -81,7 +81,7 @@ final class ProductController extends BaseController
         $out = fopen('php://temp', 'r+');
         fputcsv($out, ['id', 'title', 'vendor', 'category', 'type', 'sku', 'mrp', 'selling_price', 'status']);
         foreach ($rows as $r) {
-            fputcsv($out, [$r['id'], $r['title'], $r['vendor'] ?? '', $r['category'] ?? '', $r['product_type'] ?? 'simple', $r['sku'] ?? '', $r['mrp'] ?? '', $r['base_price'] ?? '', $r['status']]);
+            fputcsv($out, array_map([self::class, 'csvCell'], [$r['id'], $r['title'], $r['vendor'] ?? '', $r['category'] ?? '', $r['product_type'] ?? 'simple', $r['sku'] ?? '', $r['mrp'] ?? '', $r['base_price'] ?? '', $r['status']]));
         }
         rewind($out);
         $csv = stream_get_contents($out);
@@ -497,5 +497,22 @@ final class ProductController extends BaseController
         }
 
         return null;
+    }
+
+    /**
+     * Neutralise spreadsheet formula injection in an exported cell.
+     *
+     * Excel/Calc/Sheets evaluate any cell whose text begins with = + - @ TAB or CR as a
+     * formula; fputcsv()'s quoting does not stop that, because the CSV parser consumes
+     * the quotes before the value is interpreted. The columns exported here carry
+     * vendor- and customer-supplied free text, so this is the one place their input
+     * crosses out of the browser sandbox onto an operator's machine. A leading
+     * apostrophe is the standard text marker and is not displayed by the reader.
+     */
+    private static function csvCell(mixed $v): string
+    {
+        $s = (string) $v;
+
+        return $s !== '' && str_contains("=+-@\t\r", $s[0]) ? "'" . $s : $s;
     }
 }

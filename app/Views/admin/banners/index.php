@@ -73,7 +73,11 @@ $activeCount = count(array_filter($banners, static fn ($b) => $b['status'] === '
                 <div class="small text-secondary">Sort: <?= (int)$b['sort_order'] ?></div>
             </div>
             <div class="card-footer bg-transparent border-top-0 py-2 px-3 d-flex gap-2">
-                <button class="btn btn-sm btn-outline-secondary flex-fill" onclick='openEdit(<?= json_encode($b) ?>)'>
+                <?php // JSON_HEX_APOS is load-bearing: this sits inside a SINGLE-quoted
+                      // attribute, and json_encode() does not escape ' without it, so an
+                      // apostrophe in a title or target_url ends the attribute and the
+                      // remainder is re-tokenised as further attributes on the button. ?>
+                <button class="btn btn-sm btn-outline-secondary flex-fill" onclick='openEdit(<?= json_encode($b, JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP) ?>)'>
                     <i class="bi bi-pencil"></i> Edit
                 </button>
                 <button class="btn btn-sm <?= $b['status'] === 'active' ? 'btn-outline-warning' : 'btn-outline-success' ?> flex-fill"
@@ -267,8 +271,10 @@ $activeCount = count(array_filter($banners, static fn ($b) => $b['status'] === '
 const CSRF_TOKEN = '<?= csrf_token() ?>';
 const CSRF_HASH  = '<?= csrf_hash() ?>';
 const BASE       = '<?= site_url('admin/banners') ?>';
-const CATEGORIES = <?= json_encode(array_values($categories)) ?>;
-const BRANDS     = <?= json_encode(array_values($brands)) ?>;
+<?php // JSON_HEX_TAG: without it a category or brand name containing </script> closes
+      // this inline block and the rest is parsed as HTML. JSON.parse decodes it back. ?>
+const CATEGORIES = <?= json_encode(array_values($categories), JSON_HEX_TAG) ?>;
+const BRANDS     = <?= json_encode(array_values($brands), JSON_HEX_TAG) ?>;
 const BRANDS_BASE = '<?= site_url("admin/banners/brands") ?>';
 const TIERS_BASE  = '<?= site_url("admin/banners/discount-tiers") ?>';
 

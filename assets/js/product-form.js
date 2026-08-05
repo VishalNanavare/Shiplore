@@ -353,7 +353,15 @@
             upMsg.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Uploading…';
             postMedia('upload-image', fd).then(function (res) {
                 if (res && res.ok) { location.reload(); }
-                else { upMsg.innerHTML = '<span class="text-danger">' + ((res && res.errors && res.errors.join('; ')) || 'Upload failed.') + '</span>'; }
+                else {
+                    // res.errors[] entries begin with the CLIENT-SUPPLIED filename, so this
+                    // must never be concatenated into innerHTML. Same rendered result.
+                    upMsg.textContent = '';
+                    var errSpan = document.createElement('span');
+                    errSpan.className = 'text-danger';
+                    errSpan.textContent = (res && res.errors && res.errors.join('; ')) || 'Upload failed.';
+                    upMsg.appendChild(errSpan);
+                }
             });
         }
         if (libDrop && libUpInput) {

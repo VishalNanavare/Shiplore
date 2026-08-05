@@ -232,7 +232,17 @@ final class PosController extends BaseVendorController
         $shopId = $this->effectiveShopId(); // owner: chosen/all; staff: their store
         $from   = (string) ($this->request->getGet('from') ?: date('Y-m-d', strtotime('-29 days')));
         $to     = (string) ($this->request->getGet('to') ?: date('Y-m-d'));
-        $rows   = service('posReportRepository')->byDay((int) $this->vendorId(), $shopId, $from, $to);
+        // Same guard as Admin\ReportController::period(): these are interpolated into
+        // the quoted Content-Disposition filename below, so a `"` would close the
+        // parameter early and let the caller append their own. Only a literal Y-m-d
+        // may pass; the UI's date inputs always produce exactly that.
+        if (! preg_match('/^\d{4}-\d{2}-\d{2}$/', $from)) {
+            $from = date('Y-m-d', strtotime('-29 days'));
+        }
+        if (! preg_match('/^\d{4}-\d{2}-\d{2}$/', $to)) {
+            $to = date('Y-m-d');
+        }
+        $rows = service('posReportRepository')->byDay((int) $this->vendorId(), $shopId, $from, $to);
 
         $csv = \App\Libraries\Reports\ReportExportService::toCsv(
             ['date', 'bills', 'sales'],

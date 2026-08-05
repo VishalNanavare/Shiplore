@@ -83,7 +83,12 @@
             window.Swal.fire({ icon: 'error', title: 'Error', text: message });
         } else {
             var icon = (type === 'warning') ? 'warning' : (type === 'info' ? 'info' : 'success');
-            toast().fire({ icon: icon, title: message });
+            // `title` is an HTML sink in SweetAlert2 (it goes through the HTML parser);
+            // `titleText` sets innerText and renders in the same .swal2-title element.
+            // Flash text arrives here ALREADY DECODED - upgradeServerAlerts() reads
+            // el.textContent, which undoes the esc() the layout applied - so it must
+            // not be re-parsed as markup.
+            toast().fire({ icon: icon, titleText: message });
         }
     }
 

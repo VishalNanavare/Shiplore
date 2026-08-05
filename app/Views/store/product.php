@@ -15,7 +15,10 @@ if (! empty($reviews)) {
     $ld['aggregateRating'] = ['@type' => 'AggregateRating', 'ratingValue' => round($avgLd, 1), 'reviewCount' => count($reviews)];
 }
 ?>
-<script type="application/ld+json"><?= json_encode($ld, JSON_UNESCAPED_SLASHES) ?></script>
+<?php // JSON_HEX_TAG is load-bearing: JSON_UNESCAPED_SLASHES turns off the default \/
+      // escaping, so without it a product title containing </script> closes this element
+      // and the rest is parsed as HTML. Conformant JSON-LD parsers decode < back. ?>
+<script type="application/ld+json"><?= json_encode($ld, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) ?></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -35,7 +38,17 @@ $c      = $content ?? [];
 $specs  = $specs ?? [];
 $vars   = $variants ?? [];
 $picker = count($vars) > 1;
-$rich   = static fn ($html) => strip_tags((string) $html, '<p><br><ul><ol><li><strong><em><b><i><h4><h5><h6>');
+// strip_tags() removes disallowed TAGS but keeps ATTRIBUTES on the tags it allows, so
+// `<p onmouseover="...">` survives it untouched. These five fields are vendor-authored
+// rich text stored verbatim, echoed unescaped on this PUBLIC page, and a vendor can
+// rewrite a live product's content through autosave with no approval gate. The second
+// pass is safe to do with a regex precisely because strip_tags() has already run: the
+// only tags that can remain are the ones listed here.
+$rich = static function ($html): string {
+    $safe = strip_tags((string) $html, '<p><br><ul><ol><li><strong><em><b><i><h4><h5><h6>');
+
+    return (string) preg_replace('#<\s*(/?)\s*(p|br|ul|ol|li|strong|em|b|i|h4|h5|h6)\b[^>]*>#i', '<$1$2>', $safe);
+};
 $about  = $c['full_description'] ?? '';
 $short  = $c['short_description'] ?? ($product['description'] ?? '');
 $keyFacts = array_filter(['Brand' => $product['brand'] ?? '', 'Category' => $product['category'] ?? '', 'Seller' => $product['vendor'] ?? '', 'SKU' => $product['sku'] ?? '']);
