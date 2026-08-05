@@ -19,7 +19,7 @@ final class ProductLookupController extends BaseController
 
     protected function lookupGuard()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'product.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'product.view')) {
             return $this->response->setStatusCode(403)->setJSON(['ok' => false]);
         }
 

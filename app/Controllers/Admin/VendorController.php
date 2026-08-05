@@ -441,7 +441,7 @@ final class VendorController extends BaseController
     /** RBAC guard for web pages: returns a redirect if the actor lacks $permission, else null. */
     private function guard(string $permission): ?RedirectResponse
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), $permission)) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), $permission)) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

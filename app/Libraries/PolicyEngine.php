@@ -30,6 +30,35 @@ final class PolicyEngine
         return in_array($permission, $ctx['permissions'] ?? [], true);
     }
 
+    /**
+     * RBAC gate for PLATFORM-WIDE pages: hold the code AND be scoped to the platform.
+     *
+     * can() is deliberately scope-blind, which is correct for the vendor and rider
+     * panels where the tenant is established elsewhere. It is not sufficient for
+     * /admin/*: those routes are path-based (so they resolve on vendor.shiplore.in,
+     * where a vendor's session cookie is already sent), and database/sql/11_seed.sql
+     * grants every vendor/shop-scoped permission to vendor_owner — including codes the
+     * admin panel guards on, such as settlement.view, product.update, media.view,
+     * report.export and transfer.approve. Without the scope test, holding the code was
+     * the whole gate, and an ordinary vendor owner could read and write every tenant's
+     * data. Admin\PortalController already spelled this check out longhand; this makes
+     * it available to the rest of the panel as one call.
+     */
+    public function canPlatform(array $ctx, string $permission): bool
+    {
+        if (! $this->can($ctx, $permission)) {
+            return false;
+        }
+
+        foreach ($ctx['scopes'] ?? [] as $scope) {
+            if (($scope['type'] ?? null) === 'platform') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /** RBAC + ABAC: hold the permission AND be in scope for the target. */
     public function authorize(array $ctx, string $permission, array $target = []): bool
     {

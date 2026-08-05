@@ -15,7 +15,7 @@ final class CommissionHoldController extends BaseController
 {
     public function index()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'commission.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'commission.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
         $status = (string) ($this->request->getGet('status') ?: 'on_hold');

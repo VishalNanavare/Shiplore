@@ -81,7 +81,7 @@ final class PromotionController extends BaseController
         if (! service('settingsRepository')->moduleEnabled('promotions')) {
             return redirect()->to('admin/dashboard')->with('error', 'Promotions are turned off in System Settings.');
         }
-        if (! service('policyEngine')->can(service('scopeContext')->all(), $permission)) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), $permission)) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

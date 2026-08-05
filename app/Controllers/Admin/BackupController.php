@@ -11,7 +11,7 @@ final class BackupController extends BaseController
 {
     public function index()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'backup.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'backup.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

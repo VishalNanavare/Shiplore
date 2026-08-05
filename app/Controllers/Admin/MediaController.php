@@ -208,7 +208,7 @@ final class MediaController extends BaseController
 
     private function guard()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'media.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'media.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

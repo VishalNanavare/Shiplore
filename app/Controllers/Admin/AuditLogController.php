@@ -11,7 +11,7 @@ final class AuditLogController extends BaseController
 {
     public function index()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'audit.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'audit.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

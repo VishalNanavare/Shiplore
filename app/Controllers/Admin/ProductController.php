@@ -94,7 +94,7 @@ final class ProductController extends BaseController
 
     public function draft()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'product.create')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'product.create')) {
             return $this->response->setStatusCode(403)->setJSON(['ok' => false]);
         }
         $vendorId   = (int) $this->request->getPost('vendor_id');
@@ -114,7 +114,7 @@ final class ProductController extends BaseController
 
     public function autosaveSection(int $id, string $section)
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'product.update')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'product.update')) {
             return $this->response->setStatusCode(403)->setJSON(['ok' => false]);
         }
         if (service('adminProductRepository')->findById($id) === null) {
@@ -127,7 +127,7 @@ final class ProductController extends BaseController
 
     public function aiSuggest()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'product.create') && ! service('policyEngine')->can(service('scopeContext')->all(), 'product.update')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'product.create') && ! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'product.update')) {
             return $this->response->setStatusCode(403)->setJSON(['ok' => false]);
         }
 
@@ -492,7 +492,7 @@ final class ProductController extends BaseController
 
     private function guard(string $permission): ?RedirectResponse
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), $permission)) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), $permission)) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

@@ -13,7 +13,7 @@ final class ReportController extends BaseController
     /** GST collected summary (GSTR-style) for a period. */
     public function gst()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'gst.report.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'gst.report.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
         [$start, $end] = $this->period();
@@ -29,7 +29,7 @@ final class ReportController extends BaseController
     /** X5 — queue an async export (large periods; downloads from media). */
     public function exportAsync(): \CodeIgniter\HTTP\RedirectResponse
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'report.export')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'report.export')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
         [$start, $end] = $this->period();
@@ -41,7 +41,7 @@ final class ReportController extends BaseController
     /** X5 — the export-job register with download links. */
     public function exports()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'report.export')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'report.export')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 
@@ -54,7 +54,7 @@ final class ReportController extends BaseController
     /** Stream a CSV of sub-orders (sales + GST) for the period. */
     public function exportSales(): ResponseInterface|\CodeIgniter\HTTP\RedirectResponse
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'report.export')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'report.export')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
         [$start, $end] = $this->period();
@@ -90,7 +90,7 @@ final class ReportController extends BaseController
 
     public function index()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'report.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'report.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

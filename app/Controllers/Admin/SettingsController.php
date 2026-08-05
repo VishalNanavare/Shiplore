@@ -106,7 +106,7 @@ final class SettingsController extends BaseController
 
     private function guard(): ?RedirectResponse
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'settings.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'settings.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

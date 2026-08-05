@@ -37,7 +37,7 @@ final class ProductTypeController extends BaseController
 
     protected function typeGuard(): ?RedirectResponse
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'product.update')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'product.update')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

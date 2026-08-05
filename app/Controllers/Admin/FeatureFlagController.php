@@ -41,7 +41,7 @@ final class FeatureFlagController extends BaseController
 
     private function guard(): ?RedirectResponse
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'featureflag.manage')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'featureflag.manage')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

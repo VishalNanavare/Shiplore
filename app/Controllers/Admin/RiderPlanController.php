@@ -82,7 +82,7 @@ final class RiderPlanController extends BaseController
 
     private function guard(): ?RedirectResponse
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'delivery.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'delivery.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

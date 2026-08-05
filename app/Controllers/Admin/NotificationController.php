@@ -11,7 +11,7 @@ final class NotificationController extends BaseController
 {
     public function index()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'notification.send')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'notification.send')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

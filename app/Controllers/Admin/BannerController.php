@@ -43,7 +43,7 @@ final class BannerController extends BaseApiController
      */
     private function guard(): ?object
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'banner.manage')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'banner.manage')) {
             return $this->failWith('FORBIDDEN', 'You do not have permission to manage banners.');
         }
 
@@ -52,7 +52,7 @@ final class BannerController extends BaseApiController
 
     public function index()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'banner.manage')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'banner.manage')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 

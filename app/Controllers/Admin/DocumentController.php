@@ -18,7 +18,7 @@ final class DocumentController extends BaseController
     /** X4 — invoice register. */
     public function index()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'payment.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'payment.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 
@@ -36,7 +36,7 @@ final class DocumentController extends BaseController
     /** X4 — credit-note register. */
     public function creditNotes()
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'payment.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'payment.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
 
@@ -51,7 +51,7 @@ final class DocumentController extends BaseController
 
     public function invoicePdf(int $id)
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'payment.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'payment.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
         $r = service('documentPdfService')->invoicePdf($id, service('scopeContext')->actorId());
@@ -65,7 +65,7 @@ final class DocumentController extends BaseController
 
     public function creditNotePdf(int $id)
     {
-        if (! service('policyEngine')->can(service('scopeContext')->all(), 'payment.view')) {
+        if (! service('policyEngine')->canPlatform(service('scopeContext')->all(), 'payment.view')) {
             return redirect()->to('admin/dashboard')->with('error', 'You do not have permission to do that.');
         }
         $r = service('documentPdfService')->creditNotePdf($id, service('scopeContext')->actorId());

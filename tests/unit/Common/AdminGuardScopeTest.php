@@ -24,6 +24,18 @@ use PHPUnit\Framework\TestCase;
  * This test parses the seeds for each permission's scope_class and asserts no
  * admin controller guards on a non-platform code. KNOWN_GAPS records the sites
  * that are still wrong, so the list can only shrink.
+ *
+ * UPDATE — the structural fix this file's KNOWN_GAPS comment anticipated has landed
+ * (audit finding C2). Every admin authorization call now goes through
+ * PolicyEngine::canPlatform(), which requires a platform scope IN ADDITION to the
+ * permission code, so a vendor-scoped code named by an admin guard is no longer
+ * reachable by vendor staff. AdminPlatformScopeTest holds that invariant and is the
+ * load-bearing test now.
+ *
+ * This file is kept because its question is still worth asking: naming a vendor-scoped
+ * code on a platform page is confusing even when it is no longer exploitable, and a
+ * future guard added WITHOUT canPlatform() would be a live hole again. Treat the
+ * KNOWN_GAPS entries as a naming-hygiene backlog, not an open vulnerability list.
  */
 final class AdminGuardScopeTest extends TestCase
 {
@@ -156,7 +168,7 @@ final class AdminGuardScopeTest extends TestCase
         foreach ($m[1] as $method) {
             $body = substr($src, (int) strpos($src, "public function {$method}("), 400);
             $this->assertMatchesRegularExpression(
-                "/\\\$this->guard\(\)|policyEngine'\)->can\(/",
+                "/\\\$this->guard\(\)|policyEngine'\)->canPlatform?\(/",
                 $body,
                 "Admin\\BannerController::{$method}() has no authorization check",
             );
