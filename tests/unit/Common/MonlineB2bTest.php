@@ -51,6 +51,212 @@ final class MonlineB2bTest extends CIUnitTestCase
         );
     }
 
+    // ------------------------------------------------------------ proximity sort
+
+    /**
+     * The distance calculation must be a real Haversine expression with the ACOS
+     * domain clamp — without GREATEST(-1, LEAST(1, ...)), floating-point rounding on a
+     * near-identical point can push ACOS's argument fractionally outside [-1,1] and
+     * MySQL returns NULL for what should be the NEAREST result.
+     */
+    public function testDistanceCalculationClampsTheAcosDomain(): void
+    {
+        $src = $this->read('Models/MonlineCatalogRepository.php');
+
+        $this->assertStringContainsString('ACOS', $src);
+        $this->assertStringContainsString(
+            'GREATEST(-1, LEAST(1,',
+            $src,
+            "ACOS's argument must be clamped to [-1,1] or a near-identical point can silently become NULL",
+        );
+    }
+
+    /**
+     * products() must only sort by distance when a point is actually supplied, and
+     * must keep p.id as a tiebreaker — LIMIT/OFFSET pagination across rows tied on
+     * distance is not stable without one (a product could repeat or be skipped
+     * between page 1 and page 2).
+     */
+    public function testProductsSortsByDistanceOnlyWhenAPointIsSupplied(): void
+    {
+        $body = $this->methodBody($this->read('Models/MonlineCatalogRepository.php'), 'products');
+
+        $this->assertStringContainsString("isset(\$opts['sort_lat'], \$opts['sort_lng'])", $body);
+        $this->assertStringContainsString('distance_km', $body);
+        $this->assertStringContainsString(
+            "orderBy('p.id', 'DESC')",
+            $body,
+            'the no-point fallback order must be unchanged',
+        );
+
+        // Scoped to the $hasPoint branch specifically, not just "somewhere in the file"
+        // — the NULL-last handling and p.id tiebreaker matter only there.
+        $ifPos    = strpos($body, 'if ($hasPoint)');
+        $elsePos  = strpos($body, '} else {');
+        $this->assertNotFalse($ifPos);
+        $this->assertNotFalse($elsePos);
+        $pointBranch = substr($body, $ifPos, $elsePos - $ifPos);
+
+        $this->assertStringContainsString(
+            "orderBy('(distance_km IS NULL)', 'ASC', false)",
+            $pointBranch,
+            'NULL distance must sort last, or an unresolvable product would rank as "nearest"',
+        );
+        $this->assertStringContainsString(
+            "orderBy('distance_km', 'ASC')",
+            $pointBranch,
+        );
+        $this->assertStringContainsString(
+            "orderBy('p.id', 'DESC')",
+            $pointBranch,
+            'a tiebreaker is required or LIMIT/OFFSET pagination is not stable across pages for rows tied on distance',
+        );
+    }
+
+    /**
+     * buyerPoint() must resolve: an explicit override first, else the buyer's own shop,
+     * else null. Anonymous visitors must never resolve a point at all — decision:
+     * no location sort before login.
+     */
+    public function testBuyerPointPrefersOverrideThenFallsBackToShop(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/BaseMonlineController.php'), 'resolveBuyerPoint');
+
+        $this->assertStringContainsString('isBuyer()', $body, 'an anonymous visitor must never resolve a point');
+        $this->assertStringContainsString("service('monlineLocationService')->get()", $body, 'an explicit override must be checked first');
+        $this->assertStringContainsString('buyerShopIds()', $body, 'falls back to the buyer\'s own shop when no override is set');
+    }
+
+    /** render() must expose the resolved point's label and whether an override is active, for the nav pill. */
+    public function testRenderExposesTheLocationLabelAndOverrideFlag(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/BaseMonlineController.php'), 'render');
+
+        $this->assertStringContainsString("'nearLabel'", $body);
+        $this->assertStringContainsString("'hasLocationOverride'", $body);
+    }
+
+    /** browse() and home() must both pass sort_lat/sort_lng through when a point resolves. */
+    public function testBrowseAndHomePassTheResolvedPointToTheRepository(): void
+    {
+        $src = $this->read('Controllers/Monline/CatalogController.php');
+
+        foreach (['browse', 'home'] as $method) {
+            $body = $this->methodBody($src, $method);
+            $this->assertStringContainsString('buyerPoint()', $body, "{$method}() must resolve the buyer's point");
+            $this->assertStringContainsString("'sort_lat'", $body, "{$method}() must pass sort_lat through when a point resolves");
+            $this->assertStringContainsString("'sort_lng'", $body, "{$method}() must pass sort_lng through when a point resolves");
+        }
+    }
+
+    /** Setting or clearing the monline location override must require a resolved buyer. */
+    public function testLocationOverrideActionsRequireABuyer(): void
+    {
+        $src = $this->read('Controllers/Monline/CatalogController.php');
+
+        foreach (['setLocation', 'clearLocation'] as $method) {
+            $body = $this->methodBody($src, $method);
+            $this->assertNotSame('', $body, "CatalogController::{$method}() is missing");
+        }
+
+        $this->assertStringContainsString('isBuyer()', $this->methodBody($src, 'setLocation'));
+    }
+
+    /** setLocation() must reject an empty/zero point, mirroring StoreController::setLocation(). */
+    public function testSetLocationRejectsAZeroPoint(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/CatalogController.php'), 'setLocation');
+
+        $this->assertStringContainsString('$lat === 0.0 && $lng === 0.0', $body);
+    }
+
+    /**
+     * A location change must NEVER touch the cart — monline sorts, it does not filter.
+     * The consumer storefront's setLocation() drops undeliverable cart items on a
+     * location change; that logic must not be copied here.
+     */
+    public function testSetLocationNeverTouchesTheCart(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/CatalogController.php'), 'setLocation');
+
+        $this->assertStringNotContainsString('monlineCart', $body);
+        $this->assertStringNotContainsString('removeUndeliverable', $body);
+    }
+
+    /**
+     * The monline location picker must be its own thing, not a copy-paste of the
+     * storefront's — it has no delivery address to capture and must never touch the
+     * cart on a location change.
+     */
+    public function testLocationModalAndScriptDoNotCarryStoreOnlyLogic(): void
+    {
+        $modal = $this->read('Views/monline/_location_modal.php');
+        $this->assertStringContainsString("site_url('monline/location')", $modal);
+        $this->assertStringNotContainsString('pincode', $modal, 'monline has no delivery address to capture');
+        $this->assertStringNotContainsString('state_code', $modal);
+
+        $js = (string) file_get_contents(FCPATH . 'assets/js/monline-location.js');
+        $this->assertStringNotContainsString('removeUndeliverable', $js);
+        $this->assertStringNotContainsString('STATE_GST', $js, 'the GST-state mapping is store-checkout-specific, not needed for a sort-only picker');
+    }
+
+    /**
+     * The location picker modal and script must be buyer-only, per the decision that
+     * anonymous visitors get no location sort and no picker before login.
+     */
+    public function testLocationPickerIsGatedOnIsBuyer(): void
+    {
+        $layout = $this->read('Views/monline/_layout.php');
+
+        $this->assertMatchesRegularExpression(
+            "/if \(! empty\(\\\$isBuyer\)\): \?>\s*\n\s*<\?= \\\$this->include\('monline\/_location_modal'\)/",
+            $layout,
+            'the location modal must only render for a signed-in buyer',
+        );
+        $this->assertStringContainsString('monline-location.js', $layout);
+        $this->assertStringContainsString('openMonlineLocationPicker', $layout);
+    }
+
+    /** JS is served from public/, not assets/ — the two copies must stay identical. */
+    public function testMonlineLocationScriptIsMirroredToPublic(): void
+    {
+        $src  = (string) file_get_contents(ROOTPATH . 'assets/js/monline-location.js');
+        $pub  = (string) file_get_contents(FCPATH . 'assets/js/monline-location.js');
+        $this->assertNotSame('', $src);
+        $this->assertSame($src, $pub, 'assets/js/monline-location.js and public/assets/js/monline-location.js have drifted');
+    }
+
+    /** _product_card.php must show the computed distance whenever the row has one. */
+    public function testProductCardShowsDistanceWhenPresent(): void
+    {
+        $src = $this->read('Views/monline/_product_card.php');
+
+        $this->assertStringContainsString('distance_km', $src);
+    }
+
+    /** The hero must communicate the value of buying direct from a manufacturer. */
+    public function testHomeHeroCommunicatesTheDirectFromManufacturerValueProp(): void
+    {
+        $src = $this->read('Views/monline/home.php');
+
+        $this->assertStringContainsString('distributor', $src, 'the hero must mention skipping the distributor markup');
+    }
+
+    /** The location-override routes must exist and be CSRF-filtered, like every other mutating monline route. */
+    public function testLocationRoutesAreRegisteredAndCsrfFiltered(): void
+    {
+        $routes = $this->read('Config/Routes.php');
+
+        $this->assertMatchesRegularExpression(
+            "/post\\('location', 'Monline\\\\CatalogController::setLocation', \\['filter' => 'csrf'\\]\\)/",
+            $routes,
+        );
+        $this->assertMatchesRegularExpression(
+            "/post\\('location\\/clear', 'Monline\\\\CatalogController::clearLocation', \\['filter' => 'csrf'\\]\\)/",
+            $routes,
+        );
+    }
+
     /** The controller must derive that flag from a resolved buyer, not a bare login. */
     public function testControllerOptsIntoPricesOnlyForAResolvedBuyer(): void
     {
@@ -348,6 +554,38 @@ final class MonlineB2bTest extends CIUnitTestCase
             $mCon[1],
             $mB2b[1],
             'the B2B cart shares the consumer cart session key — baskets would merge',
+        );
+    }
+
+    /** BuyerLocationService must be registered as a CI4 service. */
+    public function testMonlineLocationServiceIsRegistered(): void
+    {
+        $this->assertInstanceOf(
+            \App\Libraries\Monline\BuyerLocationService::class,
+            service('monlineLocationService'),
+        );
+    }
+
+    /**
+     * The monline location override must NOT reuse the storefront's location session
+     * key either — same domain-wide-cookie hazard as the cart. A buyer changing where
+     * shiplore.in delivers their groceries must never silently change what monline
+     * sorts by, and vice versa.
+     */
+    public function testMonlineLocationUsesItsOwnSessionKey(): void
+    {
+        $b2b      = $this->read('Libraries/Monline/BuyerLocationService.php');
+        $consumer = $this->read('Libraries/Store/LocationService.php');
+
+        preg_match("/^\s+private const KEY = '([a-z_]+)'/m", $b2b, $mB2b);
+        preg_match("/^\s+private const KEY = '([a-z_]+)'/m", $consumer, $mCon);
+
+        $this->assertNotEmpty($mB2b, 'BuyerLocationService has no KEY constant');
+        $this->assertNotEmpty($mCon, 'LocationService has no KEY constant');
+        $this->assertNotSame(
+            $mCon[1],
+            $mB2b[1],
+            'the monline location override shares the storefront location session key',
         );
     }
 

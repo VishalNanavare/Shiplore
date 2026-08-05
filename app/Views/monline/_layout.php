@@ -33,6 +33,17 @@ $brand = service('settingsRepository')->brandName();
 
         <div class="ms-auto d-flex align-items-center gap-3">
             <?php if (! empty($isBuyer)): ?>
+                <button type="button" class="mo-locpill" onclick="window.openMonlineLocationPicker&&openMonlineLocationPicker()">
+                    <i class="bi bi-geo-alt"></i> <?= esc($nearLabel ?? 'your shop') ?>
+                    <span class="mo-locchange">Change</span>
+                </button>
+                <?php if (! empty($hasLocationOverride)): ?>
+                    <form method="post" action="<?= site_url('monline/location/clear') ?>" class="d-inline">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="return" value="<?= esc(uri_string(), 'attr') ?>">
+                        <button type="submit" class="mo-locreset" title="Back to your shop's location"><i class="bi bi-arrow-counterclockwise"></i></button>
+                    </form>
+                <?php endif; ?>
                 <a class="mo-navlink" href="<?= site_url('monline/orders') ?>">My orders</a>
                 <a class="btn btn-sm btn-light mo-cartbtn" href="<?= site_url('monline/cart') ?>">
                     <i class="bi bi-cart"></i> Order
@@ -53,8 +64,14 @@ $brand = service('settingsRepository')->brandName();
 <footer class="mo-footer text-center py-4">
     <?= esc($brand) ?> monline — wholesale marketplace for registered vendors and shops.
 </footer>
+<?php if (! empty($isBuyer)): ?>
+    <?= $this->include('monline/_location_modal') ?>
+<?php endif; ?>
 <script src="<?= asset('vendor/jquery/jquery.min.js') ?>"></script>
 <script src="<?= asset('vendor/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
+<?php if (! empty($isBuyer)): ?>
+    <script src="<?= asset('js/monline-location.js') ?>"></script>
+<?php endif; ?>
 <?= $this->renderSection('scripts') ?>
 </body>
 </html>

@@ -4,6 +4,7 @@
 <div class="mo-hero p-4 p-md-5 mb-4">
     <div class="mo-eyebrow mb-2">Wholesale marketplace</div>
     <h1 class="h3 fw-bold mb-2">Buy directly from manufacturers</h1>
+    <p class="mb-1 fw-semibold">Skip the distributor markup — order at factory prices, straight from the source.</p>
     <p class="mb-0 opacity-75">Browse the full catalogue for free. Sign in with your vendor or shop-manager account to see wholesale pricing and place a purchase order.</p>
     <?php /* showPrices: gate stays server-side, never CSS — see _product_card.php below */ ?>
     <?php if (empty($isBuyer)): ?>

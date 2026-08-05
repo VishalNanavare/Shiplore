@@ -29,6 +29,34 @@ final class MonlineCatalogRepository
     /** Mirrors StoreCatalogRepository::IMG_SUBQUERY — a product's primary image, if any. */
     private const IMG_SUBQUERY = "(SELECT ma.uuid FROM product_media pm JOIN media_assets ma ON ma.id = pm.media_id WHERE pm.product_id = p.id AND pm.deleted_at IS NULL AND ma.deleted_at IS NULL AND ma.status = 'active' ORDER BY pm.is_primary DESC, pm.sort_order ASC LIMIT 1) AS image_uuid";
 
+    /**
+     * Distance in km from the buyer's point to the nearest active manufacturer unit
+     * carrying this product. A product may be carried by more than one mshop, so this
+     * is a MIN() over its carrying units, not a plain join (which would duplicate rows
+     * and need a GROUP BY — the same reason IMG_SUBQUERY is a subquery, not a join).
+     *
+     * The GREATEST(-1, LEAST(1, ...)) clamp is required, not decorative: floating-point
+     * rounding can push ACOS's argument fractionally outside [-1,1] for a near-identical
+     * point, which makes MySQL return NULL for what should be the NEAREST result.
+     */
+    private function distanceSubquery(float $lat, float $lng): string
+    {
+        $latSql = sprintf('%.7f', $lat);
+        $lngSql = sprintf('%.7f', $lng);
+
+        return "(SELECT MIN(
+                    6371 * ACOS(GREATEST(-1, LEAST(1,
+                        COS(RADIANS($latSql)) * COS(RADIANS(ms.latitude)) * COS(RADIANS(ms.longitude) - RADIANS($lngSql))
+                        + SIN(RADIANS($latSql)) * SIN(RADIANS(ms.latitude))
+                    )))
+                 )
+                 FROM product_mshops pms
+                 JOIN mshops ms ON ms.id = pms.mshop_id
+                 WHERE pms.product_id = p.id AND pms.status = 'active'
+                   AND ms.status = 'active' AND ms.deleted_at IS NULL
+                ) AS distance_km";
+    }
+
     /** Only published products belonging to an active manufacturer. */
     private function base(): object
     {
@@ -46,7 +74,7 @@ final class MonlineCatalogRepository
     /**
      * Browse the wholesale catalogue.
      *
-     * @param array{q?:string,category?:string,manufacturer_id?:int,limit?:int,offset?:int} $opts
+     * @param array{q?:string,category?:string,manufacturer_id?:int,limit?:int,offset?:int,sort_lat?:float,sort_lng?:float} $opts
      * @param bool $withPrices opt-in; only ever true for a signed-in buyer
      * @return list<array<string,mixed>>
      */
@@ -71,9 +99,24 @@ final class MonlineCatalogRepository
             $b->where('v.id', (int) $opts['manufacturer_id']);
         }
 
-        $limit = min(max((int) ($opts['limit'] ?? 48), 1), 100);
+        $limit     = min(max((int) ($opts['limit'] ?? 48), 1), 100);
+        $hasPoint  = isset($opts['sort_lat'], $opts['sort_lng']);
 
-        return $b->orderBy('p.id', 'DESC')->limit($limit, max(0, (int) ($opts['offset'] ?? 0)))->get()->getResultArray();
+        if ($hasPoint) {
+            $b->select($this->distanceSubquery((float) $opts['sort_lat'], (float) $opts['sort_lng']), false);
+            // NULL distance (a product with no active carrying unit — should be rare)
+            // sorts LAST regardless of direction; MySQL otherwise treats NULL as
+            // smallest and would put "unknown distance" ahead of the true nearest.
+            // p.id is a required tiebreaker: without one, LIMIT/OFFSET pagination is
+            // not stable across pages for rows tied on distance.
+            $b->orderBy('(distance_km IS NULL)', 'ASC', false)
+              ->orderBy('distance_km', 'ASC')
+              ->orderBy('p.id', 'DESC');
+        } else {
+            $b->orderBy('p.id', 'DESC');
+        }
+
+        return $b->limit($limit, max(0, (int) ($opts['offset'] ?? 0)))->get()->getResultArray();
     }
 
     public function countProducts(array $opts = []): int

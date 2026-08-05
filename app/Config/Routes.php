@@ -817,6 +817,10 @@ $routes->group('monline', static function (RouteCollection $routes): void {
     $routes->get('browse', 'Monline\CatalogController::browse');
     $routes->get('product/(:segment)', 'Monline\CatalogController::product/$1');
 
+    // Proximity-sort location override — buyers only, sorts, never filters.
+    $routes->post('location', 'Monline\CatalogController::setLocation', ['filter' => 'csrf']);
+    $routes->post('location/clear', 'Monline\CatalogController::clearLocation', ['filter' => 'csrf']);
+
     // Cart + checkout — buyers only.
     $routes->get('cart', 'Monline\OrderController::cart');
     $routes->post('cart/add', 'Monline\OrderController::add', ['filter' => 'csrf']);

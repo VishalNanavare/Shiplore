@@ -123,16 +123,72 @@ abstract class BaseMonlineController extends BaseController
         return $out;
     }
 
+    /** @var array{lat:float,lng:float,label:string}|null */
+    private ?array $buyerPointCache = null;
+    private bool $buyerPointResolved = false;
+
+    /**
+     * The point to sort the wholesale catalogue by: an explicit monline location
+     * override if the buyer set one, else their own (first) shop's address, else null
+     * — anonymous visitor, a buyer with no shops, or (defensive; shops.latitude is
+     * NOT NULL so should not happen) a shop somehow missing coordinates.
+     *
+     * @return array{lat:float,lng:float,label:string}|null
+     */
+    protected function buyerPoint(): ?array
+    {
+        if (! $this->buyerPointResolved) {
+            $this->buyerPointResolved = true;
+            $this->buyerPointCache    = $this->resolveBuyerPoint();
+        }
+
+        return $this->buyerPointCache;
+    }
+
+    /** @return array{lat:float,lng:float,label:string}|null */
+    private function resolveBuyerPoint(): ?array
+    {
+        if (! $this->isBuyer()) {
+            return null;
+        }
+
+        $override = service('monlineLocationService')->get();
+        if ($override !== null) {
+            return $override;
+        }
+
+        $shopIds = $this->buyerShopIds();
+        if ($shopIds === []) {
+            return null;
+        }
+
+        $row = \Config\Database::connect()->table('shops')
+            ->select('name, latitude, longitude')
+            ->whereIn('id', $shopIds)
+            ->where('deleted_at', null)
+            ->orderBy('name')
+            ->get()->getRowArray();
+
+        if ($row === null || $row['latitude'] === null || $row['longitude'] === null) {
+            return null;
+        }
+
+        return ['lat' => (float) $row['latitude'], 'lng' => (float) $row['longitude'], 'label' => (string) $row['name']];
+    }
+
     /** Common chrome for every monline view. */
     protected function render(string $view, string $pageTitle, array $data = []): string
     {
-        $b = $this->buyer();
+        $b     = $this->buyer();
+        $point = $this->buyerPoint();
 
         return view($view, array_merge([
-            'title'      => $pageTitle . ' · monline',
-            'pageTitle'  => $pageTitle,
-            'isBuyer'    => $this->isBuyer(),
-            'buyerName'  => $b['display_name'] ?? null,
+            'title'               => $pageTitle . ' · monline',
+            'pageTitle'           => $pageTitle,
+            'isBuyer'             => $this->isBuyer(),
+            'buyerName'           => $b['display_name'] ?? null,
+            'nearLabel'           => $point['label'] ?? null,
+            'hasLocationOverride' => service('monlineLocationService')->has(),
         ], $data));
     }
 }

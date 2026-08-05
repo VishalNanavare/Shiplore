@@ -20,6 +20,9 @@ $img = ! empty($p['image_uuid']) ? site_url('media/' . $p['image_uuid']) : null;
         <?php if (! empty($p['min_purchase_qty']) && (float) $p['min_purchase_qty'] > 1): ?>
             <div class="mo-moq">Min order <?= esc(rtrim(rtrim(number_format((float) $p['min_purchase_qty'], 3), '0'), '.')) ?></div>
         <?php endif; ?>
+        <?php if (isset($p['distance_km'])): ?>
+            <div class="mo-distance"><i class="bi bi-signpost-2"></i> <?= (float) $p['distance_km'] < 1 ? 'Nearby' : round((float) $p['distance_km']) . ' km away' ?></div>
+        <?php endif; ?>
 
         <?php
         /*

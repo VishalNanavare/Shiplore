@@ -757,6 +757,11 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('monlineCart') : new \App\Libraries\Monline\MonlineCart();
     }
 
+    public static function monlineLocationService($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('monlineLocationService') : new \App\Libraries\Monline\BuyerLocationService();
+    }
+
     // ---- Vendor panel (Phase 7) ----
     public static function vendorAccountRepository($getShared = true)
     {

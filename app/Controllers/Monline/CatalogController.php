@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controllers\Monline;
 
+use CodeIgniter\HTTP\RedirectResponse;
+
 /**
  * Monline\CatalogController — the monline.shiplore.in entry point.
  *
@@ -16,6 +18,12 @@ final class CatalogController extends BaseMonlineController
     public function home(): string
     {
         $opts       = ['limit' => 24]; // landing teaser, smaller than browse()'s 48
+        $point      = $this->buyerPoint();
+        if ($point !== null) {
+            $opts['sort_lat'] = $point['lat'];
+            $opts['sort_lng'] = $point['lng'];
+        }
+
         $repo       = service('monlineCatalogRepository');
         $withPrices = $this->isBuyer(); // the ONLY gate — unchanged from browse()/product()
 
@@ -40,6 +48,12 @@ final class CatalogController extends BaseMonlineController
             'offset'          => ($page - 1) * $limit,
         ];
 
+        $point = $this->buyerPoint();
+        if ($point !== null) {
+            $opts['sort_lat'] = $point['lat'];
+            $opts['sort_lng'] = $point['lng'];
+        }
+
         $repo = service('monlineCatalogRepository');
 
         // The ONLY place prices are opted into: a resolved buyer. A logged-out visitor
@@ -57,6 +71,45 @@ final class CatalogController extends BaseMonlineController
             'page'          => $page,
             'pages'         => $limit > 0 ? (int) ceil($total / $limit) : 1,
         ]);
+    }
+
+    /**
+     * Set a monline-only location override for the proximity sort. Buyer-only — an
+     * anonymous visitor has nothing to sort by (decision: no picker before login).
+     * Never touches the cart: monline sorts by distance, it never filters by it, so
+     * unlike the consumer storefront's setLocation() there is nothing to drop.
+     */
+    public function setLocation(): RedirectResponse
+    {
+        if (! $this->isBuyer()) {
+            return redirect()->to('monline')->with('error', 'Sign in to set a location.');
+        }
+
+        $lat    = (float) $this->request->getPost('lat');
+        $lng    = (float) $this->request->getPost('lng');
+        $label  = trim((string) $this->request->getPost('label')) ?: 'Selected location';
+        $return = (string) $this->request->getPost('return');
+
+        if ($lat === 0.0 && $lng === 0.0) {
+            return redirect()->back()->with('error', 'Choose a location on the map.');
+        }
+
+        service('monlineLocationService')->set($lat, $lng, $label);
+
+        $dest = (str_starts_with($return, '/') && ! str_starts_with($return, '//')) ? $return : 'monline/browse';
+
+        return redirect()->to($dest)->with('success', 'Sorting products near ' . $label . '.');
+    }
+
+    /** Back to the buyer's own shop as the sort point. */
+    public function clearLocation(): RedirectResponse
+    {
+        service('monlineLocationService')->clear();
+
+        $return = (string) $this->request->getPost('return');
+        $dest   = (str_starts_with($return, '/') && ! str_starts_with($return, '//')) ? $return : 'monline/browse';
+
+        return redirect()->to($dest)->with('success', 'Back to your shop’s location.');
     }
 
     public function product(string $slug)
