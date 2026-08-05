@@ -15,7 +15,9 @@ final class MediaRepository
     public function findByUuid(string $uuid): ?array
     {
         $row = Database::connect()->table('media_assets')
-            ->select('uuid, bucket, object_key, mime, visibility, status')
+            // owner_type/owner_id are needed by MediaController::mayReadPrivate() —
+            // without them a private asset can only be gated on "some session exists".
+            ->select('uuid, bucket, object_key, mime, visibility, status, owner_type, owner_id')
             ->where('uuid', $uuid)->where('deleted_at', null)
             ->get()->getRowArray();
 
@@ -47,6 +49,13 @@ final class MediaRepository
     {
         return Database::connect()->table('media_assets')
             ->select('id, uuid, mime')
+            // visibility: a KYC scan uploaded as JPG/PNG has owner_type='vendor',
+            // owner_id={vendorId} and matches every other predicate here, so it appeared
+            // in the product-image picker alongside real product photography — and
+            // attaching it publishes its uuid in anonymously-readable HTML.
+            // Deliberately NOT mirrored in vendorOwnsImage(): an already-attached private
+            // image must keep rendering, or live product pages would blank.
+            ->where('visibility', 'public')
             ->where('status', 'active')->where('deleted_at', null)->like('mime', 'image/', 'after')
             ->groupStart()
                 ->groupStart()->where('owner_type', 'vendor')->where('owner_id', $vendorId)->groupEnd()

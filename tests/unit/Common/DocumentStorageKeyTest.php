@@ -96,10 +96,17 @@ final class DocumentStorageKeyTest extends TestCase
         return ['empty' => [''], 'slash' => ['/'], 'dot' => ['.'], 'slashes' => ['///']];
     }
 
-    /** A leading slash must not make the result absolute. */
+    /**
+     * A leading slash must not make the result absolute.
+     *
+     * ".jpg" here is load-bearing, not decorative: since the M4 extension allow-list
+     * landed, safeKey() rejects any key whose extension isn't on SAFE_EXT — a check
+     * this test must satisfy to stay isolated to what it actually proves (leading-slash
+     * normalisation), rather than incidentally failing on an unrelated gate.
+     */
     public function testLeadingSlashDoesNotEscapeRoot(): void
     {
-        $this->assertSame($this->root . '/etc/passwd', $this->storage->dummyPath('/etc/passwd'));
+        $this->assertSame($this->root . '/etc/passwd.jpg', $this->storage->dummyPath('/etc/passwd.jpg'));
     }
 
     /** "." and empty segments are noise, not traversal — normalise, don't reject. */
@@ -129,12 +136,17 @@ final class DocumentStorageKeyTest extends TestCase
         );
     }
 
-    /** Belt and braces: whatever the input, the result never leaves the root. */
+    /**
+     * Belt and braces: whatever the input, the result never leaves the root.
+     *
+     * All keys carry a SAFE_EXT extension so this stays a pure traversal-safety
+     * check, not an incidental exercise of the separate M4 extension gate.
+     */
     public function testResolvedPathNeverEscapesRoot(): void
     {
         $keys = [
-            'vendors/7/media/x.jpg', '/etc/passwd', 'vendors/./7/x', 'a/b/c',
-            'vendors/7/..hidden/y', 'vendors/7/a b;c.jpg',
+            'vendors/7/media/x.jpg', '/etc/passwd.jpg', 'vendors/./7/x.jpg', 'a/b/c.jpg',
+            'vendors/7/..hidden/y.jpg', 'vendors/7/a b;c.jpg',
         ];
 
         foreach ($keys as $key) {

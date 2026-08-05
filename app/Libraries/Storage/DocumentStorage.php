@@ -45,6 +45,20 @@ final class DocumentStorage
     ];
     private const MEDIA_MAX_BYTES = 209_715_200; // 200 MB per file (video-friendly)
 
+    /**
+     * The only extensions this store will ever write or read back — the union of
+     * ALLOWED and MEDIA_ALLOWED, plus 'jpeg' (neither map ever produces it — both send
+     * image/jpeg to 'jpg' — but it is kept here so a file already on disk under that
+     * spelling, e.g. from before this store existed, still reads back). Enforced in
+     * safeKey(), which is on the write AND the read path, so adding a type here is
+     * required before the app can store it. Executable extensions are deliberately absent.
+     */
+    private const SAFE_EXT = [
+        'pdf', 'jpg', 'jpeg', 'png', 'webp', 'gif', 'svg',
+        'mp4', 'webm', 'mov', 'mp3', 'wav',
+        'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'csv', 'zip',
+    ];
+
     /** @param array<string,mixed> $cfg saved S3 config: endpoint, bucket, region, access_key, secret_key */
     public function __construct(private array $cfg) {}
 
@@ -296,9 +310,25 @@ final class DocumentStorage
             return false;
         }
         try {
-            stream_copy_to_stream($stream, $out);
+            // Cap the REAL body. presignMedia() validates a client-DECLARED size, which
+            // the PUT is free to ignore, and .user.ini allows 5000M — so an unbounded
+            // copy here let one request fill the partition. Read one byte past the cap
+            // so an exactly-at-limit file still succeeds and an over-limit one is caught.
+            $written = stream_copy_to_stream($stream, $out, self::MEDIA_MAX_BYTES + 1);
         } finally {
             fclose($out);
+        }
+
+        if ($written === false || $written > self::MEDIA_MAX_BYTES) {
+            @unlink($path);
+            log_message('error', sprintf(
+                'DocumentStorage refused oversized upload for key %s (%s bytes, cap %s)',
+                $key,
+                var_export($written, true),
+                self::MEDIA_MAX_BYTES,
+            ));
+
+            return false;
         }
 
         return is_file($path);
@@ -358,6 +388,19 @@ final class DocumentStorage
         }
 
         if ($segments === []) {
+            throw new \InvalidArgumentException('Invalid storage key.');
+        }
+
+        // Extension allow-list. The traversal handling above is correct, but it still
+        // permitted any [a-zA-Z0-9_.-] segment — including "shell.php" — and ownsKey()
+        // only requires the vendors/{id}/ prefix, never that the server presigned this
+        // key. writable/ lives inside the DocumentRoot, so the four-line
+        // writable/.htaccess deny was the only thing between a PUT and code execution;
+        // it is lost by any rsync without dotfiles and inert under AllowOverride None.
+        // This is the single choke point for both PUT controllers, both file() readers
+        // and delete(), so it holds on the read path too.
+        $ext = strtolower(pathinfo($segments[array_key_last($segments)], PATHINFO_EXTENSION));
+        if (! in_array($ext, self::SAFE_EXT, true)) {
             throw new \InvalidArgumentException('Invalid storage key.');
         }
 
