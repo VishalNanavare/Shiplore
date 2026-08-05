@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Libraries\Workflow\StatusMachine;
 use Config\Database;
 
 /**
@@ -62,8 +63,22 @@ final class RefundRepository
             ->orderBy('r.id', 'DESC')->get()->getResultArray();
     }
 
+    /**
+     * canRefund() exists, is unit-tested, and — until this — was called from
+     * nowhere: this method applied no rule at all, despite the class docblock
+     * claiming otherwise. RefundService::complete() is idempotent on re-entry only
+     * while the status IS 'completed'; once moved away (e.g. flipped back to
+     * 'failed' by mistake), a second complete() posts a duplicate balanced ledger
+     * triple and burns a second credit-note number — the trial balance still
+     * balances, which is what makes it hard to spot.
+     */
     public function updateStatus(int $id, string $status, ?int $actorId = null): bool
     {
+        $row = $this->findById($id);
+        if ($row === null || ! StatusMachine::canRefund((string) $row['status'], $status)) {
+            return false;
+        }
+
         return Database::connect()->table('refunds')
             ->where('id', $id)
             ->update(['status' => $status, 'updated_by' => $actorId]);

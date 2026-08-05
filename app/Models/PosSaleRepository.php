@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Libraries\Tax\GstCalculator;
 use Config\Database;
 use Throwable;
 
@@ -78,7 +77,7 @@ final class PosSaleRepository
             return $this->fail('Cart is empty.');
         }
 
-        $gst = new GstCalculator();
+        $gst = service('gstCalculator');
         $subtotal = $discountTotal = $taxable = $cgst = $sgst = $igst = $grand = 0.0;
         $billDiscount = max(0.0, (float) ($opts['bill_discount'] ?? 0));
         $computed = [];

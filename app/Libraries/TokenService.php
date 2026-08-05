@@ -55,6 +55,16 @@ final class TokenService
         }
         [$h, $p, $s] = $parts;
 
+        // Defence in depth, not a fix for an exploitable hole: the signature check
+        // below always expects an HS256 HMAC regardless of what the header claims,
+        // so the usual alg:none / RS256->HS256 confusion attacks already fail here
+        // by construction. Parsing the header and rejecting anything but HS256
+        // narrows the claim surface so a future caller can't accidentally trust it.
+        $header = json_decode($this->b64UrlDecode($h), true);
+        if (! is_array($header) || ($header['alg'] ?? null) !== 'HS256') {
+            throw new TokenException('Unsupported token algorithm');
+        }
+
         $expected = $this->sign("{$h}.{$p}", $secret);
         if (! hash_equals($expected, $s)) {
             throw new TokenException('Invalid signature');
@@ -66,7 +76,9 @@ final class TokenService
             throw new TokenException('Invalid payload');
         }
 
-        if (isset($claims['exp']) && $now > (int) $claims['exp']) {
+        // exp is now mandatory, not just enforced when present: issue() always sets
+        // it, so this only closes a latent hole for a future caller that forgot to.
+        if (! isset($claims['exp']) || $now > (int) $claims['exp']) {
             throw new TokenException('Token expired');
         }
 

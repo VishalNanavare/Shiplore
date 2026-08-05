@@ -533,7 +533,7 @@ final class VendorPosController extends BaseApiController
             return $this->failWith('NOT_FOUND', 'Shop not found.');
         }
 
-        $gst      = new \App\Libraries\Tax\GstCalculator();
+        $gst      = service('gstCalculator');
         $subtotal = 0.0;
         $saleItems = [];
         $svc      = service('inventoryService');

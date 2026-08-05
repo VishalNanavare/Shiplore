@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Controllers\Admin\Concerns;
 
 use CodeIgniter\HTTP\RedirectResponse;
-use Config\Database;
 
 /**
  * MasterCrud — generic create/edit for admin master tables driven by a per-
  * controller spec(), so each simple master (brands, units, tax classes, …) gets
  * full CRUD without duplicated boilerplate. The host controller provides
- * masterSpec() and a guard(); this trait renders the generic form and persists.
+ * masterSpec() and a guard(); this trait renders the generic form and persists
+ * via App\Models\MasterRepository (audit L12 — used to open its own DB connection
+ * directly, bypassing every cross-cutting behaviour a repository gets, including
+ * the audit trail).
  *
  * spec: ['table','slug','label','permCreate','permUpdate','fields'=>[[key,label,type,required,options?]],
  *        'hasUuid'=>bool,'slugFrom'=>?key,'extra'=>array]
@@ -30,7 +32,7 @@ trait MasterCrud
         if ($denied = $this->guard($s['permView'] ?? $s['permUpdate'])) {
             return $denied;
         }
-        $rows = Database::connect()->table($s['table'])->where('deleted_at', null)->orderBy('id', 'DESC')->limit(500)->get()->getResultArray();
+        $rows = service('masterRepository')->all($s['table']);
 
         return view('admin/master/index', [
             'title' => $s['label'] . 's · Admin', 'pageTitle' => $s['label'] . 's',
@@ -41,17 +43,18 @@ trait MasterCrud
 
     public function toggle(int $id): RedirectResponse
     {
-        $s = $this->masterSpec();
+        $s    = $this->masterSpec();
         if ($denied = $this->guard($s['permUpdate'])) {
             return $denied;
         }
-        $db  = Database::connect();
-        $cur = $db->table($s['table'])->select('status')->where('id', $id)->get()->getRowArray();
+        $repo = service('masterRepository');
+        $cur  = $repo->statusOf($s['table'], $id);
         if ($cur === null) {
             return redirect()->to('admin/' . $s['slug'])->with('error', $s['label'] . ' not found.');
         }
-        $next = ($cur['status'] ?? 'active') === 'active' ? 'inactive' : 'active';
-        $db->table($s['table'])->where('id', $id)->update(['status' => $next, 'updated_by' => (int) session()->get('user_id')]);
+        $next    = ($cur['status'] ?? 'active') === 'active' ? 'inactive' : 'active';
+        $actorId = (int) session()->get('user_id');
+        $repo->update($s['table'], $s['table'], $id, ['status' => $next, 'updated_by' => $actorId], $actorId, 'toggle');
 
         return redirect()->to('admin/' . $s['slug'])->with('success', $s['label'] . ' ' . $next . '.');
     }
@@ -72,7 +75,7 @@ trait MasterCrud
         if ($denied = $this->guard($s['permUpdate'])) {
             return $denied;
         }
-        $row = Database::connect()->table($s['table'])->where('id', $id)->where('deleted_at', null)->get()->getRowArray();
+        $row = service('masterRepository')->find($s['table'], $id);
         if ($row === null) {
             return redirect()->to('admin/' . $s['slug'])->with('error', $s['label'] . ' not found.');
         }
@@ -96,10 +99,11 @@ trait MasterCrud
         if (! empty($s['slugFrom']) && ! empty($data[$s['slugFrom']])) {
             $data['slug'] = $this->masterSlug((string) $data[$s['slugFrom']]);
         }
-        $data = array_merge($data, $s['extra'] ?? []);
-        $data['created_by'] = (int) session()->get('user_id');
+        $data    = array_merge($data, $s['extra'] ?? []);
+        $actorId = (int) session()->get('user_id');
+        $data['created_by'] = $actorId;
 
-        Database::connect()->table($s['table'])->insert($data);
+        service('masterRepository')->create($s['table'], $s['table'], $data, $actorId);
 
         return redirect()->to('admin/' . $s['slug'])->with('success', $s['label'] . ' created.');
     }
@@ -110,16 +114,17 @@ trait MasterCrud
         if ($denied = $this->guard($s['permUpdate'])) {
             return $denied;
         }
-        $db = Database::connect();
-        if ($db->table($s['table'])->where('id', $id)->where('deleted_at', null)->countAllResults() === 0) {
+        $repo = service('masterRepository');
+        if ($repo->find($s['table'], $id) === null) {
             return redirect()->to('admin/' . $s['slug'])->with('error', $s['label'] . ' not found.');
         }
         [$data, $err] = $this->masterCollect($s);
         if ($err !== '') {
             return redirect()->back()->withInput()->with('error', $err);
         }
-        $data['updated_by'] = (int) session()->get('user_id');
-        $db->table($s['table'])->where('id', $id)->update($data);
+        $actorId = (int) session()->get('user_id');
+        $data['updated_by'] = $actorId;
+        $repo->update($s['table'], $s['table'], $id, $data, $actorId);
 
         return redirect()->to('admin/' . $s['slug'])->with('success', $s['label'] . ' updated.');
     }

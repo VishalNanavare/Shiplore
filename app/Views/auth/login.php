@@ -33,11 +33,7 @@
                     <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
                 </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="remember">
-                    <label class="form-check-label small" for="remember">Remember me</label>
-                </div>
+            <div class="d-flex justify-content-end align-items-center mb-3">
                 <a href="<?= site_url('forgot-password') ?>" class="small">Forgot password?</a>
             </div>
             <button type="submit" class="btn btn-primary w-100">

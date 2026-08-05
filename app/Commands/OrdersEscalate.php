@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
-use App\Libraries\Orders\EscalationService;
 use CodeIgniter\CLI\BaseCommand;
 use CodeIgniter\CLI\CLI;
 
@@ -27,7 +26,7 @@ final class OrdersEscalate extends BaseCommand
         $start = microtime(true);
         CLI::write('[orders:escalate] scanning …', 'cyan');
 
-        (new EscalationService())->escalatePending();
+        service('escalationService')->escalatePending();
 
         $ms = round((microtime(true) - $start) * 1000);
         CLI::write("[orders:escalate] done in {$ms}ms", 'green');

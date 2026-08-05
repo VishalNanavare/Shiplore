@@ -139,7 +139,7 @@ final class PosReturnRepository
             return $this->fail('That is not your store.');
         }
         $method = in_array($refundMethod, ['cash', 'card', 'upi', 'wallet', 'credit_note'], true) ? $refundMethod : 'cash';
-        $gst    = new \App\Libraries\Tax\GstCalculator();
+        $gst    = service('gstCalculator');
 
         $db = Database::connect();
         $db->transBegin();

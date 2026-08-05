@@ -86,9 +86,15 @@ final class RefundController extends BaseController
             return redirect()->to('admin/refunds')->with('error', 'Refund not found.');
         }
 
-        $repo->updateStatus($id, $status, (int) session()->get('user_id'));
+        // updateStatus() now enforces StatusMachine::canRefund() and returns false
+        // on an illegal move (e.g. completed -> failed) — that result must reach
+        // the operator, not be silently swallowed.
+        $ok = $repo->updateStatus($id, $status, (int) session()->get('user_id'));
 
-        return redirect()->to('admin/refunds')->with('success', $okMessage);
+        return redirect()->to('admin/refunds')->with(
+            $ok ? 'success' : 'error',
+            $ok ? $okMessage : 'That refund cannot move to that status.',
+        );
     }
 
     private function guard(string $permission): ?RedirectResponse

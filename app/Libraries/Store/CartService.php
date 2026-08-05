@@ -198,7 +198,7 @@ final class CartService
      */
     public function totals(array $items, float $couponPct = 0.0, ?GstCalculator $gst = null, float $tip = 0.0, float $handling = 0.0): array
     {
-        $gst    = $gst ?? new GstCalculator();
+        $gst    = $gst ?? service('gstCalculator');
         $factor = max(0.0, 1 - $couponPct / 100);
 
         $subtotal = 0.0;

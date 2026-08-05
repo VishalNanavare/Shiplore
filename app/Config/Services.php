@@ -1001,6 +1001,12 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('auditWriter') : new \App\Libraries\Audit\AuditWriter();
     }
 
+    /** Persistence for Admin\Concerns\MasterCrud (audit L12) — see App\Models\MasterRepository. */
+    public static function masterRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('masterRepository') : new \App\Models\MasterRepository();
+    }
+
     public static function changeRequestRepository($getShared = true)
     {
         return $getShared ? static::getSharedInstance('changeRequestRepository') : new \App\Models\ChangeRequestRepository();

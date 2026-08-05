@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Libraries\Tax\GstCalculator;
 use Config\Database;
 use Throwable;
 
@@ -49,7 +48,7 @@ final class StoreOrderRepository
             }
         }
 
-        $gst = new GstCalculator();
+        $gst = service('gstCalculator');
         $commission = service('commissionService');
         $db->transBegin();
 
