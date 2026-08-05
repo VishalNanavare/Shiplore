@@ -43,8 +43,13 @@ class ContentSecurityPolicy extends BaseConfig
     /**
      * Specifies a URL where a browser will send reports
      * when a content security policy is violated.
+     *
+     * Without this, reportOnly above has nowhere to send what it collects — zero
+     * protection AND zero telemetry, and the rollout plan documented on
+     * $reportOnly (collect a traffic day, build the allow-list, then enforce)
+     * could never start. See App\Controllers\CspReportController.
      */
-    public ?string $reportURI = null;
+    public ?string $reportURI = '/csp-report';
 
     /**
      * Specifies a reporting endpoint to which violation reports ought to be sent.

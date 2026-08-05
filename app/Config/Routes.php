@@ -37,6 +37,10 @@ $routes->post('logout', 'Auth\LoginController::logout', ['filter' => 'csrf']);
 $routes->get('notifications/feed', 'NotificationFeedController::feed', ['filter' => 'webAuth']);
 $routes->addRedirect('admin', 'admin/dashboard');          // bare /admin -> dashboard (webAuth-guarded)
 
+// CSP violation reports (audit M10). Browser-sent, no session, no CSRF token — same
+// "hash/shape-verified, no CSRF needed" pattern as the PayU redirect-backs below.
+$routes->post('csp-report', 'CspReportController::collect');
+
 // Vendor self-registration (Firebase mobile auth + email code + GST-API verification)
 $routes->get('register', 'Auth\RegisterController::show');
 $routes->post('register/send-codes', 'Auth\RegisterController::sendCodes', ['filter' => ['csrf', 'throttle:5,60']]);

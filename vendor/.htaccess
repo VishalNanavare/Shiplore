@@ -1,0 +1,17 @@
+# Deny all web access.
+#
+# The project-root .htaccess serves any path that exists on disk directly
+# (RewriteCond %{REQUEST_FILENAME} !-f), so every file under vendor/ was retrievable —
+# including vendor/composer/installed.json, the exact pinned version of every
+# dependency. Composer's layout is public knowledge, so Options -Indexes does not help.
+#
+# Nothing here is ever requested by a browser. The autoloader reads these files from
+# PHP, which is filesystem access, not HTTP. NOTE: this is a different directory from
+# assets/vendor/ (bootstrap, bootstrap-icons, jquery), which must stay readable and is
+# NOT covered by this file.
+<IfModule authz_core_module>
+	Require all denied
+</IfModule>
+<IfModule !authz_core_module>
+	Deny from all
+</IfModule>
