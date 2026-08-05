@@ -41,9 +41,16 @@ $q         = (string) (service('request')->getGet('q') ?? '');
                     <i class="bi bi-chevron-down ms-1 small"></i>
                 </button>
                 <?php if (! empty($hasLocationOverride)): ?>
-                    <form method="post" action="<?= site_url('monline/location/clear') ?>" class="m-0 d-none d-sm-block">
+                    <form method="post" action="<?= site_url('monline/location/clear') ?>" class="m-0">
                         <?= csrf_field() ?>
-                        <input type="hidden" name="return" value="<?= esc(uri_string(), 'attr') ?>">
+                        <?php
+                        // uri_string() strips the leading slash (url_helper.php:122), and
+                        // clearLocation() requires one — without this the reset always
+                        // redirects to the catalogue instead of back here. The query string
+                        // is preserved so clearing from a filtered browse keeps the filters.
+                        $moQs = (string) service('request')->getUri()->getQuery();
+                        ?>
+                        <input type="hidden" name="return" value="<?= esc('/' . uri_string() . ($moQs !== '' ? '?' . $moQs : ''), 'attr') ?>">
                         <button type="submit" class="mo-locreset" title="Back to your shop's location"><i class="bi bi-arrow-counterclockwise"></i></button>
                     </form>
                 <?php endif; ?>

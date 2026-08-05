@@ -42,9 +42,13 @@ $url = site_url('monline/product/' . rawurlencode((string) $p['slug']));
          * Prices only exist in $p when the controller opted in for a signed-in buyer.
          * For a logged-out visitor the key is absent — not zero, not hidden — so there
          * is nothing to leak here.
+         *
+         * Three states, not two: a signed-in buyer looking at a product whose default
+         * variant is discontinued has base_price NULL, and must NOT be told to log in.
          */
+        $priced = ! empty($showPrices) && isset($p['base_price']);
         ?>
-        <?php if (! empty($showPrices) && isset($p['base_price'])): ?>
+        <?php if ($priced): ?>
             <div class="d-flex align-items-baseline gap-2 mt-1 mb-2">
                 <span class="mo-price">₹<?= esc(number_format((float) $p['base_price'], 2)) ?></span>
                 <span class="mo-unit">per unit</span>
@@ -52,8 +56,10 @@ $url = site_url('monline/product/' . rawurlencode((string) $p['slug']));
         <?php endif; ?>
 
         <div class="mt-auto">
-            <?php if (! empty($showPrices) && isset($p['base_price'])): ?>
+            <?php if ($priced): ?>
                 <a href="<?= esc($url, 'attr') ?>" class="btn btn-sm btn-outline-primary w-100 fw-semibold">View &amp; order</a>
+            <?php elseif (! empty($showPrices)): ?>
+                <span class="mo-gate mo-gate-off"><i class="bi bi-dash-circle"></i> Currently unavailable</span>
             <?php else: ?>
                 <a class="mo-gate" href="<?= site_url('login') ?>"><i class="bi bi-lock-fill"></i> Login to view price</a>
             <?php endif; ?>

@@ -132,6 +132,10 @@ body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Int
     transition: .15s; cursor: pointer;
 }
 .mo-gate:hover { background: var(--mo-primary); border-color: var(--mo-primary); color: #fff; }
+/* Same geometry as the gate so the grid does not shift, but inert — this is a
+   statement of fact for a signed-in buyer, not a control. */
+.mo-gate-off { background: #f4f5f9; color: var(--mo-muted); border-color: var(--mo-border); cursor: default; }
+.mo-gate-off:hover { background: #f4f5f9; border-color: var(--mo-border); color: var(--mo-muted); }
 
 /* ---- Horizontal rails ---- */
 .mo-rail { display: flex; gap: .75rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: .25rem .1rem 1rem; -webkit-overflow-scrolling: touch; }

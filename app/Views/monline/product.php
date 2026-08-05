@@ -1,7 +1,18 @@
 <?= $this->extend('monline/_layout') ?>
 <?= $this->section('content') ?>
 <?php
-$moq = (float) ($product['min_purchase_qty'] ?? 0);
+$moq  = (float) ($product['min_purchase_qty'] ?? 0);
+$max  = (float) ($product['max_purchase_qty'] ?? 0);
+$step = (float) ($product['qty_step'] ?? 0);
+
+// min_purchase_qty is nullable AND may legitimately be 0, so `?? 1` does not catch it —
+// the form would render min="0" value="0" and Add-to-order would post a quantity
+// PurchaseRules rejects outright. The step is the correct fallback, not 1: with no
+// minimum, PurchaseRules measures multiples from 0, so for a step of 12 the first
+// legal quantity is 12.
+$start = $moq > 0 ? $moq : ($step > 0 ? $step : 1.0);
+
+$priced = ! empty($showPrices) && isset($product['base_price']);
 ?>
 
 <nav class="small mb-3 text-secondary">
@@ -41,7 +52,7 @@ $moq = (float) ($product['min_purchase_qty'] ?? 0);
             <?php endif; ?>
         </div>
 
-        <?php if (! empty($showPrices) && isset($product['base_price'])): ?>
+        <?php if ($priced): ?>
             <div class="card border-0 shadow-sm mb-3"><div class="card-body">
                 <div class="d-flex align-items-baseline gap-2 mb-3">
                     <span class="h3 mb-0 fw-bold mo-price">₹<?= esc(number_format((float) $product['base_price'], 2)) ?></span>
@@ -52,17 +63,26 @@ $moq = (float) ($product['min_purchase_qty'] ?? 0);
                     <input type="hidden" name="variant_id" value="<?= (int) ($product['variant_id'] ?? 0) ?>">
                     <input type="hidden" name="slug" value="<?= esc($product['slug'] ?? '', 'attr') ?>">
                     <div class="col-sm-5">
-                        <label class="form-label small fw-semibold">Quantity</label>
-                        <input name="qty" type="number" class="form-control"
-                               min="<?= esc((string) ($product['min_purchase_qty'] ?? 1), 'attr') ?>"
-                               step="<?= esc((string) ($product['qty_step'] ?? 1), 'attr') ?>"
-                               value="<?= esc((string) ($product['min_purchase_qty'] ?? 1), 'attr') ?>" required>
+                        <label class="form-label small fw-semibold" for="moQty">Quantity</label>
+                        <input id="moQty" name="qty" type="number" class="form-control"
+                               min="<?= esc((string) $start, 'attr') ?>"
+                               <?= $max > 0 ? 'max="' . esc((string) $max, 'attr') . '"' : '' ?>
+                               step="<?= esc((string) ($step > 0 ? $step : 1), 'attr') ?>"
+                               value="<?= esc((string) $start, 'attr') ?>" required>
                         <?php if ($moq > 1): ?>
                             <div class="form-text">Minimum order <?= esc(rtrim(rtrim(number_format($moq, 3), '0'), '.')) ?>.</div>
                         <?php endif; ?>
                     </div>
                     <div class="col-sm-7"><button class="btn btn-primary btn-lg w-100 fw-semibold"><i class="bi bi-cart-plus me-1"></i>Add to order</button></div>
                 </form>
+            </div></div>
+        <?php elseif (! empty($showPrices)): ?>
+            <?php // Signed in, but this product has no live default variant — do not tell them to log in. ?>
+            <div class="card border-0 shadow-sm mb-3"><div class="card-body">
+                <span class="mo-gate mo-gate-off" style="max-width:260px"><i class="bi bi-dash-circle"></i> Currently unavailable</span>
+                <p class="text-secondary small mt-3 mb-0">
+                    This product is not available to order right now. The manufacturer may have discontinued it or paused the listing.
+                </p>
             </div></div>
         <?php else: ?>
             <div class="card border-0 shadow-sm mb-3"><div class="card-body">

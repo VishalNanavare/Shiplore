@@ -63,7 +63,14 @@ final class MonlineCatalogRepository
         return Database::connect()->table('products p')
             ->join('vendors v', 'v.id = p.vendor_id')
             ->join('categories c', 'c.id = p.category_id', 'left')
-            ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
+            // The status/deleted conditions belong in the JOIN, not a WHERE: cartLines()
+            // filters variants on both, so without them here the catalogue lists and
+            // prices a product whose default variant is discontinued, the buyer adds it,
+            // and the cart silently purges the line — an unbreakable loop with no way to
+            // tell which listings are real. In the JOIN, a dead variant yields a NULL
+            // variant_id/base_price instead, which add() already rejects and the views
+            // now render as "Currently unavailable".
+            ->join('product_variants pv', "pv.product_id = p.id AND pv.is_default = 1 AND pv.status = 'active' AND pv.deleted_at IS NULL", 'left')
             ->where('v.party_type', 'manufacturer')
             ->where('v.deleted_at', null)
             ->whereIn('v.status', ['approved', 'active'])

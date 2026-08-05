@@ -51,6 +51,44 @@ final class MonlineB2bTest extends CIUnitTestCase
         );
     }
 
+    /**
+     * The catalogue must not list a product whose default variant is discontinued.
+     *
+     * cartLines() filters variants on status and deleted_at; base() did not. The
+     * result was a product listed and priced in the catalogue that the cart silently
+     * purged on arrival — repeatable forever, with no way to tell which listings were
+     * real. The conditions belong in the JOIN so a dead variant nulls the price rather
+     * than dropping the product row.
+     */
+    public function testCatalogueJoinExcludesDiscontinuedDefaultVariants(): void
+    {
+        $body = $this->methodBody($this->read('Models/MonlineCatalogRepository.php'), 'base');
+
+        $this->assertStringContainsString("pv.status = 'active'", $body);
+        $this->assertStringContainsString('pv.deleted_at IS NULL', $body);
+    }
+
+    /**
+     * A signed-in buyer must never be shown "Login to view price".
+     *
+     * With base() LEFT-JOINing, a product with no live variant yields base_price NULL,
+     * and a two-way `priced ? price : login-gate` branch sends an already-authenticated
+     * buyer to the login prompt. There must be a third, distinct state.
+     */
+    public function testPriceGateHasADistinctUnavailableStateForSignedInBuyers(): void
+    {
+        foreach (['_product_card', 'product'] as $view) {
+            $src = (string) file_get_contents(APPPATH . "Views/monline/{$view}.php");
+
+            $this->assertStringContainsString(
+                'elseif (! empty($showPrices))',
+                $src,
+                "monline/{$view}.php sends a signed-in buyer to the login gate when a price is missing",
+            );
+            $this->assertStringContainsString('mo-gate-off', $src);
+        }
+    }
+
     // ------------------------------------------------------------ proximity sort
 
     /**
