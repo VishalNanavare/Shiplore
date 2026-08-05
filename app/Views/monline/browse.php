@@ -15,6 +15,10 @@ $pages     = max(1, (int) ($pages ?? 1));
 $page      = max(1, (int) ($page ?? 1));
 $activeCat = (string) ($applied['category'] ?? '');
 
+// With no categories AND no manufacturers the sidebar is a pair of cards containing
+// nothing but a search box — an empty shell. Drop it and give the results the width.
+$hasFacets = ($navCategories ?? []) !== [] || ($manufacturers ?? []) !== [];
+
 // Active-filter chips: label => URL that removes it.
 $chips = [];
 if ($activeCat !== '') {
@@ -31,10 +35,13 @@ if (($applied['q'] ?? '') !== '') { $chips['Search: ' . $applied['q']] = $mk(['q
 ?>
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h1 class="h5 mb-0">Wholesale catalogue</h1>
-    <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#filterCol"><i class="bi bi-funnel me-1"></i>Filters</button>
+    <?php if ($hasFacets): ?>
+        <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#filterCol" aria-expanded="false" aria-controls="filterCol"><i class="bi bi-funnel me-1"></i>Filters</button>
+    <?php endif; ?>
 </div>
 
 <div class="row g-3">
+    <?php if ($hasFacets): ?>
     <div class="col-lg-3">
         <div class="collapse d-lg-block" id="filterCol">
 
@@ -87,8 +94,9 @@ if (($applied['q'] ?? '') !== '') { $chips['Search: ' . $applied['q']] = $mk(['q
             <?php endif; ?>
         </div>
     </div>
+    <?php endif; ?>
 
-    <div class="col-lg-9">
+    <div class="<?= $hasFacets ? 'col-lg-9' : 'col-12' ?>">
         <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
             <div class="text-secondary small"><strong><?= number_format((int) $total) ?></strong> products</div>
             <?php /* Sort slot: the repository has no sort option yet, so this states the
