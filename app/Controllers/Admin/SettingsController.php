@@ -10,6 +10,19 @@ use CodeIgniter\HTTP\RedirectResponse;
 /** Admin\SettingsController — system settings, feature flags + GST config. settings.view. */
 final class SettingsController extends BaseController
 {
+    /**
+     * Server-detected mime => stored extension. A closed allow-list: anything not in it
+     * is refused rather than given a fallback, so no client-supplied string can ever
+     * reach the filename. Covers exactly the types the upload form's `accept` advertises.
+     */
+    private const LOGO_TYPES = [
+        'image/png'     => 'png',
+        'image/jpeg'    => 'jpg',
+        'image/gif'     => 'gif',
+        'image/webp'    => 'webp',
+        'image/svg+xml' => 'svg',
+    ];
+
     public function index()
     {
         if ($denied = $this->guard()) {
@@ -65,7 +78,15 @@ final class SettingsController extends BaseController
         // Logo: file upload takes priority; otherwise accept a pasted URL.
         $logo = $this->request->getFile('brand_logo');
         if ($logo !== null && $logo->isValid() && ! $logo->hasMoved()) {
-            $ext  = $logo->getClientExtension();
+            // The extension MUST come from the server-detected mime type. getClientExtension()
+            // is pathinfo() over $_FILES['name'], so a file named "s.php" was written into
+            // public/assets/images/ as logo_<time>.php — a directory the cPanel PHP handler
+            // executes (see the AddHandler in .htaccess) — and could then be requested directly.
+            $ext = self::LOGO_TYPES[strtolower(trim((string) $logo->getMimeType()))] ?? null;
+            if ($ext === null) {
+                return redirect()->to('admin/settings')
+                    ->with('error', 'The logo must be a PNG, JPG, GIF, WEBP or SVG image.');
+            }
             $name = 'logo_' . time() . '.' . $ext;
             $logo->move(FCPATH . 'assets/images/', $name, true);
             $repo->set('system', 'brand_logo_url', base_url('assets/images/' . $name), 'string', $uid);

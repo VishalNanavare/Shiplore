@@ -126,3 +126,15 @@ AddOutputFilterByType DEFLATE text/xml
   AddHandler application/x-httpd-ea-php85 .php .php8 .phtml
 </IfModule>
 # php -- END cPanel-generated handler, do not edit
+
+# Neutralise script inside uploaded SVGs.
+#
+# The brand-logo upload accepts image/svg+xml by design (the form's accept attribute
+# advertises it), and an SVG is an XML document that can carry <script>. Served from our
+# own origin it would run with our origin's privileges. This CSP makes the file inert on
+# direct navigation while leaving <img src="...svg"> embedding completely unaffected.
+<FilesMatch "\.svg$">
+	<IfModule headers_module>
+		Header always set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+	</IfModule>
+</FilesMatch>

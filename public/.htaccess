@@ -47,3 +47,12 @@ Options -Indexes
 # Disable server signature start
 ServerSignature Off
 # Disable server signature end
+
+# Neutralise script inside uploaded SVGs. Mirrors the rule in the project-root .htaccess
+# so the protection survives the planned DocumentRoot move to public/. See that file for
+# the reasoning; embedding via <img> is unaffected, only direct navigation is sandboxed.
+<FilesMatch "\.svg$">
+	<IfModule headers_module>
+		Header always set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+	</IfModule>
+</FilesMatch>
