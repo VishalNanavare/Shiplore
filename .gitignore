@@ -10,3 +10,7 @@
 .DS_Store
 /build/logs/
 /build/.phpunit.cache/
+
+# Env files at ANY depth. "/.env" above is root-anchored and never covered the
+# nested s3_storage/ application, whose env carried live object-store credentials.
+**/.env

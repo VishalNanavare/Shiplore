@@ -37,10 +37,14 @@ function failJson(string $message, int $status = 400): never
 $scheme = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
-$endpoint = "https://s3n.erikserver.in";
-$region = "ap-southeast-1";
-$accessKey = "AKIA5725L8754HUJ9HKJKNPVV57GAZ27";
-$secretKey = "1y/lhmXbM7VTKEOXzQ9KzjqDFDSGRg54y5hehgrgrQH6vDzku/vRAjUysf";
+$endpoint = getenv('S3_ENDPOINT') ?: "https://s3n.erikserver.in";
+$region = getenv('S3_REGION') ?: "ap-southeast-1";
+// Read from the runtime environment, never hardcoded. This file is tracked in git AND
+// sits in the docroot of s3.shiplore.in, so a literal key here is published twice over.
+// The guards below already fail with exactly this message when they are unset, which is
+// how this script was originally written before the literals were pasted in.
+$accessKey = (string) (getenv('S3_ACCESS_KEY') ?: '');
+$secretKey = (string) (getenv('S3_SECRET_KEY') ?: '');
 
 $defaultBucket = "allwhitelabeldata";
 $defaultKeyPrefix = 'metadata/hellotest.jpg';
