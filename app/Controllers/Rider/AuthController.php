@@ -125,6 +125,9 @@ final class AuthController extends BaseRiderController
     public function logout(): RedirectResponse
     {
         session()->remove(['rider_id', 'rider_name', 'rider_login_phone']);
+        // Retire the session ID, not just the identity keys — a captured ID would
+        // otherwise stay valid and be re-usable after the next sign-in.
+        session()->regenerate(true);
 
         return redirect()->to('rider/login')->with('success', 'Signed out.');
     }

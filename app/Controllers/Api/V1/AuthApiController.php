@@ -18,6 +18,11 @@ final class AuthApiController extends BaseApiController
 {
     private const TTL = 2592000; // 30 days
 
+    /** Brute-force lockout, deliberately identical to Auth\LoginController's so the
+     *  two surfaces share one counter and neither can be used to bypass the other. */
+    private const MAX_FAILS  = 5;
+    private const WINDOW_MIN = 15;
+
     /**
      * CORS preflight catch-all so OPTIONS requests resolve to a route; the `cors`
      * filter answers the actual preflight (adds the allow-* headers). Returns 204.
@@ -152,14 +157,34 @@ final class AuthApiController extends BaseApiController
 
     public function login()
     {
-        $in    = $this->input();
-        $id    = trim((string) ($in['identifier'] ?? ''));
-        $pass  = (string) ($in['password'] ?? '');
-        $user  = $id !== '' ? service('apiAuthRepository')->findByIdentifier($id) : null;
+        $in   = $this->input();
+        $id   = trim((string) ($in['identifier'] ?? ''));
+        $pass = (string) ($in['password'] ?? '');
+
+        // The same rolling-window lockout and audit trail the web login enforces
+        // (Auth\LoginController). Without them this endpoint was an un-audited bypass
+        // of that protection against the same `users` rows: findByIdentifier() matches
+        // email OR phone with no principal predicate, so admin and vendor accounts are
+        // reachable here, and a success mints a 30-day JWT. The throttle filter is not
+        // a substitute — it keys on IP+path, so it multiplies across proxies while the
+        // target account never locks and nothing is recorded anywhere.
+        $attempts = service('loginAttemptRepository');
+        $ip       = $this->request->getIPAddress();
+        $ua       = (string) $this->request->getUserAgent();
+
+        if ($id !== '' && $attempts->recentFailureCount($id, self::WINDOW_MIN) >= self::MAX_FAILS) {
+            return $this->failWith('RATE_LIMITED', 'Too many failed attempts. Please try again in a few minutes.');
+        }
+
+        $user = $id !== '' ? service('apiAuthRepository')->findByIdentifier($id) : null;
 
         if ($user === null || empty($user['password_hash']) || ! password_verify($pass, (string) $user['password_hash']) || $user['status'] !== 'active') {
+            $attempts->record($id, false, 'invalid_credentials', $user !== null ? (int) $user['id'] : null, $ip, $ua);
+
             return $this->failWith('UNAUTHENTICATED', 'Invalid credentials.');
         }
+
+        $attempts->record($id, true, null, (int) $user['id'], $ip, $ua);
 
         return $this->ok($this->session($user));
     }

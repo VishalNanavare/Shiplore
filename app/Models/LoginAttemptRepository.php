@@ -27,8 +27,13 @@ final class LoginAttemptRepository
                 ->where('success', 0)
                 ->where('created_at >=', $since)
                 ->countAllResults();
-        } catch (Throwable) {
-            return 0; // fail-open: never lock out due to a DB error
+        } catch (Throwable $e) {
+            // Fail open: never lock real users out because of a DB error. Log it,
+            // though — a silent 0 here reads as "no recent failures" and removes
+            // brute-force protection entirely, with no other signal that it is off.
+            log_message('critical', 'Login lockout check unavailable (brute-force protection degraded): ' . $e->getMessage());
+
+            return 0;
         }
     }
 
@@ -44,8 +49,10 @@ final class LoginAttemptRepository
                 'success'        => $success ? 1 : 0,
                 'failure_reason' => $reason,
             ]);
-        } catch (Throwable) {
-            // audit logging must not break the login response
+        } catch (Throwable $e) {
+            // Audit logging must not break the login response — but a silently missing
+            // audit trail is exactly what an attacker wants, so say so.
+            log_message('error', 'Login attempt audit failed: ' . $e->getMessage());
         }
     }
 }

@@ -140,8 +140,13 @@ final class StaffController extends BaseVendorController
             $staff = service('vendorStaffRepository')->findStaff($staffId, (int) $this->vendorId());
             if ($staff !== null && (int) ($staff['user_id'] ?? 0) > 0) {
                 $db = \Config\Database::connect();
+                // Revokes API tokens. The browser session is NOT revoked here — CI4
+                // sessions are FileHandler files under writable/session, not DB rows,
+                // so the DELETE from `sessions` that used to sit on the next line
+                // matched nothing and only made this look like it worked. Web sessions
+                // are now ended by WebAuthFilter, which re-checks users.status on every
+                // request and destroys the session the moment the account is not active.
                 $db->table('auth_tokens')->where('user_id', (int) $staff['user_id'])->update(['status' => 'revoked']);
-                $db->table('sessions')->where('user_id', (int) $staff['user_id'])->delete();
             }
         } catch (\Throwable) {
         }

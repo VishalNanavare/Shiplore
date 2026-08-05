@@ -161,6 +161,11 @@ final class AccountController extends BaseStoreController
                 return redirect()->to('store/login')->with('error', 'Could not create your account. Please try again.');
             }
             session()->remove(['login_phone', 'login_name']);
+            // Rotate BEFORE elevating — otherwise the identity is written into whatever
+            // session ID the browser presented (fixation). The cookie is scoped to
+            // .shiplore.in, so anything running on a sibling subdomain can set it.
+            // regenerate() moves the payload, so login_return and my_orders survive.
+            session()->regenerate();
             session()->set(['customer_id' => $cust['customer_id'], 'customer_user_id' => $cust['user_id'], 'customer_name' => $cust['name']]);
 
             return redirect()->to($this->loginRedirect())->with('success', 'Signed in.');
@@ -176,6 +181,7 @@ final class AccountController extends BaseStoreController
             return redirect()->to('store/login')->with('error', 'Account not found.');
         }
         session()->remove('login_email');
+        session()->regenerate();  // see the phone path above — rotate before elevating
         session()->set(['customer_id' => $cust['customer_id'], 'customer_user_id' => $cust['user_id'], 'customer_name' => $cust['name']]);
 
         return redirect()->to($this->loginRedirect())->with('success', 'Signed in.');
@@ -194,6 +200,10 @@ final class AccountController extends BaseStoreController
     public function logout(): RedirectResponse
     {
         session()->remove(['customer_id', 'customer_user_id', 'customer_name', 'login_email', 'login_phone', 'login_name']);
+        // Retire the session ID itself, not just the identity keys — otherwise a
+        // captured ID stays valid and is re-usable after the next sign-in. The `true`
+        // destroys the old file; guest bookkeeping (my_orders) moves with the payload.
+        session()->regenerate(true);
 
         return redirect()->to('store')->with('success', 'Signed out.');
     }

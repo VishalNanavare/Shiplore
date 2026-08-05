@@ -36,7 +36,36 @@ final class WebAuthFilter implements FilterInterface
             return redirect()->to('login')->with('error', 'Please sign in to continue.');
         }
 
-        $userId   = (int) $session->get('user_id');
+        $userId = (int) $session->get('user_id');
+
+        // Re-check the account is still active on EVERY request, exactly as
+        // JwtAuthFilter already does for the API. Without this, suspending or
+        // terminating a user did not end their browser session: the intended
+        // compensating control in Vendor\StaffController deleted from `sessions`,
+        // which is an application device-session table nothing writes to, while the
+        // real store is FileHandler files under writable/session. The FileHandler
+        // refreshes on every request, so an active tab renewed indefinitely and a
+        // dismissed staffer kept the full panel — POS sales, product edits, order
+        // actions — for as long as they kept clicking.
+        // Fail OPEN on an indeterminate answer, closed only on a definitive "not
+        // active". This runs on every authenticated page load, so an uncaught DB fault
+        // here would 500 — or mass-log-out — every signed-in user at once, which is a
+        // worse outage than the risk being closed. Same fail-open contract, and same
+        // reasoning, as LoginAttemptRepository::recentFailureCount().
+        try {
+            $stillActive = service('apiAuthRepository')->isActive($userId);
+        } catch (\Throwable $e) {
+            log_message('critical', 'Account-status re-check unavailable (suspended users retain web sessions): ' . $e->getMessage());
+            $stillActive = true;
+        }
+
+        if (! $stillActive) {
+            $session->destroy();
+
+            return redirect()->to('login')
+                ->with('error', 'Your account is no longer active. Please contact your administrator.');
+        }
+
         $resolver = service('capabilityResolver');
         $repo     = service('capabilityRepository');
 

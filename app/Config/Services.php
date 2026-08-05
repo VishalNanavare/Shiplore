@@ -1087,12 +1087,14 @@ class Services extends BaseService
                 throw new \RuntimeException('setStatus failed');
             }
             if ($to === 'suspended' || $to === 'terminated') {
-                // GAP-023: revoke live sessions + JWTs the moment access ends
+                // GAP-023: revoke live JWTs the moment access ends. The browser session
+                // is ended by WebAuthFilter's per-request users.status re-check — the
+                // DELETE from `sessions` that used to sit here matched nothing, because
+                // CI4 sessions are FileHandler files, not DB rows.
                 $staff = static::vendorStaffRepository()->findStaff((int) $req['entity_id'], (int) $req['vendor_id']);
                 if ($staff !== null && (int) ($staff['user_id'] ?? 0) > 0) {
                     $db = \Config\Database::connect();
                     $db->table('auth_tokens')->where('user_id', (int) $staff['user_id'])->update(['status' => 'revoked']);
-                    $db->table('sessions')->where('user_id', (int) $staff['user_id'])->delete();
                 }
             }
         });

@@ -47,7 +47,15 @@ final class ForgotPasswordController extends BaseController
             // sent" while nothing had been sent and nothing was recorded.
             if (! $sent) {
                 log_message('error', 'Password reset email to ' . $email . ' could not be sent.');
-                log_message('error', 'Password reset link for {email}: {link}', ['email' => $email, 'link' => $link]);
+                // NEVER log $link: it carries the raw, single-use token, and `error` is
+                // inside the production threshold, so this line is retained. The branch
+                // fires precisely when SMTP is misconfigured — i.e. potentially for
+                // every reset. A hash prefix is enough to correlate with the auth_otp row.
+                log_message(
+                    'error',
+                    'Password reset token issued for {email} (hash {ref}) but not delivered.',
+                    ['email' => $email, 'ref' => substr($pair['hash'], 0, 12)],
+                );
                 if (ENVIRONMENT !== 'production') {
                     session()->setFlashdata('reset_link', $link);
                 }
