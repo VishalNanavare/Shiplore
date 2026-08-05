@@ -28,11 +28,16 @@ final class StoreShopRepository
             return $qb->orderBy('s.name', 'ASC')->limit($limit)->get()->getResultArray();
         }
 
-        // Bounding box pre-filter (≈55 km radius) before PHP Haversine loop.
+        // Bounding box pre-filter (≈55 km radius) before PHP Haversine loop. Capped as
+        // a safety valve — a dense metro could otherwise return every shop within
+        // ~55km with no SQL LIMIT at all; the Haversine loop below still sorts and
+        // slices to the real $limit, so this only bites if a single box holds more
+        // than max($limit*5, 500) active shops.
         $deg   = 0.5;
         $shops = $qb
             ->where('s.latitude >=', $lat - $deg)->where('s.latitude <=', $lat + $deg)
             ->where('s.longitude >=', $lng - $deg)->where('s.longitude <=', $lng + $deg)
+            ->limit(max($limit * 5, 500))
             ->get()->getResultArray();
 
         // The admin "Max delivery radius (km)" is always the outer cap: a NULL shop
@@ -61,14 +66,24 @@ final class StoreShopRepository
         return array_slice($visible, 0, $limit);
     }
 
+    /** @var array<string,list<int>> per-request memo: "lat,lng,limit" => shop ids */
+    private array $nearbyIdMemo = [];
+
     /** @return list<int> ids of shops that deliver to the location (empty if no location). */
     public function nearbyShopIds(?float $lat, ?float $lng, int $limit = 200): array
     {
         if ($lat === null || $lng === null) {
             return [];
         }
+        // StoreController::home() calls this via scoped() up to 8 times per request
+        // (root category facets, the deals rail, each of up to 5 category rails, the
+        // main product grid) with the SAME session location — the result cannot
+        // change within a request, so 7 of those 8 were pure waste on the busiest
+        // page of the site. Keyed on rounded coords + limit so it can't be wrong for
+        // a different point.
+        $key = sprintf('%.6f,%.6f,%d', $lat, $lng, $limit);
 
-        return array_map(static fn ($s) => (int) $s['id'], $this->nearby($lat, $lng, $limit));
+        return $this->nearbyIdMemo[$key] ??= array_map(static fn ($s) => (int) $s['id'], $this->nearby($lat, $lng, $limit));
     }
 
     /**

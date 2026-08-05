@@ -196,25 +196,48 @@ final class MonlineCatalogRepository
     }
 
     /** Manufacturers with at least one published product, for the browse filter. */
+    /**
+     * categories() is called from BaseMonlineController::render() — the shared chrome
+     * for EVERY monline page, not just browse() — so together with manufacturers()
+     * that was four uncached full-catalogue aggregations on every single page view.
+     * 300s cache: both are navigation/filter aids, not the priced product list, which
+     * stays live.
+     */
     public function manufacturers(): array
     {
-        return $this->base()
+        $key = 'monline_manufacturers';
+        $hit = cache($key);
+        if ($hit !== null) {
+            return $hit;
+        }
+        $rows = $this->base()
             ->select('v.id, v.display_name, COUNT(DISTINCT p.id) AS product_count', false)
             ->groupBy('v.id, v.display_name')
             ->orderBy('v.display_name')
             ->limit(100)
             ->get()->getResultArray();
+        cache()->save($key, $rows, 300);
+
+        return $rows;
     }
 
     /** Categories with at least one published manufacturer product, for homepage browsing + the browse filter. */
     public function categories(): array
     {
-        return $this->base()
+        $key = 'monline_categories';
+        $hit = cache($key);
+        if ($hit !== null) {
+            return $hit;
+        }
+        $rows = $this->base()
             ->select('c.id, c.name, c.slug, COUNT(DISTINCT p.id) AS product_count', false)
             ->where('c.id IS NOT NULL', null, false)
             ->groupBy('c.id, c.name, c.slug')
             ->orderBy('product_count', 'DESC')
             ->limit(12)
             ->get()->getResultArray();
+        cache()->save($key, $rows, 300);
+
+        return $rows;
     }
 }

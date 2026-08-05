@@ -22,6 +22,17 @@ use App\Libraries\Store\CartService;
  */
 final class CustomerApiController extends BaseApiController
 {
+    /**
+     * The item list in placeOrder()/validateCart() is entirely client-supplied and
+     * unbounded — each line costs several queries across payment/qty/stock/
+     * deliverability checks, so an attacker-sized list is a real amplification
+     * vector (2,000 lines ≈ 12,000 queries in one authenticated request), not just
+     * a perf nit. Rejected explicitly rather than silently truncated: a truncated
+     * placeOrder() would bill/ship fewer items than the customer submitted.
+     */
+    private const MAX_CART_LINES = 100;
+
+
     public function home()
     {
         $lat  = $this->floatOrNull($this->request->getGet('lat'));
@@ -61,7 +72,13 @@ final class CustomerApiController extends BaseApiController
         $category = trim((string) $this->request->getGet('category'));
         $opts     = $category !== '' ? ['category' => $category] : [];
 
-        return $this->ok(service('storeCatalogRepository')->computeBrandFacets($opts));
+        // brandFacets(), not computeBrandFacets(): the latter is explicitly documented
+        // "Raw brand facets (UNCACHED)" and this route carries no auth filter and no
+        // throttle — an unauthenticated attacker looping it drove concurrent
+        // full-catalogue GROUP BYs with nothing absorbing the load. brandFacets() is
+        // the FacetCache-backed wrapper every other browse aggregate already goes
+        // through; same data, same shape, up to 90s stale.
+        return $this->ok(service('storeCatalogRepository')->brandFacets($opts));
     }
 
     /** Categories that have products in a given shop — for the shop page's left rail. */
@@ -168,6 +185,10 @@ final class CustomerApiController extends BaseApiController
         }
         $in   = $this->input();
         $idem = trim((string) ($in['idempotency_key'] ?? ''));
+
+        if (count((array) ($in['items'] ?? [])) > self::MAX_CART_LINES) {
+            return $this->failWith('VALIDATION_ERROR', 'Too many items in one order.', ['reason' => 'too_many_items']);
+        }
 
         // Resolve the client-held cart (variant_id => qty) into priced lines.
         $cartMap = [];
@@ -468,7 +489,14 @@ final class CustomerApiController extends BaseApiController
         if (! is_int($cid)) {
             return $cid; // vendor/rider tokens may not validate customer carts
         }
-        $in      = $this->input();
+        $in = $this->input();
+        if (count((array) ($in['items'] ?? [])) > self::MAX_CART_LINES) {
+            return $this->ok([
+                'valid'  => false,
+                'issues' => [['reason' => 'too_many_items', 'title' => 'Cart', 'message' => 'Too many items in one order.']],
+                'lines'  => [], 'totals' => service('cartService')->totals([]), 'deliverable_checked' => false,
+            ]);
+        }
         $lines   = service('cartService')->linesFor($this->cartMap($in));
         $lat     = $this->floatOrNull($in['lat'] ?? null);
         $lng     = $this->floatOrNull($in['lng'] ?? null);

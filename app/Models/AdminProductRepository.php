@@ -34,6 +34,14 @@ final class AdminProductRepository
     private const SHIPPING   = ['free', 'paid', 'vendor', 'pickup'];
     private const RELATIONS  = ['related', 'upsell', 'cross_sell', 'fbt', 'alternative', 'similar', 'accessory'];
 
+    /**
+     * Guaranteed-safe ceiling for an unbounded list()/export. limit<=0 ("all" /
+     * export) used to mean NO LIMIT AT ALL — at real catalogue scale that is a
+     * guaranteed PHP OOM or a multi-minute request pinning an FPM worker and a DB
+     * connection. Mirrors ReportRepository::exportRows(), which already caps here.
+     */
+    public const MAX_ROWS = 5000;
+
     /** Pure: URL slug from a title (caller adds a uniqueness suffix). */
     public static function slugify(string $title): string
     {
@@ -72,10 +80,10 @@ final class AdminProductRepository
         $this->applyListFilters($b, $f);
         $b->orderBy('p.created_at', 'DESC');
 
+        // limit<=0 ("all" / export) no longer means unbounded — it means MAX_ROWS.
+        // A caller that genuinely wants a page still gets exactly that page.
         $limit = (int) ($f['limit'] ?? 50);
-        if ($limit > 0) {
-            $b->limit($limit, (int) ($f['offset'] ?? 0));
-        }
+        $b->limit($limit > 0 ? min($limit, self::MAX_ROWS) : self::MAX_ROWS, (int) ($f['offset'] ?? 0));
 
         return $b->get()->getResultArray();
     }

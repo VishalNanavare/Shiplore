@@ -312,18 +312,55 @@ final class InventoryService
      */
     public function snapshotRows(array $variants, array $shops, string $method = 'fifo'): array
     {
+        if ($variants === []) {
+            return [];
+        }
+
+        $variantIds = array_map(static fn ($v) => (int) $v['id'], $variants);
+        $shopIds    = array_map(static fn ($s) => (int) $s['id'], $shops);
+        $db         = Database::connect();
+        $zero       = ['id' => null, 'on_hand' => 0, 'reserved' => 0, 'available' => 0, 'reorder_level' => null, 'status' => 'active'];
+
+        $levelsByPair = [];
+        $layersByPair = [];
+        if ($shopIds !== []) {
+            // Batch both datasets once instead of the original 2 × |variants| × |shops|
+            // queries (one levels() + one valuation() per cell), then pair in PHP. The
+            // FIFO ORDER BY is identical to the original per-pair valuation() query, so
+            // layer order — and therefore StockValuation's arithmetic — is unchanged.
+            // Guarded on $shopIds !== [] so an empty whereIn() never runs (and a vendor
+            // with zero shops still gets one row per variant, all zeros, as before).
+            foreach ($db->table('inventory')
+                ->select('variant_id, shop_id, id, on_hand, reserved, available, reorder_level, status')
+                ->whereIn('variant_id', $variantIds)->whereIn('shop_id', $shopIds)
+                ->get()->getResultArray() as $row) {
+                $levelsByPair[(int) $row['variant_id'] . '_' . (int) $row['shop_id']] = $row;
+            }
+
+            foreach ($db->table('stock_batches')
+                ->select('variant_id, shop_id, qty, cost_price')
+                ->whereIn('variant_id', $variantIds)->whereIn('shop_id', $shopIds)
+                ->where('qty >', 0)->where('status', 'active')->where('deleted_at', null)
+                ->orderBy('COALESCE(mfg_date, created_at) ASC, id ASC', '', false)
+                ->get()->getResultArray() as $b) {
+                $key = (int) $b['variant_id'] . '_' . (int) $b['shop_id'];
+                $layersByPair[$key][] = ['qty' => (float) $b['qty'], 'cost' => (float) $b['cost_price']];
+            }
+        }
+
         $rows = [];
         foreach ($variants as $v) {
-            $vid = (int) $v['id'];
+            $vid    = (int) $v['id'];
             $levels = [];
-            $value = 0.0;
-            $qty = 0.0;
+            $value  = 0.0;
+            $qty    = 0.0;
             foreach ($shops as $s) {
-                $sid = (int) $s['id'];
-                $levels[$sid] = $this->levels($vid, $sid);
-                $val = $this->valuation($vid, $sid, $method);
-                $value += (float) $val['on_hand_value'];
-                $qty += (float) $val['on_hand_qty'];
+                $sid          = (int) $s['id'];
+                $key          = $vid . '_' . $sid;
+                $levels[$sid] = $levelsByPair[$key] ?? $zero;
+                $layers       = $layersByPair[$key] ?? [];
+                $value       += StockValuation::onHandValue($layers);
+                $qty         += StockValuation::onHandQty($layers);
             }
             $rows[] = [
                 'v' => $v, 'levels' => $levels,

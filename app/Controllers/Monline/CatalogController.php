@@ -46,7 +46,6 @@ final class CatalogController extends BaseMonlineController
             'category'        => trim((string) $this->request->getGet('category')),
             'manufacturer_id' => (int) $this->request->getGet('manufacturer'),
             'limit'           => $limit,
-            'offset'          => ($page - 1) * $limit,
         ];
 
         $point = $this->buyerPoint();
@@ -55,12 +54,19 @@ final class CatalogController extends BaseMonlineController
             $opts['sort_lng'] = $point['lng'];
         }
 
-        $repo = service('monlineCatalogRepository');
+        $repo  = service('monlineCatalogRepository');
+        $total = $repo->countProducts($opts);
+
+        // Clamp the page BEFORE it becomes an OFFSET. $page had no ceiling, so
+        // ?page=1000000 became LIMIT 48 OFFSET 47999952 — MySQL still generates and
+        // discards every one of those rows.
+        $pages          = max(1, (int) ceil($total / $limit));
+        $page           = min($page, $pages);
+        $opts['offset'] = ($page - 1) * $limit;
 
         // The ONLY place prices are opted into: a resolved buyer. A logged-out visitor
         // gets rows with no price keys at all — not zeroed, not hidden by the template.
         $withPrices = $this->isBuyer();
-        $total      = $repo->countProducts($opts);
 
         return $this->render('monline/browse', 'Wholesale catalogue', [
             'products'      => $repo->products($opts, $withPrices),
@@ -70,7 +76,7 @@ final class CatalogController extends BaseMonlineController
             'showPrices'    => $withPrices,
             'cartCount'     => $this->isBuyer() ? service('monlineCart')->count() : 0,
             'page'          => $page,
-            'pages'         => $limit > 0 ? (int) ceil($total / $limit) : 1,
+            'pages'         => $pages,
         ]);
     }
 

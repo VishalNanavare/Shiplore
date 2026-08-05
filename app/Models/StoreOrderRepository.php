@@ -236,6 +236,36 @@ final class StoreOrderRepository
             ->join('vendors v', 'v.id = so.vendor_id', 'left')
             ->where('so.order_id', $order['id'])
             ->get()->getResultArray();
+
+        // place() creates one sub-order PER PRODUCT, so the old per-sub-order loop cost
+        // 1 + 3×N queries — and this backs the customer app's live tracking screen,
+        // POLLED while an order is in flight. Batch the two cheap lookups (items,
+        // invoice id) with whereIn(); keep the delivery query per sub-order — it needs
+        // ORDER BY d.id DESC LIMIT 1 semantics per row and is genuinely awkward to batch.
+        $subIds       = array_column($subs, 'id');
+        $itemsBySub   = [];
+        $invoiceBySub = [];
+        if ($subIds !== []) {
+            // Explicit ORDER BY id matches the natural PK order the app already saw
+            // from the unordered per-sub-order query.
+            foreach ($db->table('order_items')
+                ->select('id AS order_item_id, sub_order_id, product_title_snapshot, sku_snapshot, qty, unit_price, status')
+                ->whereIn('sub_order_id', $subIds)->orderBy('id', 'ASC')
+                ->get()->getResultArray() as $it) {
+                $sid = (int) $it['sub_order_id'];
+                unset($it['sub_order_id']); // not part of the original per-item payload shape
+                $itemsBySub[$sid][] = $it;
+            }
+            // If a sub-order ever has more than one invoice, the ORIGINAL single-row
+            // query took whichever MySQL returned first (no ORDER BY); this map takes
+            // the last one iterated — same "arbitrary pick" contract, not a behaviour
+            // guarantee either way.
+            foreach ($db->table('invoices')->select('id, sub_order_id')
+                ->whereIn('sub_order_id', $subIds)->get()->getResultArray() as $inv) {
+                $invoiceBySub[(int) $inv['sub_order_id']] = (int) $inv['id'];
+            }
+        }
+
         foreach ($subs as &$s) {
             // Only expose OTP at delivery handoff — mask for all other statuses
             if ($s['status'] !== 'out_for_delivery') {
@@ -255,13 +285,11 @@ final class StoreOrderRepository
             if ($dl !== null) {
                 $dl = $this->clampDeliveryToSubOrder($dl, (string) $s['status']);
             }
-            $s['items']    = $db->table('order_items')->select('id AS order_item_id, product_title_snapshot, sku_snapshot, qty, unit_price, status')
-                ->where('sub_order_id', $s['id'])->get()->getResultArray();
+            $s['items']    = $itemsBySub[(int) $s['id']] ?? [];
             $s['delivery'] = $dl ?: null;
             // Expose the sub-order id (cancel-item endpoint) and order_item ids (return endpoint).
             $s['sub_order_id'] = (int) $s['id'];
-            $invRow = $db->table('invoices')->select('id')->where('sub_order_id', $s['id'])->get()->getRowArray();
-            $s['invoice_id'] = $invRow !== null ? (int) $invRow['id'] : null;
+            $s['invoice_id']   = $invoiceBySub[(int) $s['id']] ?? null;
             unset($s['id']);
         }
         unset($s);

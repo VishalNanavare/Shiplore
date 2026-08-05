@@ -77,10 +77,34 @@ final class FacetCache
         return $this->refreshFor('global', $cat);
     }
 
-    /** Compute + persist a single payload (tree or browse) for a scope/category. */
+    /**
+     * Compute + persist a single payload (tree or browse) for a scope/category.
+     *
+     * refresh() (the worker entry) has always taken a lock here; coldFallback() —
+     * reached synchronously from a live request when a scope has no cached/durable
+     * payload — called this directly with none. N concurrent requests for the same
+     * novel key (e.g. a burst of hits on one never-seen ?category= before the slug
+     * canonicalisation memo above is warm, or genuinely simultaneous first hits) all
+     * computed the same ~960K-row aggregate at once. Single-flight-locked the same
+     * way refresh() already is: a request that loses the race serves the durable
+     * base — stale (possibly zeroed if even that is missing) but instant — rather
+     * than joining the stampede.
+     */
     private function refreshFor(string $scope, string $cat): array
     {
-        return $cat === self::TREE_CAT ? $this->refreshTree($scope) : $this->refreshBrowse($scope, $cat);
+        $lock = 'facetlock_' . $scope . '_' . md5($cat);
+        if (cache($lock) !== null) {
+            return $this->loadSummary($scope, $cat) ?? [
+                'tree' => [], 'total' => 0, 'brandFacets' => [],
+                'typeFacets' => [], 'priceBounds' => ['lo' => 0.0, 'hi' => 0.0], 'computed_at' => 0,
+            ];
+        }
+        cache()->save($lock, 1, 120);
+        try {
+            return $cat === self::TREE_CAT ? $this->refreshTree($scope) : $this->refreshBrowse($scope, $cat);
+        } finally {
+            cache()->delete($lock);
+        }
     }
 
     /**

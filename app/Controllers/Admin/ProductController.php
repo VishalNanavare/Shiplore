@@ -83,9 +83,16 @@ final class ProductController extends BaseController
         foreach ($rows as $r) {
             fputcsv($out, array_map([self::class, 'csvCell'], [$r['id'], $r['title'], $r['vendor'] ?? '', $r['category'] ?? '', $r['product_type'] ?? 'simple', $r['sku'] ?? '', $r['mrp'] ?? '', $r['base_price'] ?? '', $r['status']]));
         }
+        if (count($rows) >= AdminProductRepository::MAX_ROWS) {
+            // list() now caps at MAX_ROWS instead of attempting every matching row —
+            // make a truncated export visible rather than silently handing back a
+            // partial file that looks complete.
+            fputcsv($out, ['# export truncated at ' . AdminProductRepository::MAX_ROWS . ' rows — narrow your filters for the rest']);
+        }
         rewind($out);
         $csv = stream_get_contents($out);
         fclose($out);
+        unset($rows);
 
         return $this->response->setHeader('Content-Type', 'text/csv')
             ->setHeader('Content-Disposition', 'attachment; filename="products-' . date('Ymd') . '.csv"')

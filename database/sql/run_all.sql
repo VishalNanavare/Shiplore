@@ -53,3 +53,10 @@ SOURCE 42_staff_request_perm.sql;
 SOURCE 43_product_shops.sql;
 SOURCE 60_delivery_otp_and_assignments.sql;
 SOURCE 61_pos_gst_customer.sql;
+
+-- NOTE (audit 2026-08): files 44-59 and 62-73 exist on disk but are not SOURCEd
+-- above — a pre-existing gap, not introduced here. 74/75 are appended at the very
+-- end rather than inserted in numeric order so they still run (and still land
+-- after every base table they ALTER exists) regardless of that gap.
+SOURCE 74_report_indexes.sql;
+SOURCE 75_catalog_indexes.sql;

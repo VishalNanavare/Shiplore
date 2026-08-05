@@ -90,25 +90,39 @@ final class SettingsRepository
 
     // ---- generic scalar settings (JSON-encoded value) ---------------------
 
+    /**
+     * Per-request memo, keyed "namespace|key". brandName()/logoUrl()/moduleEnabled()
+     * are called 38 times across 20 files — several from inside views/partials that
+     * render on every request (layouts/store, _store_header, _store_footer,
+     * layouts/rider, _sidebar, _head, monline/_layout) — so an unmemoised get() was
+     * a fresh SELECT for the identical row on every one of those calls.
+     */
+    private array $memo = [];
+
     /** Read a scalar setting (JSON-decoded), or $default when absent. */
     public function get(string $namespace, string $key, mixed $default = null): mixed
     {
         $namespace = $this->norm($namespace);
         $key       = $this->norm($key);
-        try {
-            $row = Database::connect()->table('settings')->select('value')
-                ->where('namespace', $namespace)
-                ->where("`key` = '{$key}'", null, false)
-                ->get()->getRowArray();
-        } catch (\Throwable) {
-            return $default;
-        }
-        if ($row === null) {
-            return $default;
-        }
-        $v = json_decode((string) $row['value'], true);
+        $memoKey   = $namespace . '|' . $key;
 
-        return $v ?? $default;
+        if (! array_key_exists($memoKey, $this->memo)) {
+            try {
+                $row = Database::connect()->table('settings')->select('value')
+                    ->where('namespace', $namespace)
+                    ->where("`key` = '{$key}'", null, false)
+                    ->get()->getRowArray();
+            } catch (\Throwable) {
+                // A transient DB fault must not pin a default for the rest of the
+                // request — deliberately not memoised, unlike a real miss below.
+                return $default;
+            }
+            // A miss is memoised too (as null), so 6 calls for an absent key still
+            // cost one round trip, not six.
+            $this->memo[$memoKey] = $row !== null ? json_decode((string) $row['value'], true) : null;
+        }
+
+        return $this->memo[$memoKey] ?? $default;
     }
 
     /** Upsert a scalar setting. */
@@ -116,6 +130,7 @@ final class SettingsRepository
     {
         $namespace = $this->norm($namespace);
         $key       = $this->norm($key);
+        unset($this->memo[$namespace . '|' . $key]);
         $db        = Database::connect();
         $row       = $db->table('settings')->select('id')
             ->where('namespace', $namespace)->where("`key` = '{$key}'", null, false)->get()->getRowArray();

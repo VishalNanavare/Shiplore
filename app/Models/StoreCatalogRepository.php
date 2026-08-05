@@ -14,6 +14,37 @@ use Config\Database;
  */
 final class StoreCatalogRepository
 {
+    /** @var array<string,bool> per-request memo: slug => exists */
+    private array $catSlugMemo = [];
+
+    /**
+     * Collapse an unresolvable category slug to '' before it becomes a FacetCache
+     * key. FacetCache's cache key is built directly from $opts['category'], which on
+     * the public browse/facet endpoints is raw, unvalidated query-string input — so a
+     * never-seen slug forced coldFallback() to compute a full-catalogue aggregation
+     * INLINE on the request and permanently grow category_facet_summary, once per
+     * distinct junk value (`?category=x1`, `?category=x2`, …). applyFilters() already
+     * ignores an unresolvable slug and returns the full-catalogue result, so
+     * collapsing it to '' returns byte-identical data while pinning the cache key to
+     * the pre-warmed 'global'/'' entry.
+     */
+    private function _canonicalOpts(array $opts): array
+    {
+        $slug = (string) ($opts['category'] ?? '');
+        if ($slug === '') {
+            return $opts;
+        }
+        if (! array_key_exists($slug, $this->catSlugMemo)) {
+            $this->catSlugMemo[$slug] = Database::connect()->table('categories')
+                ->where('slug', $slug)->where('deleted_at', null)->countAllResults() > 0;
+        }
+        if (! $this->catSlugMemo[$slug]) {
+            $opts['category'] = '';
+        }
+
+        return $opts;
+    }
+
     /** @return list<array<string,mixed>> Active top-level categories. */
     public function categories(int $limit = 12): array
     {
@@ -33,6 +64,8 @@ final class StoreCatalogRepository
      */
     public function categoryTreeWithCounts(array $opts = []): array
     {
+        $opts = $this->_canonicalOpts($opts);
+
         // Global / GPS-bucket browse → the cached tree (computed off-request by the
         // facets:refresh worker). A single-shop scope is computed live & exact so a
         // shop page/rail never inherits the global tree's categories.
@@ -196,6 +229,8 @@ final class StoreCatalogRepository
     /** Total products matching the filters (for pagination). */
     public function countProducts(array $opts = []): int
     {
+        $opts = $this->_canonicalOpts($opts);
+
         // Unfiltered category/all browse → read the cached exact count for the GPS
         // bucket (SWR; never computed on the live request). Filtered counts (brand/
         // price/search) are a deliberate, lower-volume action → computed live.
@@ -350,6 +385,8 @@ final class StoreCatalogRepository
      */
     public function categoryFacets(array $opts, int $limit = 60): array
     {
+        $opts = $this->_canonicalOpts($opts);
+
         // Unfiltered browse: slice the cached, bucket-scoped category tree (computed
         // off-request) instead of a fresh ~960K-row GROUP BY — same data, ~0 cost.
         // Filtered browse (brand/price/search) falls back to the live scan.
@@ -402,6 +439,7 @@ final class StoreCatalogRepository
     /** Brands with product counts in scope (excludes the brand filter). @return list<array<string,mixed>> */
     public function brandFacets(array $opts, int $limit = 25): array
     {
+        $opts = $this->_canonicalOpts($opts);
         [$noOther] = $this->_noOtherFilters($opts);
         if ($noOther && $this->_cacheableScope($opts)) {
             return service('facetCache')->browse($opts)['brandFacets'] ?? [];
@@ -426,6 +464,7 @@ final class StoreCatalogRepository
     /** Product types with counts in scope (excludes the type filter). @return list<array<string,mixed>> */
     public function typeFacets(array $opts): array
     {
+        $opts = $this->_canonicalOpts($opts);
         [$noOther] = $this->_noOtherFilters($opts);
         if ($noOther && $this->_cacheableScope($opts)) {
             return service('facetCache')->browse($opts)['typeFacets'] ?? [];
@@ -447,6 +486,7 @@ final class StoreCatalogRepository
     /** Min/max selling price across the scope (for the price filter hints). @return array{lo:float,hi:float} */
     public function priceBounds(array $opts): array
     {
+        $opts = $this->_canonicalOpts($opts);
         [$noOther] = $this->_noOtherFilters($opts);
         if ($noOther && $this->_cacheableScope($opts)) {
             return service('facetCache')->browse($opts)['priceBounds'] ?? ['lo' => 0.0, 'hi' => 0.0];
@@ -693,15 +733,30 @@ final class StoreCatalogRepository
         ];
     }
 
-    /** Purchase + order rules for the variant's product. @return array<string,mixed> */
+    /** @var array<int,array<string,mixed>> per-request memo: variantId => rules */
+    private array $purchaseRulesMemo = [];
+
+    /**
+     * Purchase + order rules for the variant's product. @return array<string,mixed>
+     *
+     * Called up to 3× per cart line in one request — CustomerApiController's
+     * validateCart()/placeOrder() each call it directly and again via qtyError(),
+     * and StoreOrderRepository::place() calls it a third time as its own backstop —
+     * plus twice more per line in the web checkout. Rules cannot change mid-request,
+     * so a per-instance memo (this service is registered shared) is safe by
+     * construction, not just an optimisation.
+     */
     public function purchaseRulesForVariant(int $variantId): array
     {
+        if (array_key_exists($variantId, $this->purchaseRulesMemo)) {
+            return $this->purchaseRulesMemo[$variantId];
+        }
         $row = Database::connect()->table('product_variants pv')
             ->select('p.min_purchase_qty, p.max_purchase_qty, p.qty_step, p.payment_restriction')
             ->join('products p', 'p.id = pv.product_id', 'left')
             ->where('pv.id', $variantId)->get()->getRowArray();
 
-        return $row ?: [];
+        return $this->purchaseRulesMemo[$variantId] = ($row ?: []);
     }
 
     /** Purchase + order rules enforced by cart/checkout. @return array<string,mixed> */
