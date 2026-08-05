@@ -31,10 +31,10 @@ $moq = (float) ($product['min_purchase_qty'] ?? 0);
 
         <div class="d-flex flex-wrap gap-1 mb-3">
             <?php if (! empty($product['category'])): ?>
-                <span class="badge rounded-pill text-bg-light border"><i class="bi bi-tag me-1"></i><?= esc($product['category']) ?></span>
+                <span class="badge rounded-pill bg-light border mo-moq"><i class="bi bi-tag me-1"></i><?= esc($product['category']) ?></span>
             <?php endif; ?>
             <?php if ($moq > 1): ?>
-                <span class="badge rounded-pill text-bg-light border"><i class="bi bi-box-seam me-1"></i>Min order <?= esc(rtrim(rtrim(number_format($moq, 3), '0'), '.')) ?></span>
+                <span class="badge rounded-pill bg-light border mo-moq"><i class="bi bi-box-seam me-1"></i>Min order <?= esc(rtrim(rtrim(number_format($moq, 3), '0'), '.')) ?></span>
             <?php endif; ?>
             <?php if (isset($product['distance_km'])): ?>
                 <span class="badge mo-dist"><i class="bi bi-signpost-2 me-1"></i><?= (float) $product['distance_km'] < 1 ? 'Nearby' : round((float) $product['distance_km']) . ' km away' ?></span>

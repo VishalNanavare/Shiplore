@@ -28,11 +28,19 @@
     --mo-shadow: 0 1px 2px rgba(16,24,40,.04), 0 6px 18px rgba(16,24,40,.06);
 }
 
-.mo-body .btn-primary { --bs-btn-bg: var(--mo-primary); --bs-btn-border-color: var(--mo-primary); --bs-btn-hover-bg: var(--mo-primary-2); --bs-btn-hover-border-color: var(--mo-primary-2); --bs-btn-active-bg: var(--mo-primary-2); }
-.mo-body .btn-outline-primary { --bs-btn-color: var(--mo-primary); --bs-btn-border-color: var(--mo-primary); --bs-btn-hover-bg: var(--mo-primary); --bs-btn-hover-border-color: var(--mo-primary); }
+/* Every --bs-btn-* that Bootstrap would otherwise resolve to its blue defaults must
+   be overridden, or the button flashes #0d6efd on :active and draws a blue focus
+   halo — on a violet button. */
+.mo-body .btn-primary { --bs-btn-bg: var(--mo-primary); --bs-btn-border-color: var(--mo-primary); --bs-btn-hover-bg: var(--mo-primary-2); --bs-btn-hover-border-color: var(--mo-primary-2); --bs-btn-active-bg: var(--mo-primary-2); --bs-btn-active-border-color: var(--mo-primary-2); --bs-btn-focus-shadow-rgb: 91,33,182; }
+.mo-body .btn-outline-primary { --bs-btn-color: var(--mo-primary); --bs-btn-border-color: var(--mo-primary); --bs-btn-hover-bg: var(--mo-primary); --bs-btn-hover-border-color: var(--mo-primary); --bs-btn-active-bg: var(--mo-primary); --bs-btn-active-border-color: var(--mo-primary); --bs-btn-focus-shadow-rgb: 91,33,182; }
+.mo-body .pagination { --bs-pagination-color: var(--mo-primary); --bs-pagination-hover-color: var(--mo-primary-2); --bs-pagination-active-bg: var(--mo-primary); --bs-pagination-active-border-color: var(--mo-primary); --bs-pagination-focus-box-shadow: 0 0 0 .25rem rgba(91,33,182,.25); }
 .mo-body .text-primary { color: var(--mo-primary) !important; }
 .mo-body .bg-primary { background-color: var(--mo-primary) !important; }
-.mo-body a { color: var(--mo-primary); }
+/* Bare `a`, NOT `.mo-body a` — deliberately specificity (0,0,1) so it loses to
+   Bootstrap's `.btn` and to every `.mo-*` component that sets its own colour, all
+   of which are (0,1,0). Scoping this one to .mo-body makes it (0,1,1), which wins
+   instead and paints anchor-buttons violet-on-violet. store.css does the same. */
+a { color: var(--mo-primary); }
 
 body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; }
 
@@ -48,9 +56,13 @@ body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Int
 .mo-locreset { border: 1px solid var(--mo-border); border-radius: var(--mo-radius); background: #fff; color: var(--mo-muted); padding: .3rem .5rem; line-height: 1.1; transition: .15s; }
 .mo-locreset:hover { border-color: var(--mo-primary); color: var(--mo-primary); background: var(--mo-tint-3); }
 .mo-search .form-control, .mo-search .input-group-text { border-color: var(--mo-border); }
-.mo-search .form-control:focus { box-shadow: none; border-color: var(--mo-primary); }
-.mo-search { box-shadow: var(--mo-shadow); border-radius: var(--mo-radius); overflow: hidden; }
+/* Bootstrap sets outline:0 on .form-control:focus, so its ring IS the focus
+   affordance — killing it leaves keyboard users with almost no indication. The
+   radius is capped per-child rather than with overflow:hidden, which would clip it. */
+.mo-search .form-control:focus { border-color: var(--mo-primary); box-shadow: 0 0 0 .2rem rgba(91,33,182,.18); }
+.mo-search { box-shadow: var(--mo-shadow); border-radius: var(--mo-radius); }
 .mo-search .input-group-text:first-child { border-radius: var(--mo-radius) 0 0 var(--mo-radius); }
+.mo-search .form-control:last-child { border-radius: 0 var(--mo-radius) var(--mo-radius) 0; }
 .mo-iconbtn { border: 1px solid var(--mo-border); border-radius: var(--mo-radius); position: relative; display: inline-flex; align-items: center; }
 .mo-cartbtn .badge { position: absolute; top: -7px; right: -7px; }
 .mo-catnav { scrollbar-width: none; }
@@ -83,7 +95,10 @@ body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Int
 .mo-mfrcard:hover { transform: translateY(-2px); box-shadow: var(--mo-shadow); }
 .mo-mfr-ico { width: 40px; height: 40px; border-radius: 10px; background: var(--mo-tint); color: var(--mo-primary); display: grid; place-items: center; font-size: 1.15rem; }
 .mo-count { background: var(--mo-tint); color: var(--mo-primary); font-weight: 600; }
-.mo-dist  { background: #eafaf0; color: var(--mo-success); font-weight: 600; }
+/* #15803d, not --mo-success: the token is 3.05:1 on this tint, below AA for text
+   this small. The darker green measures 4.64:1. The token itself is fine at larger
+   sizes and is left alone. */
+.mo-dist  { background: #eafaf0; color: #15803d; font-weight: 600; }
 
 /* ---- Product card ---- */
 .mo-pcard { overflow: hidden; transition: .15s; border-radius: var(--mo-radius); }
@@ -142,7 +157,7 @@ body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Int
 .mo-table td, .mo-table th { border-color: var(--mo-border); }
 .mo-table tbody tr:hover td { background: var(--mo-tint-3); }
 .mo-status { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; border-radius: 999px; padding: .25rem .6rem; background: var(--mo-tint); color: var(--mo-primary); }
-.mo-status-ok { background: #eafaf0; color: var(--mo-success); }
+.mo-status-ok { background: #eafaf0; color: #15803d; }
 .mo-status-warn { background: #fff7ed; color: #b45309; }
 .mo-status-bad { background: #ffe4e6; color: #be123c; }
 
@@ -152,8 +167,11 @@ body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Int
 
 /* ---- Footer ---- */
 .mo-footer { background: #15131f; color: #aeb2c8; margin-top: 2rem; }
-.mo-footer a { color: #cfd2e3; text-decoration: none; }
-.mo-footer a:hover { color: #fff; }
+/* :not(.btn) — otherwise these (0,2,1) rules beat Bootstrap's .btn:hover (0,2,0)
+   on colour only, so btn-outline-light hovers to a #f8f9fa background with #fff
+   text and the label disappears. */
+.mo-footer a:not(.btn) { color: #cfd2e3; text-decoration: none; }
+.mo-footer a:not(.btn):hover { color: #fff; }
 .mo-footer .mo-brand { color: #fff; }
 .mo-footer .mo-brand span { color: #fff; }
 
@@ -161,7 +179,14 @@ body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Int
 .mo-locmap { width: 100%; height: 260px; border-radius: var(--mo-radius); border: 1px solid var(--mo-border); background: #eef0f6; }
 .pac-container { z-index: 1100 !important; }   /* must beat Bootstrap modal's 1055 */
 
+.mo-loc-label { max-width: 130px; }
+
+/* The header flex row has two hard min-content floors — the brand lockup and the
+   location chip — that together overflow a 360px viewport and give the whole page a
+   horizontal scrollbar. Shrinking the font alone does not touch either. */
 @media (max-width: 575.98px) {
     .mo-brand { font-size: 1.1rem; }
+    .mo-header .mo-brand > span { display: none; }  /* scoped: the footer lockup keeps its wordmark */
     .mo-loc small { display: none; }
+    .mo-loc-label { max-width: 64px; }
 }

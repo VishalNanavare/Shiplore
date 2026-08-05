@@ -36,7 +36,7 @@ $q         = (string) (service('request')->getGet('q') ?? '');
                     <i class="bi bi-geo-alt-fill text-primary"></i>
                     <span>
                         <small class="d-block text-secondary lh-1">Sorting from</small>
-                        <span class="fw-semibold text-truncate d-inline-block align-bottom" style="max-width:130px"><?= esc($nearLabel ?? 'your shop') ?></span>
+                        <span class="fw-semibold text-truncate d-inline-block align-bottom mo-loc-label"><?= esc($nearLabel ?? 'your shop') ?></span>
                     </span>
                     <i class="bi bi-chevron-down ms-1 small"></i>
                 </button>
@@ -111,7 +111,7 @@ $q         = (string) (service('request')->getGet('q') ?? '');
     <div class="container py-4">
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="mo-brand mb-2"><?= esc($brand) ?><span> monline</span></div>
+                <div class="mo-brand mb-2"><?= esc($brand) ?><span>monline</span></div>
                 <p class="small mb-0">The wholesale side of <?= esc($brand) ?> — registered vendors and shop managers buying direct from manufacturers, at factory prices.</p>
             </div>
             <div class="col-6 col-md-2"><h6 class="text-white small text-uppercase">Buy</h6>

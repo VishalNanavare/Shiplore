@@ -514,6 +514,45 @@ final class MonlineB2bTest extends CIUnitTestCase
         $this->assertStringContainsString('$cartSvc->count()', $cartBody);
     }
 
+    // ------------------------------------------------------------------ stylesheet
+
+    /**
+     * The anchor colour rule must stay UNSCOPED.
+     *
+     * `.mo-body a` has specificity (0,1,1), which beats Bootstrap's
+     * `.btn { color: var(--bs-btn-color) }` (0,1,0) and every .mo-* component that
+     * sets its own colour (.mo-brand, .mo-catlink, .mo-ptitle, .mo-gate). The visible
+     * result is anchor-buttons rendered violet-on-violet — a solid rectangle with
+     * invisible text. A bare `a` is (0,0,1) and correctly loses to all of them, which
+     * is exactly why store.css writes it that way.
+     */
+    public function testAnchorColourRuleIsNotScopedAboveComponentClasses(): void
+    {
+        $css = (string) file_get_contents(ROOTPATH . 'assets/css/monline.css');
+
+        $this->assertMatchesRegularExpression(
+            '/^a \{[^}]*color:/m',
+            $css,
+            'monline.css must set the anchor colour with a bare `a` selector',
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            '/^\.mo-body a \{/m',
+            $css,
+            'scoping the anchor rule to .mo-body makes it outrank .btn and every .mo-* '
+            . 'component colour — anchor-buttons render with invisible text',
+        );
+    }
+
+    /** The two CSS copies are served from different roots and must not drift. */
+    public function testMonlineStylesheetIsMirroredToPublic(): void
+    {
+        $src = (string) file_get_contents(ROOTPATH . 'assets/css/monline.css');
+        $pub = (string) file_get_contents(FCPATH . 'assets/css/monline.css');
+
+        $this->assertNotSame('', $src);
+        $this->assertSame($src, $pub, 'assets/css/monline.css and public/assets/css/monline.css have drifted');
+    }
+
     // ----------------------------------------------------------- homepage sections
 
     /** categories() must exist and stay scoped to the same manufacturer-only base(). */

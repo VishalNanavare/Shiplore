@@ -29,7 +29,8 @@ $url = site_url('monline/product/' . rawurlencode((string) $p['slug']));
 
         <div class="d-flex flex-wrap gap-1 mt-1">
             <?php if ($moq > 1): ?>
-                <span class="badge rounded-pill text-bg-light border mo-moq"><i class="bi bi-box-seam me-1"></i>Min <?= esc(rtrim(rtrim(number_format($moq, 3), '0'), '.')) ?></span>
+                <?php // bg-light, not text-bg-light — the latter forces color:#000!important and kills .mo-moq ?>
+                <span class="badge rounded-pill bg-light border mo-moq"><i class="bi bi-box-seam me-1"></i>Min <?= esc(rtrim(rtrim(number_format($moq, 3), '0'), '.')) ?></span>
             <?php endif; ?>
             <?php if (isset($p['distance_km'])): ?>
                 <span class="badge mo-dist"><i class="bi bi-signpost-2 me-1"></i><?= (float) $p['distance_km'] < 1 ? 'Nearby' : round((float) $p['distance_km']) . ' km' ?></span>
