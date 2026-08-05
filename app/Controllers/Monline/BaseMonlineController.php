@@ -189,6 +189,7 @@ abstract class BaseMonlineController extends BaseController
             'buyerName'           => $b['display_name'] ?? null,
             'nearLabel'           => $point['label'] ?? null,
             'hasLocationOverride' => service('monlineLocationService')->has(),
+            'navCategories'       => service('monlineCatalogRepository')->categories(),
         ], $data));
     }
 }

@@ -42,6 +42,11 @@ final class MonlineTest extends CIUnitTestCase
             {
                 return [];
             }
+
+            public function categories(): array
+            {
+                return [];
+            }
         });
     }
 

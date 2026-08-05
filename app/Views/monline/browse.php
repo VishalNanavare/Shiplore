@@ -6,10 +6,20 @@
 </div>
 
 <form method="get" action="<?= site_url('monline/browse') ?>" class="row g-2 mb-4">
-    <div class="col-md-5">
+    <div class="col-md-4">
         <input name="q" class="form-control" placeholder="Search products, SKU or manufacturer…" value="<?= esc($filters['q'] ?? '', 'attr') ?>">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <select name="category" class="form-select">
+            <option value="">All categories</option>
+            <?php foreach (($navCategories ?? []) as $c): ?>
+                <option value="<?= esc((string) $c['slug'], 'attr') ?>" <?= (string) ($filters['category'] ?? '') === (string) $c['slug'] ? 'selected' : '' ?>>
+                    <?= esc($c['name']) ?> (<?= (int) $c['product_count'] ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="col-md-3">
         <select name="manufacturer" class="form-select">
             <option value="">All manufacturers</option>
             <?php foreach ($manufacturers as $m): ?>
@@ -19,7 +29,7 @@
             <?php endforeach; ?>
         </select>
     </div>
-    <div class="col-md-3"><button class="btn btn-primary w-100">Search</button></div>
+    <div class="col-md-2"><button class="btn btn-primary w-100">Search</button></div>
 </form>
 
 <?php if (empty($products)): ?>

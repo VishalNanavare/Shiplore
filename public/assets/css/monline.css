@@ -49,11 +49,38 @@ body.mo-body { background: var(--mo-bg); color: var(--mo-ink); font-family: "Seg
 .mo-locreset:hover { color: #fff; }
 .mo-signin-cta { --bs-btn-bg: var(--mo-accent); --bs-btn-border-color: var(--mo-accent); --bs-btn-hover-bg: var(--mo-accent-2); --bs-btn-hover-border-color: var(--mo-accent-2); }
 
+/* ---- Category nav row (under the header) ---- */
+.mo-catnav-wrap { background: var(--mo-primary-2); border-top: 1px solid rgba(255,255,255,.1); }
+.mo-catnav { display: flex; gap: 1.1rem; overflow-x: auto; padding: .5rem 0; scrollbar-width: none; }
+.mo-catnav::-webkit-scrollbar { display: none; }
+.mo-catlink { white-space: nowrap; text-decoration: none; color: rgba(255,255,255,.8); font-size: .8rem; font-weight: 500; }
+.mo-catlink:hover { color: #fff; }
+
 /* ---- Hero ---- */
 .mo-hero { background: linear-gradient(115deg, #1B3358, #26487D 60%, #3260A4); color: #fff; border-radius: var(--mo-radius); box-shadow: var(--mo-shadow); }
 .mo-hero .mo-eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .72rem; color: var(--mo-accent); font-weight: 700; }
 
 .mo-section-title { font-size: 1.05rem; font-weight: 700; margin-bottom: .9rem; color: var(--mo-ink); }
+
+/* ---- Category tiles (homepage) ---- */
+.mo-cat-tile { display: block; text-align: center; text-decoration: none; color: var(--mo-ink); background: var(--mo-card); border: 1px solid var(--mo-border); border-radius: var(--mo-radius); padding: .9rem .4rem; transition: .15s; height: 100%; }
+.mo-cat-tile:hover { transform: translateY(-2px); box-shadow: var(--mo-shadow); border-color: transparent; }
+.mo-cat-ico { width: 46px; height: 46px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 1.3rem; margin-bottom: .4rem; }
+.mo-cat-c0 { background: var(--mo-tint); color: var(--mo-primary); }
+.mo-cat-c1 { background: #FBEADB; color: var(--mo-accent-2); }
+.mo-cat-c2 { background: #E7EEF3; color: #4A6274; }
+.mo-cat-c3 { background: #E6EFEA; color: var(--mo-success); }
+.mo-cat-c4 { background: #ECF1F9; color: var(--mo-primary-2); }
+.mo-cat-c5 { background: #F5E9DC; color: #8A5A22; }
+.mo-cat-name { font-size: .78rem; font-weight: 600; line-height: 1.15; }
+.mo-cat-count { font-size: .68rem; color: var(--mo-muted); margin-top: .1rem; }
+
+/* ---- Featured manufacturer cards (homepage) ---- */
+.mo-mfr-card { display: block; text-align: center; background: var(--mo-card); border: 1px solid var(--mo-border); border-radius: var(--mo-radius); padding: 1rem .5rem; transition: .15s; height: 100%; }
+.mo-mfr-card:hover { transform: translateY(-2px); box-shadow: var(--mo-shadow); border-color: var(--mo-primary); }
+.mo-mfr-ico { width: 52px; height: 52px; border-radius: 50%; background: var(--mo-primary); color: #fff; display: inline-grid; place-items: center; font-size: 1.4rem; margin-bottom: .5rem; }
+.mo-mfr-name { font-weight: 600; font-size: .85rem; color: var(--mo-ink); }
+.mo-mfr-count { font-size: .7rem; color: var(--mo-muted); }
 
 /* ---- Product card ---- */
 .mo-pcard { border: 1px solid var(--mo-border); border-radius: var(--mo-radius); transition: .15s; }

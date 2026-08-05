@@ -28,10 +28,11 @@ final class CatalogController extends BaseMonlineController
         $withPrices = $this->isBuyer(); // the ONLY gate — unchanged from browse()/product()
 
         return $this->render('monline/home', 'Wholesale marketplace', [
-            'products'   => $repo->products($opts, $withPrices),
-            'total'      => $repo->countProducts($opts),
-            'showPrices' => $withPrices,
-            'cartCount'  => $this->isBuyer() ? service('monlineCart')->count() : 0,
+            'products'      => $repo->products($opts, $withPrices),
+            'total'         => $repo->countProducts($opts),
+            'showPrices'    => $withPrices,
+            'manufacturers' => $repo->manufacturers(),
+            'cartCount'     => $this->isBuyer() ? service('monlineCart')->count() : 0,
         ]);
     }
 

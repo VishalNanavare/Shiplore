@@ -514,6 +514,54 @@ final class MonlineB2bTest extends CIUnitTestCase
         $this->assertStringContainsString('$cartSvc->count()', $cartBody);
     }
 
+    // ----------------------------------------------------------- homepage sections
+
+    /** categories() must exist and stay scoped to the same manufacturer-only base(). */
+    public function testCategoriesMethodExistsAndIsScopedToManufacturers(): void
+    {
+        $src  = $this->read('Models/MonlineCatalogRepository.php');
+        $body = $this->methodBody($src, 'categories');
+
+        $this->assertNotSame('', $body, 'MonlineCatalogRepository::categories() is missing');
+        $this->assertStringContainsString('this->base()', $body, 'categories() must reuse base(), not a separate unscoped query');
+        $this->assertStringContainsString('product_count', $body);
+    }
+
+    /** render() must expose category data for the nav row, on every monline page. */
+    public function testRenderExposesNavCategories(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/BaseMonlineController.php'), 'render');
+
+        $this->assertStringContainsString("'navCategories'", $body);
+        $this->assertStringContainsString('categories()', $body);
+    }
+
+    /** The homepage must offer category browsing and featured manufacturers, not just a flat product grid. */
+    public function testHomeHasCategoryAndManufacturerSections(): void
+    {
+        $src = $this->read('Views/monline/home.php');
+
+        $this->assertStringContainsString('navCategories', $src, 'home.php must render a category browsing section');
+        $this->assertStringContainsString('manufacturers', $src, 'home.php must render a featured-manufacturers section');
+    }
+
+    /** home() must fetch the manufacturer list for the featured-manufacturers section. */
+    public function testHomeControllerFetchesManufacturers(): void
+    {
+        $body = $this->methodBody($this->read('Controllers/Monline/CatalogController.php'), 'home');
+
+        $this->assertStringContainsString("'manufacturers'", $body);
+        $this->assertStringContainsString('manufacturers()', $body);
+    }
+
+    /** browse.php must expose the category filter — the backend already supports it. */
+    public function testBrowseHasACategoryFilter(): void
+    {
+        $src = $this->read('Views/monline/browse.php');
+
+        $this->assertStringContainsString('name="category"', $src);
+    }
+
     /** Only manufacturers may be sold on monline. */
     public function testOnlyManufacturerProductsAreSellable(): void
     {

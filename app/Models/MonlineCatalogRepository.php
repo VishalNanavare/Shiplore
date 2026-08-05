@@ -198,4 +198,16 @@ final class MonlineCatalogRepository
             ->limit(100)
             ->get()->getResultArray();
     }
+
+    /** Categories with at least one published manufacturer product, for homepage browsing + the browse filter. */
+    public function categories(): array
+    {
+        return $this->base()
+            ->select('c.id, c.name, c.slug, COUNT(DISTINCT p.id) AS product_count', false)
+            ->where('c.id IS NOT NULL', null, false)
+            ->groupBy('c.id, c.name, c.slug')
+            ->orderBy('product_count', 'DESC')
+            ->limit(12)
+            ->get()->getResultArray();
+    }
 }

@@ -55,6 +55,16 @@ $brand = service('settingsRepository')->brandName();
             <?php endif; ?>
         </div>
     </div>
+    <?php if (! empty($navCategories)): ?>
+        <div class="mo-catnav-wrap">
+            <div class="container mo-catnav">
+                <a class="mo-catlink" href="<?= site_url('monline/browse') ?>">All categories</a>
+                <?php foreach ($navCategories as $c): ?>
+                    <a class="mo-catlink" href="<?= site_url('monline/browse') . '?category=' . rawurlencode((string) $c['slug']) ?>"><?= esc($c['name']) ?></a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </nav>
 <main class="container py-4">
     <?php if ($m = session('success')): ?><div class="alert alert-success py-2"><?= esc($m) ?></div><?php endif; ?>
