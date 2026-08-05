@@ -1,7 +1,7 @@
 <?= $this->extend('monline/_layout') ?>
 <?= $this->section('content') ?>
 
-<h2 class="mo-section-title">Your order</h2>
+<h1 class="h5 mb-3">Your order</h1>
 
 <?php if (! empty($removedCount)): ?>
     <div class="alert alert-warning py-2">
@@ -10,9 +10,7 @@
 <?php endif; ?>
 
 <?php if (empty($lines)): ?>
-    <div class="card"><div class="card-body text-center text-secondary py-5">
-        Your order is empty. <a href="<?= site_url('monline/browse') ?>">Browse the catalogue</a>.
-    </div></div>
+    <div class="mo-empty"><i class="bi bi-cart"></i>Your order is empty. <a href="<?= site_url('monline/browse') ?>">Browse the catalogue</a>.</div>
 <?php else: ?>
     <form method="post" action="<?= site_url('monline/cart/update') ?>">
         <?= csrf_field() ?>
@@ -25,9 +23,9 @@
                             <tr>
                                 <td style="width:56px">
                                     <?php if (! empty($l['image_uuid'])): ?>
-                                        <img src="<?= esc(site_url('media/' . $l['image_uuid']), 'attr') ?>" alt="" width="44" height="44" style="object-fit:cover;border-radius:var(--mo-radius)">
+                                        <img src="<?= esc(site_url('media/' . $l['image_uuid']), 'attr') ?>" alt="" class="rounded" style="width:44px;height:44px;object-fit:cover">
                                     <?php else: ?>
-                                        <div class="mo-thumb-ph" style="width:44px;height:44px;border-radius:var(--mo-radius)"><span style="font-size:1rem"><?= esc(mb_strtoupper(mb_substr((string) ($l['title'] ?? ''), 0, 1))) ?></span></div>
+                                        <div class="mo-thumb mo-ph-g0 rounded" style="width:44px;height:44px;min-height:0"><span class="mo-ph-letter" style="font-size:1rem"><?= esc(mb_strtoupper(mb_substr((string) ($l['title'] ?? ''), 0, 1))) ?></span></div>
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -52,10 +50,10 @@
                 </table>
             </div>
         </div>
-        <button class="btn btn-outline-secondary btn-sm mb-4">Update quantities</button>
+        <button class="btn btn-outline-primary btn-sm mb-4">Update quantities</button>
     </form>
 
-    <div class="card">
+    <div class="card border-0 shadow-sm">
         <div class="card-body">
             <form method="post" action="<?= site_url('monline/place') ?>" class="row g-3">
                 <?= csrf_field() ?>

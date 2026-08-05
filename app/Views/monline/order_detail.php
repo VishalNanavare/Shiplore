@@ -3,9 +3,14 @@
 
 <a class="small text-decoration-none" href="<?= site_url('monline/orders') ?>">&larr; All purchase orders</a>
 
+<?php
+$st  = (string) $po['status'];
+$cls = in_array($st, ['received', 'closed'], true) ? 'mo-status mo-status-ok'
+     : (in_array($st, ['rejected', 'cancelled'], true) ? 'mo-status mo-status-bad' : 'mo-status');
+?>
 <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-    <h2 class="mo-section-title mb-0"><?= esc($po['po_no']) ?></h2>
-    <span class="badge bg-secondary fs-6"><?= esc(str_replace('_', ' ', (string) $po['status'])) ?></span>
+    <h1 class="h5 mb-0"><?= esc($po['po_no']) ?></h1>
+    <span class="<?= $cls ?>"><?= esc(str_replace('_', ' ', $st)) ?></span>
 </div>
 
 <div class="card mb-3">

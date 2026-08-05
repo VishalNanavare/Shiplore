@@ -25,7 +25,7 @@ $loc     = service('monlineLocationService')->get();
                     <input id="moLocSearch" class="form-control ps-5" placeholder="Search area, city or landmark…" autocomplete="off">
                 </div>
 
-                <div id="moLocMap" style="height:220px;border-radius:var(--mo-radius)" class="mb-2"></div>
+                <div id="moLocMap" class="mo-locmap mb-2"></div>
                 <div id="moLocHint" class="form-text mb-2 d-none"><i class="bi bi-hand-index-thumb me-1"></i>Drag the pin to fine-tune.</div>
 
                 <form method="post" action="<?= site_url('monline/location') ?>" id="moLocForm">
