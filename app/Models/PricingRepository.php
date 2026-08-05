@@ -137,18 +137,51 @@ final class PricingRepository
         return (bool) $db->table('customer_group_prices')->insert(['variant_id' => $variantId, 'customer_group_id' => $groupId, 'price' => $price, 'created_by' => $actorId]);
     }
 
-    public function deleteSpecial(int $listId): bool
+    /**
+     * price_lists carries no vendor_id of its own — ownership is derived from the
+     * linked variant. Refuse if the list has no live items (nothing proves it's this
+     * vendor's) or if any item belongs to a different vendor: a caller in the wrong
+     * tenant must not be able to expire another vendor's price list by guessing a
+     * sequential id. The ADD path already verifies the variant belongs to both the
+     * product and the vendor; this closes the gap on the delete path.
+     */
+    public function deleteSpecial(int $listId, int $vendorId): bool
     {
-        $db  = Database::connect();
+        $db = Database::connect();
+
+        $total = $db->table('price_list_items pli')
+            ->join('product_variants pv', 'pv.id = pli.variant_id', 'left')
+            ->where('pli.price_list_id', $listId)->where('pli.deleted_at', null)
+            ->countAllResults();
+        $owned = $db->table('price_list_items pli')
+            ->join('product_variants pv', 'pv.id = pli.variant_id', 'left')
+            ->where('pli.price_list_id', $listId)->where('pli.deleted_at', null)
+            ->where('pv.vendor_id', $vendorId)
+            ->countAllResults();
+        if ($total === 0 || $total !== $owned) {
+            return false;
+        }
+
         $now = date('Y-m-d H:i:s');
         $db->table('price_list_items')->where('price_list_id', $listId)->update(['deleted_at' => $now]);
 
         return $db->table('price_lists')->where('id', $listId)->update(['deleted_at' => $now, 'status' => 'expired']);
     }
 
-    public function deleteTier(int $tierId): bool
+    /** Same reasoning as deleteSpecial(): price_tiers carries no vendor_id, only
+     *  variant_id, so ownership has to be checked via a join before the delete. */
+    public function deleteTier(int $tierId, int $vendorId): bool
     {
-        return (bool) Database::connect()->table('price_tiers')->where('id', $tierId)->delete();
+        $db    = Database::connect();
+        $owned = $db->table('price_tiers pt')
+            ->join('product_variants pv', 'pv.id = pt.variant_id', 'left')
+            ->where('pt.id', $tierId)->where('pv.vendor_id', $vendorId)
+            ->countAllResults();
+        if ($owned === 0) {
+            return false;
+        }
+
+        return (bool) $db->table('price_tiers')->where('id', $tierId)->delete();
     }
 
     /** @return list<array<string,mixed>> */

@@ -29,6 +29,9 @@ final class StaffController extends BaseVendorController
             // are submitted to the vendor for approval.
             'canManage'  => $this->canManageStaff() || $this->canRequestStaff(),
             'asRequest'  => ! $this->canManageStaff() && $this->canRequestStaff(),
+            // Server-side check in addRider() is the real boundary; this only hides
+            // the form for a role that would just get "You don't have permission."
+            'canAddRider' => $this->isOwner() || $this->can('rider.manage') || $this->can('vendor_staff.manage'),
         ]);
     }
 
@@ -156,6 +159,15 @@ final class StaffController extends BaseVendorController
     {
         if ($denied = $this->requireVendor()) {
             return $denied;
+        }
+        // Every other write on this page goes through guardStaffAccess(); this one
+        // called bare requireVendor() and then minted a login with an
+        // attacker-chosen password, bound to the vendor's fleet — the same class of
+        // action as create()/update(), so it takes the same gate. rider.manage is
+        // seeded (vendor scope) and held by vendor_owner and vendor_shop_manager;
+        // other staff roles must not reach here.
+        if (! $this->isOwner() && ! $this->can('rider.manage') && ! $this->can('vendor_staff.manage')) {
+            return redirect()->to('vendor/staff')->with('error', "You don't have permission to manage staff.");
         }
         $name  = trim((string) $this->request->getPost('name'));
         $phone = trim((string) $this->request->getPost('phone'));

@@ -760,12 +760,16 @@ final class MonlineB2bTest extends CIUnitTestCase
         $this->assertFalse(StatusMachine::canPurchaseOrder('dispatched', 'cancelled'));
     }
 
-    /** Receipt must go through the state machine and raise stock via InventoryService. */
+    /** Receipt must go through an explicit status check and raise stock via InventoryService. */
     public function testReceiptRaisesStockThroughInventoryService(): void
     {
         $body = $this->methodBody($this->read('Models/PurchaseOrderRepository.php'), 'receive');
 
-        $this->assertStringContainsString('canPurchaseOrder', $body, 'receipt must validate the transition');
+        // Not canPurchaseOrder(): receive() deliberately does NOT call it (see
+        // testReceiptCannotBeAppliedTwice) — that string only ever matched this
+        // method's own explanatory comment, in both the old code and the new,
+        // so it proved nothing about the actual gate.
+        $this->assertStringContainsString("'dispatched'", $body, 'receipt must validate the starting status');
         $this->assertStringContainsString("service('inventoryService')", $body);
         $this->assertStringContainsString("'ref_type' => 'mfg_purchase_order'", $body, 'the ledger row must reference the PO');
         $this->assertStringContainsString('buyer_shop_id', $body, 'stock must land at the destination shop');
@@ -781,22 +785,33 @@ final class MonlineB2bTest extends CIUnitTestCase
      * canPurchaseOrder($from, 'received') lets a second call on an already-'received'
      * order pass that shortcut and credit stock a second time. receive() must check
      * the starting status explicitly rather than rely on that shortcut.
+     *
+     * Audit M17: that check must also read the status under a `FOR UPDATE` lock taken
+     * INSIDE the transaction, not the pre-transaction $found read — otherwise two
+     * concurrent "mark received" calls (a double-tapped button, or a retry) both read
+     * 'dispatched', both pass, and both credit stock. Hence $locked['status'], not
+     * $found['po']['status'].
      */
     public function testReceiptCannotBeAppliedTwice(): void
     {
         $body = $this->methodBody($this->read('Models/PurchaseOrderRepository.php'), 'receive');
 
+        $this->assertStringContainsString('FOR UPDATE', $body, 'the status re-check must happen under a row lock, or two concurrent calls both pass it');
         $this->assertStringContainsString(
-            "\$from !== 'dispatched'",
+            "\$locked['status'] !== 'dispatched'",
             $body,
-            "receive() must explicitly require status === 'dispatched' — canPurchaseOrder() alone "
+            "receive() must explicitly require the LOCKED row's status === 'dispatched' — canPurchaseOrder() alone "
             . "would let a second call on an already-'received' order through its idempotent "
             . '$from===$to shortcut and double-credit stock',
         );
 
-        // The guard must run before InventoryService is ever touched.
-        $guard  = strpos($body, "\$from !== 'dispatched'");
-        $credit = strpos($body, "service('inventoryService')");
+        // The guard must run before stock is actually credited. Not
+        // strpos(..., "service('inventoryService')") — that matches
+        // `$service = service('inventoryService')`, which only resolves the service
+        // and runs before transBegin() in both the old code and the new; the real
+        // credit call is $service->receive(...), inside the loop after the guard.
+        $guard  = strpos($body, "\$locked['status'] !== 'dispatched'");
+        $credit = strpos($body, '$service->receive(');
         $this->assertNotFalse($guard);
         $this->assertNotFalse($credit);
         $this->assertLessThan($credit, $guard, 'the status guard must precede the stock credit');

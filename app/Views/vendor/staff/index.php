@@ -8,6 +8,7 @@ $availBadge = ['available' => 'success', 'busy' => 'warning', 'offline' => 'seco
 <?php if ($m = session('success')): ?><div class="alert alert-success"><?= esc($m) ?></div><?php endif; ?>
 <?php if ($m = session('error')): ?><div class="alert alert-danger"><?= esc($m) ?></div><?php endif; ?>
 
+<?php if (! empty($canAddRider)): ?>
 <div class="card mb-3"><div class="card-body">
     <h2 class="h6 mb-3"><i class="bi bi-person-plus me-1"></i>Add delivery rider</h2>
     <form method="post" action="<?= site_url('vendor/staff/riders') ?>" class="row g-2 align-items-end">
@@ -23,6 +24,7 @@ $availBadge = ['available' => 'success', 'busy' => 'warning', 'offline' => 'seco
     </form>
     <div class="form-text mt-1">The rider signs in to the Delivery app with this phone (OTP).</div>
 </div></div>
+<?php endif; ?>
 
 <div class="row g-3">
     <div class="col-lg-7"><div class="card h-100">

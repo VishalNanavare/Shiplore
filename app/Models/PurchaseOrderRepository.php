@@ -470,25 +470,52 @@ final class PurchaseOrderRepository
         if ($found === null) {
             return ['ok' => false, 'error' => 'Purchase order not found.'];
         }
-        $from = (string) $found['po']['status'];
 
-        if (! StatusMachine::canPurchaseOrder($from, $to)) {
-            return ['ok' => false, 'error' => 'Cannot move a ' . $from . ' order to ' . $to . '.'];
+        $db = Database::connect();
+        $db->transBegin();
+
+        try {
+            // findFor() read the status OUTSIDE this transaction, so two concurrent
+            // transitions (a double-tapped button, or a retry) could both read the same
+            // stale status, both pass canPurchaseOrder(), and race to write — same class
+            // of bug as receive() below. Claim the row under a lock and re-check here,
+            // where it can't race.
+            $locked = $db->query(
+                'SELECT status FROM mfg_purchase_orders WHERE id = ? AND deleted_at IS NULL FOR UPDATE',
+                [$poId],
+            )->getRowArray();
+            $from = $locked !== null ? (string) $locked['status'] : (string) $found['po']['status'];
+
+            if ($locked === null || ! StatusMachine::canPurchaseOrder($from, $to)) {
+                $db->transRollback();
+
+                return ['ok' => false, 'error' => 'Cannot move a ' . $from . ' order to ' . $to . '.'];
+            }
+
+            $set = array_merge(['status' => $to, 'updated_by' => $actorId], $extra);
+            $now = date('Y-m-d H:i:s');
+            if ($to === 'accepted') {
+                $set['accepted_at'] = $now;
+                $set['accepted_by'] = $actorId;
+            } elseif ($to === 'dispatched') {
+                $set['dispatched_at'] = $now;
+            } elseif ($to === 'received') {
+                $set['received_at'] = $now;
+                $set['received_by'] = $actorId;
+            }
+
+            $db->table('mfg_purchase_orders')->where('id', $poId)->update($set);
+            $db->transComplete();
+
+            if (! $db->transStatus()) {
+                return ['ok' => false, 'error' => 'Could not update the purchase order.'];
+            }
+        } catch (Throwable $e) {
+            $db->transRollback();
+            log_message('error', 'monline PO transition failed for PO ' . $poId . ': ' . $e->getMessage());
+
+            return ['ok' => false, 'error' => 'Could not update the purchase order.'];
         }
-
-        $set = array_merge(['status' => $to, 'updated_by' => $actorId], $extra);
-        $now = date('Y-m-d H:i:s');
-        if ($to === 'accepted') {
-            $set['accepted_at'] = $now;
-            $set['accepted_by'] = $actorId;
-        } elseif ($to === 'dispatched') {
-            $set['dispatched_at'] = $now;
-        } elseif ($to === 'received') {
-            $set['received_at'] = $now;
-            $set['received_by'] = $actorId;
-        }
-
-        Database::connect()->table('mfg_purchase_orders')->where('id', $poId)->update($set);
 
         // Only the seller ever drives these three; the buyer's only transition is
         // 'cancelled'. So branching on $to alone is enough — no $side check needed.
@@ -515,15 +542,7 @@ final class PurchaseOrderRepository
         if ($found === null) {
             return ['ok' => false, 'error' => 'Purchase order not found.'];
         }
-        $po   = $found['po'];
-        $from = (string) $po['status'];
-        // Explicit status check, not StatusMachine::canPurchaseOrder() alone: that helper
-        // treats $from === $to as an idempotent no-op, which is fine for a transition that
-        // just rewrites a timestamp but wrong here — a second call on an already-'received'
-        // order would otherwise pass the guard and credit stock a second time.
-        if ($from !== 'dispatched') {
-            return ['ok' => false, 'error' => 'Only a dispatched order can be received.'];
-        }
+        $po = $found['po'];
 
         $db      = Database::connect();
         $shopId  = (int) $po['buyer_shop_id'];
@@ -532,12 +551,31 @@ final class PurchaseOrderRepository
         $db->transBegin();
 
         try {
+            // findFor() read the status OUTSIDE this transaction, so two concurrent
+            // "mark received" calls (a double-tapped button, or a retry) would otherwise
+            // both read 'dispatched', both pass, and both run the credit loop below —
+            // stock credited twice. Claim the row under a lock and re-check the status
+            // here, where it can't race. Explicit status check, not
+            // StatusMachine::canPurchaseOrder() alone: that helper treats $from === $to
+            // as an idempotent no-op, which is fine for a transition that just rewrites a
+            // timestamp but wrong here — a second call on an already-'received' order
+            // would otherwise pass the guard and credit stock a second time.
+            $locked = $db->query(
+                'SELECT status FROM mfg_purchase_orders WHERE id = ? AND deleted_at IS NULL FOR UPDATE',
+                [$poId],
+            )->getRowArray();
+            if ($locked === null || (string) $locked['status'] !== 'dispatched') {
+                $db->transRollback();
+
+                return ['ok' => false, 'error' => 'Only a dispatched order can be received.'];
+            }
+
             foreach ($found['items'] as $item) {
                 $qty = (float) $item['qty'];
                 if ($qty <= 0) {
                     continue;
                 }
-                $service->receive(
+                $ok = $service->receive(
                     (int) $item['variant_id'],
                     $shopId,
                     $qty,
@@ -545,6 +583,9 @@ final class PurchaseOrderRepository
                     ['ref_type' => 'mfg_purchase_order', 'ref_id' => $poId],
                     $actorId,
                 );
+                if (! $ok) {
+                    throw new \RuntimeException('stock credit failed for variant ' . (int) $item['variant_id']);
+                }
                 $db->table('mfg_purchase_order_items')->where('id', (int) $item['id'])
                     ->update(['qty_received' => $qty]);
             }

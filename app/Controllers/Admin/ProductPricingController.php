@@ -79,9 +79,13 @@ final class ProductPricingController extends BaseController
         if ($denied = $this->guard()) {
             return $denied;
         }
-        service('pricingRepository')->deleteSpecial($listId);
+        // deleteSpecial() is tenant-scoped at the repository, so it needs the owning
+        // vendor id — resolve the product first (also the notFound check we skipped
+        // before) rather than trust that $listId belongs to $productId.
+        $product = service('adminProductRepository')->findById($productId);
+        $ok      = $product !== null && service('pricingRepository')->deleteSpecial($listId, (int) $product['vendor_id']);
 
-        return redirect()->to('admin/products/' . $productId . '/pricing')->with('success', 'Removed.');
+        return redirect()->to('admin/products/' . $productId . '/pricing')->with($ok ? 'success' : 'error', $ok ? 'Removed.' : 'Price list not found.');
     }
 
     public function deleteTier(int $productId, int $tierId): RedirectResponse
@@ -89,9 +93,10 @@ final class ProductPricingController extends BaseController
         if ($denied = $this->guard()) {
             return $denied;
         }
-        service('pricingRepository')->deleteTier($tierId);
+        $product = service('adminProductRepository')->findById($productId);
+        $ok      = $product !== null && service('pricingRepository')->deleteTier($tierId, (int) $product['vendor_id']);
 
-        return redirect()->to('admin/products/' . $productId . '/pricing')->with('success', 'Removed.');
+        return redirect()->to('admin/products/' . $productId . '/pricing')->with($ok ? 'success' : 'error', $ok ? 'Removed.' : 'Tier not found.');
     }
 
     /** @return list<array<string,mixed>> */

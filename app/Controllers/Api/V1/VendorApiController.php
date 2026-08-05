@@ -1487,6 +1487,9 @@ final class VendorApiController extends BaseApiController
         return $this->item(['id' => $id, 'status' => $nextStatus]);
     }
 
+    /** vendor_staff.staff_type ENUM (database/sql/10_staff.sql:28). */
+    private const STAFF_TYPES = ['branch_manager', 'cashier', 'packer', 'helper', 'delivery_boy', 'manager', 'other'];
+
     public function createStaff()
     {
         $vid = $this->vendorId();
@@ -1495,24 +1498,30 @@ final class VendorApiController extends BaseApiController
         $body = $this->request->getJSON(true) ?? [];
         $name  = trim($body['name'] ?? '');
         $phone = trim($body['phone'] ?? '');
-        $type  = $body['type'] ?? 'cashier'; // cashier | branch_manager
-        $shops = $body['shop_ids'] ?? [];
+        $type  = in_array($body['type'] ?? '', self::STAFF_TYPES, true) ? $body['type'] : 'cashier';
+        $shops = array_values(array_intersect(
+            array_map('intval', (array) ($body['shop_ids'] ?? [])),
+            service('vendorAccountRepository')->shopIdsForVendor($vid),
+        ));
 
         if (!$name || !$phone) return $this->fail('Name and phone are required.', 422);
 
         $db = \Config\Database::connect();
-        // Upsert user
-        $existingUser = $db->table('users')->where('phone', $phone)->get()->getRowArray();
-        if ($existingUser) {
-            $userId = $existingUser['id'];
-        } else {
-            $db->table('users')->insert(['name' => $name, 'phone' => $phone, 'role' => 'staff', 'status' => 'active', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
-            $userId = $db->insertID();
+
+        // Never adopt an existing account by phone: that used to bind an admin, a
+        // rider or another vendor's staffer to this tenant without their involvement
+        // (findStaffVendor() resolves any active vendor_staff row), and updateStaff()
+        // would then treat them as ours to rewrite — an arbitrary cross-tenant write
+        // to the global users table.
+        if ($db->table('users')->where('phone', $phone)->where('deleted_at', null)->get()->getRowArray()) {
+            return $this->fail('That phone number already belongs to an account.', 409);
         }
 
-        // Create vendor_staff record
-        $existing = $db->table('vendor_staff')->where('user_id', $userId)->where('vendor_id', $vid)->get()->getRowArray();
-        if (!$existing) {
+        $db->transBegin();
+        try {
+            $db->table('users')->insert(['name' => $name, 'phone' => $phone, 'role' => 'staff', 'status' => 'active', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+            $userId = (int) $db->insertID();
+
             $db->table('vendor_staff')->insert([
                 'vendor_id'   => $vid,
                 'user_id'     => $userId,
@@ -1522,16 +1531,28 @@ final class VendorApiController extends BaseApiController
                 'created_at'  => date('Y-m-d H:i:s'),
                 'updated_at'  => date('Y-m-d H:i:s'),
             ]);
-        }
+            $staffId = (int) $db->insertID();
 
-        // Assign shops
-        foreach ($shops as $sid) {
-            $existing = $db->table('staff_shop_assignments')->where('staff_user_id', $userId)->where('shop_id', (int) $sid)->where('vendor_id', $vid)->get()->getRowArray();
-            if ($existing) {
-                $db->table('staff_shop_assignments')->where('staff_user_id', $userId)->where('shop_id', (int) $sid)->where('vendor_id', $vid)->update(['assigned_at' => date('Y-m-d H:i:s')]);
-            } else {
-                $db->table('staff_shop_assignments')->insert(['staff_user_id' => $userId, 'shop_id' => (int) $sid, 'vendor_id' => $vid, 'assigned_at' => date('Y-m-d H:i:s')]);
+            // staff_shop_assignments is keyed on (vendor_staff_id, shop_id), not
+            // (staff_user_id, vendor_id) — those columns never existed on this table,
+            // so any call here with a non-empty shop_ids threw *after* the users and
+            // vendor_staff writes above had already committed (no transaction), 500ing
+            // while leaving the binding in place. Fixed columns + a real transaction.
+            foreach ($shops as $sid) {
+                $db->table('staff_shop_assignments')->insert([
+                    'vendor_staff_id' => $staffId, 'shop_id' => $sid, 'assigned_at' => date('Y-m-d H:i:s'),
+                ]);
             }
+
+            $db->transComplete();
+            if (! $db->transStatus()) {
+                return $this->fail('Could not create the staff member.', 500);
+            }
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            log_message('error', 'vendor staff create failed: ' . $e->getMessage());
+
+            return $this->fail('Could not create the staff member.', 500);
         }
 
         return $this->item(['user_id' => $userId, 'message' => 'Staff member added.']);
@@ -1547,17 +1568,37 @@ final class VendorApiController extends BaseApiController
         if (!$row) return $this->fail('Staff not found.', 404);
 
         $body = $this->request->getJSON(true) ?? [];
-        if (!empty($body['name'])) {
-            $db->table('users')->where('id', $userId)->update(['name' => $body['name'], 'updated_at' => date('Y-m-d H:i:s')]);
+        if (!empty($body['type']) && ! in_array($body['type'], self::STAFF_TYPES, true)) {
+            return $this->fail('Invalid staff type.', 422);
         }
-        if (!empty($body['type'])) {
-            $db->table('vendor_staff')->where('user_id', $userId)->where('vendor_id', $vid)->update(['staff_type' => $body['type'], 'updated_at' => date('Y-m-d H:i:s')]);
-        }
-        if (isset($body['shop_ids'])) {
-            $db->table('staff_shop_assignments')->where('staff_user_id', $userId)->where('vendor_id', $vid)->delete();
-            foreach ($body['shop_ids'] as $sid) {
-                $db->table('staff_shop_assignments')->insert(['staff_user_id' => $userId, 'shop_id' => (int) $sid, 'vendor_id' => $vid, 'assigned_at' => date('Y-m-d H:i:s')]);
+
+        $db->transBegin();
+        try {
+            if (!empty($body['name'])) {
+                $db->table('users')->where('id', $userId)->update(['name' => $body['name'], 'updated_at' => date('Y-m-d H:i:s')]);
             }
+            if (!empty($body['type'])) {
+                $db->table('vendor_staff')->where('user_id', $userId)->where('vendor_id', $vid)->update(['staff_type' => $body['type'], 'updated_at' => date('Y-m-d H:i:s')]);
+            }
+            if (isset($body['shop_ids'])) {
+                $shops = array_values(array_intersect(
+                    array_map('intval', (array) $body['shop_ids']),
+                    service('vendorAccountRepository')->shopIdsForVendor($vid),
+                ));
+                $db->table('staff_shop_assignments')->where('vendor_staff_id', (int) $row['id'])->delete();
+                foreach ($shops as $sid) {
+                    $db->table('staff_shop_assignments')->insert(['vendor_staff_id' => (int) $row['id'], 'shop_id' => $sid, 'assigned_at' => date('Y-m-d H:i:s')]);
+                }
+            }
+            $db->transComplete();
+            if (! $db->transStatus()) {
+                return $this->fail('Could not update the staff member.', 500);
+            }
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            log_message('error', 'vendor staff update failed: ' . $e->getMessage());
+
+            return $this->fail('Could not update the staff member.', 500);
         }
 
         return $this->item(['message' => 'Updated.']);
@@ -1568,9 +1609,12 @@ final class VendorApiController extends BaseApiController
         $vid = $this->vendorId();
         if ($vid === null || !$this->isOwner()) return $this->fail('Owner access required.', 403);
 
-        $db = \Config\Database::connect();
-        $db->table('vendor_staff')->where('user_id', $userId)->where('vendor_id', $vid)->update(['status' => 'inactive', 'updated_at' => date('Y-m-d H:i:s')]);
-        $db->table('staff_shop_assignments')->where('staff_user_id', $userId)->where('vendor_id', $vid)->delete();
+        $db  = \Config\Database::connect();
+        $row = $db->table('vendor_staff')->where('user_id', $userId)->where('vendor_id', $vid)->get()->getRowArray();
+        if (!$row) return $this->fail('Staff not found.', 404);
+
+        $db->table('vendor_staff')->where('id', (int) $row['id'])->update(['status' => 'inactive', 'updated_at' => date('Y-m-d H:i:s')]);
+        $db->table('staff_shop_assignments')->where('vendor_staff_id', (int) $row['id'])->delete();
 
         return $this->item(['message' => 'Staff member deactivated.']);
     }
@@ -1719,6 +1763,12 @@ final class VendorApiController extends BaseApiController
         if ($vid === null || !$this->isOwner()) return $this->fail('Owner access required.', 403);
 
         $db = \Config\Database::connect();
+        // Every sibling method here (productPricing, addSpecialPrice, addTierPrice)
+        // checks the product belongs to this vendor before touching it; this one
+        // didn't, so any vendor could delete another vendor's rule by guessing ids.
+        $own = $db->table('products')->where('id', $productId)->where('vendor_id', $vid)->get()->getRowArray();
+        if (!$own) return $this->fail('Product not found.', 404);
+
         $table = $type === 'tier' ? 'product_tier_prices' : 'product_special_prices';
         $db->table($table)->where('id', $ruleId)->where('product_id', $productId)->update(['deleted_at' => date('Y-m-d H:i:s')]);
 

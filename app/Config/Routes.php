@@ -164,6 +164,16 @@ $routes->group('rider', ['filter' => 'riderAuth'], static function (RouteCollect
     $routes->post('documents/(:num)/delete', 'Rider\DocumentController::remove/$1', ['filter' => 'csrf']);
 });
 
+// Exit impersonation. Deliberately declared BEFORE and OUTSIDE the `webAuth:platform`
+// group below (first-declaration-wins, per the pattern already used elsewhere in this
+// file): while an admin is inside a vendor/manufacturer portal, their principal_type
+// is rewritten to 'vendor'/'manufacturer' by PortalController::startStaffImpersonation(),
+// so the platform pin would block the only way back the moment
+// auth.enforcePrincipalType=true is set. Plain `webAuth` still requires a live
+// session; leave() itself refuses to do anything without a valid is_impersonating
+// stash, so a non-impersonating user posting here just no-ops back to the dashboard.
+$routes->post('admin/portal/leave', 'Admin\PortalController::leave', ['filter' => ['webAuth', 'csrf']]);
+
 // ---- Authenticated admin web pages (session-guarded) ----
 // `webAuth:platform` pins this group to platform principals. The session cookie is
 // domain-wide (.shiplore.in), so without the argument a vendor login is accepted
@@ -176,7 +186,6 @@ $routes->group('admin', ['filter' => 'webAuth:platform'], static function (Route
     $routes->post('portal/enter/manufacturer/(:num)', 'Admin\PortalController::enterManufacturer/$1', ['filter' => 'csrf']);
     $routes->post('portal/enter/shop/(:num)', 'Admin\PortalController::enterShop/$1', ['filter' => 'csrf']);
     $routes->post('portal/enter/rider/(:num)', 'Admin\PortalController::enterRider/$1', ['filter' => 'csrf']);
-    $routes->post('portal/leave', 'Admin\PortalController::leave', ['filter' => 'csrf']);
 
     // Vendor management
     $routes->get('vendors', 'Admin\VendorController::index');

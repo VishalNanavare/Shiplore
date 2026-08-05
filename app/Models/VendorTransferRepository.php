@@ -36,6 +36,19 @@ final class VendorTransferRepository
     }
 
     /**
+     * A single transfer, vendor-scoped — used by the controller to check shop
+     * access (from_shop_id / to_shop_id) before letting non-owner staff act on it.
+     * @return array<string,mixed>|null
+     */
+    public function findOne(int $id, int $vendorId): ?array
+    {
+        return Database::connect()->table('stock_transfers')
+            ->select('id, from_shop_id, to_shop_id, status')
+            ->where('id', $id)->where('vendor_id', $vendorId)->where('deleted_at', null)
+            ->get()->getRowArray() ?: null;
+    }
+
+    /**
      * Cross-store stock visibility: where (in the vendor's stores) is a product
      * in stock? Matches by SKU / title / barcode and returns each shop with
      * available > 0, so a store manager can request a transfer from a store that

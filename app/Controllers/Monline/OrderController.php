@@ -231,6 +231,9 @@ final class OrderController extends BaseMonlineController
         if ($found === null) {
             return redirect()->to('monline/orders')->with('error', 'Purchase order not found.');
         }
+        if ($denied = $this->requirePoShopAccess($found['po'])) {
+            return $denied;
+        }
 
         return $this->render('monline/order_detail', $found['po']['po_no'], [
             'po'        => $found['po'],
@@ -243,6 +246,13 @@ final class OrderController extends BaseMonlineController
     public function receive(int $id): RedirectResponse
     {
         if ($denied = $this->requireBuyer()) {
+            return $denied;
+        }
+        $found = service('purchaseOrderRepository')->findFor($id, (int) $this->buyerVendorId(), 'buyer');
+        if ($found === null) {
+            return redirect()->to('monline/orders')->with('error', 'Purchase order not found.');
+        }
+        if ($denied = $this->requirePoShopAccess($found['po'])) {
             return $denied;
         }
 
@@ -258,6 +268,13 @@ final class OrderController extends BaseMonlineController
         if ($denied = $this->requireBuyer()) {
             return $denied;
         }
+        $found = service('purchaseOrderRepository')->findFor($id, (int) $this->buyerVendorId(), 'buyer');
+        if ($found === null) {
+            return redirect()->to('monline/orders')->with('error', 'Purchase order not found.');
+        }
+        if ($denied = $this->requirePoShopAccess($found['po'])) {
+            return $denied;
+        }
 
         $res = service('purchaseOrderRepository')->transition(
             $id,
@@ -270,5 +287,26 @@ final class OrderController extends BaseMonlineController
         return $res['ok']
             ? redirect()->to('monline/orders/' . $id)->with('success', 'Purchase order cancelled.')
             : redirect()->to('monline/orders/' . $id)->with('error', $res['error']);
+    }
+
+    /**
+     * place() rejects a destination outside buyerShopIds() and orders() filters the
+     * list the same way; show()/receive()/cancel() only checked buyerVendorId(), so a
+     * shop-3 manager could receive or cancel a PO destined for shop 1 — the same rule
+     * place() enforces, applied inconsistently in the same controller. receive()'s
+     * side effect credits stock at the PO's OWN buyer_shop_id regardless of who
+     * confirms it, so a wrong-branch receive overstates that branch's inventory with
+     * nobody there having signed for it, and closes the PO so the real destination
+     * can no longer confirm it. buyerShopIds() already returns every shop for an
+     * owner (mirrors BaseVendorController), so no separate owner short-circuit is
+     * needed here.
+     */
+    private function requirePoShopAccess(array $po): ?RedirectResponse
+    {
+        if (! in_array((int) $po['buyer_shop_id'], $this->buyerShopIds(), true)) {
+            return redirect()->to('monline/orders')->with('error', 'Purchase order not found.');
+        }
+
+        return null;
     }
 }

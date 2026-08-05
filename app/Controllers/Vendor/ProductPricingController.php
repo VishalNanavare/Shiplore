@@ -63,11 +63,11 @@ final class ProductPricingController extends BaseVendorController
         if ($denied = $this->requireVendor()) {
             return $denied;
         }
-        if ($this->ownProduct($productId) !== null) {
-            service('pricingRepository')->deleteSpecial($listId);
-        }
+        // $productId being ours does not prove $listId is: they are independent POST
+        // segments. The repository re-checks every item on the list against $vendorId.
+        $ok = $this->ownProduct($productId) !== null && service('pricingRepository')->deleteSpecial($listId, $this->vendorId());
 
-        return redirect()->to('vendor/products/' . $productId . '/pricing')->with('success', 'Removed.');
+        return redirect()->to('vendor/products/' . $productId . '/pricing')->with($ok ? 'success' : 'error', $ok ? 'Removed.' : 'Price list not found.');
     }
 
     public function deleteTier(int $productId, int $tierId): RedirectResponse
@@ -75,11 +75,9 @@ final class ProductPricingController extends BaseVendorController
         if ($denied = $this->requireVendor()) {
             return $denied;
         }
-        if ($this->ownProduct($productId) !== null) {
-            service('pricingRepository')->deleteTier($tierId);
-        }
+        $ok = $this->ownProduct($productId) !== null && service('pricingRepository')->deleteTier($tierId, $this->vendorId());
 
-        return redirect()->to('vendor/products/' . $productId . '/pricing')->with('success', 'Removed.');
+        return redirect()->to('vendor/products/' . $productId . '/pricing')->with($ok ? 'success' : 'error', $ok ? 'Removed.' : 'Tier not found.');
     }
 
     /** Shared mutate: tenant-check product + variant, run $fn(vid), flash. */
