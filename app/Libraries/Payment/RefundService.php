@@ -59,13 +59,30 @@ final class RefundService
             return ['ok' => true, 'reason' => 'already completed']; // idempotent
         }
 
-        // payment -> order -> first sub-order (for GST reversal basis)
-        $row = $db->table('payments p')
+        // payment -> order -> the sub-order this refund actually belongs to.
+        // A return is raised per sub-order, and one order carries one sub-order PER
+        // PRODUCT — so the first sub-order of the order (the old fallback-only
+        // behaviour) is the wrong GST/commission basis whenever a specific item was
+        // returned. POS/legacy/whole-order refunds carry no return_id, so
+        // $subOrderId stays null and they keep resolving via the same fallback.
+        $subOrderId = null;
+        if ($refund['return_id'] !== null) {
+            $ret = $db->table('returns')->select('sub_order_id')
+                ->where('id', (int) $refund['return_id'])->get()->getRowArray();
+            $subOrderId = $ret !== null && $ret['sub_order_id'] !== null ? (int) $ret['sub_order_id'] : null;
+        }
+
+        $builder = $db->table('payments p')
             ->select('o.id AS order_id, o.order_no, o.customer_id, so.id AS sub_order_id, so.shop_id, so.taxable_value, so.cgst, so.sgst, so.igst, so.grand_total')
             ->join('orders o', 'o.id = p.order_id', 'left')
             ->join('sub_orders so', 'so.order_id = o.id', 'left')
-            ->where('p.id', $refund['payment_id'])->orderBy('so.id', 'ASC')
-            ->get()->getRowArray();
+            ->where('p.id', $refund['payment_id']);
+
+        if ($subOrderId !== null) {
+            $builder->where('so.id', $subOrderId);
+        }
+
+        $row = $builder->orderBy('so.id', 'ASC')->get()->getRowArray();
         if ($row === null) {
             return ['ok' => false, 'reason' => 'no order/sub-order for payment'];
         }
