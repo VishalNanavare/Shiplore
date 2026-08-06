@@ -255,16 +255,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p1, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p1, @vtm_vendor, 'VTM-SHTFRM-M-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 310.00, 1, 'active');
+(UUID(), @vtm_p1, @vtm_vendor, 'VTM-SHTFRM-M-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 310.00, 1, 'active');
 SET @vtm_p1_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p1, @vtm_vendor, 'VTM-SHTFRM-L-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 310.00, 0, 'active');
+(UUID(), @vtm_p1, @vtm_vendor, 'VTM-SHTFRM-L-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 310.00, 0, 'active');
 SET @vtm_p1_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p1, @vtm_vendor, 'VTM-SHTFRM-M-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 310.00, 0, 'active');
+(UUID(), @vtm_p1, @vtm_vendor, 'VTM-SHTFRM-M-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 310.00, 0, 'active');
 SET @vtm_p1_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p1, @vtm_vendor, 'VTM-SHTFRM-L-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 310.00, 0, 'active');
+(UUID(), @vtm_p1, @vtm_vendor, 'VTM-SHTFRM-L-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 310.00, 0, 'active');
 SET @vtm_p1_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -289,16 +289,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p2, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p2, @vtm_vendor, 'VTM-SHTCAS-M-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 270.00, 1, 'active');
+(UUID(), @vtm_p2, @vtm_vendor, 'VTM-SHTCAS-M-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 270.00, 1, 'active');
 SET @vtm_p2_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p2, @vtm_vendor, 'VTM-SHTCAS-L-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 270.00, 0, 'active');
+(UUID(), @vtm_p2, @vtm_vendor, 'VTM-SHTCAS-L-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 270.00, 0, 'active');
 SET @vtm_p2_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p2, @vtm_vendor, 'VTM-SHTCAS-M-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 270.00, 0, 'active');
+(UUID(), @vtm_p2, @vtm_vendor, 'VTM-SHTCAS-M-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 270.00, 0, 'active');
 SET @vtm_p2_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p2, @vtm_vendor, 'VTM-SHTCAS-L-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 270.00, 0, 'active');
+(UUID(), @vtm_p2, @vtm_vendor, 'VTM-SHTCAS-L-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 270.00, 0, 'active');
 SET @vtm_p2_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -323,19 +323,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p3, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-M-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 279.00, 190.00, 1, 'active');
+(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-M-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 279.00, 190.00, 1, 'active');
 SET @vtm_p3_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-L-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 279.00, 190.00, 0, 'active');
+(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-L-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 279.00, 190.00, 0, 'active');
 SET @vtm_p3_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-M-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 279.00, 190.00, 0, 'active');
+(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-M-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 279.00, 190.00, 0, 'active');
 SET @vtm_p3_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-L-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 279.00, 190.00, 0, 'active');
+(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-L-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 279.00, 190.00, 0, 'active');
 SET @vtm_p3_v4 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-M-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 279.00, 190.00, 0, 'active');
+(UUID(), @vtm_p3, @vtm_vendor, 'VTM-POLO-M-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 279.00, 190.00, 0, 'active');
 SET @vtm_p3_v5 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -362,16 +362,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p4, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p4, @vtm_vendor, 'VTM-TRS-S', (SELECT id FROM units WHERE code='pcs'), NULL, 549.00, 380.00, 1, 'active');
+(UUID(), @vtm_p4, @vtm_vendor, 'VTM-TRS-S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 549.00, 380.00, 1, 'active');
 SET @vtm_p4_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p4, @vtm_vendor, 'VTM-TRS-M', (SELECT id FROM units WHERE code='pcs'), NULL, 549.00, 380.00, 0, 'active');
+(UUID(), @vtm_p4, @vtm_vendor, 'VTM-TRS-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 549.00, 380.00, 0, 'active');
 SET @vtm_p4_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p4, @vtm_vendor, 'VTM-TRS-L', (SELECT id FROM units WHERE code='pcs'), NULL, 549.00, 380.00, 0, 'active');
+(UUID(), @vtm_p4, @vtm_vendor, 'VTM-TRS-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 549.00, 380.00, 0, 'active');
 SET @vtm_p4_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p4, @vtm_vendor, 'VTM-TRS-XL', (SELECT id FROM units WHERE code='pcs'), NULL, 549.00, 380.00, 0, 'active');
+(UUID(), @vtm_p4, @vtm_vendor, 'VTM-TRS-XL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 549.00, 380.00, 0, 'active');
 SET @vtm_p4_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -392,19 +392,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p5, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-S', (SELECT id FROM units WHERE code='pcs'), NULL, 649.00, 450.00, 1, 'active');
+(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 649.00, 450.00, 1, 'active');
 SET @vtm_p5_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-M', (SELECT id FROM units WHERE code='pcs'), NULL, 649.00, 450.00, 0, 'active');
+(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 649.00, 450.00, 0, 'active');
 SET @vtm_p5_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-L', (SELECT id FROM units WHERE code='pcs'), NULL, 649.00, 450.00, 0, 'active');
+(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 649.00, 450.00, 0, 'active');
 SET @vtm_p5_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-XL', (SELECT id FROM units WHERE code='pcs'), NULL, 649.00, 450.00, 0, 'active');
+(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-XL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 649.00, 450.00, 0, 'active');
 SET @vtm_p5_v4 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-XXL', (SELECT id FROM units WHERE code='pcs'), NULL, 649.00, 450.00, 0, 'active');
+(UUID(), @vtm_p5, @vtm_vendor, 'VTM-JNS-XXL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 649.00, 450.00, 0, 'active');
 SET @vtm_p5_v5 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -426,13 +426,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p6, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p6, @vtm_vendor, 'VTM-KURPYJ-M', (SELECT id FROM units WHERE code='set'), NULL, 799.00, 550.00, 1, 'active');
+(UUID(), @vtm_p6, @vtm_vendor, 'VTM-KURPYJ-M', (SELECT id FROM units WHERE code='set'), 0.0000, 799.00, 550.00, 1, 'active');
 SET @vtm_p6_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p6, @vtm_vendor, 'VTM-KURPYJ-L', (SELECT id FROM units WHERE code='set'), NULL, 799.00, 550.00, 0, 'active');
+(UUID(), @vtm_p6, @vtm_vendor, 'VTM-KURPYJ-L', (SELECT id FROM units WHERE code='set'), 0.0000, 799.00, 550.00, 0, 'active');
 SET @vtm_p6_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p6, @vtm_vendor, 'VTM-KURPYJ-XL', (SELECT id FROM units WHERE code='set'), NULL, 799.00, 550.00, 0, 'active');
+(UUID(), @vtm_p6, @vtm_vendor, 'VTM-KURPYJ-XL', (SELECT id FROM units WHERE code='set'), 0.0000, 799.00, 550.00, 0, 'active');
 SET @vtm_p6_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -452,7 +452,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p7, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p7, @vtm_vendor, 'VTM-NEHRU-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 1299.00, 900.00, 1, 'active');
+(UUID(), @vtm_p7, @vtm_vendor, 'VTM-NEHRU-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1299.00, 900.00, 1, 'active');
 
 -- ===================== Product 8: Men's Formal Blazer Wool Blend (variant: size) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -466,13 +466,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p8, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p8, @vtm_vendor, 'VTM-BLZR-M', (SELECT id FROM units WHERE code='pcs'), NULL, 2199.00, 1500.00, 1, 'active');
+(UUID(), @vtm_p8, @vtm_vendor, 'VTM-BLZR-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2199.00, 1500.00, 1, 'active');
 SET @vtm_p8_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p8, @vtm_vendor, 'VTM-BLZR-L', (SELECT id FROM units WHERE code='pcs'), NULL, 2199.00, 1500.00, 0, 'active');
+(UUID(), @vtm_p8, @vtm_vendor, 'VTM-BLZR-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2199.00, 1500.00, 0, 'active');
 SET @vtm_p8_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p8, @vtm_vendor, 'VTM-BLZR-XL', (SELECT id FROM units WHERE code='pcs'), NULL, 2199.00, 1500.00, 0, 'active');
+(UUID(), @vtm_p8, @vtm_vendor, 'VTM-BLZR-XL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2199.00, 1500.00, 0, 'active');
 SET @vtm_p8_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -492,7 +492,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p9, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p9, @vtm_vendor, 'VTM-VEST5-STD', (SELECT id FROM units WHERE code='set'), NULL, 299.00, 200.00, 1, 'active');
+(UUID(), @vtm_p9, @vtm_vendor, 'VTM-VEST5-STD', (SELECT id FROM units WHERE code='set'), 0.0000, 299.00, 200.00, 1, 'active');
 
 -- ===================== Product 10: Men's Boxer Shorts Cotton Pack of 3 (variant: size) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -506,13 +506,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p10, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p10, @vtm_vendor, 'VTM-BOXER3-M', (SELECT id FROM units WHERE code='set'), NULL, 349.00, 235.00, 1, 'active');
+(UUID(), @vtm_p10, @vtm_vendor, 'VTM-BOXER3-M', (SELECT id FROM units WHERE code='set'), 0.0000, 349.00, 235.00, 1, 'active');
 SET @vtm_p10_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p10, @vtm_vendor, 'VTM-BOXER3-L', (SELECT id FROM units WHERE code='set'), NULL, 349.00, 235.00, 0, 'active');
+(UUID(), @vtm_p10, @vtm_vendor, 'VTM-BOXER3-L', (SELECT id FROM units WHERE code='set'), 0.0000, 349.00, 235.00, 0, 'active');
 SET @vtm_p10_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p10, @vtm_vendor, 'VTM-BOXER3-XL', (SELECT id FROM units WHERE code='set'), NULL, 349.00, 235.00, 0, 'active');
+(UUID(), @vtm_p10, @vtm_vendor, 'VTM-BOXER3-XL', (SELECT id FROM units WHERE code='set'), 0.0000, 349.00, 235.00, 0, 'active');
 SET @vtm_p10_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -532,16 +532,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p11, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p11, @vtm_vendor, 'VTM-SWTR-M-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 849.00, 580.00, 1, 'active');
+(UUID(), @vtm_p11, @vtm_vendor, 'VTM-SWTR-M-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 849.00, 580.00, 1, 'active');
 SET @vtm_p11_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p11, @vtm_vendor, 'VTM-SWTR-L-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 849.00, 580.00, 0, 'active');
+(UUID(), @vtm_p11, @vtm_vendor, 'VTM-SWTR-L-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 849.00, 580.00, 0, 'active');
 SET @vtm_p11_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p11, @vtm_vendor, 'VTM-SWTR-M-MAR', (SELECT id FROM units WHERE code='pcs'), NULL, 849.00, 580.00, 0, 'active');
+(UUID(), @vtm_p11, @vtm_vendor, 'VTM-SWTR-M-MAR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 849.00, 580.00, 0, 'active');
 SET @vtm_p11_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p11, @vtm_vendor, 'VTM-SWTR-L-MAR', (SELECT id FROM units WHERE code='pcs'), NULL, 849.00, 580.00, 0, 'active');
+(UUID(), @vtm_p11, @vtm_vendor, 'VTM-SWTR-L-MAR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 849.00, 580.00, 0, 'active');
 SET @vtm_p11_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -566,16 +566,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p12, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p12, @vtm_vendor, 'VTM-TRKPNT-S', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 300.00, 1, 'active');
+(UUID(), @vtm_p12, @vtm_vendor, 'VTM-TRKPNT-S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 300.00, 1, 'active');
 SET @vtm_p12_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p12, @vtm_vendor, 'VTM-TRKPNT-M', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 300.00, 0, 'active');
+(UUID(), @vtm_p12, @vtm_vendor, 'VTM-TRKPNT-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 300.00, 0, 'active');
 SET @vtm_p12_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p12, @vtm_vendor, 'VTM-TRKPNT-L', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 300.00, 0, 'active');
+(UUID(), @vtm_p12, @vtm_vendor, 'VTM-TRKPNT-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 300.00, 0, 'active');
 SET @vtm_p12_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p12, @vtm_vendor, 'VTM-TRKPNT-XL', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 300.00, 0, 'active');
+(UUID(), @vtm_p12, @vtm_vendor, 'VTM-TRKPNT-XL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 300.00, 0, 'active');
 SET @vtm_p12_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -596,7 +596,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p13, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p13, @vtm_vendor, 'VTM-SHERWANI-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 4499.00, 3100.00, 1, 'active');
+(UUID(), @vtm_p13, @vtm_vendor, 'VTM-SHERWANI-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4499.00, 3100.00, 1, 'active');
 
 -- ===================== Product 14: Men's Cotton Handkerchief Pack of 12 (simple) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -610,7 +610,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p14, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p14, @vtm_vendor, 'VTM-HANKY12-STD', (SELECT id FROM units WHERE code='set'), NULL, 179.00, 110.00, 1, 'active');
+(UUID(), @vtm_p14, @vtm_vendor, 'VTM-HANKY12-STD', (SELECT id FROM units WHERE code='set'), 0.0000, 179.00, 110.00, 1, 'active');
 
 -- ===================== Product 15: Men's Formal Tie Silk (simple) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -624,7 +624,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p15, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p15, @vtm_vendor, 'VTM-TIE-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 299.00, 190.00, 1, 'active');
+(UUID(), @vtm_p15, @vtm_vendor, 'VTM-TIE-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 299.00, 190.00, 1, 'active');
 
 -- ===================== Product 16: Men's Leather Belt Formal (simple) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -638,7 +638,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p16, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p16, @vtm_vendor, 'VTM-BELT-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 499.00, 330.00, 1, 'active');
+(UUID(), @vtm_p16, @vtm_vendor, 'VTM-BELT-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 499.00, 330.00, 1, 'active');
 
 -- ===================== Product 17: Men's Cotton Undershirt Round Neck (simple) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -652,7 +652,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p17, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p17, @vtm_vendor, 'VTM-UNDVEST-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 179.00, 115.00, 1, 'active');
+(UUID(), @vtm_p17, @vtm_vendor, 'VTM-UNDVEST-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 179.00, 115.00, 1, 'active');
 
 -- ===================== Product 18: Men's Rain Jacket Waterproof Nylon (variant: size x color) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -666,16 +666,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p18, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p18, @vtm_vendor, 'VTM-RAINJKT-M-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 999.00, 680.00, 1, 'active');
+(UUID(), @vtm_p18, @vtm_vendor, 'VTM-RAINJKT-M-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 999.00, 680.00, 1, 'active');
 SET @vtm_p18_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p18, @vtm_vendor, 'VTM-RAINJKT-L-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 999.00, 680.00, 0, 'active');
+(UUID(), @vtm_p18, @vtm_vendor, 'VTM-RAINJKT-L-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 999.00, 680.00, 0, 'active');
 SET @vtm_p18_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p18, @vtm_vendor, 'VTM-RAINJKT-M-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 999.00, 680.00, 0, 'active');
+(UUID(), @vtm_p18, @vtm_vendor, 'VTM-RAINJKT-M-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 999.00, 680.00, 0, 'active');
 SET @vtm_p18_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p18, @vtm_vendor, 'VTM-RAINJKT-L-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 999.00, 680.00, 0, 'active');
+(UUID(), @vtm_p18, @vtm_vendor, 'VTM-RAINJKT-L-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 999.00, 680.00, 0, 'active');
 SET @vtm_p18_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -700,19 +700,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p19, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-S-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 270.00, 1, 'active');
+(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-S-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 270.00, 1, 'active');
 SET @vtm_p19_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-M-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 270.00, 0, 'active');
+(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-M-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 270.00, 0, 'active');
 SET @vtm_p19_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-L-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 270.00, 0, 'active');
+(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-L-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 270.00, 0, 'active');
 SET @vtm_p19_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-S-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 270.00, 0, 'active');
+(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-S-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 270.00, 0, 'active');
 SET @vtm_p19_v4 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-M-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 270.00, 0, 'active');
+(UUID(), @vtm_p19, @vtm_vendor, 'VTM-KURTI-M-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 270.00, 0, 'active');
 SET @vtm_p19_v5 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -739,16 +739,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p20, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p20, @vtm_vendor, 'VTM-ANARKALI-S', (SELECT id FROM units WHERE code='set'), NULL, 1499.00, 1020.00, 1, 'active');
+(UUID(), @vtm_p20, @vtm_vendor, 'VTM-ANARKALI-S', (SELECT id FROM units WHERE code='set'), 0.0000, 1499.00, 1020.00, 1, 'active');
 SET @vtm_p20_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p20, @vtm_vendor, 'VTM-ANARKALI-M', (SELECT id FROM units WHERE code='set'), NULL, 1499.00, 1020.00, 0, 'active');
+(UUID(), @vtm_p20, @vtm_vendor, 'VTM-ANARKALI-M', (SELECT id FROM units WHERE code='set'), 0.0000, 1499.00, 1020.00, 0, 'active');
 SET @vtm_p20_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p20, @vtm_vendor, 'VTM-ANARKALI-L', (SELECT id FROM units WHERE code='set'), NULL, 1499.00, 1020.00, 0, 'active');
+(UUID(), @vtm_p20, @vtm_vendor, 'VTM-ANARKALI-L', (SELECT id FROM units WHERE code='set'), 0.0000, 1499.00, 1020.00, 0, 'active');
 SET @vtm_p20_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p20, @vtm_vendor, 'VTM-ANARKALI-XL', (SELECT id FROM units WHERE code='set'), NULL, 1499.00, 1020.00, 0, 'active');
+(UUID(), @vtm_p20, @vtm_vendor, 'VTM-ANARKALI-XL', (SELECT id FROM units WHERE code='set'), 0.0000, 1499.00, 1020.00, 0, 'active');
 SET @vtm_p20_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -769,7 +769,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p21, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p21, @vtm_vendor, 'VTM-SAREEHL-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 949.00, 640.00, 1, 'active');
+(UUID(), @vtm_p21, @vtm_vendor, 'VTM-SAREEHL-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 949.00, 640.00, 1, 'active');
 
 -- ===================== Product 22: Women's Silk Saree Banarasi (simple) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -783,7 +783,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p22, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p22, @vtm_vendor, 'VTM-SAREEBN-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 4299.00, 2900.00, 1, 'active');
+(UUID(), @vtm_p22, @vtm_vendor, 'VTM-SAREEBN-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4299.00, 2900.00, 1, 'active');
 
 -- ===================== Product 23: Women's Palazzo Pants Rayon (variant: size x color) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -797,16 +797,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p23, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p23, @vtm_vendor, 'VTM-PALAZZO-S-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 349.00, 235.00, 1, 'active');
+(UUID(), @vtm_p23, @vtm_vendor, 'VTM-PALAZZO-S-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 349.00, 235.00, 1, 'active');
 SET @vtm_p23_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p23, @vtm_vendor, 'VTM-PALAZZO-M-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 349.00, 235.00, 0, 'active');
+(UUID(), @vtm_p23, @vtm_vendor, 'VTM-PALAZZO-M-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 349.00, 235.00, 0, 'active');
 SET @vtm_p23_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p23, @vtm_vendor, 'VTM-PALAZZO-L-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 349.00, 235.00, 0, 'active');
+(UUID(), @vtm_p23, @vtm_vendor, 'VTM-PALAZZO-L-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 349.00, 235.00, 0, 'active');
 SET @vtm_p23_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p23, @vtm_vendor, 'VTM-PALAZZO-M-BEG', (SELECT id FROM units WHERE code='pcs'), NULL, 349.00, 235.00, 0, 'active');
+(UUID(), @vtm_p23, @vtm_vendor, 'VTM-PALAZZO-M-BEG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 349.00, 235.00, 0, 'active');
 SET @vtm_p23_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -831,16 +831,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p24, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p24, @vtm_vendor, 'VTM-BLZRSET-S', (SELECT id FROM units WHERE code='set'), NULL, 1999.00, 1350.00, 1, 'active');
+(UUID(), @vtm_p24, @vtm_vendor, 'VTM-BLZRSET-S', (SELECT id FROM units WHERE code='set'), 0.0000, 1999.00, 1350.00, 1, 'active');
 SET @vtm_p24_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p24, @vtm_vendor, 'VTM-BLZRSET-M', (SELECT id FROM units WHERE code='set'), NULL, 1999.00, 1350.00, 0, 'active');
+(UUID(), @vtm_p24, @vtm_vendor, 'VTM-BLZRSET-M', (SELECT id FROM units WHERE code='set'), 0.0000, 1999.00, 1350.00, 0, 'active');
 SET @vtm_p24_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p24, @vtm_vendor, 'VTM-BLZRSET-L', (SELECT id FROM units WHERE code='set'), NULL, 1999.00, 1350.00, 0, 'active');
+(UUID(), @vtm_p24, @vtm_vendor, 'VTM-BLZRSET-L', (SELECT id FROM units WHERE code='set'), 0.0000, 1999.00, 1350.00, 0, 'active');
 SET @vtm_p24_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p24, @vtm_vendor, 'VTM-BLZRSET-XL', (SELECT id FROM units WHERE code='set'), NULL, 1999.00, 1350.00, 0, 'active');
+(UUID(), @vtm_p24, @vtm_vendor, 'VTM-BLZRSET-XL', (SELECT id FROM units WHERE code='set'), 0.0000, 1999.00, 1350.00, 0, 'active');
 SET @vtm_p24_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -861,16 +861,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p25, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p25, @vtm_vendor, 'VTM-NGHTSET-S-PNK', (SELECT id FROM units WHERE code='set'), NULL, 549.00, 370.00, 1, 'active');
+(UUID(), @vtm_p25, @vtm_vendor, 'VTM-NGHTSET-S-PNK', (SELECT id FROM units WHERE code='set'), 0.0000, 549.00, 370.00, 1, 'active');
 SET @vtm_p25_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p25, @vtm_vendor, 'VTM-NGHTSET-M-PNK', (SELECT id FROM units WHERE code='set'), NULL, 549.00, 370.00, 0, 'active');
+(UUID(), @vtm_p25, @vtm_vendor, 'VTM-NGHTSET-M-PNK', (SELECT id FROM units WHERE code='set'), 0.0000, 549.00, 370.00, 0, 'active');
 SET @vtm_p25_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p25, @vtm_vendor, 'VTM-NGHTSET-L-PNK', (SELECT id FROM units WHERE code='set'), NULL, 549.00, 370.00, 0, 'active');
+(UUID(), @vtm_p25, @vtm_vendor, 'VTM-NGHTSET-L-PNK', (SELECT id FROM units WHERE code='set'), 0.0000, 549.00, 370.00, 0, 'active');
 SET @vtm_p25_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p25, @vtm_vendor, 'VTM-NGHTSET-M-YEL', (SELECT id FROM units WHERE code='set'), NULL, 549.00, 370.00, 0, 'active');
+(UUID(), @vtm_p25, @vtm_vendor, 'VTM-NGHTSET-M-YEL', (SELECT id FROM units WHERE code='set'), 0.0000, 549.00, 370.00, 0, 'active');
 SET @vtm_p25_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -895,19 +895,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p26, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-S', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 300.00, 1, 'active');
+(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 300.00, 1, 'active');
 SET @vtm_p26_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-M', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 300.00, 0, 'active');
+(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 300.00, 0, 'active');
 SET @vtm_p26_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-L', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 300.00, 0, 'active');
+(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 300.00, 0, 'active');
 SET @vtm_p26_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-XL', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 300.00, 0, 'active');
+(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-XL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 300.00, 0, 'active');
 SET @vtm_p26_v4 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-XXL', (SELECT id FROM units WHERE code='pcs'), NULL, 449.00, 300.00, 0, 'active');
+(UUID(), @vtm_p26, @vtm_vendor, 'VTM-JEGGINGS-XXL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 449.00, 300.00, 0, 'active');
 SET @vtm_p26_v5 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -929,7 +929,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p27, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p27, @vtm_vendor, 'VTM-SHAWL-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 1099.00, 750.00, 1, 'active');
+(UUID(), @vtm_p27, @vtm_vendor, 'VTM-SHAWL-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1099.00, 750.00, 1, 'active');
 
 -- ===================== Product 28: Women's Cotton Leggings Pack of 3 (variant: size) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -943,16 +943,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p28, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p28, @vtm_vendor, 'VTM-LEGG3-S', (SELECT id FROM units WHERE code='set'), NULL, 399.00, 265.00, 1, 'active');
+(UUID(), @vtm_p28, @vtm_vendor, 'VTM-LEGG3-S', (SELECT id FROM units WHERE code='set'), 0.0000, 399.00, 265.00, 1, 'active');
 SET @vtm_p28_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p28, @vtm_vendor, 'VTM-LEGG3-M', (SELECT id FROM units WHERE code='set'), NULL, 399.00, 265.00, 0, 'active');
+(UUID(), @vtm_p28, @vtm_vendor, 'VTM-LEGG3-M', (SELECT id FROM units WHERE code='set'), 0.0000, 399.00, 265.00, 0, 'active');
 SET @vtm_p28_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p28, @vtm_vendor, 'VTM-LEGG3-L', (SELECT id FROM units WHERE code='set'), NULL, 399.00, 265.00, 0, 'active');
+(UUID(), @vtm_p28, @vtm_vendor, 'VTM-LEGG3-L', (SELECT id FROM units WHERE code='set'), 0.0000, 399.00, 265.00, 0, 'active');
 SET @vtm_p28_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p28, @vtm_vendor, 'VTM-LEGG3-XL', (SELECT id FROM units WHERE code='set'), NULL, 399.00, 265.00, 0, 'active');
+(UUID(), @vtm_p28, @vtm_vendor, 'VTM-LEGG3-XL', (SELECT id FROM units WHERE code='set'), 0.0000, 399.00, 265.00, 0, 'active');
 SET @vtm_p28_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -973,16 +973,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p29, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p29, @vtm_vendor, 'VTM-SHTOFF-S-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 499.00, 340.00, 1, 'active');
+(UUID(), @vtm_p29, @vtm_vendor, 'VTM-SHTOFF-S-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 499.00, 340.00, 1, 'active');
 SET @vtm_p29_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p29, @vtm_vendor, 'VTM-SHTOFF-M-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 499.00, 340.00, 0, 'active');
+(UUID(), @vtm_p29, @vtm_vendor, 'VTM-SHTOFF-M-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 499.00, 340.00, 0, 'active');
 SET @vtm_p29_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p29, @vtm_vendor, 'VTM-SHTOFF-L-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 499.00, 340.00, 0, 'active');
+(UUID(), @vtm_p29, @vtm_vendor, 'VTM-SHTOFF-L-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 499.00, 340.00, 0, 'active');
 SET @vtm_p29_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p29, @vtm_vendor, 'VTM-SHTOFF-M-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 499.00, 340.00, 0, 'active');
+(UUID(), @vtm_p29, @vtm_vendor, 'VTM-SHTOFF-M-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 499.00, 340.00, 0, 'active');
 SET @vtm_p29_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -1007,7 +1007,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p30, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p30, @vtm_vendor, 'VTM-DUPATTA-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 249.00, 160.00, 1, 'active');
+(UUID(), @vtm_p30, @vtm_vendor, 'VTM-DUPATTA-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 249.00, 160.00, 1, 'active');
 
 -- ===================== Product 31: Women's Maxi Dress Floral Print (variant: size) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -1021,13 +1021,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p31, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p31, @vtm_vendor, 'VTM-MAXIDRESS-S', (SELECT id FROM units WHERE code='pcs'), NULL, 899.00, 610.00, 1, 'active');
+(UUID(), @vtm_p31, @vtm_vendor, 'VTM-MAXIDRESS-S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 899.00, 610.00, 1, 'active');
 SET @vtm_p31_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p31, @vtm_vendor, 'VTM-MAXIDRESS-M', (SELECT id FROM units WHERE code='pcs'), NULL, 899.00, 610.00, 0, 'active');
+(UUID(), @vtm_p31, @vtm_vendor, 'VTM-MAXIDRESS-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 899.00, 610.00, 0, 'active');
 SET @vtm_p31_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p31, @vtm_vendor, 'VTM-MAXIDRESS-L', (SELECT id FROM units WHERE code='pcs'), NULL, 899.00, 610.00, 0, 'active');
+(UUID(), @vtm_p31, @vtm_vendor, 'VTM-MAXIDRESS-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 899.00, 610.00, 0, 'active');
 SET @vtm_p31_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -1047,7 +1047,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p32, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p32, @vtm_vendor, 'VTM-CAMI3-STD', (SELECT id FROM units WHERE code='set'), NULL, 349.00, 230.00, 1, 'active');
+(UUID(), @vtm_p32, @vtm_vendor, 'VTM-CAMI3-STD', (SELECT id FROM units WHERE code='set'), 0.0000, 349.00, 230.00, 1, 'active');
 
 -- ===================== Product 33: Women's Woolen Cardigan Full Sleeve (variant: size x color) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -1061,16 +1061,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p33, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p33, @vtm_vendor, 'VTM-CARDIGAN-M-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 999.00, 680.00, 1, 'active');
+(UUID(), @vtm_p33, @vtm_vendor, 'VTM-CARDIGAN-M-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 999.00, 680.00, 1, 'active');
 SET @vtm_p33_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p33, @vtm_vendor, 'VTM-CARDIGAN-L-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 999.00, 680.00, 0, 'active');
+(UUID(), @vtm_p33, @vtm_vendor, 'VTM-CARDIGAN-L-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 999.00, 680.00, 0, 'active');
 SET @vtm_p33_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p33, @vtm_vendor, 'VTM-CARDIGAN-M-MAR', (SELECT id FROM units WHERE code='pcs'), NULL, 999.00, 680.00, 0, 'active');
+(UUID(), @vtm_p33, @vtm_vendor, 'VTM-CARDIGAN-M-MAR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 999.00, 680.00, 0, 'active');
 SET @vtm_p33_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p33, @vtm_vendor, 'VTM-CARDIGAN-L-MAR', (SELECT id FROM units WHERE code='pcs'), NULL, 999.00, 680.00, 0, 'active');
+(UUID(), @vtm_p33, @vtm_vendor, 'VTM-CARDIGAN-L-MAR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 999.00, 680.00, 0, 'active');
 SET @vtm_p33_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -1095,7 +1095,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p34, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p34, @vtm_vendor, 'VTM-NIGHTY-STD', (SELECT id FROM units WHERE code='pcs'), NULL, 399.00, 260.00, 1, 'active');
+(UUID(), @vtm_p34, @vtm_vendor, 'VTM-NIGHTY-STD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 399.00, 260.00, 1, 'active');
 
 -- ===================== Product 35: Women's Scarf Cotton Printed Pack of 2 (simple) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -1109,7 +1109,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p35, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p35, @vtm_vendor, 'VTM-SCARF2-STD', (SELECT id FROM units WHERE code='set'), NULL, 199.00, 125.00, 1, 'active');
+(UUID(), @vtm_p35, @vtm_vendor, 'VTM-SCARF2-STD', (SELECT id FROM units WHERE code='set'), 0.0000, 199.00, 125.00, 1, 'active');
 
 -- ===================== Product 36: Women's Trench Coat Winter Wear (variant: size) =====================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -1123,16 +1123,16 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@vtm_p36, @vtm_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p36, @vtm_vendor, 'VTM-TRENCH-S', (SELECT id FROM units WHERE code='pcs'), NULL, 2299.00, 1550.00, 1, 'active');
+(UUID(), @vtm_p36, @vtm_vendor, 'VTM-TRENCH-S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2299.00, 1550.00, 1, 'active');
 SET @vtm_p36_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p36, @vtm_vendor, 'VTM-TRENCH-M', (SELECT id FROM units WHERE code='pcs'), NULL, 2299.00, 1550.00, 0, 'active');
+(UUID(), @vtm_p36, @vtm_vendor, 'VTM-TRENCH-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2299.00, 1550.00, 0, 'active');
 SET @vtm_p36_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p36, @vtm_vendor, 'VTM-TRENCH-L', (SELECT id FROM units WHERE code='pcs'), NULL, 2299.00, 1550.00, 0, 'active');
+(UUID(), @vtm_p36, @vtm_vendor, 'VTM-TRENCH-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2299.00, 1550.00, 0, 'active');
 SET @vtm_p36_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @vtm_p36, @vtm_vendor, 'VTM-TRENCH-XL', (SELECT id FROM units WHERE code='pcs'), NULL, 2299.00, 1550.00, 0, 'active');
+(UUID(), @vtm_p36, @vtm_vendor, 'VTM-TRENCH-XL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2299.00, 1550.00, 0, 'active');
 SET @vtm_p36_v4 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -1172,16 +1172,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p1, 'Low-top canvas sneakers with cushioned insole and rubber sole, available in multiple colours.', 'Manufactured at our Agra facility using breathable canvas uppers and vulcanised rubber outsoles for durability. Suitable for retailers stocking everyday casual footwear across age groups. Minimum order quantity of 12 pairs per colour, packed in export-standard cartons of 6.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p1, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p1, @efi_vendor, 'EFI-CVSNK-WHT', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 290.00, 1, 'active');
+(UUID(), @efi_p1, @efi_vendor, 'EFI-CVSNK-WHT', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 290.00, 1, 'active');
 SET @efi_p1_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p1, @efi_vendor, 'EFI-CVSNK-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @efi_p1, @efi_vendor, 'EFI-CVSNK-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @efi_p1_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p1, @efi_vendor, 'EFI-CVSNK-GRY', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @efi_p1, @efi_vendor, 'EFI-CVSNK-GRY', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @efi_p1_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p1, @efi_vendor, 'EFI-CVSNK-NVY', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @efi_p1, @efi_vendor, 'EFI-CVSNK-NVY', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @efi_p1_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p1_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White')),
@@ -1196,13 +1196,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p2, 'Genuine leather slip-on loafers with stitched sole and cushioned insole.', 'Crafted from top-grain leather sourced from certified tanneries, with a stitched leather sole for durability. Popular with retailers targeting the semi-formal casual segment. Supplied in size bands of Medium, Large and Extra Large with a minimum order of 12 pairs per size.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p2, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p2, @efi_vendor, 'EFI-LTLOAF-M', (SELECT id FROM units WHERE code='pair'), NULL, 980.00, 680.00, 1, 'active');
+(UUID(), @efi_p2, @efi_vendor, 'EFI-LTLOAF-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 980.00, 680.00, 1, 'active');
 SET @efi_p2_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p2, @efi_vendor, 'EFI-LTLOAF-L', (SELECT id FROM units WHERE code='pair'), NULL, 980.00, 680.00, 0, 'active');
+(UUID(), @efi_p2, @efi_vendor, 'EFI-LTLOAF-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 980.00, 680.00, 0, 'active');
 SET @efi_p2_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p2, @efi_vendor, 'EFI-LTLOAF-XL', (SELECT id FROM units WHERE code='pair'), NULL, 980.00, 680.00, 0, 'active');
+(UUID(), @efi_p2, @efi_vendor, 'EFI-LTLOAF-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 980.00, 680.00, 0, 'active');
 SET @efi_p2_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p2_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
@@ -1216,7 +1216,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p3, 'Budget-friendly PU slip-on casual shoes with EVA sole, single SKU bulk pack.', 'Made from synthetic PU leather with a moulded EVA sole for lightweight comfort. Ideal for value retailers and institutional buyers needing large uniform-size batches. Minimum order quantity of 24 pairs, supplied in cartons of 12.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p3, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p3, @efi_vendor, 'EFI-PUSLIP-001', (SELECT id FROM units WHERE code='pair'), NULL, 380.00, 260.00, 1, 'active');
+(UUID(), @efi_p3, @efi_vendor, 'EFI-PUSLIP-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 380.00, 260.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-casual'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pair'), 'Rubber Flip Flops - Bulk Pack', 'efi-rubber-flip-flops-bulk-pack', 'Basic rubber flip flops manufactured for bulk institutional and export orders.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 100, 50, 'both');
@@ -1225,7 +1225,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p4, 'Moulded rubber flip flops for bulk wholesale and export orders.', 'Single-piece moulded rubber construction, water-resistant and low-cost per pair. Commonly ordered by hospitality chains, hostels and export traders in high volumes. Minimum order quantity of 100 pairs, packed 50 pairs per carton.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p4, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p4, @efi_vendor, 'EFI-FLIPFL-001', (SELECT id FROM units WHERE code='pair'), NULL, 85.00, 55.00, 1, 'active');
+(UUID(), @efi_p4, @efi_vendor, 'EFI-FLIPFL-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 85.00, 55.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-casual'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pair'), 'Espadrille Canvas Shoes', 'efi-espadrille-canvas-shoes', 'Jute-soled espadrille canvas shoes with a relaxed casual fit for warm-weather retail.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 12, 6, 'both');
@@ -1234,13 +1234,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p5, 'Canvas espadrilles with jute-wrapped sole, available in three colourways.', 'Woven canvas uppers stitched onto a jute-wrapped rubber sole for a classic espadrille look. Suited for summer collections and resort-wear retailers. Minimum order of 12 pairs per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p5, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p5, @efi_vendor, 'EFI-ESPAD-BEG', (SELECT id FROM units WHERE code='pair'), NULL, 560.00, 385.00, 1, 'active');
+(UUID(), @efi_p5, @efi_vendor, 'EFI-ESPAD-BEG', (SELECT id FROM units WHERE code='pair'), 0.0000, 560.00, 385.00, 1, 'active');
 SET @efi_p5_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p5, @efi_vendor, 'EFI-ESPAD-NVY', (SELECT id FROM units WHERE code='pair'), NULL, 560.00, 385.00, 0, 'active');
+(UUID(), @efi_p5, @efi_vendor, 'EFI-ESPAD-NVY', (SELECT id FROM units WHERE code='pair'), 0.0000, 560.00, 385.00, 0, 'active');
 SET @efi_p5_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p5, @efi_vendor, 'EFI-ESPAD-GRY', (SELECT id FROM units WHERE code='pair'), NULL, 560.00, 385.00, 0, 'active');
+(UUID(), @efi_p5, @efi_vendor, 'EFI-ESPAD-GRY', (SELECT id FROM units WHERE code='pair'), 0.0000, 560.00, 385.00, 0, 'active');
 SET @efi_p5_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p5_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige')),
@@ -1254,7 +1254,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p6, 'Leather boat shoes with siped non-marking rubber outsole.', 'Hand-lasted leather uppers combined with a siped rubber outsole for traction on smooth surfaces. Positioned for mid-tier casual retail and smart-casual bundles. Minimum order quantity of 12 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p6, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p6, @efi_vendor, 'EFI-BOATSH-001', (SELECT id FROM units WHERE code='pair'), NULL, 920.00, 640.00, 1, 'active');
+(UUID(), @efi_p6, @efi_vendor, 'EFI-BOATSH-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 920.00, 640.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-casual'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pair'), 'EVA Sole Casual Sandals', 'efi-eva-sole-casual-sandals', 'Everyday casual sandals with a moulded EVA sole and adjustable straps.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 12, 'both');
@@ -1263,16 +1263,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p7, 'Adjustable-strap casual sandals with lightweight EVA sole across four size bands.', 'Moulded EVA soling combined with synthetic straps for an everyday casual sandal. Popular with regional distributors for high-turnover general trade. Minimum order of 24 pairs per size band.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p7, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p7, @efi_vendor, 'EFI-EVASND-S', (SELECT id FROM units WHERE code='pair'), NULL, 260.00, 175.00, 1, 'active');
+(UUID(), @efi_p7, @efi_vendor, 'EFI-EVASND-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 260.00, 175.00, 1, 'active');
 SET @efi_p7_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p7, @efi_vendor, 'EFI-EVASND-M', (SELECT id FROM units WHERE code='pair'), NULL, 260.00, 175.00, 0, 'active');
+(UUID(), @efi_p7, @efi_vendor, 'EFI-EVASND-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 260.00, 175.00, 0, 'active');
 SET @efi_p7_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p7, @efi_vendor, 'EFI-EVASND-L', (SELECT id FROM units WHERE code='pair'), NULL, 260.00, 175.00, 0, 'active');
+(UUID(), @efi_p7, @efi_vendor, 'EFI-EVASND-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 260.00, 175.00, 0, 'active');
 SET @efi_p7_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p7, @efi_vendor, 'EFI-EVASND-XL', (SELECT id FROM units WHERE code='pair'), NULL, 260.00, 175.00, 0, 'active');
+(UUID(), @efi_p7, @efi_vendor, 'EFI-EVASND-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 260.00, 175.00, 0, 'active');
 SET @efi_p7_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p7_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
@@ -1287,7 +1287,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p8, 'Suede slip-on derby shoe with cushioned footbed, single-SKU wholesale batch.', 'Genuine suede leather uppers with a memory-foam-cushioned footbed and flexible sole unit. Designed for boutique casual footwear retailers seeking a premium single-batch product. Minimum order quantity of 12 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p8, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p8, @efi_vendor, 'EFI-SUEDER-001', (SELECT id FROM units WHERE code='pair'), NULL, 980.00, 680.00, 1, 'active');
+(UUID(), @efi_p8, @efi_vendor, 'EFI-SUEDER-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 980.00, 680.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-casual'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pair'), 'Women''s Casual Ballerina Flats', 'efi-womens-casual-ballerina-flats', 'Soft synthetic-leather ballerina flats with an elasticated topline for all-day comfort.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 12, 'both');
@@ -1296,16 +1296,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p9, 'Ballerina flats with elasticated topline and flexible sole, four colourways.', 'Synthetic leather uppers with an elasticated topline for secure fit and a flexible PU sole for everyday comfort. Suited for women''s casual footwear counters in department and general retail. Minimum order of 24 pairs per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p9, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p9, @efi_vendor, 'EFI-BALFLT-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 290.00, 1, 'active');
+(UUID(), @efi_p9, @efi_vendor, 'EFI-BALFLT-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 290.00, 1, 'active');
 SET @efi_p9_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p9, @efi_vendor, 'EFI-BALFLT-RED', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @efi_p9, @efi_vendor, 'EFI-BALFLT-RED', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @efi_p9_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p9, @efi_vendor, 'EFI-BALFLT-BEG', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @efi_p9, @efi_vendor, 'EFI-BALFLT-BEG', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @efi_p9_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p9, @efi_vendor, 'EFI-BALFLT-PNK', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @efi_p9, @efi_vendor, 'EFI-BALFLT-PNK', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @efi_p9_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p9_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black')),
@@ -1320,16 +1320,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p10, 'High-top canvas sneakers with padded ankle collar, size x colour matrix.', 'Reinforced canvas uppers with a padded ankle collar and vulcanised rubber cupsole. Offered in a size-by-colour matrix to let retailers stock a compact but complete assortment. Minimum order of 12 pairs per size/colour combination.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p10, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p10, @efi_vendor, 'EFI-HTOPSNK-M-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 720.00, 495.00, 1, 'active');
+(UUID(), @efi_p10, @efi_vendor, 'EFI-HTOPSNK-M-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 720.00, 495.00, 1, 'active');
 SET @efi_p10_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p10, @efi_vendor, 'EFI-HTOPSNK-M-WHT', (SELECT id FROM units WHERE code='pair'), NULL, 720.00, 495.00, 0, 'active');
+(UUID(), @efi_p10, @efi_vendor, 'EFI-HTOPSNK-M-WHT', (SELECT id FROM units WHERE code='pair'), 0.0000, 720.00, 495.00, 0, 'active');
 SET @efi_p10_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p10, @efi_vendor, 'EFI-HTOPSNK-L-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 720.00, 495.00, 0, 'active');
+(UUID(), @efi_p10, @efi_vendor, 'EFI-HTOPSNK-L-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 720.00, 495.00, 0, 'active');
 SET @efi_p10_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p10, @efi_vendor, 'EFI-HTOPSNK-L-WHT', (SELECT id FROM units WHERE code='pair'), NULL, 720.00, 495.00, 0, 'active');
+(UUID(), @efi_p10, @efi_vendor, 'EFI-HTOPSNK-L-WHT', (SELECT id FROM units WHERE code='pair'), 0.0000, 720.00, 495.00, 0, 'active');
 SET @efi_p10_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p10_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
@@ -1348,7 +1348,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p11, 'Cushioned everyday walking shoe with mesh panels, single-SKU wholesale batch.', 'Dual-density EVA midsole paired with breathable mesh side panels for extended daily wear. Targeted at pharmacy chains and general footwear retailers stocking comfort-focused ranges. Minimum order quantity of 12 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p11, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p11, @efi_vendor, 'EFI-WALKSH-001', (SELECT id FROM units WHERE code='pair'), NULL, 850.00, 590.00, 1, 'active');
+(UUID(), @efi_p11, @efi_vendor, 'EFI-WALKSH-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 850.00, 590.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-casual'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pair'), 'PVC Casual Clogs', 'efi-pvc-casual-clogs', 'Perforated PVC clogs with backstrap, moulded in a single piece for easy cleaning and durability.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 12, 'both');
@@ -1357,13 +1357,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p12, 'Single-piece moulded PVC clogs with ventilation holes, three colourways.', 'Injection-moulded PVC construction with ventilation perforations and an adjustable backstrap. Popular with kitchen-staff uniform suppliers and casual footwear distributors. Minimum order of 24 pairs per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p12, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p12, @efi_vendor, 'EFI-PVCCLG-BLU', (SELECT id FROM units WHERE code='pair'), NULL, 310.00, 210.00, 1, 'active');
+(UUID(), @efi_p12, @efi_vendor, 'EFI-PVCCLG-BLU', (SELECT id FROM units WHERE code='pair'), 0.0000, 310.00, 210.00, 1, 'active');
 SET @efi_p12_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p12, @efi_vendor, 'EFI-PVCCLG-GRN', (SELECT id FROM units WHERE code='pair'), NULL, 310.00, 210.00, 0, 'active');
+(UUID(), @efi_p12, @efi_vendor, 'EFI-PVCCLG-GRN', (SELECT id FROM units WHERE code='pair'), 0.0000, 310.00, 210.00, 0, 'active');
 SET @efi_p12_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p12, @efi_vendor, 'EFI-PVCCLG-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 310.00, 210.00, 0, 'active');
+(UUID(), @efi_p12, @efi_vendor, 'EFI-PVCCLG-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 310.00, 210.00, 0, 'active');
 SET @efi_p12_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p12_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue')),
@@ -1379,19 +1379,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p13, 'Genuine leather black Oxford formal shoes across five size bands.', 'Full-grain leather uppers with closed lacing and a leather-lined interior for a classic formal silhouette. Manufactured to order for corporate uniform suppliers and formal-wear retailers. Minimum order of 12 pairs per size band.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p13, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-S', (SELECT id FROM units WHERE code='pair'), NULL, 1550.00, 1050.00, 1, 'active');
+(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 1550.00, 1050.00, 1, 'active');
 SET @efi_p13_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-M', (SELECT id FROM units WHERE code='pair'), NULL, 1550.00, 1050.00, 0, 'active');
+(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 1550.00, 1050.00, 0, 'active');
 SET @efi_p13_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-L', (SELECT id FROM units WHERE code='pair'), NULL, 1550.00, 1050.00, 0, 'active');
+(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 1550.00, 1050.00, 0, 'active');
 SET @efi_p13_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-XL', (SELECT id FROM units WHERE code='pair'), NULL, 1550.00, 1050.00, 0, 'active');
+(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 1550.00, 1050.00, 0, 'active');
 SET @efi_p13_v4 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-XXL', (SELECT id FROM units WHERE code='pair'), NULL, 1550.00, 1050.00, 0, 'active');
+(UUID(), @efi_p13, @efi_vendor, 'EFI-OXFBLK-XXL', (SELECT id FROM units WHERE code='pair'), 0.0000, 1550.00, 1050.00, 0, 'active');
 SET @efi_p13_v5 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p13_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
@@ -1407,13 +1407,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p14, 'Genuine leather derby formal shoes with open lacing, three colourways.', 'Open-lacing derby construction in genuine leather with a Goodyear-inspired welt for durability and resoling. Suited for corporate formal-wear ranges and export orders. Minimum order of 12 pairs per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p14, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p14, @efi_vendor, 'EFI-LDRDBY-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 1650.00, 1120.00, 1, 'active');
+(UUID(), @efi_p14, @efi_vendor, 'EFI-LDRDBY-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 1650.00, 1120.00, 1, 'active');
 SET @efi_p14_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p14, @efi_vendor, 'EFI-LDRDBY-MRN', (SELECT id FROM units WHERE code='pair'), NULL, 1650.00, 1120.00, 0, 'active');
+(UUID(), @efi_p14, @efi_vendor, 'EFI-LDRDBY-MRN', (SELECT id FROM units WHERE code='pair'), 0.0000, 1650.00, 1120.00, 0, 'active');
 SET @efi_p14_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p14, @efi_vendor, 'EFI-LDRDBY-BEG', (SELECT id FROM units WHERE code='pair'), NULL, 1650.00, 1120.00, 0, 'active');
+(UUID(), @efi_p14, @efi_vendor, 'EFI-LDRDBY-BEG', (SELECT id FROM units WHERE code='pair'), 0.0000, 1650.00, 1120.00, 0, 'active');
 SET @efi_p14_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p14_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black')),
@@ -1427,7 +1427,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p15, 'Wingtip brogue formal shoes with perforated detailing, single-SKU wholesale batch.', 'Genuine leather uppers with classic wingtip broguing and a leather sole unit. Aimed at premium formal-wear retailers and export buyers. Minimum order quantity of 12 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p15, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p15, @efi_vendor, 'EFI-BROGUE-001', (SELECT id FROM units WHERE code='pair'), NULL, 1580.00, 1070.00, 1, 'active');
+(UUID(), @efi_p15, @efi_vendor, 'EFI-BROGUE-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 1580.00, 1070.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-formal'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pair'), 'Leather Monk Strap Formal Shoes', 'efi-leather-monk-strap-formal-shoes', 'Double monk-strap formal shoes in genuine leather with polished buckle hardware.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 6, 6, 'both');
@@ -1436,13 +1436,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p16, 'Double monk-strap leather formal shoes across three size bands.', 'Genuine leather uppers with dual buckle straps and a leather sole for a premium formal finish. Positioned for boutique formal-wear retailers and corporate gifting programmes. Minimum order of 6 pairs per size band.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p16, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p16, @efi_vendor, 'EFI-MONKST-M', (SELECT id FROM units WHERE code='pair'), NULL, 1720.00, 1170.00, 1, 'active');
+(UUID(), @efi_p16, @efi_vendor, 'EFI-MONKST-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 1720.00, 1170.00, 1, 'active');
 SET @efi_p16_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p16, @efi_vendor, 'EFI-MONKST-L', (SELECT id FROM units WHERE code='pair'), NULL, 1720.00, 1170.00, 0, 'active');
+(UUID(), @efi_p16, @efi_vendor, 'EFI-MONKST-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 1720.00, 1170.00, 0, 'active');
 SET @efi_p16_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p16, @efi_vendor, 'EFI-MONKST-XL', (SELECT id FROM units WHERE code='pair'), NULL, 1720.00, 1170.00, 0, 'active');
+(UUID(), @efi_p16, @efi_vendor, 'EFI-MONKST-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 1720.00, 1170.00, 0, 'active');
 SET @efi_p16_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p16_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
@@ -1456,7 +1456,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p17, 'Black leather formal slip-on loafers, single-SKU wholesale batch.', 'Leather uppers finished with a low-profile leather sole for a laceless formal option suited to daily office wear. Targeted at uniform suppliers and formal-wear retailers. Minimum order quantity of 12 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p17, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p17, @efi_vendor, 'EFI-SLPLOAF-001', (SELECT id FROM units WHERE code='pair'), NULL, 1320.00, 900.00, 1, 'active');
+(UUID(), @efi_p17, @efi_vendor, 'EFI-SLPLOAF-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 1320.00, 900.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-formal'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pair'), 'Patent Leather Formal Shoes', 'efi-patent-leather-formal-shoes', 'High-gloss patent leather formal shoes suited for occasion wear and uniformed staff.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 12, 6, 'both');
@@ -1465,7 +1465,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p18, 'High-gloss patent leather formal shoes, single-SKU wholesale batch.', 'Patent-finish leather uppers on a moulded sole unit for a durable high-shine formal shoe. Common in hospitality and hotel-staff uniform programmes. Minimum order quantity of 12 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p18, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p18, @efi_vendor, 'EFI-PATENT-001', (SELECT id FROM units WHERE code='pair'), NULL, 1460.00, 990.00, 1, 'active');
+(UUID(), @efi_p18, @efi_vendor, 'EFI-PATENT-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 1460.00, 990.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-formal'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pair'), 'Men''s Formal Cap-Toe Oxford', 'efi-mens-formal-cap-toe-oxford', 'Cap-toe Oxford formal shoes in genuine leather with a stitched apron detail.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 6, 6, 'both');
@@ -1474,10 +1474,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p19, 'Cap-toe Oxford formal shoes with stitched apron, two colourways.', 'Genuine leather uppers with a stitched cap-toe apron for a formal executive look. Offered in two finishes for boutique and export orders. Minimum order of 6 pairs per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p19, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p19, @efi_vendor, 'EFI-CAPOXF-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 1680.00, 1140.00, 1, 'active');
+(UUID(), @efi_p19, @efi_vendor, 'EFI-CAPOXF-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 1680.00, 1140.00, 1, 'active');
 SET @efi_p19_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p19, @efi_vendor, 'EFI-CAPOXF-MRN', (SELECT id FROM units WHERE code='pair'), NULL, 1680.00, 1140.00, 0, 'active');
+(UUID(), @efi_p19, @efi_vendor, 'EFI-CAPOXF-MRN', (SELECT id FROM units WHERE code='pair'), 0.0000, 1680.00, 1140.00, 0, 'active');
 SET @efi_p19_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p19_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black')),
@@ -1490,16 +1490,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p20, 'Closed-toe block heel formal pumps across four size bands.', 'Synthetic leather uppers on a stable block heel with a cushioned insole for all-day office comfort. Targeted at corporate uniform and women''s formal-wear retailers. Minimum order of 12 pairs per size band.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p20, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p20, @efi_vendor, 'EFI-BHPUMP-S', (SELECT id FROM units WHERE code='pair'), NULL, 1120.00, 760.00, 1, 'active');
+(UUID(), @efi_p20, @efi_vendor, 'EFI-BHPUMP-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 1120.00, 760.00, 1, 'active');
 SET @efi_p20_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p20, @efi_vendor, 'EFI-BHPUMP-M', (SELECT id FROM units WHERE code='pair'), NULL, 1120.00, 760.00, 0, 'active');
+(UUID(), @efi_p20, @efi_vendor, 'EFI-BHPUMP-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 1120.00, 760.00, 0, 'active');
 SET @efi_p20_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p20, @efi_vendor, 'EFI-BHPUMP-L', (SELECT id FROM units WHERE code='pair'), NULL, 1120.00, 760.00, 0, 'active');
+(UUID(), @efi_p20, @efi_vendor, 'EFI-BHPUMP-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 1120.00, 760.00, 0, 'active');
 SET @efi_p20_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p20, @efi_vendor, 'EFI-BHPUMP-XL', (SELECT id FROM units WHERE code='pair'), NULL, 1120.00, 760.00, 0, 'active');
+(UUID(), @efi_p20, @efi_vendor, 'EFI-BHPUMP-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 1120.00, 760.00, 0, 'active');
 SET @efi_p20_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p20_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
@@ -1514,7 +1514,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p21, 'Leather Chelsea boots with elastic gussets, single-SKU wholesale batch.', 'Genuine leather uppers with elastic side gussets and a pull tab for easy wear, finished with a leather sole. Suited for premium formal and smart-casual retail lines. Minimum order quantity of 6 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p21, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p21, @efi_vendor, 'EFI-CHELBT-001', (SELECT id FROM units WHERE code='pair'), NULL, 1850.00, 1260.00, 1, 'active');
+(UUID(), @efi_p21, @efi_vendor, 'EFI-CHELBT-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 1850.00, 1260.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-formal'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pair'), 'Leather Formal Derby Shoes - Beige', 'efi-leather-formal-derby-shoes-beige', 'Beige genuine leather derby formal shoes across four size bands, finished with a stitched welt.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 12, 6, 'both');
@@ -1523,16 +1523,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p22, 'Beige leather derby formal shoes with stitched welt, four size bands.', 'Genuine leather uppers in a beige finish with a stitched welt sole for durability and resoling. Suited for formal-wear retailers seeking a lighter-toned option alongside classic black and brown ranges. Minimum order of 12 pairs per size band.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p22, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p22, @efi_vendor, 'EFI-LDRBEG-M', (SELECT id FROM units WHERE code='pair'), NULL, 1620.00, 1100.00, 1, 'active');
+(UUID(), @efi_p22, @efi_vendor, 'EFI-LDRBEG-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 1620.00, 1100.00, 1, 'active');
 SET @efi_p22_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p22, @efi_vendor, 'EFI-LDRBEG-L', (SELECT id FROM units WHERE code='pair'), NULL, 1620.00, 1100.00, 0, 'active');
+(UUID(), @efi_p22, @efi_vendor, 'EFI-LDRBEG-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 1620.00, 1100.00, 0, 'active');
 SET @efi_p22_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p22, @efi_vendor, 'EFI-LDRBEG-XL', (SELECT id FROM units WHERE code='pair'), NULL, 1620.00, 1100.00, 0, 'active');
+(UUID(), @efi_p22, @efi_vendor, 'EFI-LDRBEG-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 1620.00, 1100.00, 0, 'active');
 SET @efi_p22_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p22, @efi_vendor, 'EFI-LDRBEG-XXL', (SELECT id FROM units WHERE code='pair'), NULL, 1620.00, 1100.00, 0, 'active');
+(UUID(), @efi_p22, @efi_vendor, 'EFI-LDRBEG-XXL', (SELECT id FROM units WHERE code='pair'), 0.0000, 1620.00, 1100.00, 0, 'active');
 SET @efi_p22_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p22_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
@@ -1547,7 +1547,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p23, 'Single buckle-strap formal shoes, single-SKU wholesale batch.', 'Genuine leather uppers with a single adjustable buckle strap and a leather sole unit. Suited for uniform suppliers and formal-wear retailers seeking a laceless option. Minimum order quantity of 12 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p23, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p23, @efi_vendor, 'EFI-BUCKST-001', (SELECT id FROM units WHERE code='pair'), NULL, 1420.00, 965.00, 1, 'active');
+(UUID(), @efi_p23, @efi_vendor, 'EFI-BUCKST-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 1420.00, 965.00, 1, 'active');
 
 -- ============ SPORTS ============
 
@@ -1558,13 +1558,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p24, 'Lightweight mesh running shoes with EVA midsole, three colourways.', 'Breathable engineered mesh uppers combined with a moulded EVA midsole for cushioned daily running. Suited for sports retailers and gym-wear bundlers. Minimum order of 12 pairs per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p24, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p24, @efi_vendor, 'EFI-RUNMSH-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 920.00, 630.00, 1, 'active');
+(UUID(), @efi_p24, @efi_vendor, 'EFI-RUNMSH-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 920.00, 630.00, 1, 'active');
 SET @efi_p24_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p24, @efi_vendor, 'EFI-RUNMSH-BLU', (SELECT id FROM units WHERE code='pair'), NULL, 920.00, 630.00, 0, 'active');
+(UUID(), @efi_p24, @efi_vendor, 'EFI-RUNMSH-BLU', (SELECT id FROM units WHERE code='pair'), 0.0000, 920.00, 630.00, 0, 'active');
 SET @efi_p24_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p24, @efi_vendor, 'EFI-RUNMSH-GRY', (SELECT id FROM units WHERE code='pair'), NULL, 920.00, 630.00, 0, 'active');
+(UUID(), @efi_p24, @efi_vendor, 'EFI-RUNMSH-GRY', (SELECT id FROM units WHERE code='pair'), 0.0000, 920.00, 630.00, 0, 'active');
 SET @efi_p24_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p24_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black')),
@@ -1578,16 +1578,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p25, 'Women''s cross-training shoes with supportive midsole, four size bands.', 'Synthetic mesh and overlay uppers on a supportive EVA midsole with a multi-directional grip outsole for cross-training. Targeted at fitness-wear retailers and gym supply chains. Minimum order of 12 pairs per size band.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p25, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p25, @efi_vendor, 'EFI-TRNWMN-S', (SELECT id FROM units WHERE code='pair'), NULL, 860.00, 590.00, 1, 'active');
+(UUID(), @efi_p25, @efi_vendor, 'EFI-TRNWMN-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 860.00, 590.00, 1, 'active');
 SET @efi_p25_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p25, @efi_vendor, 'EFI-TRNWMN-M', (SELECT id FROM units WHERE code='pair'), NULL, 860.00, 590.00, 0, 'active');
+(UUID(), @efi_p25, @efi_vendor, 'EFI-TRNWMN-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 860.00, 590.00, 0, 'active');
 SET @efi_p25_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p25, @efi_vendor, 'EFI-TRNWMN-L', (SELECT id FROM units WHERE code='pair'), NULL, 860.00, 590.00, 0, 'active');
+(UUID(), @efi_p25, @efi_vendor, 'EFI-TRNWMN-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 860.00, 590.00, 0, 'active');
 SET @efi_p25_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p25, @efi_vendor, 'EFI-TRNWMN-XL', (SELECT id FROM units WHERE code='pair'), NULL, 860.00, 590.00, 0, 'active');
+(UUID(), @efi_p25, @efi_vendor, 'EFI-TRNWMN-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 860.00, 590.00, 0, 'active');
 SET @efi_p25_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p25_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
@@ -1602,7 +1602,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p26, 'Moulded rubber-stud football boots, single-SKU wholesale batch.', 'Synthetic leather uppers on a firm-ground moulded rubber stud outsole for turf and hard-ground matches. Commonly ordered by sports academies and school kit suppliers. Minimum order quantity of 24 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p26, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p26, @efi_vendor, 'EFI-FBSTUD-001', (SELECT id FROM units WHERE code='pair'), NULL, 710.00, 480.00, 1, 'active');
+(UUID(), @efi_p26, @efi_vendor, 'EFI-FBSTUD-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 710.00, 480.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-sports'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pair'), 'Cricket Spikes Shoes', 'efi-cricket-spikes-shoes', 'Cricket spike shoes with removable rubber spikes and reinforced toe cap for bowlers and fielders.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 6, 6, 'both');
@@ -1611,13 +1611,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p27, 'Cricket spike shoes with removable spikes, three size bands.', 'Synthetic leather uppers with a reinforced toe cap and removable rubber spike outsole for grip on the pitch. Supplied to cricket academies and sports equipment distributors. Minimum order of 6 pairs per size band.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p27, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p27, @efi_vendor, 'EFI-CRKSPK-M', (SELECT id FROM units WHERE code='pair'), NULL, 960.00, 650.00, 1, 'active');
+(UUID(), @efi_p27, @efi_vendor, 'EFI-CRKSPK-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 960.00, 650.00, 1, 'active');
 SET @efi_p27_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p27, @efi_vendor, 'EFI-CRKSPK-L', (SELECT id FROM units WHERE code='pair'), NULL, 960.00, 650.00, 0, 'active');
+(UUID(), @efi_p27, @efi_vendor, 'EFI-CRKSPK-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 960.00, 650.00, 0, 'active');
 SET @efi_p27_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p27, @efi_vendor, 'EFI-CRKSPK-XL', (SELECT id FROM units WHERE code='pair'), NULL, 960.00, 650.00, 0, 'active');
+(UUID(), @efi_p27, @efi_vendor, 'EFI-CRKSPK-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 960.00, 650.00, 0, 'active');
 SET @efi_p27_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p27_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
@@ -1631,7 +1631,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p28, 'Non-marking gum rubber sole badminton court shoes, single-SKU wholesale batch.', 'Breathable synthetic uppers with lateral support panels and a non-marking gum rubber outsole for indoor courts. Supplied to badminton academies and sports retailers. Minimum order quantity of 12 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p28, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p28, @efi_vendor, 'EFI-BADCRT-001', (SELECT id FROM units WHERE code='pair'), NULL, 810.00, 550.00, 1, 'active');
+(UUID(), @efi_p28, @efi_vendor, 'EFI-BADCRT-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 810.00, 550.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-sports'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pair'), 'Men''s Gym Training Shoes', 'efi-mens-gym-training-shoes', 'Gym training shoes with a flat stable base and breathable mesh uppers for weightlifting and cross-training.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 12, 6, 'both');
@@ -1640,13 +1640,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p29, 'Flat-base gym training shoes with breathable mesh, three colourways.', 'Breathable mesh uppers on a flat, stable outsole designed for weightlifting and general gym training. Aimed at fitness equipment retailers and gym chains. Minimum order of 12 pairs per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p29, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p29, @efi_vendor, 'EFI-GYMTRN-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 890.00, 610.00, 1, 'active');
+(UUID(), @efi_p29, @efi_vendor, 'EFI-GYMTRN-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 890.00, 610.00, 1, 'active');
 SET @efi_p29_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p29, @efi_vendor, 'EFI-GYMTRN-WHT', (SELECT id FROM units WHERE code='pair'), NULL, 890.00, 610.00, 0, 'active');
+(UUID(), @efi_p29, @efi_vendor, 'EFI-GYMTRN-WHT', (SELECT id FROM units WHERE code='pair'), 0.0000, 890.00, 610.00, 0, 'active');
 SET @efi_p29_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p29, @efi_vendor, 'EFI-GYMTRN-RED', (SELECT id FROM units WHERE code='pair'), NULL, 890.00, 610.00, 0, 'active');
+(UUID(), @efi_p29, @efi_vendor, 'EFI-GYMTRN-RED', (SELECT id FROM units WHERE code='pair'), 0.0000, 890.00, 610.00, 0, 'active');
 SET @efi_p29_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p29_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black')),
@@ -1660,16 +1660,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p30, 'Waterproof high-ankle trekking boots with lugged sole, four size bands.', 'Water-resistant synthetic and mesh uppers with a padded high-ankle collar and deep-lugged rubber outsole for off-road traction. Supplied to outdoor and adventure-gear retailers. Minimum order of 6 pairs per size band.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p30, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p30, @efi_vendor, 'EFI-TREKBT-M', (SELECT id FROM units WHERE code='pair'), NULL, 1650.00, 1120.00, 1, 'active');
+(UUID(), @efi_p30, @efi_vendor, 'EFI-TREKBT-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 1650.00, 1120.00, 1, 'active');
 SET @efi_p30_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p30, @efi_vendor, 'EFI-TREKBT-L', (SELECT id FROM units WHERE code='pair'), NULL, 1650.00, 1120.00, 0, 'active');
+(UUID(), @efi_p30, @efi_vendor, 'EFI-TREKBT-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 1650.00, 1120.00, 0, 'active');
 SET @efi_p30_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p30, @efi_vendor, 'EFI-TREKBT-XL', (SELECT id FROM units WHERE code='pair'), NULL, 1650.00, 1120.00, 0, 'active');
+(UUID(), @efi_p30, @efi_vendor, 'EFI-TREKBT-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 1650.00, 1120.00, 0, 'active');
 SET @efi_p30_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p30, @efi_vendor, 'EFI-TREKBT-XXL', (SELECT id FROM units WHERE code='pair'), NULL, 1650.00, 1120.00, 0, 'active');
+(UUID(), @efi_p30, @efi_vendor, 'EFI-TREKBT-XXL', (SELECT id FROM units WHERE code='pair'), 0.0000, 1650.00, 1120.00, 0, 'active');
 SET @efi_p30_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p30_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
@@ -1684,7 +1684,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p31, 'Velcro-strap sports sandals with rugged outsole, single-SKU wholesale batch.', 'Quick-dry synthetic straps with Velcro adjustment on a rugged traction outsole suited for outdoor and water-adjacent activity. Ordered by adventure retailers and camping-gear suppliers. Minimum order quantity of 24 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p31, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p31, @efi_vendor, 'EFI-SPRSND-001', (SELECT id FROM units WHERE code='pair'), NULL, 360.00, 240.00, 1, 'active');
+(UUID(), @efi_p31, @efi_vendor, 'EFI-SPRSND-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 360.00, 240.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-sports'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pair'), 'Men''s Basketball High-Top Shoes', 'efi-mens-basketball-high-top-shoes', 'High-top basketball shoes with ankle support padding and a herringbone-pattern grip outsole.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 6, 6, 'both');
@@ -1693,13 +1693,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p32, 'High-top basketball shoes with ankle support, three colourways.', 'Synthetic leather and mesh uppers with padded ankle support and a herringbone grip outsole for court traction. Supplied to sports academies and basketball equipment retailers. Minimum order of 6 pairs per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p32, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p32, @efi_vendor, 'EFI-BBALHT-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 1350.00, 920.00, 1, 'active');
+(UUID(), @efi_p32, @efi_vendor, 'EFI-BBALHT-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 1350.00, 920.00, 1, 'active');
 SET @efi_p32_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p32, @efi_vendor, 'EFI-BBALHT-RED', (SELECT id FROM units WHERE code='pair'), NULL, 1350.00, 920.00, 0, 'active');
+(UUID(), @efi_p32, @efi_vendor, 'EFI-BBALHT-RED', (SELECT id FROM units WHERE code='pair'), 0.0000, 1350.00, 920.00, 0, 'active');
 SET @efi_p32_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p32, @efi_vendor, 'EFI-BBALHT-WHT', (SELECT id FROM units WHERE code='pair'), NULL, 1350.00, 920.00, 0, 'active');
+(UUID(), @efi_p32, @efi_vendor, 'EFI-BBALHT-WHT', (SELECT id FROM units WHERE code='pair'), 0.0000, 1350.00, 920.00, 0, 'active');
 SET @efi_p32_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p32_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black')),
@@ -1713,7 +1713,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p33, 'Women''s cushioned-sole running shoes, single-SKU wholesale batch.', 'Engineered mesh uppers on a soft-compound cushioned midsole designed for road running and daily jogging. Targeted at women''s sportswear retailers and fitness chains. Minimum order quantity of 12 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p33, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p33, @efi_vendor, 'EFI-RUNWCS-001', (SELECT id FROM units WHERE code='pair'), NULL, 910.00, 620.00, 1, 'active');
+(UUID(), @efi_p33, @efi_vendor, 'EFI-RUNWCS-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 910.00, 620.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@efi_vendor, (SELECT id FROM categories WHERE slug='mfg-footwear-sports'), @efi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pair'), 'Kids Sports Shoes - Velcro Closure', 'efi-kids-sports-shoes-velcro-closure', 'Kids sports shoes with easy Velcro closure and a flexible cushioned sole for daily play.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 12, 'both');
@@ -1722,13 +1722,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p34, 'Kids sports shoes with Velcro closure, three size bands.', 'Soft mesh and synthetic uppers with a wide Velcro strap for easy on-off, on a flexible cushioned sole for active play. Supplied to school-uniform and children''s footwear retailers. Minimum order of 24 pairs per size band.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p34, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p34, @efi_vendor, 'EFI-KIDSPT-XS', (SELECT id FROM units WHERE code='pair'), NULL, 510.00, 345.00, 1, 'active');
+(UUID(), @efi_p34, @efi_vendor, 'EFI-KIDSPT-XS', (SELECT id FROM units WHERE code='pair'), 0.0000, 510.00, 345.00, 1, 'active');
 SET @efi_p34_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p34, @efi_vendor, 'EFI-KIDSPT-S', (SELECT id FROM units WHERE code='pair'), NULL, 510.00, 345.00, 0, 'active');
+(UUID(), @efi_p34, @efi_vendor, 'EFI-KIDSPT-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 510.00, 345.00, 0, 'active');
 SET @efi_p34_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p34, @efi_vendor, 'EFI-KIDSPT-M', (SELECT id FROM units WHERE code='pair'), NULL, 510.00, 345.00, 0, 'active');
+(UUID(), @efi_p34, @efi_vendor, 'EFI-KIDSPT-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 510.00, 345.00, 0, 'active');
 SET @efi_p34_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@efi_p34_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XS')),
@@ -1742,7 +1742,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@efi_p35, 'Laceless slip-on sports shoes with EVA sole, single-SKU wholesale batch.', 'Stretch-knit uppers with a laceless slip-on fit on a lightweight EVA sole, suited for casual gym and travel wear. Ordered by value sportswear retailers for quick-turnover stock. Minimum order quantity of 24 pairs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@efi_p35, @efi_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @efi_p35, @efi_vendor, 'EFI-SLPEVA-001', (SELECT id FROM units WHERE code='pair'), NULL, 460.00, 310.00, 1, 'active');
+(UUID(), @efi_p35, @efi_vendor, 'EFI-SLPEVA-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 460.00, 310.00, 1, 'active');
 
 -- ---------------------------------------------------------------------
 -- Manufacturer 3/15 [zem]: Zenith Electronics Manufacturing Ltd — Consumer Electronics (Noida, Uttar Pradesh)
@@ -1767,17 +1767,17 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p1 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p1, 'Anti-scratch 9H tempered glass protector for 6.5 inch smartphone screens, bulk packed for retailers.', 'Manufactured from chemically strengthened glass with oleophobic coating for fingerprint resistance and easy cleaning. Bubble-free adhesive installation with edge-to-edge coverage. Supplied in bulk trade packs; ideal for mobile accessory retailers and repair shops. MOQ discounts available on orders above 500 pieces.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p1, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p1, @zem_vendor, 'ZEM-TGSP-001', (SELECT id FROM units WHERE code='pcs'), NULL, 15.00, 9.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p1, @zem_vendor, 'ZEM-TGSP-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 15.00, 9.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-mobile-accessories'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'PU Leather Flip Case for Smartphones - Assorted Sizes', 'zem-pu-leather-flip-case-smartphone', 'Premium PU leather flip case with card slots, magnetic closure and foldable stand, made to fit popular smartphone sizes.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 10, 'both');
 SET @zem_p2 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p2, 'Premium PU leather flip case with card slots and magnetic closure, available in multiple sizes and colors.', 'Crafted from durable PU leather with a soft microfiber interior lining to protect device screens from scratches. Features integrated card slots, a magnetic closure, and a foldable stand for hands-free viewing. Manufactured to fit a wide range of smartphone models across popular screen sizes. Bulk order discounts apply for retail chains and mobile accessory distributors.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p2, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p2, @zem_vendor, 'ZEM-FLIPCASE-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 120.00, 75.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p2, @zem_vendor, 'ZEM-FLIPCASE-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 120.00, 75.00, 1, 'active');
 SET @zem_p2_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p2, @zem_vendor, 'ZEM-FLIPCASE-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 120.00, 75.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p2, @zem_vendor, 'ZEM-FLIPCASE-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 120.00, 75.00, 0, 'active');
 SET @zem_p2_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p2, @zem_vendor, 'ZEM-FLIPCASE-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 120.00, 75.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p2, @zem_vendor, 'ZEM-FLIPCASE-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 120.00, 75.00, 0, 'active');
 SET @zem_p2_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p2_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p2_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
@@ -1787,11 +1787,11 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p3 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p3, '1.5 meter braided Type-C fast charging and data sync cable rated up to 3A.', 'Nylon-braided Type-C cable engineered for fast charging up to 3A and reliable high-speed data transfer. Reinforced connectors are rated for over 10,000 bend cycles for extended durability. Compatible with all standard Type-C enabled smartphones, tablets and accessories. Supplied in bulk trade cartons suitable for retail and e-commerce resellers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p3, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p3, @zem_vendor, 'ZEM-TCCABLE15-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 40.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p3, @zem_vendor, 'ZEM-TCCABLE15-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 40.00, 1, 'active');
 SET @zem_p3_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p3, @zem_vendor, 'ZEM-TCCABLE15-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 40.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p3, @zem_vendor, 'ZEM-TCCABLE15-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 40.00, 0, 'active');
 SET @zem_p3_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p3, @zem_vendor, 'ZEM-TCCABLE15-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 40.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p3, @zem_vendor, 'ZEM-TCCABLE15-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 40.00, 0, 'active');
 SET @zem_p3_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p3_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p3_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
@@ -1801,9 +1801,9 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p4 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p4, '20W PD fast charging wall adapter with USB-C output, compact travel design.', 'Compact power delivery wall charger delivering up to 20W output for rapid charging of compatible smartphones and tablets. Built-in surge protection and thermal control circuitry ensure safe, stable charging. Foldable pins allow for convenient storage and travel use. BIS-compliant construction suitable for retail distribution across India.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p4, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p4, @zem_vendor, 'ZEM-PDCHG20W-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 140.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p4, @zem_vendor, 'ZEM-PDCHG20W-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 140.00, 1, 'active');
 SET @zem_p4_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p4, @zem_vendor, 'ZEM-PDCHG20W-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 140.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p4, @zem_vendor, 'ZEM-PDCHG20W-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 140.00, 0, 'active');
 SET @zem_p4_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p4_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p4_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
@@ -1812,15 +1812,15 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p5 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p5, '10000mAh lithium polymer power bank with dual USB output ports for simultaneous device charging.', 'High-capacity lithium polymer power bank offering dual USB output ports for charging two devices at once. Equipped with LED battery indicator and multi-layer safety protection against overcharge and short circuit. Compact ABS housing designed for everyday carry and retail shelf display. Ideal bulk-order product for mobile accessory and gifting distributors.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p5, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p5, @zem_vendor, 'ZEM-PWRBANK10K-001', (SELECT id FROM units WHERE code='pcs'), NULL, 450.00, 290.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p5, @zem_vendor, 'ZEM-PWRBANK10K-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 450.00, 290.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-mobile-accessories'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), '15W Wireless Charging Pad Fast Charge', 'zem-15w-wireless-charging-pad', 'Qi-certified wireless charging pad delivering up to 15W fast charge with non-slip silicone surface.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 10, 'both');
 SET @zem_p6 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p6, '15W Qi-certified wireless charging pad compatible with all Qi-enabled smartphones.', 'Qi-certified wireless charging pad delivering up to 15W fast charge output for compatible smartphones. Non-slip silicone surface and integrated LED indicator provide safe, stable charging placement. Compact flat-panel design with foreign object detection for added safety. Supplied with USB-C input cable in bulk trade packaging.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p6, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p6, @zem_vendor, 'ZEM-WLCHGPAD15W-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 240.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p6, @zem_vendor, 'ZEM-WLCHGPAD15W-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 240.00, 1, 'active');
 SET @zem_p6_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p6, @zem_vendor, 'ZEM-WLCHGPAD15W-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 240.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p6, @zem_vendor, 'ZEM-WLCHGPAD15W-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 240.00, 0, 'active');
 SET @zem_p6_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p6_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p6_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
@@ -1829,23 +1829,23 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p7 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p7, '360-degree rotating dashboard and air-vent car mount for smartphones up to 6.7 inches.', 'Universal car mount with a 360-degree rotating ball joint and spring-loaded gripping arms suitable for smartphones up to 6.7 inches. Reinforced ABS and silicone padded clamps prevent slipping and scratching during use. Suction base and vent clip variants can be configured on request. Designed for bulk supply to automotive accessory and mobile retail chains.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p7, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p7, @zem_vendor, 'ZEM-CARMOUNT360-001', (SELECT id FROM units WHERE code='pcs'), NULL, 140.00, 85.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p7, @zem_vendor, 'ZEM-CARMOUNT360-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 140.00, 85.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-mobile-accessories'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='box'), 'OTG Type-C to USB Adapter Pack of 5', 'zem-otg-type-c-usb-adapter-pack-5', 'Zinc-alloy body OTG adapters enabling Type-C smartphones to connect USB-A peripherals, packed 5 per trade box.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 10, 5, 'both');
 SET @zem_p8 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p8, 'Pack of 5 Type-C to USB-A OTG adapters for connecting peripherals to smartphones.', 'Compact zinc-alloy body OTG adapters enabling Type-C smartphones to connect USB flash drives, keyboards, and other USB-A peripherals. Each trade pack contains 5 individually poly-bagged units ready for retail resale. Gold-plated connectors ensure stable data transfer and long connector life. Bulk carton packing available for wholesale and e-commerce distribution.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p8, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p8, @zem_vendor, 'ZEM-OTGPACK5-001', (SELECT id FROM units WHERE code='box'), NULL, 180.00, 110.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p8, @zem_vendor, 'ZEM-OTGPACK5-001', (SELECT id FROM units WHERE code='box'), 0.0000, 180.00, 110.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-mobile-accessories'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Micro USB Braided Charging Cable 1m', 'zem-micro-usb-braided-cable-1m', 'Durable nylon-braided Micro USB cable supporting charging and data sync for legacy Android devices.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 25, 'both');
 SET @zem_p9 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p9, '1 meter braided Micro USB charging and sync cable for legacy Android devices.', 'Durable nylon-braided Micro USB cable supporting charging and data sync for legacy Android smartphones and feature phones. Reinforced connector joints are tested for extended bend-life durability. Manufactured to standard specifications for compatibility across major device brands. Available in bulk trade cartons for retail and repair shop resale.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p9, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p9, @zem_vendor, 'ZEM-MICROUSB1M-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 45.00, 27.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p9, @zem_vendor, 'ZEM-MICROUSB1M-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 45.00, 27.00, 1, 'active');
 SET @zem_p9_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p9, @zem_vendor, 'ZEM-MICROUSB1M-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 45.00, 27.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p9, @zem_vendor, 'ZEM-MICROUSB1M-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 45.00, 27.00, 0, 'active');
 SET @zem_p9_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p9, @zem_vendor, 'ZEM-MICROUSB1M-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 45.00, 27.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p9, @zem_vendor, 'ZEM-MICROUSB1M-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 45.00, 27.00, 0, 'active');
 SET @zem_p9_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p9_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p9_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
@@ -1855,19 +1855,19 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p10 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p10, 'Extendable aluminium selfie stick with detachable Bluetooth shutter remote.', 'Lightweight aluminium alloy selfie stick extending up to 80cm with a sturdy phone clamp fitting most smartphones. Includes a detachable Bluetooth remote shutter compatible with iOS and Android devices. Foldable, pocket-friendly design suitable for retail packaging and gifting bundles. Bulk pricing available for accessory distributors and online resellers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p10, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p10, @zem_vendor, 'ZEM-SELFIESTICK-001', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 130.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p10, @zem_vendor, 'ZEM-SELFIESTICK-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 130.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-mobile-accessories'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Silicone Slim Back Cover for Smartphones', 'zem-silicone-slim-back-cover-smartphone', 'Soft-touch silicone back cover with raised bezel protection and a matte anti-fingerprint finish.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 30, 10, 'both');
 SET @zem_p11 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p11, 'Slim-fit silicone back cover offering shock protection and a matte anti-fingerprint finish.', 'Soft-touch silicone back cover manufactured for precision fit and raised bezel protection for camera and screen. Shock-absorbing edges and a matte anti-fingerprint finish provide everyday drop protection without added bulk. Compatible with wireless charging when fitted. Supplied in multiple colorways for retail assortment packs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p11, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p11, @zem_vendor, 'ZEM-SILICOVER-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 55.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p11, @zem_vendor, 'ZEM-SILICOVER-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 55.00, 1, 'active');
 SET @zem_p11_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p11, @zem_vendor, 'ZEM-SILICOVER-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 55.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p11, @zem_vendor, 'ZEM-SILICOVER-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 55.00, 0, 'active');
 SET @zem_p11_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p11, @zem_vendor, 'ZEM-SILICOVER-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 55.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p11, @zem_vendor, 'ZEM-SILICOVER-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 55.00, 0, 'active');
 SET @zem_p11_v3 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p11, @zem_vendor, 'ZEM-SILICOVER-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 55.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p11, @zem_vendor, 'ZEM-SILICOVER-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 55.00, 0, 'active');
 SET @zem_p11_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p11_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p11_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
@@ -1878,7 +1878,7 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p12 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p12, 'USB 3.0 all-in-one memory card reader supporting SD, microSD and other common card formats.', 'Compact USB 3.0 card reader supporting simultaneous connection of multiple memory card formats including SD, microSD, MMC and more. High-speed data transfer up to 5Gbps reduces file transfer times significantly. Durable ABS casing with a plug-and-play design requires no driver installation on most systems. Suitable for bulk supply to computer accessory retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p12, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p12, @zem_vendor, 'ZEM-CARDREADER-001', (SELECT id FROM units WHERE code='pcs'), NULL, 160.00, 100.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p12, @zem_vendor, 'ZEM-CARDREADER-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 160.00, 100.00, 1, 'active');
 
 -- ===================== AUDIO =====================
 
@@ -1886,11 +1886,11 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p13 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p13, 'In-ear wired earphones with inline microphone and 3.5mm jack for calls and music.', 'Dynamic 10mm drivers deliver balanced sound output through a comfortable in-ear silicone tip design. Inline microphone and control button enable hands-free calling on compatible devices. Tangle-resistant cable construction improves everyday durability. Manufactured for bulk retail and telecom bundling programs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p13, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p13, @zem_vendor, 'ZEM-INEAREARPH-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 80.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p13, @zem_vendor, 'ZEM-INEAREARPH-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 80.00, 1, 'active');
 SET @zem_p13_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p13, @zem_vendor, 'ZEM-INEAREARPH-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 80.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p13, @zem_vendor, 'ZEM-INEAREARPH-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 80.00, 0, 'active');
 SET @zem_p13_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p13, @zem_vendor, 'ZEM-INEAREARPH-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 80.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p13, @zem_vendor, 'ZEM-INEAREARPH-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 80.00, 0, 'active');
 SET @zem_p13_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p13_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p13_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
@@ -1900,9 +1900,9 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p14 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p14, 'True wireless stereo earbuds with ENC noise-cancelling mic and charging case.', 'True wireless earbuds featuring Bluetooth 5.x connectivity, touch controls, and environmental noise cancellation (ENC) microphones for clearer calls. Compact charging case delivers multiple additional charge cycles for extended listening time. IPX4 sweat resistance suits daily and workout use. Supplied bulk-packed for retail and corporate gifting orders.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p14, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p14, @zem_vendor, 'ZEM-TWSEARBUD-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 850.00, 540.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p14, @zem_vendor, 'ZEM-TWSEARBUD-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 850.00, 540.00, 1, 'active');
 SET @zem_p14_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p14, @zem_vendor, 'ZEM-TWSEARBUD-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 850.00, 540.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p14, @zem_vendor, 'ZEM-TWSEARBUD-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 850.00, 540.00, 0, 'active');
 SET @zem_p14_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p14_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p14_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
@@ -1911,11 +1911,11 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p15 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p15, 'Over-ear Bluetooth headphones with 40mm drivers and padded cushions for extended listening.', 'Over-ear wireless headphones built around 40mm dynamic drivers for deep bass and clear treble response. Foldable headband and memory-foam ear cushions provide comfortable extended wear. Built-in rechargeable battery delivers extended playback on a single charge with quick-charge support. Designed for bulk distribution to electronics retailers and online marketplaces.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p15, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p15, @zem_vendor, 'ZEM-OVEREARBT-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 920.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p15, @zem_vendor, 'ZEM-OVEREARBT-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 920.00, 1, 'active');
 SET @zem_p15_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p15, @zem_vendor, 'ZEM-OVEREARBT-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 920.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p15, @zem_vendor, 'ZEM-OVEREARBT-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 920.00, 0, 'active');
 SET @zem_p15_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p15, @zem_vendor, 'ZEM-OVEREARBT-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 920.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p15, @zem_vendor, 'ZEM-OVEREARBT-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 920.00, 0, 'active');
 SET @zem_p15_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p15_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p15_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
@@ -1925,11 +1925,11 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p16 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p16, '10W portable Bluetooth speaker with IPX6 water resistance and 8-hour playback.', 'Compact Bluetooth speaker delivering 10W of clear, room-filling sound with enhanced bass output. IPX6-rated water-resistant housing suits outdoor and travel use. Built-in rechargeable battery supports up to 8 hours of continuous playback per charge. Bulk trade packaging available for accessory and lifestyle product retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p16, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p16, @zem_vendor, 'ZEM-BTSPKR10W-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 470.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p16, @zem_vendor, 'ZEM-BTSPKR10W-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 470.00, 1, 'active');
 SET @zem_p16_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p16, @zem_vendor, 'ZEM-BTSPKR10W-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 470.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p16, @zem_vendor, 'ZEM-BTSPKR10W-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 470.00, 0, 'active');
 SET @zem_p16_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p16, @zem_vendor, 'ZEM-BTSPKR10W-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 470.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p16, @zem_vendor, 'ZEM-BTSPKR10W-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 470.00, 0, 'active');
 SET @zem_p16_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p16_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p16_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -1939,11 +1939,11 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p17 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p17, 'Magnetic Bluetooth neckband earphones with 10-hour battery and fast charging.', 'Sweat-resistant neckband earphones with magnetic earbuds for secure carrying when not in use. Bluetooth 5.x connectivity and dual-driver acoustics deliver clear audio for calls and music. Rechargeable battery supports up to 10 hours of playback with 10-minute fast-charge top-up. Manufactured for bulk supply to mobile accessory and telecom retail chains.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p17, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p17, @zem_vendor, 'ZEM-NECKBAND-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 300.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p17, @zem_vendor, 'ZEM-NECKBAND-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 300.00, 1, 'active');
 SET @zem_p17_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p17, @zem_vendor, 'ZEM-NECKBAND-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 300.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p17, @zem_vendor, 'ZEM-NECKBAND-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 300.00, 0, 'active');
 SET @zem_p17_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p17, @zem_vendor, 'ZEM-NECKBAND-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 300.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p17, @zem_vendor, 'ZEM-NECKBAND-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 300.00, 0, 'active');
 SET @zem_p17_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p17_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p17_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
@@ -1953,37 +1953,37 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p18 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p18, '40W trolley-mounted party speaker with dynamic LED lighting and wheeled base.', 'High-output 40W trolley speaker with a durable wheeled base for easy transport at events and outdoor gatherings. Built-in dynamic LED lighting effects sync with the beat for added stage presence. Supports Bluetooth, USB, and auxiliary input for flexible source connectivity. Bulk supply available for event rental and retail electronics businesses.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p18, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p18, @zem_vendor, 'ZEM-PARTYSPKR40W-001', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2100.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p18, @zem_vendor, 'ZEM-PARTYSPKR40W-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2100.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-audio'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), '2.1 Channel Home Theater Soundbar', 'zem-21-channel-home-theater-soundbar', 'Slim wall-mountable soundbar paired with a wired subwoofer, supporting Bluetooth, HDMI ARC, optical and AUX inputs.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 5, 1, 'both');
 SET @zem_p19 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p19, '2.1 channel soundbar with wired subwoofer for enhanced home theater bass.', 'Compact soundbar system pairing a slim wall-mountable bar with a dedicated wired subwoofer for deep bass reproduction. Multiple connectivity options include Bluetooth, HDMI ARC, optical and AUX inputs. Remote control and equalizer presets allow quick sound customization. Designed for wholesale supply to consumer electronics retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p19, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p19, @zem_vendor, 'ZEM-SOUNDBAR21-001', (SELECT id FROM units WHERE code='pcs'), NULL, 2100.00, 1350.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p19, @zem_vendor, 'ZEM-SOUNDBAR21-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2100.00, 1350.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-audio'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Clip-On Wired Collar Mic for Smartphones', 'zem-clip-on-wired-collar-mic', 'Omnidirectional lapel microphone with sturdy clip mount and 3.5mm jack for smartphone recording and calls.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 40, 20, 'both');
 SET @zem_p20 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p20, 'Clip-on lapel collar microphone with 3.5mm jack for smartphone recording and calls.', 'Omnidirectional lapel microphone with a sturdy clip mount, designed for clear voice capture during video recording, interviews, and calls. Compatible with smartphones and devices with a standard 3.5mm audio jack. Braided cable construction improves handling noise reduction and durability. Supplied in bulk trade packs for content-creator accessory retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p20, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p20, @zem_vendor, 'ZEM-COLLARMIC-001', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 58.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p20, @zem_vendor, 'ZEM-COLLARMIC-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 58.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-audio'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'USB Wired Gaming Headset with Noise Cancelling Mic', 'zem-usb-gaming-headset-noise-cancelling', 'Over-ear USB gaming headset with 50mm drivers, a detachable noise-cancelling boom mic and RGB accent lighting.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 10, 5, 'both');
 SET @zem_p21 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p21, 'Over-ear USB gaming headset with noise-cancelling boom mic and RGB lighting.', 'Gaming headset featuring 50mm drivers tuned for immersive in-game audio and footstep detail. Detachable noise-cancelling boom microphone improves team communication clarity. USB connectivity with inline volume and mute controls, plus subtle RGB lighting accents. Manufactured for bulk supply to gaming accessory and computer retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p21, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p21, @zem_vendor, 'ZEM-GAMEHEADSET-001', (SELECT id FROM units WHERE code='pcs'), NULL, 680.00, 430.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p21, @zem_vendor, 'ZEM-GAMEHEADSET-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 680.00, 430.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-audio'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Mini Bluetooth Speaker Keychain', 'zem-mini-bluetooth-speaker-keychain', 'Pocket-sized Bluetooth speaker with an integrated carabiner clip and up to 5 hours of playback, TWS pairable.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 25, 10, 'both');
 SET @zem_p22 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p22, 'Pocket-sized Bluetooth speaker keychain with clip mount and 5-hour battery.', 'Ultra-compact Bluetooth speaker with an integrated carabiner clip for attaching to bags and keychains. Delivers surprisingly clear sound for its size, backed by a rechargeable battery offering up to 5 hours of playback. TWS pairing mode allows two units to be linked for stereo sound. Supplied in assorted colors for retail impulse-purchase displays.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p22, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p22, @zem_vendor, 'ZEM-MINISPKR-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 135.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p22, @zem_vendor, 'ZEM-MINISPKR-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 135.00, 1, 'active');
 SET @zem_p22_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p22, @zem_vendor, 'ZEM-MINISPKR-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 135.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p22, @zem_vendor, 'ZEM-MINISPKR-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 135.00, 0, 'active');
 SET @zem_p22_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p22, @zem_vendor, 'ZEM-MINISPKR-PNK', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 135.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p22, @zem_vendor, 'ZEM-MINISPKR-PNK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 135.00, 0, 'active');
 SET @zem_p22_v3 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p22, @zem_vendor, 'ZEM-MINISPKR-YEL', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 135.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p22, @zem_vendor, 'ZEM-MINISPKR-YEL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 135.00, 0, 'active');
 SET @zem_p22_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p22_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p22_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
@@ -1994,7 +1994,7 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p23 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p23, '5.1 channel home theater speaker system with wired subwoofer for immersive surround sound.', 'Multi-speaker home theater system comprising satellite speakers and a powered subwoofer for immersive 5.1 surround sound. Supports Bluetooth, USB, FM and multiple auxiliary inputs for flexible source switching. Remote-controlled bass and volume adjustment simplifies everyday use. Bulk supply available for consumer electronics retail chains and online marketplaces.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p23, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p23, @zem_vendor, 'ZEM-HOMETHEATER51-001', (SELECT id FROM units WHERE code='pcs'), NULL, 4500.00, 2950.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p23, @zem_vendor, 'ZEM-HOMETHEATER51-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4500.00, 2950.00, 1, 'active');
 
 -- ===================== COMPUTER =====================
 
@@ -2002,17 +2002,17 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p24 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p24, 'Full-size wired USB keyboard with spill-resistant design for office and home use.', 'Standard full-size USB keyboard with a spill-resistant membrane design to protect internal circuitry from accidental liquid spills. Responsive, quiet-touch keys are rated for millions of keystrokes. Plug-and-play USB connectivity requires no additional drivers. Manufactured for bulk supply to computer accessory retailers and system integrators.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p24, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p24, @zem_vendor, 'ZEM-USBKEYBOARD-001', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 200.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p24, @zem_vendor, 'ZEM-USBKEYBOARD-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 200.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-computer'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Wireless Optical Mouse 2.4GHz', 'zem-wireless-optical-mouse-2-4ghz', '2.4GHz wireless optical mouse with USB nano receiver and a 1600 DPI sensor for smooth, precise tracking.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 15, 5, 'both');
 SET @zem_p25 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p25, '2.4GHz wireless optical mouse with USB nano receiver and 1600 DPI sensor.', 'Ergonomic wireless optical mouse using a 2.4GHz USB nano receiver for a stable, low-latency connection up to 10 meters. 1600 DPI optical sensor provides smooth, precise tracking on most surfaces. Long battery life is supported by an automatic sleep mode. Supplied in bulk trade packaging for computer accessory retail chains.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p25, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p25, @zem_vendor, 'ZEM-WLMOUSE-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 280.00, 175.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p25, @zem_vendor, 'ZEM-WLMOUSE-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 280.00, 175.00, 1, 'active');
 SET @zem_p25_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p25, @zem_vendor, 'ZEM-WLMOUSE-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 280.00, 175.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p25, @zem_vendor, 'ZEM-WLMOUSE-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 280.00, 175.00, 0, 'active');
 SET @zem_p25_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p25, @zem_vendor, 'ZEM-WLMOUSE-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 280.00, 175.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p25, @zem_vendor, 'ZEM-WLMOUSE-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 280.00, 175.00, 0, 'active');
 SET @zem_p25_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p25_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p25_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
@@ -2022,9 +2022,9 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p26 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p26, 'Compact USB 3.0 4-port hub for expanding laptop and desktop connectivity.', 'Slim USB 3.0 hub expanding a single port into four high-speed USB-A ports for peripherals and storage devices. Data transfer speeds of up to 5Gbps ensure fast file transfers between connected devices. Compact aluminium-finish housing suits desktop and travel use. Bulk trade packaging available for computer accessory distributors.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p26, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p26, @zem_vendor, 'ZEM-USBHUB4P-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 130.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p26, @zem_vendor, 'ZEM-USBHUB4P-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 130.00, 1, 'active');
 SET @zem_p26_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p26, @zem_vendor, 'ZEM-USBHUB4P-SLV', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 130.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p26, @zem_vendor, 'ZEM-USBHUB4P-SLV', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 130.00, 0, 'active');
 SET @zem_p26_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p26_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p26_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Silver'));
@@ -2033,17 +2033,17 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p27 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p27, '1080p HD webcam with built-in noise-reducing microphone for video calls and streaming.', 'USB plug-and-play webcam capturing 1080p full-HD video suitable for video conferencing, online classes, and streaming. Built-in noise-reducing microphone improves call clarity without external accessories. Adjustable clip mount fits laptop screens and monitors alike. Manufactured for bulk supply to IT hardware and computer accessory retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p27, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p27, @zem_vendor, 'ZEM-WEBCAM1080-001', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 610.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p27, @zem_vendor, 'ZEM-WEBCAM1080-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 610.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-computer'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Adjustable Aluminium Laptop Stand', 'zem-adjustable-aluminium-laptop-stand', 'Aluminium-alloy foldable laptop stand with adjustable height and angle, fitted with non-slip silicone pads.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 10, 5, 'both');
 SET @zem_p28 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p28, 'Foldable aluminium laptop stand with adjustable height for ergonomic desk setups.', 'Aluminium-alloy laptop stand offering multiple height and angle adjustments to improve posture and airflow around the laptop base. Non-slip silicone pads secure the device and protect against scratches. Compact folding design allows easy storage and portability. Supplied in bulk for office furniture and computer accessory retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p28, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p28, @zem_vendor, 'ZEM-LAPSTAND-SLV', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 410.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p28, @zem_vendor, 'ZEM-LAPSTAND-SLV', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 410.00, 1, 'active');
 SET @zem_p28_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p28, @zem_vendor, 'ZEM-LAPSTAND-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 410.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p28, @zem_vendor, 'ZEM-LAPSTAND-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 410.00, 0, 'active');
 SET @zem_p28_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p28, @zem_vendor, 'ZEM-LAPSTAND-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 410.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p28, @zem_vendor, 'ZEM-LAPSTAND-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 410.00, 0, 'active');
 SET @zem_p28_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p28_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Silver'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p28_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
@@ -2053,17 +2053,17 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p29 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p29, 'Dual-fan laptop cooling pad with adjustable height and USB pass-through.', 'Laptop cooling pad fitted with dual high-speed fans to reduce thermal throttling during extended use. Adjustable stand height accommodates laptops up to 17 inches with improved ergonomic viewing angle. USB pass-through port allows connection of additional peripherals without losing a port. Bulk supply available for computer accessory and IT hardware retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p29, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p29, @zem_vendor, 'ZEM-COOLPAD-001', (SELECT id FROM units WHERE code='pcs'), NULL, 580.00, 365.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p29, @zem_vendor, 'ZEM-COOLPAD-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 580.00, 365.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES (@zem_vendor, (SELECT id FROM categories WHERE slug='mfg-electronics-computer'), @zem_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'USB Flash Drive Pen Drive', 'zem-usb-flash-drive-pen-drive', 'Metal-bodied USB 3.0 flash drive offering fast read and write speeds, available across multiple storage capacities.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 25, 10, 'both');
 SET @zem_p30 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p30, 'USB 3.0 flash drive with metal casing, available in multiple storage capacities.', 'Durable metal-bodied USB 3.0 flash drive offering fast read and write speeds for everyday file transfer and backup. Compact keyring-ready design suits both personal and corporate branding use. Available across multiple storage capacities to suit different customer needs. Supplied in bulk trade packaging for IT accessory and corporate gifting distributors.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p30, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p30, @zem_vendor, 'ZEM-USBFLASH-64GB', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 115.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p30, @zem_vendor, 'ZEM-USBFLASH-64GB', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 115.00, 1, 'active');
 SET @zem_p30_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p30, @zem_vendor, 'ZEM-USBFLASH-128GB', (SELECT id FROM units WHERE code='pcs'), NULL, 290.00, 185.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p30, @zem_vendor, 'ZEM-USBFLASH-128GB', (SELECT id FROM units WHERE code='pcs'), 0.0000, 290.00, 185.00, 0, 'active');
 SET @zem_p30_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p30, @zem_vendor, 'ZEM-USBFLASH-256GB', (SELECT id FROM units WHERE code='pcs'), NULL, 520.00, 335.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p30, @zem_vendor, 'ZEM-USBFLASH-256GB', (SELECT id FROM units WHERE code='pcs'), 0.0000, 520.00, 335.00, 0, 'active');
 SET @zem_p30_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p30_v1, (SELECT id FROM attributes WHERE code='storage'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='storage' AND av.value='64GB'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p30_v2, (SELECT id FROM attributes WHERE code='storage'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='storage' AND av.value='128GB'));
@@ -2073,9 +2073,9 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p31 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p31, 'USB 3.1 portable external SSD offering fast transfer speeds in a compact shockproof body.', 'Portable solid-state drive connecting via USB 3.1 for significantly faster read and write speeds compared to traditional hard drives. Shockproof aluminium casing protects stored data during everyday transport. Compact form factor fits easily into a laptop bag or pocket. Manufactured for bulk supply to computer hardware and IT accessory retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p31, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p31, @zem_vendor, 'ZEM-EXTSSD-256GB', (SELECT id FROM units WHERE code='pcs'), NULL, 2400.00, 1550.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p31, @zem_vendor, 'ZEM-EXTSSD-256GB', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2400.00, 1550.00, 1, 'active');
 SET @zem_p31_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p31, @zem_vendor, 'ZEM-EXTSSD-512GB', (SELECT id FROM units WHERE code='pcs'), NULL, 4200.00, 2700.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p31, @zem_vendor, 'ZEM-EXTSSD-512GB', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4200.00, 2700.00, 0, 'active');
 SET @zem_p31_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p31_v1, (SELECT id FROM attributes WHERE code='storage'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='storage' AND av.value='256GB'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p31_v2, (SELECT id FROM attributes WHERE code='storage'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='storage' AND av.value='512GB'));
@@ -2084,11 +2084,11 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p32 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p32, 'Class 10 microSD memory card with adapter, available in multiple storage capacities.', 'High-speed Class 10 microSD memory card suitable for smartphones, cameras, and dashcams requiring reliable continuous write speeds. Includes a full-size SD adapter for broader device compatibility. Rigorously tested for shock, temperature and water resistance during manufacturing. Supplied in bulk trade packs across multiple storage capacities for retail distribution.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p32, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p32, @zem_vendor, 'ZEM-MICROSD-64GB', (SELECT id FROM units WHERE code='pcs'), NULL, 350.00, 225.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p32, @zem_vendor, 'ZEM-MICROSD-64GB', (SELECT id FROM units WHERE code='pcs'), 0.0000, 350.00, 225.00, 1, 'active');
 SET @zem_p32_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p32, @zem_vendor, 'ZEM-MICROSD-128GB', (SELECT id FROM units WHERE code='pcs'), NULL, 580.00, 375.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p32, @zem_vendor, 'ZEM-MICROSD-128GB', (SELECT id FROM units WHERE code='pcs'), 0.0000, 580.00, 375.00, 0, 'active');
 SET @zem_p32_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p32, @zem_vendor, 'ZEM-MICROSD-256GB', (SELECT id FROM units WHERE code='pcs'), NULL, 1050.00, 680.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p32, @zem_vendor, 'ZEM-MICROSD-256GB', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1050.00, 680.00, 0, 'active');
 SET @zem_p32_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p32_v1, (SELECT id FROM attributes WHERE code='storage'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='storage' AND av.value='64GB'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p32_v2, (SELECT id FROM attributes WHERE code='storage'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='storage' AND av.value='128GB'));
@@ -2098,9 +2098,9 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p33 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p33, 'RGB backlit mechanical gaming keyboard with anti-ghosting keys and durable switches.', 'Full-size mechanical keyboard fitted with durable switches rated for over 10 million keystrokes, tuned for gaming responsiveness. Customizable RGB backlighting and anti-ghosting key rollover improve the gaming experience. Reinforced keycaps and a sturdy metal top plate resist daily wear. Manufactured for bulk supply to gaming and computer accessory retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p33, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p33, @zem_vendor, 'ZEM-MECHKB-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1650.00, 1050.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p33, @zem_vendor, 'ZEM-MECHKB-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1650.00, 1050.00, 1, 'active');
 SET @zem_p33_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p33, @zem_vendor, 'ZEM-MECHKB-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 1650.00, 1050.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p33, @zem_vendor, 'ZEM-MECHKB-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1650.00, 1050.00, 0, 'active');
 SET @zem_p33_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p33_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p33_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
@@ -2109,11 +2109,11 @@ INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_
 SET @zem_p34 := LAST_INSERT_ID();
 INSERT INTO product_content (product_id, short_description, full_description) VALUES (@zem_p34, 'Water-resistant laptop backpack with padded compartment for laptops up to 15.6 inches.', 'Durable water-resistant fabric backpack with a padded, cushioned compartment protecting laptops up to 15.6 inches. Multiple organizer pockets accommodate chargers, cables, and daily accessories. Reinforced stitching and padded shoulder straps improve comfort during daily commutes. Supplied in bulk for computer accessory and travel gear retailers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@zem_p34, @zem_mshop, 'active', NOW());
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p34, @zem_vendor, 'ZEM-BACKPACK-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 1, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p34, @zem_vendor, 'ZEM-BACKPACK-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 1, 'active');
 SET @zem_p34_v1 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p34, @zem_vendor, 'ZEM-BACKPACK-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p34, @zem_vendor, 'ZEM-BACKPACK-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 0, 'active');
 SET @zem_p34_v2 := LAST_INSERT_ID();
-INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p34, @zem_vendor, 'ZEM-BACKPACK-NAVY', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 0, 'active');
+INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES (UUID(), @zem_p34, @zem_vendor, 'ZEM-BACKPACK-NAVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 0, 'active');
 SET @zem_p34_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p34_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@zem_p34_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
@@ -2155,13 +2155,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p1, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p1, @cha_vendor, 'CHA-MG750-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 2200.00, 1600.00, 1, 'active');
+(UUID(), @cha_p1, @cha_vendor, 'CHA-MG750-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2200.00, 1600.00, 1, 'active');
 SET @cha_p1_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p1, @cha_vendor, 'CHA-MG750-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 2200.00, 1600.00, 0, 'active');
+(UUID(), @cha_p1, @cha_vendor, 'CHA-MG750-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2200.00, 1600.00, 0, 'active');
 SET @cha_p1_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p1, @cha_vendor, 'CHA-MG750-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 2200.00, 1600.00, 0, 'active');
+(UUID(), @cha_p1, @cha_vendor, 'CHA-MG750-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2200.00, 1600.00, 0, 'active');
 SET @cha_p1_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2185,13 +2185,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p2, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p2, @cha_vendor, 'CHA-KETL15-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 450.00, 1, 'active');
+(UUID(), @cha_p2, @cha_vendor, 'CHA-KETL15-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 450.00, 1, 'active');
 SET @cha_p2_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p2, @cha_vendor, 'CHA-KETL15-SLV', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 450.00, 0, 'active');
+(UUID(), @cha_p2, @cha_vendor, 'CHA-KETL15-SLV', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 450.00, 0, 'active');
 SET @cha_p2_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p2, @cha_vendor, 'CHA-KETL15-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 450.00, 0, 'active');
+(UUID(), @cha_p2, @cha_vendor, 'CHA-KETL15-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 450.00, 0, 'active');
 SET @cha_p2_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2215,13 +2215,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p3, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p3, @cha_vendor, 'CHA-TOST750-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 850.00, 600.00, 1, 'active');
+(UUID(), @cha_p3, @cha_vendor, 'CHA-TOST750-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 850.00, 600.00, 1, 'active');
 SET @cha_p3_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p3, @cha_vendor, 'CHA-TOST750-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 850.00, 600.00, 0, 'active');
+(UUID(), @cha_p3, @cha_vendor, 'CHA-TOST750-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 850.00, 600.00, 0, 'active');
 SET @cha_p3_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p3, @cha_vendor, 'CHA-TOST750-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 850.00, 600.00, 0, 'active');
+(UUID(), @cha_p3, @cha_vendor, 'CHA-TOST750-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 850.00, 600.00, 0, 'active');
 SET @cha_p3_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2245,7 +2245,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p4, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p4, @cha_vendor, 'CHA-SNDW4-001', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 680.00, 1, 'active');
+(UUID(), @cha_p4, @cha_vendor, 'CHA-SNDW4-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 680.00, 1, 'active');
 
 -- =========================================================
 -- Product 5: Electric Rice Cooker 1.8L (simple)
@@ -2261,7 +2261,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p5, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p5, @cha_vendor, 'CHA-RICE18-001', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 1050.00, 1, 'active');
+(UUID(), @cha_p5, @cha_vendor, 'CHA-RICE18-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 1050.00, 1, 'active');
 
 -- =========================================================
 -- Product 6: Aluminium Pressure Cooker Induction Base (variant: capacity)
@@ -2277,10 +2277,10 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p6, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p6, @cha_vendor, 'CHA-PCOOK-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 1100.00, 780.00, 1, 'active');
+(UUID(), @cha_p6, @cha_vendor, 'CHA-PCOOK-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1100.00, 780.00, 1, 'active');
 SET @cha_p6_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p6, @cha_vendor, 'CHA-PCOOK-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 1020.00, 0, 'active');
+(UUID(), @cha_p6, @cha_vendor, 'CHA-PCOOK-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 1020.00, 0, 'active');
 SET @cha_p6_v2 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2302,7 +2302,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p7, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p7, @cha_vendor, 'CHA-FPROC600-001', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2300.00, 1, 'active');
+(UUID(), @cha_p7, @cha_vendor, 'CHA-FPROC600-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2300.00, 1, 'active');
 
 -- =========================================================
 -- Product 8: Juicer Mixer Grinder 500W (variant: color)
@@ -2318,10 +2318,10 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p8, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p8, @cha_vendor, 'CHA-JMG500-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1800.00, 1300.00, 1, 'active');
+(UUID(), @cha_p8, @cha_vendor, 'CHA-JMG500-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1800.00, 1300.00, 1, 'active');
 SET @cha_p8_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p8, @cha_vendor, 'CHA-JMG500-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 1800.00, 1300.00, 0, 'active');
+(UUID(), @cha_p8, @cha_vendor, 'CHA-JMG500-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1800.00, 1300.00, 0, 'active');
 SET @cha_p8_v2 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2343,10 +2343,10 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p9, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p9, @cha_vendor, 'CHA-OTG24-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 3600.00, 2600.00, 1, 'active');
+(UUID(), @cha_p9, @cha_vendor, 'CHA-OTG24-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3600.00, 2600.00, 1, 'active');
 SET @cha_p9_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p9, @cha_vendor, 'CHA-OTG24-SLV', (SELECT id FROM units WHERE code='pcs'), NULL, 3600.00, 2600.00, 0, 'active');
+(UUID(), @cha_p9, @cha_vendor, 'CHA-OTG24-SLV', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3600.00, 2600.00, 0, 'active');
 SET @cha_p9_v2 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2368,10 +2368,10 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p10, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p10, @cha_vendor, 'CHA-INDCT2000-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1600.00, 1150.00, 1, 'active');
+(UUID(), @cha_p10, @cha_vendor, 'CHA-INDCT2000-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1600.00, 1150.00, 1, 'active');
 SET @cha_p10_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p10, @cha_vendor, 'CHA-INDCT2000-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 1600.00, 1150.00, 0, 'active');
+(UUID(), @cha_p10, @cha_vendor, 'CHA-INDCT2000-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1600.00, 1150.00, 0, 'active');
 SET @cha_p10_v2 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2393,7 +2393,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p11, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p11, @cha_vendor, 'CHA-CHIM60AC-001', (SELECT id FROM units WHERE code='pcs'), NULL, 6500.00, 4700.00, 1, 'active');
+(UUID(), @cha_p11, @cha_vendor, 'CHA-CHIM60AC-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 6500.00, 4700.00, 1, 'active');
 
 -- =========================================================
 -- Product 12: Stainless Steel Gas Stove 3 Burner (simple)
@@ -2409,7 +2409,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p12, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p12, @cha_vendor, 'CHA-GSTOVE3B-001', (SELECT id FROM units WHERE code='pcs'), NULL, 2400.00, 1750.00, 1, 'active');
+(UUID(), @cha_p12, @cha_vendor, 'CHA-GSTOVE3B-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2400.00, 1750.00, 1, 'active');
 
 -- =========================================================
 -- Product 13: RO+UV+UF Water Purifier 10L Storage (variant: color)
@@ -2425,10 +2425,10 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p13, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p13, @cha_vendor, 'CHA-RWP10-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 8500.00, 6200.00, 1, 'active');
+(UUID(), @cha_p13, @cha_vendor, 'CHA-RWP10-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 8500.00, 6200.00, 1, 'active');
 SET @cha_p13_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p13, @cha_vendor, 'CHA-RWP10-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 8500.00, 6200.00, 0, 'active');
+(UUID(), @cha_p13, @cha_vendor, 'CHA-RWP10-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 8500.00, 6200.00, 0, 'active');
 SET @cha_p13_v2 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2450,7 +2450,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p14, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p14, @cha_vendor, 'CHA-WGRIND2L-001', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2300.00, 1, 'active');
+(UUID(), @cha_p14, @cha_vendor, 'CHA-WGRIND2L-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2300.00, 1, 'active');
 
 -- =========================================================
 -- Product 15: Hand Blender 250W with Attachments (variant: color)
@@ -2466,13 +2466,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p15, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p15, @cha_vendor, 'CHA-HBLEND250-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 520.00, 1, 'active');
+(UUID(), @cha_p15, @cha_vendor, 'CHA-HBLEND250-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 520.00, 1, 'active');
 SET @cha_p15_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p15, @cha_vendor, 'CHA-HBLEND250-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 520.00, 0, 'active');
+(UUID(), @cha_p15, @cha_vendor, 'CHA-HBLEND250-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 520.00, 0, 'active');
 SET @cha_p15_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p15, @cha_vendor, 'CHA-HBLEND250-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 520.00, 0, 'active');
+(UUID(), @cha_p15, @cha_vendor, 'CHA-HBLEND250-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 520.00, 0, 'active');
 SET @cha_p15_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2496,7 +2496,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p16, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p16, @cha_vendor, 'CHA-EGGBOIL7-001', (SELECT id FROM units WHERE code='pcs'), NULL, 550.00, 380.00, 1, 'active');
+(UUID(), @cha_p16, @cha_vendor, 'CHA-EGGBOIL7-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 550.00, 380.00, 1, 'active');
 
 -- =========================================================
 -- Product 17: Electric Roti & Chapati Maker (simple)
@@ -2512,7 +2512,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p17, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p17, @cha_vendor, 'CHA-ROTIMK-001', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 1000.00, 1, 'active');
+(UUID(), @cha_p17, @cha_vendor, 'CHA-ROTIMK-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 1000.00, 1, 'active');
 
 -- =========================================================
 -- Product 18: Drip Coffee Maker 600ml (variant: color)
@@ -2528,13 +2528,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p18, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p18, @cha_vendor, 'CHA-COFMK600-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1950.00, 1400.00, 1, 'active');
+(UUID(), @cha_p18, @cha_vendor, 'CHA-COFMK600-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1950.00, 1400.00, 1, 'active');
 SET @cha_p18_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p18, @cha_vendor, 'CHA-COFMK600-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 1950.00, 1400.00, 0, 'active');
+(UUID(), @cha_p18, @cha_vendor, 'CHA-COFMK600-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1950.00, 1400.00, 0, 'active');
 SET @cha_p18_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p18, @cha_vendor, 'CHA-COFMK600-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 1950.00, 1400.00, 0, 'active');
+(UUID(), @cha_p18, @cha_vendor, 'CHA-COFMK600-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1950.00, 1400.00, 0, 'active');
 SET @cha_p18_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2558,13 +2558,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p19, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p19, @cha_vendor, 'CHA-TWRCLR20-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 4200.00, 3000.00, 1, 'active');
+(UUID(), @cha_p19, @cha_vendor, 'CHA-TWRCLR20-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4200.00, 3000.00, 1, 'active');
 SET @cha_p19_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p19, @cha_vendor, 'CHA-TWRCLR20-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 4200.00, 3000.00, 0, 'active');
+(UUID(), @cha_p19, @cha_vendor, 'CHA-TWRCLR20-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4200.00, 3000.00, 0, 'active');
 SET @cha_p19_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p19, @cha_vendor, 'CHA-TWRCLR20-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 4200.00, 3000.00, 0, 'active');
+(UUID(), @cha_p19, @cha_vendor, 'CHA-TWRCLR20-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4200.00, 3000.00, 0, 'active');
 SET @cha_p19_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2588,7 +2588,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p20, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p20, @cha_vendor, 'CHA-DSRTCLR50-001', (SELECT id FROM units WHERE code='pcs'), NULL, 7200.00, 5200.00, 1, 'active');
+(UUID(), @cha_p20, @cha_vendor, 'CHA-DSRTCLR50-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 7200.00, 5200.00, 1, 'active');
 
 -- =========================================================
 -- Product 21: High Speed Pedestal Fan 400mm (variant: color)
@@ -2604,13 +2604,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p21, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p21, @cha_vendor, 'CHA-PEDFAN400-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 1850.00, 1300.00, 1, 'active');
+(UUID(), @cha_p21, @cha_vendor, 'CHA-PEDFAN400-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1850.00, 1300.00, 1, 'active');
 SET @cha_p21_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p21, @cha_vendor, 'CHA-PEDFAN400-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1850.00, 1300.00, 0, 'active');
+(UUID(), @cha_p21, @cha_vendor, 'CHA-PEDFAN400-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1850.00, 1300.00, 0, 'active');
 SET @cha_p21_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p21, @cha_vendor, 'CHA-PEDFAN400-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 1850.00, 1300.00, 0, 'active');
+(UUID(), @cha_p21, @cha_vendor, 'CHA-PEDFAN400-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1850.00, 1300.00, 0, 'active');
 SET @cha_p21_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2634,13 +2634,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p22, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p22, @cha_vendor, 'CHA-TBLFAN300-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 680.00, 1, 'active');
+(UUID(), @cha_p22, @cha_vendor, 'CHA-TBLFAN300-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 680.00, 1, 'active');
 SET @cha_p22_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p22, @cha_vendor, 'CHA-TBLFAN300-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 680.00, 0, 'active');
+(UUID(), @cha_p22, @cha_vendor, 'CHA-TBLFAN300-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 680.00, 0, 'active');
 SET @cha_p22_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p22, @cha_vendor, 'CHA-TBLFAN300-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 680.00, 0, 'active');
+(UUID(), @cha_p22, @cha_vendor, 'CHA-TBLFAN300-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 680.00, 0, 'active');
 SET @cha_p22_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2664,13 +2664,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p23, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p23, @cha_vendor, 'CHA-CLGFAN1200-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 1050.00, 1, 'active');
+(UUID(), @cha_p23, @cha_vendor, 'CHA-CLGFAN1200-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 1050.00, 1, 'active');
 SET @cha_p23_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p23, @cha_vendor, 'CHA-CLGFAN1200-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 1050.00, 0, 'active');
+(UUID(), @cha_p23, @cha_vendor, 'CHA-CLGFAN1200-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 1050.00, 0, 'active');
 SET @cha_p23_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p23, @cha_vendor, 'CHA-CLGFAN1200-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 1050.00, 0, 'active');
+(UUID(), @cha_p23, @cha_vendor, 'CHA-CLGFAN1200-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 1050.00, 0, 'active');
 SET @cha_p23_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2694,13 +2694,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p24, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p24, @cha_vendor, 'CHA-EXHFAN150-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 520.00, 1, 'active');
+(UUID(), @cha_p24, @cha_vendor, 'CHA-EXHFAN150-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 520.00, 1, 'active');
 SET @cha_p24_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p24, @cha_vendor, 'CHA-EXHFAN150-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 520.00, 0, 'active');
+(UUID(), @cha_p24, @cha_vendor, 'CHA-EXHFAN150-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 520.00, 0, 'active');
 SET @cha_p24_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p24, @cha_vendor, 'CHA-EXHFAN150-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 520.00, 0, 'active');
+(UUID(), @cha_p24, @cha_vendor, 'CHA-EXHFAN150-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 520.00, 0, 'active');
 SET @cha_p24_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2724,13 +2724,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p25, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p25, @cha_vendor, 'CHA-SPLAC-1T', (SELECT id FROM units WHERE code='pcs'), NULL, 24000.00, 17500.00, 1, 'active');
+(UUID(), @cha_p25, @cha_vendor, 'CHA-SPLAC-1T', (SELECT id FROM units WHERE code='pcs'), 0.0000, 24000.00, 17500.00, 1, 'active');
 SET @cha_p25_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p25, @cha_vendor, 'CHA-SPLAC-1_5T', (SELECT id FROM units WHERE code='pcs'), NULL, 29000.00, 21000.00, 0, 'active');
+(UUID(), @cha_p25, @cha_vendor, 'CHA-SPLAC-1_5T', (SELECT id FROM units WHERE code='pcs'), 0.0000, 29000.00, 21000.00, 0, 'active');
 SET @cha_p25_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p25, @cha_vendor, 'CHA-SPLAC-2T', (SELECT id FROM units WHERE code='pcs'), NULL, 35000.00, 25500.00, 0, 'active');
+(UUID(), @cha_p25, @cha_vendor, 'CHA-SPLAC-2T', (SELECT id FROM units WHERE code='pcs'), 0.0000, 35000.00, 25500.00, 0, 'active');
 SET @cha_p25_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2754,7 +2754,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p26, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p26, @cha_vendor, 'CHA-WINAC1T-001', (SELECT id FROM units WHERE code='pcs'), NULL, 22000.00, 16000.00, 1, 'active');
+(UUID(), @cha_p26, @cha_vendor, 'CHA-WINAC1T-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 22000.00, 16000.00, 1, 'active');
 
 -- =========================================================
 -- Product 27: Oil Filled Radiator Room Heater 11 Fin (simple)
@@ -2770,7 +2770,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p27, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p27, @cha_vendor, 'CHA-OILRAD11-001', (SELECT id FROM units WHERE code='pcs'), NULL, 3800.00, 2700.00, 1, 'active');
+(UUID(), @cha_p27, @cha_vendor, 'CHA-OILRAD11-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3800.00, 2700.00, 1, 'active');
 
 -- =========================================================
 -- Product 28: Fan Room Heater 2000W (variant: color)
@@ -2786,10 +2786,10 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p28, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p28, @cha_vendor, 'CHA-FANHTR2000-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 880.00, 1, 'active');
+(UUID(), @cha_p28, @cha_vendor, 'CHA-FANHTR2000-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 880.00, 1, 'active');
 SET @cha_p28_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p28, @cha_vendor, 'CHA-FANHTR2000-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 880.00, 0, 'active');
+(UUID(), @cha_p28, @cha_vendor, 'CHA-FANHTR2000-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 880.00, 0, 'active');
 SET @cha_p28_v2 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2811,7 +2811,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p29, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p29, @cha_vendor, 'CHA-PTCHTR1500-001', (SELECT id FROM units WHERE code='pcs'), NULL, 1650.00, 1150.00, 1, 'active');
+(UUID(), @cha_p29, @cha_vendor, 'CHA-PTCHTR1500-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1650.00, 1150.00, 1, 'active');
 
 -- =========================================================
 -- Product 30: Instant Water Heater Geyser (variant: capacity)
@@ -2827,13 +2827,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p30, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p30, @cha_vendor, 'CHA-GEYSER-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 2200.00, 1550.00, 1, 'active');
+(UUID(), @cha_p30, @cha_vendor, 'CHA-GEYSER-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2200.00, 1550.00, 1, 'active');
 SET @cha_p30_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p30, @cha_vendor, 'CHA-GEYSER-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2250.00, 0, 'active');
+(UUID(), @cha_p30, @cha_vendor, 'CHA-GEYSER-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2250.00, 0, 'active');
 SET @cha_p30_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p30, @cha_vendor, 'CHA-GEYSER-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 4200.00, 2950.00, 0, 'active');
+(UUID(), @cha_p30, @cha_vendor, 'CHA-GEYSER-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4200.00, 2950.00, 0, 'active');
 SET @cha_p30_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2857,7 +2857,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p31, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p31, @cha_vendor, 'CHA-STORGEY15-001', (SELECT id FROM units WHERE code='pcs'), NULL, 6800.00, 4900.00, 1, 'active');
+(UUID(), @cha_p31, @cha_vendor, 'CHA-STORGEY15-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 6800.00, 4900.00, 1, 'active');
 
 -- =========================================================
 -- Product 32: Immersion Water Heater Rod 1500W (variant: color)
@@ -2873,13 +2873,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p32, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p32, @cha_vendor, 'CHA-IMRSN1500-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 450.00, 300.00, 1, 'active');
+(UUID(), @cha_p32, @cha_vendor, 'CHA-IMRSN1500-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 450.00, 300.00, 1, 'active');
 SET @cha_p32_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p32, @cha_vendor, 'CHA-IMRSN1500-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 450.00, 300.00, 0, 'active');
+(UUID(), @cha_p32, @cha_vendor, 'CHA-IMRSN1500-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 450.00, 300.00, 0, 'active');
 SET @cha_p32_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p32, @cha_vendor, 'CHA-IMRSN1500-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 450.00, 300.00, 0, 'active');
+(UUID(), @cha_p32, @cha_vendor, 'CHA-IMRSN1500-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 450.00, 300.00, 0, 'active');
 SET @cha_p32_v3 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2903,10 +2903,10 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p33, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p33, @cha_vendor, 'CHA-HEPAPUR-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 6200.00, 4400.00, 1, 'active');
+(UUID(), @cha_p33, @cha_vendor, 'CHA-HEPAPUR-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 6200.00, 4400.00, 1, 'active');
 SET @cha_p33_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p33, @cha_vendor, 'CHA-HEPAPUR-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 6200.00, 4400.00, 0, 'active');
+(UUID(), @cha_p33, @cha_vendor, 'CHA-HEPAPUR-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 6200.00, 4400.00, 0, 'active');
 SET @cha_p33_v2 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2928,7 +2928,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p34, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p34, @cha_vendor, 'CHA-DEHUM20-001', (SELECT id FROM units WHERE code='pcs'), NULL, 9200.00, 6600.00, 1, 'active');
+(UUID(), @cha_p34, @cha_vendor, 'CHA-DEHUM20-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 9200.00, 6600.00, 1, 'active');
 
 -- =========================================================
 -- Product 35: Bladeless Tower Fan with Remote (variant: color)
@@ -2944,10 +2944,10 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cha_p35, @cha_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p35, @cha_vendor, 'CHA-BLDFAN-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2300.00, 1, 'active');
+(UUID(), @cha_p35, @cha_vendor, 'CHA-BLDFAN-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2300.00, 1, 'active');
 SET @cha_p35_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cha_p35, @cha_vendor, 'CHA-BLDFAN-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2300.00, 0, 'active');
+(UUID(), @cha_p35, @cha_vendor, 'CHA-BLDFAN-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2300.00, 0, 'active');
 SET @cha_p35_v2 := LAST_INSERT_ID();
 
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
@@ -2989,13 +2989,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p1, 'Crispy Indori sev namkeen, gram flour base with authentic spice blend, available in bulk pack sizes.', 'Made from finely sieved gram flour and a proprietary blend of regional spices, this sev is fried in small batches for uniform crunch. Manufactured in an FSSAI-licensed facility in Indore following traditional recipes. Suitable for retail repackaging or wholesale distribution. MOQ applies per pack size; case discounts available on request.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p1, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p1, @afs_vendor, 'AFS-SEV-IND-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 60.00, 1, 'active');
+(UUID(), @afs_p1, @afs_vendor, 'AFS-SEV-IND-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 60.00, 1, 'active');
 SET @afs_p1_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p1, @afs_vendor, 'AFS-SEV-IND-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 200.00, 135.00, 0, 'active');
+(UUID(), @afs_p1, @afs_vendor, 'AFS-SEV-IND-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 200.00, 135.00, 0, 'active');
 SET @afs_p1_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p1, @afs_vendor, 'AFS-SEV-IND-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 260.00, 0, 'active');
+(UUID(), @afs_p1, @afs_vendor, 'AFS-SEV-IND-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 260.00, 0, 'active');
 SET @afs_p1_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p1_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g')),
@@ -3010,13 +3010,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p2, 'Extra spicy Ratlami sev with coarse black pepper, packed fresh in sealed pouches for wholesale.', 'A signature Malwa-region recipe using coarse black pepper and a higher chilli ratio than standard sev. Cooked in refined vegetable oil and nitrogen-flushed for extended shelf life. Popular with regional distributors and modern trade retailers. Bulk case packing available on request for orders above 100 units.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p2, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p2, @afs_vendor, 'AFS-SEV-RTM-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 55.00, 35.00, 1, 'active');
+(UUID(), @afs_p2, @afs_vendor, 'AFS-SEV-RTM-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 55.00, 35.00, 1, 'active');
 SET @afs_p2_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p2, @afs_vendor, 'AFS-SEV-RTM-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 100.00, 65.00, 0, 'active');
+(UUID(), @afs_p2, @afs_vendor, 'AFS-SEV-RTM-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 100.00, 65.00, 0, 'active');
 SET @afs_p2_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p2, @afs_vendor, 'AFS-SEV-RTM-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 230.00, 150.00, 0, 'active');
+(UUID(), @afs_p2, @afs_vendor, 'AFS-SEV-RTM-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 230.00, 150.00, 0, 'active');
 SET @afs_p2_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p2_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g')),
@@ -3031,13 +3031,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p3, 'Classic potato bhujia with crisp texture and balanced spice, manufactured for bulk distribution.', 'Made from dehydrated potato and gram flour dough extruded fine and fried in small batch fryers for consistent crunch. Seasoned with a roasted spice mix and packed in moisture-barrier pouches. Suitable for hotel/HORECA supply as well as retail repackaging. Volume pricing available for orders above 200 units per SKU.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p3, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p3, @afs_vendor, 'AFS-BHUJIA-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 55.00, 1, 'active');
+(UUID(), @afs_p3, @afs_vendor, 'AFS-BHUJIA-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 55.00, 1, 'active');
 SET @afs_p3_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p3, @afs_vendor, 'AFS-BHUJIA-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 190.00, 125.00, 0, 'active');
+(UUID(), @afs_p3, @afs_vendor, 'AFS-BHUJIA-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 190.00, 125.00, 0, 'active');
 SET @afs_p3_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p3, @afs_vendor, 'AFS-BHUJIA-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 360.00, 240.00, 0, 'active');
+(UUID(), @afs_p3, @afs_vendor, 'AFS-BHUJIA-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 360.00, 240.00, 0, 'active');
 SET @afs_p3_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p3_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g')),
@@ -3052,7 +3052,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p4, 'Dry-roasted moong dal namkeen, lightly salted, low-oil crunchy snack in a 500g wholesale pack.', 'Split moong dal is oven-roasted rather than deep fried, resulting in a lower-oil, high-protein snack. Lightly salted with rock salt and packed in a resealable 500g pouch. A popular choice for health-conscious retail chains and gifting hampers. Custom private-label packaging available above 500 units MOQ.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p4, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p4, @afs_vendor, 'AFS-MOONGDAL-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 140.00, 1, 'active');
+(UUID(), @afs_p4, @afs_vendor, 'AFS-MOONGDAL-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 140.00, 1, 'active');
 
 -- Product 5: Mixture Namkeen Punjabi Style (variant: pack_size)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3062,13 +3062,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p5, 'Punjabi-style mixture blending peanuts, sev, curry leaves and cornflakes for a varied crunch.', 'Combines eight distinct fried ingredients including peanuts, boondi, sev and curry leaves for a layered texture profile. Tossed in a house spice masala after frying to lock in flavor. Manufactured on the same line as our sev range under FSSAI supervision. Suitable for kirana, HORECA and modern trade channels.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p5, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p5, @afs_vendor, 'AFS-MIX-PUNJ-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 58.00, 1, 'active');
+(UUID(), @afs_p5, @afs_vendor, 'AFS-MIX-PUNJ-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 58.00, 1, 'active');
 SET @afs_p5_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p5, @afs_vendor, 'AFS-MIX-PUNJ-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 205.00, 135.00, 0, 'active');
+(UUID(), @afs_p5, @afs_vendor, 'AFS-MIX-PUNJ-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 205.00, 135.00, 0, 'active');
 SET @afs_p5_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p5, @afs_vendor, 'AFS-MIX-PUNJ-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 390.00, 255.00, 0, 'active');
+(UUID(), @afs_p5, @afs_vendor, 'AFS-MIX-PUNJ-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 390.00, 255.00, 0, 'active');
 SET @afs_p5_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p5_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g')),
@@ -3083,7 +3083,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p6, 'Kerala-style raw banana chips fried in coconut oil, seasoned with rock salt and curry leaves.', 'Thin-sliced raw bananas are deep fried in pure coconut oil for authentic flavour and seasoned with rock salt and fried curry leaves. Sourced raw material is graded before slicing to ensure uniform crispness. Packed in 250g foil pouches suitable for retail shelf display. Bulk carton packing (24 units/case) available on request.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p6, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p6, @afs_vendor, 'AFS-BANANACHIPS-250G', (SELECT id FROM units WHERE code='pcs'), NULL, 150.00, 95.00, 1, 'active');
+(UUID(), @afs_p6, @afs_vendor, 'AFS-BANANACHIPS-250G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 150.00, 95.00, 1, 'active');
 
 -- Product 7: Khatta Meetha Namkeen Mix (variant: pack_size)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3093,10 +3093,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p7, 'Sweet-tangy namkeen mix with boondi, sev and raisins, seasoned with tamarind and jaggery notes.', 'Balances fried boondi and sev with raisins and a tamarind-jaggery seasoning for the classic khatta-meetha profile popular across western India. Batch-mixed after frying to ensure even coating of seasoning. Nitrogen-flushed pouches extend shelf life to 4 months from packing date. Ideal for wholesale grocery and gifting assortments.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p7, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p7, @afs_vendor, 'AFS-KHATMEETHA-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 1, 'active');
+(UUID(), @afs_p7, @afs_vendor, 'AFS-KHATMEETHA-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 1, 'active');
 SET @afs_p7_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p7, @afs_vendor, 'AFS-KHATMEETHA-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 215.00, 140.00, 0, 'active');
+(UUID(), @afs_p7, @afs_vendor, 'AFS-KHATMEETHA-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 215.00, 140.00, 0, 'active');
 SET @afs_p7_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p7_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g')),
@@ -3110,13 +3110,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p8, 'Light and crunchy corn flakes chivda with peanuts and curry leaf tempering, oven-roasted.', 'Corn flakes are lightly roasted rather than fried, then tempered with mustard seeds, curry leaves and peanuts for a savory finish. A lower-oil alternative within our namkeen range, popular with health-food distributors. Packed in laminated pouches for a 5-month shelf life. Available in three wholesale pack sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p8, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p8, @afs_vendor, 'AFS-CORNCHIVDA-250G', (SELECT id FROM units WHERE code='pcs'), NULL, 100.00, 65.00, 1, 'active');
+(UUID(), @afs_p8, @afs_vendor, 'AFS-CORNCHIVDA-250G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 100.00, 65.00, 1, 'active');
 SET @afs_p8_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p8, @afs_vendor, 'AFS-CORNCHIVDA-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 118.00, 0, 'active');
+(UUID(), @afs_p8, @afs_vendor, 'AFS-CORNCHIVDA-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 118.00, 0, 'active');
 SET @afs_p8_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p8, @afs_vendor, 'AFS-CORNCHIVDA-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 225.00, 0, 'active');
+(UUID(), @afs_p8, @afs_vendor, 'AFS-CORNCHIVDA-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 225.00, 0, 'active');
 SET @afs_p8_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p8_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='250g')),
@@ -3131,7 +3131,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p9, 'Skin-on masala peanuts with a tangy roasted coating, packed for wholesale tea-time snacking.', 'Bold peanuts are graded for size uniformity, roasted and coated with a gram-flour masala batter fried to a light crisp. The tangy, mildly spiced coating is a proprietary blend developed in-house. Packed in 200g pouches ideal for kirana counters and travel retail. Larger bulk sacks available for institutional buyers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p9, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p9, @afs_vendor, 'AFS-PEANUT-MASALA-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 80.00, 52.00, 1, 'active');
+(UUID(), @afs_p9, @afs_vendor, 'AFS-PEANUT-MASALA-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 80.00, 52.00, 1, 'active');
 
 -- Product 10: Chana Jor Garam Namkeen (variant: pack_size)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3141,13 +3141,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p10, 'Flattened roasted chana namkeen with tangy amchur masala, a classic street-style snack, bulk packed.', 'Bengal gram is soaked, flattened and roasted before being tossed with a masala of amchur, black salt and red chilli. The recipe replicates the classic street-vendor chana jor garam popular across North and Central India. Packed fresh in sealed pouches to retain crunch. Available across three wholesale pack sizes for distributor stocking.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p10, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p10, @afs_vendor, 'AFS-CHANAJOR-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 55.00, 36.00, 1, 'active');
+(UUID(), @afs_p10, @afs_vendor, 'AFS-CHANAJOR-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 55.00, 36.00, 1, 'active');
 SET @afs_p10_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p10, @afs_vendor, 'AFS-CHANAJOR-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 100.00, 65.00, 0, 'active');
+(UUID(), @afs_p10, @afs_vendor, 'AFS-CHANAJOR-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 100.00, 65.00, 0, 'active');
 SET @afs_p10_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p10, @afs_vendor, 'AFS-CHANAJOR-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 225.00, 150.00, 0, 'active');
+(UUID(), @afs_p10, @afs_vendor, 'AFS-CHANAJOR-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 225.00, 150.00, 0, 'active');
 SET @afs_p10_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p10_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g')),
@@ -3162,7 +3162,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p11, 'Hand-rolled sun-dried urad dal papad with cracked pepper, ready to roast or fry, 200g pack.', 'Urad dal is ground into a smooth dough, hand-rolled into thin discs and sun-dried over multiple days for the traditional texture. Seasoned with cracked black pepper and a touch of asafoetida. Suitable for roasting or shallow frying before serving. Packed flat in moisture-resistant sleeves of 200g for bulk kirana and HORECA supply.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p11, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p11, @afs_vendor, 'AFS-PAPAD-URAD-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 70.00, 45.00, 1, 'active');
+(UUID(), @afs_p11, @afs_vendor, 'AFS-PAPAD-URAD-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 70.00, 45.00, 1, 'active');
 
 -- Product 12: Soya Chips Roasted Masala 200g (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3172,7 +3172,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p12, 'High-protein roasted soya chips tossed in a masala seasoning, packed for wholesale distribution.', 'Soya chunks are dry-roasted rather than deep fried, then coated with a roasted masala seasoning for a savory, protein-rich snack. Positioned for the growing health-food and fitness-focused retail segment. Packed in 200g resealable pouches with a 6-month shelf life. Custom nutrition labelling available for private-label orders.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p12, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p12, @afs_vendor, 'AFS-SOYACHIPS-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 62.00, 1, 'active');
+(UUID(), @afs_p12, @afs_vendor, 'AFS-SOYACHIPS-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 62.00, 1, 'active');
 
 -- ===================== Category: mfg-foods-spices =====================
 
@@ -3184,16 +3184,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p13, 'Premium stone-ground turmeric powder, high curcumin content, lab-tested and free of added colour.', 'Sourced from Sangli-belt turmeric rhizomes, boiled, sun-dried and stone-ground to preserve curcumin content and aroma. Each batch is lab-tested for adulterants and heavy metals before release. No synthetic colour or filler added. Suitable for spice traders, HORECA kitchens and private-label repacking across multiple pack sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p13, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p13, @afs_vendor, 'AFS-TURMERIC-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 45.00, 28.00, 1, 'active');
+(UUID(), @afs_p13, @afs_vendor, 'AFS-TURMERIC-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 45.00, 28.00, 1, 'active');
 SET @afs_p13_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p13, @afs_vendor, 'AFS-TURMERIC-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 54.00, 0, 'active');
+(UUID(), @afs_p13, @afs_vendor, 'AFS-TURMERIC-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 54.00, 0, 'active');
 SET @afs_p13_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p13, @afs_vendor, 'AFS-TURMERIC-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 195.00, 125.00, 0, 'active');
+(UUID(), @afs_p13, @afs_vendor, 'AFS-TURMERIC-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 195.00, 125.00, 0, 'active');
 SET @afs_p13_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p13, @afs_vendor, 'AFS-TURMERIC-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 370.00, 240.00, 0, 'active');
+(UUID(), @afs_p13, @afs_vendor, 'AFS-TURMERIC-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 370.00, 240.00, 0, 'active');
 SET @afs_p13_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p13_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g')),
@@ -3209,16 +3209,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p14, 'Kashmiri red chilli powder with deep colour and mild heat, stone-ground and double sieved.', 'Whole Kashmiri chillies are sun-dried, stone-ground and double-sieved to achieve a fine, vivid-red powder with mild heat. Preferred by restaurants and packaged food manufacturers for colour without excessive spice. Every batch is tested for Sudan dye adulteration before dispatch. Available across four wholesale pack sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p14, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p14, @afs_vendor, 'AFS-CHILLI-KASH-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 60.00, 38.00, 1, 'active');
+(UUID(), @afs_p14, @afs_vendor, 'AFS-CHILLI-KASH-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 60.00, 38.00, 1, 'active');
 SET @afs_p14_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p14, @afs_vendor, 'AFS-CHILLI-KASH-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 115.00, 74.00, 0, 'active');
+(UUID(), @afs_p14, @afs_vendor, 'AFS-CHILLI-KASH-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 115.00, 74.00, 0, 'active');
 SET @afs_p14_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p14, @afs_vendor, 'AFS-CHILLI-KASH-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 265.00, 172.00, 0, 'active');
+(UUID(), @afs_p14, @afs_vendor, 'AFS-CHILLI-KASH-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 265.00, 172.00, 0, 'active');
 SET @afs_p14_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p14, @afs_vendor, 'AFS-CHILLI-KASH-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 500.00, 325.00, 0, 'active');
+(UUID(), @afs_p14, @afs_vendor, 'AFS-CHILLI-KASH-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 500.00, 325.00, 0, 'active');
 SET @afs_p14_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p14_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g')),
@@ -3234,13 +3234,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p15, 'Pure coriander powder from lightly roasted seeds, no fillers or additives, aromatic and fresh.', 'Whole coriander seeds are lightly roasted to bring out natural oils before grinding, avoiding the flat taste of raw-ground powder. No husk, starch or other fillers are added, keeping the product 100% pure coriander. Packed under nitrogen flush to preserve aroma through the supply chain. A kitchen staple stocked by most of our distributor network.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p15, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p15, @afs_vendor, 'AFS-CORIANDER-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 40.00, 25.00, 1, 'active');
+(UUID(), @afs_p15, @afs_vendor, 'AFS-CORIANDER-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 40.00, 25.00, 1, 'active');
 SET @afs_p15_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p15, @afs_vendor, 'AFS-CORIANDER-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 75.00, 48.00, 0, 'active');
+(UUID(), @afs_p15, @afs_vendor, 'AFS-CORIANDER-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 75.00, 48.00, 0, 'active');
 SET @afs_p15_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p15, @afs_vendor, 'AFS-CORIANDER-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 170.00, 110.00, 0, 'active');
+(UUID(), @afs_p15, @afs_vendor, 'AFS-CORIANDER-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 170.00, 110.00, 0, 'active');
 SET @afs_p15_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p15_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g')),
@@ -3255,13 +3255,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p16, 'Signature 14-spice garam masala blend, dry-roasted and stone-ground for depth of flavour.', 'Our master blend combines fourteen whole spices including cassia, mace, black cardamom and star anise, dry-roasted individually before stone-grinding to preserve volatile oils. Small-batch production ensures consistent aroma across every pack. A best-seller among restaurant and caterer clients on our platform. Sold in three wholesale pack sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p16, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p16, @afs_vendor, 'AFS-GARAMMASALA-50G', (SELECT id FROM units WHERE code='pcs'), NULL, 45.00, 28.00, 1, 'active');
+(UUID(), @afs_p16, @afs_vendor, 'AFS-GARAMMASALA-50G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 45.00, 28.00, 1, 'active');
 SET @afs_p16_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p16, @afs_vendor, 'AFS-GARAMMASALA-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 80.00, 50.00, 0, 'active');
+(UUID(), @afs_p16, @afs_vendor, 'AFS-GARAMMASALA-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 80.00, 50.00, 0, 'active');
 SET @afs_p16_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p16, @afs_vendor, 'AFS-GARAMMASALA-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 150.00, 95.00, 0, 'active');
+(UUID(), @afs_p16, @afs_vendor, 'AFS-GARAMMASALA-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 150.00, 95.00, 0, 'active');
 SET @afs_p16_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p16_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='50g')),
@@ -3276,7 +3276,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p17, 'Whole cumin seeds, machine-cleaned and graded, high aromatic oil content, 200g wholesale pack.', 'Sourced directly from cumin-growing belts of Gujarat and Rajasthan, the seeds are machine-cleaned to remove stones and chaff, then graded for size uniformity. High volatile oil content ensures strong aroma when tempered. Suitable for whole-spice retail and food-processing tempering lines. Sold loose-fill in 200g wholesale pouches.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p17, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p17, @afs_vendor, 'AFS-JEERA-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 58.00, 1, 'active');
+(UUID(), @afs_p17, @afs_vendor, 'AFS-JEERA-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 58.00, 1, 'active');
 
 -- Product 18: Whole Mustard Seeds Rai 200g (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3286,7 +3286,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p18, 'Sortex-cleaned black mustard seeds for tempering and pickling, 200g wholesale pack.', 'Small black mustard seeds are sortex-cleaned to remove foreign matter and broken seeds, resulting in a uniform, pungent product. Widely used for tadka tempering across Indian cuisines and as a base for pickle manufacturing. Packed dry in moisture-resistant pouches to prevent clumping. A steady mover among our spice-trader partners.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p18, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p18, @afs_vendor, 'AFS-RAI-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 55.00, 34.00, 1, 'active');
+(UUID(), @afs_p18, @afs_vendor, 'AFS-RAI-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 55.00, 34.00, 1, 'active');
 
 -- Product 19: Malabar Black Pepper Whole 100g (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3296,7 +3296,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p19, 'Single-origin Malabar black peppercorns, bold size, sun-dried for high piperine pungency.', 'Sourced from Kerala pepper estates, these bold peppercorns are hand-harvested and sun-dried to concentrate piperine content and aroma. Free of stems and light corns through mechanical grading. Popular with premium spice retailers and export-oriented food processors. Packed in 100g resealable pouches for wholesale stocking.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p19, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p19, @afs_vendor, 'AFS-PEPPER-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 110.00, 70.00, 1, 'active');
+(UUID(), @afs_p19, @afs_vendor, 'AFS-PEPPER-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 110.00, 70.00, 1, 'active');
 
 -- Product 20: Chana Masala Powder (variant: pack_size)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3306,13 +3306,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p20, 'Ready-mix chana masala blending anardana, amchur and roasted cumin for authentic chickpea curry.', 'A balanced blend of pomegranate seed powder, dried mango powder and roasted cumin developed for classic North Indian chole. Removes the need for home cooks or restaurant kitchens to source and roast individual spices. Dry-roasted before grinding to enhance aroma. Available in three wholesale pack sizes for distributor stocking.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p20, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p20, @afs_vendor, 'AFS-CHANAMASALA-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 50.00, 32.00, 1, 'active');
+(UUID(), @afs_p20, @afs_vendor, 'AFS-CHANAMASALA-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 50.00, 32.00, 1, 'active');
 SET @afs_p20_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p20, @afs_vendor, 'AFS-CHANAMASALA-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 92.00, 60.00, 0, 'active');
+(UUID(), @afs_p20, @afs_vendor, 'AFS-CHANAMASALA-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 92.00, 60.00, 0, 'active');
 SET @afs_p20_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p20, @afs_vendor, 'AFS-CHANAMASALA-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 136.00, 0, 'active');
+(UUID(), @afs_p20, @afs_vendor, 'AFS-CHANAMASALA-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 136.00, 0, 'active');
 SET @afs_p20_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p20_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g')),
@@ -3327,13 +3327,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p21, 'All-purpose sabzi masala for everyday vegetable curries, balanced blend of ground and whole spices.', 'A versatile everyday masala designed for dry and gravy vegetable preparations, combining coriander, turmeric, chilli and a touch of garam masala. Formulated to be mild enough for daily use while retaining depth of flavour. Widely stocked by our HORECA and tiffin-service clients. Sold in three wholesale pack sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p21, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p21, @afs_vendor, 'AFS-SABZIMASALA-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 48.00, 30.00, 1, 'active');
+(UUID(), @afs_p21, @afs_vendor, 'AFS-SABZIMASALA-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 48.00, 30.00, 1, 'active');
 SET @afs_p21_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p21, @afs_vendor, 'AFS-SABZIMASALA-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 88.00, 57.00, 0, 'active');
+(UUID(), @afs_p21, @afs_vendor, 'AFS-SABZIMASALA-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 88.00, 57.00, 0, 'active');
 SET @afs_p21_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p21, @afs_vendor, 'AFS-SABZIMASALA-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 200.00, 130.00, 0, 'active');
+(UUID(), @afs_p21, @afs_vendor, 'AFS-SABZIMASALA-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 200.00, 130.00, 0, 'active');
 SET @afs_p21_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p21_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g')),
@@ -3348,7 +3348,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p22, 'Versatile 20-spice kitchen king blend suited to gravies, paneer dishes and mixed vegetables.', 'Combines twenty ground and whole spices into a single all-purpose blend designed for restaurant-style gravies, paneer preparations and mixed vegetable dishes. Reduces prep time for commercial kitchens by replacing multiple individual spice additions. Batch-tested for consistent colour and aroma. Packed in a 100g pouch suited to household and small-kitchen wholesale orders.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p22, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p22, @afs_vendor, 'AFS-KITCHENKING-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 40.00, 1, 'active');
+(UUID(), @afs_p22, @afs_vendor, 'AFS-KITCHENKING-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 40.00, 1, 'active');
 
 -- Product 23: Whole Fenugreek Seeds Methi 200g (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3358,7 +3358,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p23, 'Whole fenugreek seeds, machine-cleaned, used for tempering, pickling and sprouting, 200g pack.', 'Fenugreek seeds are cleaned mechanically to remove dust and broken grains, retaining their characteristic bitter-aromatic profile. Commonly used for tadka tempering, pickle manufacturing and home sprouting. Packed dry to prevent moisture pickup during storage and transit. A regular reorder item among our regional grocery distributors.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p23, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p23, @afs_vendor, 'AFS-METHI-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 48.00, 30.00, 1, 'active');
+(UUID(), @afs_p23, @afs_vendor, 'AFS-METHI-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 48.00, 30.00, 1, 'active');
 
 -- Product 24: Compounded Asafoetida Powder Hing 50g (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3368,7 +3368,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p24, 'Compounded asafoetida powder with a rice-flour carrier base, strong aroma for daily tempering.', 'Pure asafoetida resin is blended with a small proportion of edible gum and rice flour to create a stable, pourable compounded powder suitable for daily kitchen use. Sealed in an aroma-lock pouch to contain its characteristic pungency during transit. A pantry essential stocked across nearly all our grocery distributor accounts. Sold in a compact 50g wholesale pack.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p24, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p24, @afs_vendor, 'AFS-HING-50G', (SELECT id FROM units WHERE code='pcs'), NULL, 60.00, 36.00, 1, 'active');
+(UUID(), @afs_p24, @afs_vendor, 'AFS-HING-50G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 60.00, 36.00, 1, 'active');
 
 -- ===================== Category: mfg-foods-ready-to-cook =====================
 
@@ -3380,16 +3380,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p25, 'Thick-flake pressed rice poha, the base for authentic Indori-style breakfast, wholesale packed.', 'Parboiled paddy is flattened into thick flakes suited to absorbing moisture without turning mushy, the standard required for Indori-style poha. Sourced from regional rice mills and cleaned to remove broken grains and husk. A high-volume staple for our HORECA and grocery distribution channels. Available in bulk pack sizes up to 5kg for institutional buyers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p25, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p25, @afs_vendor, 'AFS-POHA-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 45.00, 28.00, 1, 'active');
+(UUID(), @afs_p25, @afs_vendor, 'AFS-POHA-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 45.00, 28.00, 1, 'active');
 SET @afs_p25_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p25, @afs_vendor, 'AFS-POHA-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 82.00, 52.00, 0, 'active');
+(UUID(), @afs_p25, @afs_vendor, 'AFS-POHA-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 82.00, 52.00, 0, 'active');
 SET @afs_p25_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p25, @afs_vendor, 'AFS-POHA-2KG', (SELECT id FROM units WHERE code='pcs'), NULL, 155.00, 98.00, 0, 'active');
+(UUID(), @afs_p25, @afs_vendor, 'AFS-POHA-2KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 155.00, 98.00, 0, 'active');
 SET @afs_p25_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p25, @afs_vendor, 'AFS-POHA-5KG', (SELECT id FROM units WHERE code='pcs'), NULL, 370.00, 235.00, 0, 'active');
+(UUID(), @afs_p25, @afs_vendor, 'AFS-POHA-5KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 370.00, 235.00, 0, 'active');
 SET @afs_p25_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p25_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g')),
@@ -3405,10 +3405,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p26, 'Pre-seasoned instant poha mix with dehydrated peanuts and spice sachet, ready in under 5 minutes.', 'Thin poha flakes are pre-mixed with a dehydrated tempering of peanuts, curry leaves and spices for a quick-prep breakfast requiring only hot water and a short rest. Designed for QSR, cloud-kitchen and travel-retail use cases where prep time is limited. Each pack includes a garnish sachet of sev and coriander. Packed in retort pouches for a 6-month shelf life.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p26, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p26, @afs_vendor, 'AFS-POHAMIX-RTC-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 60.00, 38.00, 1, 'active');
+(UUID(), @afs_p26, @afs_vendor, 'AFS-POHAMIX-RTC-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 60.00, 38.00, 1, 'active');
 SET @afs_p26_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p26, @afs_vendor, 'AFS-POHAMIX-RTC-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 135.00, 86.00, 0, 'active');
+(UUID(), @afs_p26, @afs_vendor, 'AFS-POHAMIX-RTC-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 135.00, 86.00, 0, 'active');
 SET @afs_p26_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p26_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g')),
@@ -3422,7 +3422,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p27, 'Roasted coarse-ground broken wheat dalia, suited to both savory upma and sweet porridge, 1kg pack.', 'Whole wheat is cleaned, cracked and lightly roasted to reduce cooking time and impart a nutty aroma. The coarse grind holds texture well in both savory dalia upma and sweet kheer-style preparations. A wholesome staple stocked by tiffin services and household grocery distributors alike. Packed in a 1kg bulk wholesale pouch.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p27, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p27, @afs_vendor, 'AFS-DALIA-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 78.00, 50.00, 1, 'active');
+(UUID(), @afs_p27, @afs_vendor, 'AFS-DALIA-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 78.00, 50.00, 1, 'active');
 
 -- Product 28: Pure Gram Flour Besan (variant: pack_size)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3432,16 +3432,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p28, 'Pure stone-milled gram flour with fine, consistent texture, unblended with cheaper starches.', 'Chana dal is stone-milled into a fine besan without blending with wheat or maize starch, a common adulteration in lower-grade flour. Used across our own sev and bhujia production lines, so quality control is stringent. Suitable for sweets, snacks, batters and gravies. Packed in bulk wholesale sizes up to 5kg for commercial kitchens and food processors.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p28, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p28, @afs_vendor, 'AFS-BESAN-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 60.00, 38.00, 1, 'active');
+(UUID(), @afs_p28, @afs_vendor, 'AFS-BESAN-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 60.00, 38.00, 1, 'active');
 SET @afs_p28_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p28, @afs_vendor, 'AFS-BESAN-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 112.00, 72.00, 0, 'active');
+(UUID(), @afs_p28, @afs_vendor, 'AFS-BESAN-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 112.00, 72.00, 0, 'active');
 SET @afs_p28_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p28, @afs_vendor, 'AFS-BESAN-2KG', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 135.00, 0, 'active');
+(UUID(), @afs_p28, @afs_vendor, 'AFS-BESAN-2KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 135.00, 0, 'active');
 SET @afs_p28_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p28, @afs_vendor, 'AFS-BESAN-5KG', (SELECT id FROM units WHERE code='pcs'), NULL, 495.00, 320.00, 0, 'active');
+(UUID(), @afs_p28, @afs_vendor, 'AFS-BESAN-5KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 495.00, 320.00, 0, 'active');
 SET @afs_p28_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p28_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g')),
@@ -3457,13 +3457,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p29, 'Fine-grade semolina roller-milled from durum wheat, suited to upma, halwa and idli batters.', 'Durum wheat is roller-milled to a fine, uniform grain size suited across preparations from upma to halwa to idli batter. Sifted multiple times to remove bran flecks for a clean, pale appearance. Sourced from certified mills and repacked at our Indore facility under quality checks. Available in bulk pack sizes for commercial kitchens and grocery distribution.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p29, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p29, @afs_vendor, 'AFS-SOOJI-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 38.00, 24.00, 1, 'active');
+(UUID(), @afs_p29, @afs_vendor, 'AFS-SOOJI-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 38.00, 24.00, 1, 'active');
 SET @afs_p29_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p29, @afs_vendor, 'AFS-SOOJI-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 70.00, 45.00, 0, 'active');
+(UUID(), @afs_p29, @afs_vendor, 'AFS-SOOJI-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 70.00, 45.00, 0, 'active');
 SET @afs_p29_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p29, @afs_vendor, 'AFS-SOOJI-2KG', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 84.00, 0, 'active');
+(UUID(), @afs_p29, @afs_vendor, 'AFS-SOOJI-2KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 84.00, 0, 'active');
 SET @afs_p29_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p29_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g')),
@@ -3478,7 +3478,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p30, 'Pre-portioned khichdi masala mix for quick rice-lentil khichdi preparation, just add rice and dal.', 'A pre-measured blend of turmeric, cumin, asafoetida and ghee-roasted spices designed to be added directly to cooking rice and moong dal for a one-pot khichdi. Cuts prep time significantly for institutional kitchens, hospitals and tiffin services. Each 200g pack yields approximately 8-10 servings depending on portion size. Shelf-stable for 8 months from packing.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p30, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p30, @afs_vendor, 'AFS-KHICHDIMIX-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 55.00, 35.00, 1, 'active');
+(UUID(), @afs_p30, @afs_vendor, 'AFS-KHICHDIMIX-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 55.00, 35.00, 1, 'active');
 
 -- Product 31: Instant Upma Mix Ready to Cook 200g (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3488,7 +3488,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p31, 'Instant sooji upma mix with dehydrated vegetables and tempering, ready in about 10 minutes.', 'Roasted semolina is pre-blended with dehydrated carrots, peas and a ready tempering of mustard seed and curry leaf, requiring only hot water and a short simmer. Designed for cloud kitchens, canteens and travel retail where quick turnaround matters. Retains texture and flavour close to freshly prepared upma. Packed in a 200g single-use-friendly wholesale pouch.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p31, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p31, @afs_vendor, 'AFS-UPMAMIX-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 58.00, 37.00, 1, 'active');
+(UUID(), @afs_p31, @afs_vendor, 'AFS-UPMAMIX-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 58.00, 37.00, 1, 'active');
 
 -- Product 32: Multigrain Atta Premium 5kg (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3498,7 +3498,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p32, 'Stone-ground multigrain atta blending wheat, jowar, bajra, ragi and chana in a 5kg bulk pack.', 'A five-grain blend of wheat, jowar, bajra, ragi and chana is stone-ground together to preserve fibre and nutrient content compared to refined single-grain flour. Formulated for daily roti-making with a soft dough texture despite the multigrain content. Positioned for health-conscious households and institutional canteens. Packed in a 5kg bulk sack for wholesale distribution.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p32, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p32, @afs_vendor, 'AFS-ATTA-MULTI-5KG', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 210.00, 1, 'active');
+(UUID(), @afs_p32, @afs_vendor, 'AFS-ATTA-MULTI-5KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 210.00, 1, 'active');
 
 -- Product 33: Instant Idli Dosa Batter Mix (variant: pack_size)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3508,10 +3508,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p33, 'Instant dry idli-dosa batter mix from rice and urad dal flour, ready to use after a short rest.', 'A pre-ground blend of parboiled rice flour and urad dal flour with a stabilised fermentation aid removes the need for the traditional 8-hour soak-and-grind process. Water is added and the batter rests for 15 minutes before use. Consistent results have made this a preferred choice among South Indian quick-service outlets. Available in two wholesale pack sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p33, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p33, @afs_vendor, 'AFS-IDLIDOSAMIX-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 42.00, 1, 'active');
+(UUID(), @afs_p33, @afs_vendor, 'AFS-IDLIDOSAMIX-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 42.00, 1, 'active');
 SET @afs_p33_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p33, @afs_vendor, 'AFS-IDLIDOSAMIX-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 145.00, 93.00, 0, 'active');
+(UUID(), @afs_p33, @afs_vendor, 'AFS-IDLIDOSAMIX-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 145.00, 93.00, 0, 'active');
 SET @afs_p33_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p33_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g')),
@@ -3525,13 +3525,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p34, 'Premium round sago pearls, uniform size and translucent cook, for khichdi, vada and fasting foods.', 'Sourced from tapioca-processing units in South India, these sago pearls are graded for uniform round size to ensure even cooking. Turns translucent and non-sticky when cooked correctly, key for both sabudana khichdi and vada preparations. Widely used across household and religious-fasting food segments. Available in three wholesale pack sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p34, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p34, @afs_vendor, 'AFS-SABUDANA-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 70.00, 45.00, 1, 'active');
+(UUID(), @afs_p34, @afs_vendor, 'AFS-SABUDANA-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 70.00, 45.00, 1, 'active');
 SET @afs_p34_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p34, @afs_vendor, 'AFS-SABUDANA-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 84.00, 0, 'active');
+(UUID(), @afs_p34, @afs_vendor, 'AFS-SABUDANA-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 84.00, 0, 'active');
 SET @afs_p34_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p34, @afs_vendor, 'AFS-SABUDANA-2KG', (SELECT id FROM units WHERE code='pcs'), NULL, 245.00, 158.00, 0, 'active');
+(UUID(), @afs_p34, @afs_vendor, 'AFS-SABUDANA-2KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 245.00, 158.00, 0, 'active');
 SET @afs_p34_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@afs_p34_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g')),
@@ -3546,7 +3546,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@afs_p35, 'Instant khoya-based gulab jamun mix for quick dessert prep, just knead, fry and soak in syrup.', 'A milk-solid-based instant mix replicates the softness of traditional khoya gulab jamun with a fraction of the preparation time. Just water is kneaded in before shaping and frying, followed by soaking in sugar syrup. Popular with caterers and sweet shops needing consistent quality without dedicated khoya-making infrastructure. Packed in a 200g pack yielding approximately 15-18 pieces.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@afs_p35, @afs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @afs_p35, @afs_vendor, 'AFS-GULABJAMUNMIX-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 54.00, 1, 'active');
+(UUID(), @afs_p35, @afs_vendor, 'AFS-GULABJAMUNMIX-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 54.00, 1, 'active');
 
 -- ---------------------------------------------------------------------
 -- Manufacturer 6/15 [hbv]: Himalayan Beverages Pvt Ltd — Beverages (Dehradun, Uttarakhand)
@@ -3580,7 +3580,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p1, 'IS-14543 certified 20L packaged drinking water jar for offices and events.', 'Sourced from Himalayan foothill aquifers and processed through multi-stage RO and UV purification. Supplied in food-grade reusable jars with tamper-evident seals. Suitable for office coolers, catering and events. MOQ 5 jars per order, jar deposit handled separately.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p1, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p1, @hbv_vendor, 'HBV-WATER-JAR-20L', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 45.00, 1, 'active');
+(UUID(), @hbv_p1, @hbv_vendor, 'HBV-WATER-JAR-20L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 45.00, 1, 'active');
 
 -- P2 (simple) Alpine Sparkling Mineral Water 750ml
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3590,7 +3590,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p2, 'Naturally carbonated 750ml glass-bottled mineral water for HORECA.', 'Sourced from a protected Himalayan spring and naturally carbonated. Bottled in returnable glass with crown cap for premium hotel, restaurant and cafe channels. Sold in cases of 12 bottles; case labelling available for private-label buyers on request.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p2, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p2, @hbv_vendor, 'HBV-SPARKLE-750ML', (SELECT id FROM units WHERE code='pcs'), NULL, 38.00, 26.00, 1, 'active');
+(UUID(), @hbv_p2, @hbv_vendor, 'HBV-SPARKLE-750ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 38.00, 26.00, 1, 'active');
 
 -- P3 (simple) Mixed Fruit Juice Concentrate 5L Pack
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3600,7 +3600,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p3, 'Bulk 5L mixed fruit concentrate, dilution ratio 1:4 for juice bars.', 'Concentrated blend of apple, orange and pineapple pulp, pasteurised and packed in food-grade jerry cans. Recommended dilution ratio 1:4 with chilled water. Ideal for juice bars, hotel kitchens and institutional catering. Batch traceability code printed on every can.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p3, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p3, @hbv_vendor, 'HBV-JUICE-CONC-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 850.00, 595.00, 1, 'active');
+(UUID(), @hbv_p3, @hbv_vendor, 'HBV-JUICE-CONC-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 850.00, 595.00, 1, 'active');
 
 -- P4 (simple) Electrolyte Sports Drink 500ml
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3610,7 +3610,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p4, 'Isotonic citrus electrolyte drink, 500ml PET bottle, for sports retail.', 'Formulated with sodium, potassium and magnesium electrolytes for rapid rehydration. Citrus flavoured, sugar level tuned for isotonic absorption. Packed in lightweight PET bottles suitable for gym counters, sports events and modern trade distribution. Sold in cases of 24.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p4, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p4, @hbv_vendor, 'HBV-SPORTS-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 32.00, 22.00, 1, 'active');
+(UUID(), @hbv_p4, @hbv_vendor, 'HBV-SPORTS-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 32.00, 22.00, 1, 'active');
 
 -- P5 (simple) Pomegranate Juice Premium 1L
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3620,7 +3620,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p5, 'Cold-pressed 100% pomegranate juice, 1L tetra pack, no added sugar.', 'Cold-pressed from farm-sourced pomegranates with no added sugar or preservatives. Packed in aseptic tetra cartons for 9-month ambient shelf life. Targeted at premium retail, hospital canteens and health food distributors. Batch-tested for Brix and anthocyanin content.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p5, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p5, @hbv_vendor, 'HBV-POMEGRANATE-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 145.00, 100.00, 1, 'active');
+(UUID(), @hbv_p5, @hbv_vendor, 'HBV-POMEGRANATE-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 145.00, 100.00, 1, 'active');
 
 -- P6 (simple) Ginger Lemon Honey Drink 250ml
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3630,7 +3630,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p6, 'RTD ginger-lemon-honey wellness drink, 250ml single-serve bottle.', 'Blend of ginger extract, lemon juice and pure honey positioned as a functional wellness beverage. Single-serve 250ml PET bottle suitable for cafe counters, gyms and wellness retail. No artificial colours; naturally preserved with citric acid.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p6, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p6, @hbv_vendor, 'HBV-GINGERLEMON-250ML', (SELECT id FROM units WHERE code='pcs'), NULL, 28.00, 19.00, 1, 'active');
+(UUID(), @hbv_p6, @hbv_vendor, 'HBV-GINGERLEMON-250ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 28.00, 19.00, 1, 'active');
 
 -- P7 (simple) Jaljeera Masala Drink Concentrate 750ml
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3640,7 +3640,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p7, 'Traditional jaljeera syrup concentrate, 750ml bottle, dilution 1:5.', 'Slow-cooked blend of roasted cumin, black salt, mint and tamarind concentrate. Recommended dilution 1:5 with chilled water for restaurant service. Packed in HDPE bottles with tamper-evident caps. Preferred by caterers for consistent batch-to-batch taste.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p7, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p7, @hbv_vendor, 'HBV-JALJEERA-750ML', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 145.00, 1, 'active');
+(UUID(), @hbv_p7, @hbv_vendor, 'HBV-JALJEERA-750ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 145.00, 1, 'active');
 
 -- P8 (variant) Himalayan Natural Mineral Water - 500ml/1L/2L
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3650,13 +3650,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p8, 'Natural Himalayan mineral water in 500ml, 1L and 2L PET bottles.', 'Drawn from a protected sub-Himalayan spring and bottled without any added minerals or treatment chemicals. Available across 500ml, 1L and 2L pack sizes to serve retail, HORECA and household delivery channels. Cases shrink-wrapped for pallet dispatch.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p8, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p8, @hbv_vendor, 'HBV-MINWATER-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 12.00, 8.00, 1, 'active');
+(UUID(), @hbv_p8, @hbv_vendor, 'HBV-MINWATER-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 12.00, 8.00, 1, 'active');
 SET @hbv_p8_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p8, @hbv_vendor, 'HBV-MINWATER-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 18.00, 12.50, 0, 'active');
+(UUID(), @hbv_p8, @hbv_vendor, 'HBV-MINWATER-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 18.00, 12.50, 0, 'active');
 SET @hbv_p8_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p8, @hbv_vendor, 'HBV-MINWATER-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 30.00, 21.00, 0, 'active');
+(UUID(), @hbv_p8, @hbv_vendor, 'HBV-MINWATER-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 30.00, 21.00, 0, 'active');
 SET @hbv_p8_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p8_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
@@ -3673,13 +3673,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p9, 'RTS orange juice from concentrate, 200ml/500ml/1L PET bottles.', 'Made from reconstituted orange concentrate with pulp retained for authentic mouthfeel. Pasteurised and hot-filled for ambient shelf stability. Supplied across three pack sizes to suit vending, retail and catering requirements.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p9, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p9, @hbv_vendor, 'HBV-ORANGE-RTS-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 22.00, 15.00, 1, 'active');
+(UUID(), @hbv_p9, @hbv_vendor, 'HBV-ORANGE-RTS-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 22.00, 15.00, 1, 'active');
 SET @hbv_p9_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p9, @hbv_vendor, 'HBV-ORANGE-RTS-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 48.00, 33.00, 0, 'active');
+(UUID(), @hbv_p9, @hbv_vendor, 'HBV-ORANGE-RTS-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 48.00, 33.00, 0, 'active');
 SET @hbv_p9_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p9, @hbv_vendor, 'HBV-ORANGE-RTS-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 88.00, 60.00, 0, 'active');
+(UUID(), @hbv_p9, @hbv_vendor, 'HBV-ORANGE-RTS-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 88.00, 60.00, 0, 'active');
 SET @hbv_p9_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p9_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
@@ -3696,10 +3696,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p10, 'Litchi-flavoured fruit drink, 200ml and 500ml PET bottles.', 'Refreshing litchi fruit drink made with real fruit pulp and natural flavouring, popular in the April-July summer season. Packed in lightweight PET bottles with shrink-sleeve labelling. Cases available in 24-bottle configuration.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p10, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p10, @hbv_vendor, 'HBV-LITCHI-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 20.00, 14.00, 1, 'active');
+(UUID(), @hbv_p10, @hbv_vendor, 'HBV-LITCHI-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 20.00, 14.00, 1, 'active');
 SET @hbv_p10_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p10, @hbv_vendor, 'HBV-LITCHI-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 42.00, 29.00, 0, 'active');
+(UUID(), @hbv_p10, @hbv_vendor, 'HBV-LITCHI-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 42.00, 29.00, 0, 'active');
 SET @hbv_p10_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p10_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
@@ -3714,10 +3714,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p11, 'RTD lemon iced tea brewed from real tea leaves, 250ml/500ml bottles.', 'Brewed from Assam tea leaves, lightly sweetened and finished with natural lemon extract. Bottled and pasteurised for 6-month ambient shelf life. Positioned for vending machines, cafes and modern trade cold-beverage sections.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p11, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p11, @hbv_vendor, 'HBV-ICEDTEA-250ML', (SELECT id FROM units WHERE code='pcs'), NULL, 25.00, 17.00, 1, 'active');
+(UUID(), @hbv_p11, @hbv_vendor, 'HBV-ICEDTEA-250ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 25.00, 17.00, 1, 'active');
 SET @hbv_p11_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p11, @hbv_vendor, 'HBV-ICEDTEA-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 45.00, 31.00, 0, 'active');
+(UUID(), @hbv_p11, @hbv_vendor, 'HBV-ICEDTEA-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 45.00, 31.00, 0, 'active');
 SET @hbv_p11_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p11_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='250ml'));
@@ -3732,10 +3732,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p12, '100% tender coconut water, 200ml/1L tetra packs, no added sugar.', 'Naturally extracted from tender coconuts, flash pasteurised to retain electrolytes and natural sweetness. Zero added sugar or preservatives. Packed in aseptic cartons for ambient distribution to health food, gym and modern retail channels.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p12, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p12, @hbv_vendor, 'HBV-COCONUT-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 30.00, 21.00, 1, 'active');
+(UUID(), @hbv_p12, @hbv_vendor, 'HBV-COCONUT-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 30.00, 21.00, 1, 'active');
 SET @hbv_p12_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p12, @hbv_vendor, 'HBV-COCONUT-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 110.00, 76.00, 0, 'active');
+(UUID(), @hbv_p12, @hbv_vendor, 'HBV-COCONUT-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 110.00, 76.00, 0, 'active');
 SET @hbv_p12_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p12_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
@@ -3750,10 +3750,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p13, 'Aloe vera pulp juice with honey and lemon, 500ml/1L bottles.', 'Made from farm-sourced aloe vera pulp blended with honey and lemon for taste. Retains visible aloe pulp bits as per consumer preference in the functional beverage category. Sold in 500ml and 1L PET bottles to health food and wellness retail chains.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p13, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p13, @hbv_vendor, 'HBV-ALOEVERA-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 55.00, 38.00, 1, 'active');
+(UUID(), @hbv_p13, @hbv_vendor, 'HBV-ALOEVERA-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 55.00, 38.00, 1, 'active');
 SET @hbv_p13_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p13, @hbv_vendor, 'HBV-ALOEVERA-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 66.00, 0, 'active');
+(UUID(), @hbv_p13, @hbv_vendor, 'HBV-ALOEVERA-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 66.00, 0, 'active');
 SET @hbv_p13_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p13_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
@@ -3768,10 +3768,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p14, 'Clarified apple juice from hill-grown apples, 200ml/1L bottles.', 'Pressed and clarified from hill-grown apples sourced from nearby orchards, filtered for a clear appearance. Hot-filled for ambient shelf stability without preservatives. Packed in 200ml single-serve and 1L family-pack bottles.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p14, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p14, @hbv_vendor, 'HBV-APPLEJUICE-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 24.00, 17.00, 1, 'active');
+(UUID(), @hbv_p14, @hbv_vendor, 'HBV-APPLEJUICE-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 24.00, 17.00, 1, 'active');
 SET @hbv_p14_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p14, @hbv_vendor, 'HBV-APPLEJUICE-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 92.00, 64.00, 0, 'active');
+(UUID(), @hbv_p14, @hbv_vendor, 'HBV-APPLEJUICE-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 92.00, 64.00, 0, 'active');
 SET @hbv_p14_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p14_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
@@ -3786,10 +3786,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p15, 'Pink guava nectar with retained pulp, 200ml/1L bottles.', 'Made from pink guava pulp with nectar-grade fruit content and natural pulp retained for texture. Pasteurised and hot-filled for shelf stability. Available in single-serve 200ml and family 1L pack for retail and catering buyers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p15, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p15, @hbv_vendor, 'HBV-GUAVA-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 21.00, 15.00, 1, 'active');
+(UUID(), @hbv_p15, @hbv_vendor, 'HBV-GUAVA-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 21.00, 15.00, 1, 'active');
 SET @hbv_p15_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p15, @hbv_vendor, 'HBV-GUAVA-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 59.00, 0, 'active');
+(UUID(), @hbv_p15, @hbv_vendor, 'HBV-GUAVA-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 59.00, 0, 'active');
 SET @hbv_p15_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p15_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
@@ -3804,13 +3804,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p16, 'Blueberry-cranberry-blackcurrant juice blend, 200ml/500ml/1L bottles.', 'A blend of imported berry concentrates combined with local grape base for a balanced antioxidant-rich profile. Positioned as a premium health juice for modern retail and gifting hampers. Available in three pack sizes to suit vending through to family packs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p16, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p16, @hbv_vendor, 'HBV-BERRYBLEND-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 26.00, 18.00, 1, 'active');
+(UUID(), @hbv_p16, @hbv_vendor, 'HBV-BERRYBLEND-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 26.00, 18.00, 1, 'active');
 SET @hbv_p16_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p16, @hbv_vendor, 'HBV-BERRYBLEND-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 55.00, 38.00, 0, 'active');
+(UUID(), @hbv_p16, @hbv_vendor, 'HBV-BERRYBLEND-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 55.00, 38.00, 0, 'active');
 SET @hbv_p16_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p16, @hbv_vendor, 'HBV-BERRYBLEND-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 98.00, 68.00, 0, 'active');
+(UUID(), @hbv_p16, @hbv_vendor, 'HBV-BERRYBLEND-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 98.00, 68.00, 0, 'active');
 SET @hbv_p16_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p16_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
@@ -3827,10 +3827,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p17, 'Alphonso mango pulp juice, aseptic tetra pack, 500ml/1L.', 'Made from Alphonso mango pulp sourced during peak season and preserved by aseptic processing for year-round availability. Rich, thick consistency preferred in the North Indian mango-drink segment. Available in 500ml single-serve and 1L family packs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p17, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p17, @hbv_vendor, 'HBV-MANGOPULP-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 60.00, 42.00, 1, 'active');
+(UUID(), @hbv_p17, @hbv_vendor, 'HBV-MANGOPULP-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 60.00, 42.00, 1, 'active');
 SET @hbv_p17_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p17, @hbv_vendor, 'HBV-MANGOPULP-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 105.00, 73.00, 0, 'active');
+(UUID(), @hbv_p17, @hbv_vendor, 'HBV-MANGOPULP-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 105.00, 73.00, 0, 'active');
 SET @hbv_p17_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p17_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
@@ -3847,7 +3847,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p18, 'Single-estate Darjeeling first-flush black tea, 25 pyramid tea bags.', 'Sourced from a single Darjeeling estate first-flush harvest, known for its distinct muscatel character. Packed as pyramid tea bags for full leaf infusion. Boxed 25 bags per pack with individually foil-wrapped sachets to retain aroma.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p18, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p18, @hbv_vendor, 'HBV-DARJEELING-BAGS-25S', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 125.00, 1, 'active');
+(UUID(), @hbv_p18, @hbv_vendor, 'HBV-DARJEELING-BAGS-25S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 125.00, 1, 'active');
 
 -- P19 (simple) Robusta Coffee Beans Whole 500g
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3857,7 +3857,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p19, 'Coorg-sourced roasted whole robusta beans, 500g resealable pouch.', 'Beans sourced from Coorg estates and medium-roasted for a strong, bold cup suited to South Indian filter and espresso blends. Packed in a resealable, one-way degassing valve pouch to preserve freshness. Sold in 500g units to cafes and roasters.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p19, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p19, @hbv_vendor, 'HBV-ROBUSTA-BEANS-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 290.00, 1, 'active');
+(UUID(), @hbv_p19, @hbv_vendor, 'HBV-ROBUSTA-BEANS-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 290.00, 1, 'active');
 
 -- P20 (simple) Lemon Green Tea Bags 25s Box
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3867,7 +3867,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p20, 'Lemon-infused green tea, box of 25 individually wrapped tea bags.', 'Green tea leaves blended with natural lemon peel and flavouring for a refreshing infusion. Each tea bag individually foil-wrapped to preserve freshness. Boxed 25 per pack, suited to cafes, offices and modern trade tea sections.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p20, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p20, @hbv_vendor, 'HBV-LEMONGREEN-BAGS-25S', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 114.00, 1, 'active');
+(UUID(), @hbv_p20, @hbv_vendor, 'HBV-LEMONGREEN-BAGS-25S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 114.00, 1, 'active');
 
 -- P21 (simple) Cardamom Chai Masala Powder 100g
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3877,7 +3877,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p21, 'Cardamom-forward ground chai masala spice blend, 100g pouch.', 'A ground spice blend of cardamom, cinnamon, cloves, ginger and black pepper tuned for a cardamom-forward masala chai. Ideal for tea stalls, restaurants and home kitchens looking for a consistent brew. Packed in a resealable 100g pouch.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p21, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p21, @hbv_vendor, 'HBV-CHAIMASALA-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 65.00, 1, 'active');
+(UUID(), @hbv_p21, @hbv_vendor, 'HBV-CHAIMASALA-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 65.00, 1, 'active');
 
 -- P22 (simple) Cold Brew Coffee Concentrate 500ml
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3887,7 +3887,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p22, '18-hour cold-steeped coffee concentrate, 500ml bottle, dilution 1:1.', 'Slow-steeped for 18 hours using coarse-ground Arabica beans for a naturally sweet, low-acidity concentrate. Recommended 1:1 dilution with water or milk over ice. Bottled and refrigerated for cafes running cold brew and iced latte menus.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p22, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p22, @hbv_vendor, 'HBV-COLDBREW-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 220.00, 1, 'active');
+(UUID(), @hbv_p22, @hbv_vendor, 'HBV-COLDBREW-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 220.00, 1, 'active');
 
 -- P23 (simple) Instant Cappuccino Premix 1kg
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3897,7 +3897,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p23, 'Vending-grade instant cappuccino premix powder, 1kg bag.', 'A blend of instant coffee, milk solids and sugar formulated to dissolve cleanly in vending machine dispensers and cafe hot-water setups. Consistent froth and taste across cups. Packed in 1kg moisture-proof bags for bulk buyers and vending operators.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p23, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p23, @hbv_vendor, 'HBV-CAPPUCCINO-PREMIX-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 680.00, 470.00, 1, 'active');
+(UUID(), @hbv_p23, @hbv_vendor, 'HBV-CAPPUCCINO-PREMIX-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 680.00, 470.00, 1, 'active');
 
 -- P24 (simple) Chamomile Herbal Tea Bags 20s
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3907,7 +3907,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p24, 'Caffeine-free chamomile flower herbal tea, box of 20 tea bags.', 'Made from whole dried chamomile flowers, naturally caffeine-free and marketed for relaxation and bedtime use. Individually sachet-wrapped tea bags retain aroma. Boxed 20 per pack for hotel amenity trays, spas and wellness retail.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p24, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p24, @hbv_vendor, 'HBV-CHAMOMILE-BAGS-20S', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 145.00, 1, 'active');
+(UUID(), @hbv_p24, @hbv_vendor, 'HBV-CHAMOMILE-BAGS-20S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 145.00, 1, 'active');
 
 -- P25 (variant) Himalayan Green Tea Loose Leaf - 100g/250g/500g
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -3917,13 +3917,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p25, 'Hand-plucked loose-leaf Himalayan green tea, 100g/250g/500g packs.', 'Hand-plucked from foothill gardens and pan-fired for a light, grassy cup. Sold as loose leaf across three pack sizes to serve retail tea counters through to bulk institutional buyers. Resealable foil pouches retain freshness after opening.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p25, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p25, @hbv_vendor, 'HBV-GREENTEA-LOOSE-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 145.00, 100.00, 1, 'active');
+(UUID(), @hbv_p25, @hbv_vendor, 'HBV-GREENTEA-LOOSE-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 145.00, 100.00, 1, 'active');
 SET @hbv_p25_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p25, @hbv_vendor, 'HBV-GREENTEA-LOOSE-250G', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 235.00, 0, 'active');
+(UUID(), @hbv_p25, @hbv_vendor, 'HBV-GREENTEA-LOOSE-250G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 235.00, 0, 'active');
 SET @hbv_p25_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p25, @hbv_vendor, 'HBV-GREENTEA-LOOSE-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 620.00, 430.00, 0, 'active');
+(UUID(), @hbv_p25, @hbv_vendor, 'HBV-GREENTEA-LOOSE-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 620.00, 430.00, 0, 'active');
 SET @hbv_p25_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p25_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
@@ -3940,10 +3940,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p26, 'Strong Assam CTC black tea for milk chai, bulk 500g/1kg packs.', 'Crush-Tear-Curl processed Assam tea known for its malty strength, ideal for milk-based chai preparation. Sourced from Assam gardens and packed for tea stalls, canteens and household bulk buyers. Available in 500g and 1kg poly-lined bags.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p26, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p26, @hbv_vendor, 'HBV-ASSAMCTC-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 260.00, 180.00, 1, 'active');
+(UUID(), @hbv_p26, @hbv_vendor, 'HBV-ASSAMCTC-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 260.00, 180.00, 1, 'active');
 SET @hbv_p26_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p26, @hbv_vendor, 'HBV-ASSAMCTC-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 335.00, 0, 'active');
+(UUID(), @hbv_p26, @hbv_vendor, 'HBV-ASSAMCTC-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 335.00, 0, 'active');
 SET @hbv_p26_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p26_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g'));
@@ -3958,13 +3958,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p27, 'Pre-blended masala chai leaf with whole spices, 250g/500g/1kg.', 'Assam CTC tea leaf pre-blended with crushed cardamom, cinnamon, clove and ginger for a ready masala chai. Saves preparation time for tea stalls and canteens while keeping a consistent flavour. Available across three bulk pack sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p27, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p27, @hbv_vendor, 'HBV-MASALACHAI-250G', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 115.00, 1, 'active');
+(UUID(), @hbv_p27, @hbv_vendor, 'HBV-MASALACHAI-250G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 115.00, 1, 'active');
 SET @hbv_p27_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p27, @hbv_vendor, 'HBV-MASALACHAI-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 300.00, 210.00, 0, 'active');
+(UUID(), @hbv_p27, @hbv_vendor, 'HBV-MASALACHAI-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 300.00, 210.00, 0, 'active');
 SET @hbv_p27_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p27, @hbv_vendor, 'HBV-MASALACHAI-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 560.00, 390.00, 0, 'active');
+(UUID(), @hbv_p27, @hbv_vendor, 'HBV-MASALACHAI-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 560.00, 390.00, 0, 'active');
 SET @hbv_p27_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p27_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='250g'));
@@ -3981,13 +3981,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p28, 'Freeze-dried premium instant coffee granules, 50g/100g/200g jars.', 'Freeze-dried from a blend of Arabica and Robusta beans to retain aroma and a smooth finish. Packed in reusable glass jars across three sizes for retail and gifting. Dissolves instantly in hot or cold milk and water.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p28, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p28, @hbv_vendor, 'HBV-INSTANTCOFFEE-50G', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 66.00, 1, 'active');
+(UUID(), @hbv_p28, @hbv_vendor, 'HBV-INSTANTCOFFEE-50G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 66.00, 1, 'active');
 SET @hbv_p28_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p28, @hbv_vendor, 'HBV-INSTANTCOFFEE-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 175.00, 122.00, 0, 'active');
+(UUID(), @hbv_p28, @hbv_vendor, 'HBV-INSTANTCOFFEE-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 175.00, 122.00, 0, 'active');
 SET @hbv_p28_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p28, @hbv_vendor, 'HBV-INSTANTCOFFEE-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 222.00, 0, 'active');
+(UUID(), @hbv_p28, @hbv_vendor, 'HBV-INSTANTCOFFEE-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 222.00, 0, 'active');
 SET @hbv_p28_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p28_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='50g'));
@@ -4004,10 +4004,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p29, 'Chicory-blended South Indian filter coffee powder, 200g/500g.', 'A classic 80:20 coffee-chicory blend roasted and ground fine for traditional South Indian filter decoction brewing. Sourced from Chikmagalur estates. Packed in foil pouches across 200g and 500g sizes for households and darshinis alike.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p29, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p29, @hbv_vendor, 'HBV-FILTERCOFFEE-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 146.00, 1, 'active');
+(UUID(), @hbv_p29, @hbv_vendor, 'HBV-FILTERCOFFEE-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 146.00, 1, 'active');
 SET @hbv_p29_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p29, @hbv_vendor, 'HBV-FILTERCOFFEE-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 335.00, 0, 'active');
+(UUID(), @hbv_p29, @hbv_vendor, 'HBV-FILTERCOFFEE-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 335.00, 0, 'active');
 SET @hbv_p29_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p29_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g'));
@@ -4022,13 +4022,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p30, 'Single-origin medium-roast Arabica coffee beans, 250g/500g/1kg.', 'Single-origin Arabica beans grown in the sub-Himalayan belt, medium roasted to highlight fruity and floral notes. Roasted in small batches and packed with a degassing valve pouch. Available in three sizes for specialty cafes, roasters and gifting.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p30, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p30, @hbv_vendor, 'HBV-ARABICA-BEANS-250G', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 265.00, 1, 'active');
+(UUID(), @hbv_p30, @hbv_vendor, 'HBV-ARABICA-BEANS-250G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 265.00, 1, 'active');
 SET @hbv_p30_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p30, @hbv_vendor, 'HBV-ARABICA-BEANS-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 700.00, 490.00, 0, 'active');
+(UUID(), @hbv_p30, @hbv_vendor, 'HBV-ARABICA-BEANS-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 700.00, 490.00, 0, 'active');
 SET @hbv_p30_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p30, @hbv_vendor, 'HBV-ARABICA-BEANS-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 1320.00, 920.00, 0, 'active');
+(UUID(), @hbv_p30, @hbv_vendor, 'HBV-ARABICA-BEANS-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1320.00, 920.00, 0, 'active');
 SET @hbv_p30_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p30_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='250g'));
@@ -4045,10 +4045,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p31, 'Caffeine-free loose-leaf tulsi-ginger herbal tea, 100g/250g.', 'A caffeine-free blend of dried tulsi (holy basil) leaves and ginger slices marketed for immunity and digestion benefits. Loose-leaf format for infusion in a strainer or teapot. Packed in 100g and 250g resealable kraft pouches.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p31, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p31, @hbv_vendor, 'HBV-TULSIGINGER-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 120.00, 83.00, 1, 'active');
+(UUID(), @hbv_p31, @hbv_vendor, 'HBV-TULSIGINGER-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 120.00, 83.00, 1, 'active');
 SET @hbv_p31_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p31, @hbv_vendor, 'HBV-TULSIGINGER-250G', (SELECT id FROM units WHERE code='pcs'), NULL, 270.00, 188.00, 0, 'active');
+(UUID(), @hbv_p31, @hbv_vendor, 'HBV-TULSIGINGER-250G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 270.00, 188.00, 0, 'active');
 SET @hbv_p31_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p31_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
@@ -4063,10 +4063,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p32, 'Traditional Kashmiri kahwa green tea blend with saffron and almond, 100g/250g.', 'A traditional Kashmiri recipe blending green tea leaves with saffron strands, cinnamon bark, cardamom and slivered almonds. Packed in decorative tins suited to gifting and premium retail. Available in 100g and 250g tin sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p32, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p32, @hbv_vendor, 'HBV-KAHWA-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 250.00, 174.00, 1, 'active');
+(UUID(), @hbv_p32, @hbv_vendor, 'HBV-KAHWA-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 250.00, 174.00, 1, 'active');
 SET @hbv_p32_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p32, @hbv_vendor, 'HBV-KAHWA-250G', (SELECT id FROM units WHERE code='pcs'), NULL, 560.00, 390.00, 0, 'active');
+(UUID(), @hbv_p32, @hbv_vendor, 'HBV-KAHWA-250G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 560.00, 390.00, 0, 'active');
 SET @hbv_p32_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p32_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
@@ -4081,10 +4081,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p33, 'Dried whole hibiscus flower petals, caffeine-free, 100g/200g packs.', 'Sun-dried whole hibiscus petals producing a tart, deep-red infusion popular hot or cold-brewed. Naturally caffeine-free and rich in antioxidants. Packed in resealable pouches across 100g and 200g sizes for cafes and health food stores.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p33, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p33, @hbv_vendor, 'HBV-HIBISCUS-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 135.00, 94.00, 1, 'active');
+(UUID(), @hbv_p33, @hbv_vendor, 'HBV-HIBISCUS-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 135.00, 94.00, 1, 'active');
 SET @hbv_p33_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p33, @hbv_vendor, 'HBV-HIBISCUS-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 245.00, 171.00, 0, 'active');
+(UUID(), @hbv_p33, @hbv_vendor, 'HBV-HIBISCUS-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 245.00, 171.00, 0, 'active');
 SET @hbv_p33_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p33_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
@@ -4099,10 +4099,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p34, 'Hand-rolled semi-oxidised oolong tea, loose leaf, 100g/250g tins.', 'Semi-oxidised and hand-rolled in small batches from second-flush leaf, giving a floral aroma between green and black tea. Sold loose leaf in airtight tins for specialty tea shops and cafes running a premium tea programme. Available in 100g and 250g sizes.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p34, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p34, @hbv_vendor, 'HBV-OOLONG-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 216.00, 1, 'active');
+(UUID(), @hbv_p34, @hbv_vendor, 'HBV-OOLONG-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 216.00, 1, 'active');
 SET @hbv_p34_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p34, @hbv_vendor, 'HBV-OOLONG-250G', (SELECT id FROM units WHERE code='pcs'), NULL, 700.00, 490.00, 0, 'active');
+(UUID(), @hbv_p34, @hbv_vendor, 'HBV-OOLONG-250G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 700.00, 490.00, 0, 'active');
 SET @hbv_p34_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p34_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
@@ -4117,10 +4117,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@hbv_p35, 'Hand-picked silver-tip white tea, minimally processed, 50g/100g tins.', 'Hand-picked silver-tip buds, minimally processed with only withering and drying to preserve delicate flavour and antioxidants. Among the highest-value teas in our range, positioned for luxury retail and export buyers. Packed in 50g and 100g premium tins.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@hbv_p35, @hbv_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p35, @hbv_vendor, 'HBV-WHITETEA-50G', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 265.00, 1, 'active');
+(UUID(), @hbv_p35, @hbv_vendor, 'HBV-WHITETEA-50G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 265.00, 1, 'active');
 SET @hbv_p35_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @hbv_p35, @hbv_vendor, 'HBV-WHITETEA-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 700.00, 490.00, 0, 'active');
+(UUID(), @hbv_p35, @hbv_vendor, 'HBV-WHITETEA-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 700.00, 490.00, 0, 'active');
 SET @hbv_p35_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@hbv_p35_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='50g'));
@@ -4166,19 +4166,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p1, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p1, @gpc_vendor, 'GPC-FW-NEEM-50G', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 45.00, 1, 'active');
+(UUID(), @gpc_p1, @gpc_vendor, 'GPC-FW-NEEM-50G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 45.00, 1, 'active');
 SET @gpc_p1_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p1_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='50g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p1, @gpc_vendor, 'GPC-FW-NEEM-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 110.00, 75.00, 0, 'active');
+(UUID(), @gpc_p1, @gpc_vendor, 'GPC-FW-NEEM-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 110.00, 75.00, 0, 'active');
 SET @gpc_p1_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p1_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p1, @gpc_vendor, 'GPC-FW-NEEM-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 190.00, 130.00, 0, 'active');
+(UUID(), @gpc_p1, @gpc_vendor, 'GPC-FW-NEEM-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 190.00, 130.00, 0, 'active');
 SET @gpc_p1_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p1_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g'));
@@ -4195,7 +4195,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p2, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p2, @gpc_vendor, 'GPC-SR-VITC-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 350.00, 235.00, 1, 'active');
+(UUID(), @gpc_p2, @gpc_vendor, 'GPC-SR-VITC-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 350.00, 235.00, 1, 'active');
 
 -- ===== Product 3: Aloe Vera Soothing Gel =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4209,19 +4209,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p3, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p3, @gpc_vendor, 'GPC-GEL-ALOE-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 60.00, 1, 'active');
+(UUID(), @gpc_p3, @gpc_vendor, 'GPC-GEL-ALOE-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 60.00, 1, 'active');
 SET @gpc_p3_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p3_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p3, @gpc_vendor, 'GPC-GEL-ALOE-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 150.00, 100.00, 0, 'active');
+(UUID(), @gpc_p3, @gpc_vendor, 'GPC-GEL-ALOE-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 150.00, 100.00, 0, 'active');
 SET @gpc_p3_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p3_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p3, @gpc_vendor, 'GPC-GEL-ALOE-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 215.00, 0, 'active');
+(UUID(), @gpc_p3, @gpc_vendor, 'GPC-GEL-ALOE-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 215.00, 0, 'active');
 SET @gpc_p3_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p3_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g'));
@@ -4238,19 +4238,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p4, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p4, @gpc_vendor, 'GPC-PACK-UBTAN-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 70.00, 48.00, 1, 'active');
+(UUID(), @gpc_p4, @gpc_vendor, 'GPC-PACK-UBTAN-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 70.00, 48.00, 1, 'active');
 SET @gpc_p4_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p4_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p4, @gpc_vendor, 'GPC-PACK-UBTAN-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 120.00, 82.00, 0, 'active');
+(UUID(), @gpc_p4, @gpc_vendor, 'GPC-PACK-UBTAN-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 120.00, 82.00, 0, 'active');
 SET @gpc_p4_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p4_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p4, @gpc_vendor, 'GPC-PACK-UBTAN-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 260.00, 175.00, 0, 'active');
+(UUID(), @gpc_p4, @gpc_vendor, 'GPC-PACK-UBTAN-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 260.00, 175.00, 0, 'active');
 SET @gpc_p4_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p4_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g'));
@@ -4267,13 +4267,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p5, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p5, @gpc_vendor, 'GPC-FW-CHAR-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 115.00, 78.00, 1, 'active');
+(UUID(), @gpc_p5, @gpc_vendor, 'GPC-FW-CHAR-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 115.00, 78.00, 1, 'active');
 SET @gpc_p5_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p5_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p5, @gpc_vendor, 'GPC-FW-CHAR-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 195.00, 132.00, 0, 'active');
+(UUID(), @gpc_p5, @gpc_vendor, 'GPC-FW-CHAR-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 195.00, 132.00, 0, 'active');
 SET @gpc_p5_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p5_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g'));
@@ -4290,7 +4290,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p6, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p6, @gpc_vendor, 'GPC-CR-ANTIAGE-50G', (SELECT id FROM units WHERE code='pcs'), NULL, 450.00, 300.00, 1, 'active');
+(UUID(), @gpc_p6, @gpc_vendor, 'GPC-CR-ANTIAGE-50G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 450.00, 300.00, 1, 'active');
 
 -- ===== Product 7: Sunscreen SPF 50 Matte Gel =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4304,13 +4304,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p7, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p7, @gpc_vendor, 'GPC-SUN-SPF50-50G', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 122.00, 1, 'active');
+(UUID(), @gpc_p7, @gpc_vendor, 'GPC-SUN-SPF50-50G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 122.00, 1, 'active');
 SET @gpc_p7_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p7_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='50g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p7, @gpc_vendor, 'GPC-SUN-SPF50-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 215.00, 0, 'active');
+(UUID(), @gpc_p7, @gpc_vendor, 'GPC-SUN-SPF50-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 215.00, 0, 'active');
 SET @gpc_p7_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p7_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
@@ -4327,19 +4327,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p8, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p8, @gpc_vendor, 'GPC-TON-ROSE-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 58.00, 1, 'active');
+(UUID(), @gpc_p8, @gpc_vendor, 'GPC-TON-ROSE-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 58.00, 1, 'active');
 SET @gpc_p8_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p8_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p8, @gpc_vendor, 'GPC-TON-ROSE-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 140.00, 95.00, 0, 'active');
+(UUID(), @gpc_p8, @gpc_vendor, 'GPC-TON-ROSE-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 140.00, 95.00, 0, 'active');
 SET @gpc_p8_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p8_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p8, @gpc_vendor, 'GPC-TON-ROSE-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 280.00, 190.00, 0, 'active');
+(UUID(), @gpc_p8, @gpc_vendor, 'GPC-TON-ROSE-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 280.00, 190.00, 0, 'active');
 SET @gpc_p8_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p8_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
@@ -4356,7 +4356,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p9, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p9, @gpc_vendor, 'GPC-CR-KOJIC-50G', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 148.00, 1, 'active');
+(UUID(), @gpc_p9, @gpc_vendor, 'GPC-CR-KOJIC-50G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 148.00, 1, 'active');
 
 -- ===== Product 10: Herbal Glycerin Soap Bar 100g =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4370,7 +4370,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p10, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p10, @gpc_vendor, 'GPC-SOAP-HERBAL-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 35.00, 22.00, 1, 'active');
+(UUID(), @gpc_p10, @gpc_vendor, 'GPC-SOAP-HERBAL-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 35.00, 22.00, 1, 'active');
 
 -- ===== Product 11: Body Lotion Cocoa Butter =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4384,19 +4384,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p11, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p11, @gpc_vendor, 'GPC-LOT-COCOA-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 64.00, 1, 'active');
+(UUID(), @gpc_p11, @gpc_vendor, 'GPC-LOT-COCOA-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 64.00, 1, 'active');
 SET @gpc_p11_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p11_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p11, @gpc_vendor, 'GPC-LOT-COCOA-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 112.00, 0, 'active');
+(UUID(), @gpc_p11, @gpc_vendor, 'GPC-LOT-COCOA-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 112.00, 0, 'active');
 SET @gpc_p11_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p11_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p11, @gpc_vendor, 'GPC-LOT-COCOA-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 230.00, 0, 'active');
+(UUID(), @gpc_p11, @gpc_vendor, 'GPC-LOT-COCOA-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 230.00, 0, 'active');
 SET @gpc_p11_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p11_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
@@ -4413,19 +4413,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p12, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p12, @gpc_vendor, 'GPC-TALC-SNDL-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 60.00, 40.00, 1, 'active');
+(UUID(), @gpc_p12, @gpc_vendor, 'GPC-TALC-SNDL-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 60.00, 40.00, 1, 'active');
 SET @gpc_p12_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p12_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p12, @gpc_vendor, 'GPC-TALC-SNDL-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 105.00, 70.00, 0, 'active');
+(UUID(), @gpc_p12, @gpc_vendor, 'GPC-TALC-SNDL-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 105.00, 70.00, 0, 'active');
 SET @gpc_p12_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p12_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p12, @gpc_vendor, 'GPC-TALC-SNDL-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 148.00, 0, 'active');
+(UUID(), @gpc_p12, @gpc_vendor, 'GPC-TALC-SNDL-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 148.00, 0, 'active');
 SET @gpc_p12_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p12_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g'));
@@ -4442,31 +4442,31 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p13, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 120.00, 1, 'active');
+(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 120.00, 1, 'active');
 SET @gpc_p13_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p13_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-MRN', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 120.00, 0, 'active');
+(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-MRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 120.00, 0, 'active');
 SET @gpc_p13_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p13_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-PNK', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 120.00, 0, 'active');
+(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-PNK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 120.00, 0, 'active');
 SET @gpc_p13_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p13_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-ORG', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 120.00, 0, 'active');
+(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-ORG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 120.00, 0, 'active');
 SET @gpc_p13_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p13_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Orange'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-BEG', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 120.00, 0, 'active');
+(UUID(), @gpc_p13, @gpc_vendor, 'GPC-LIP-MATTE-BEG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 120.00, 0, 'active');
 SET @gpc_p13_v5 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p13_v5, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
@@ -4483,37 +4483,37 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p14, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 55.00, 1, 'active');
+(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 55.00, 1, 'active');
 SET @gpc_p14_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p14_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-PNK', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 55.00, 0, 'active');
+(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-PNK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 55.00, 0, 'active');
 SET @gpc_p14_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p14_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-PUR', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 55.00, 0, 'active');
+(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-PUR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 55.00, 0, 'active');
 SET @gpc_p14_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p14_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Purple'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-MRN', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 55.00, 0, 'active');
+(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-MRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 55.00, 0, 'active');
 SET @gpc_p14_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p14_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-GLD', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 58.00, 0, 'active');
+(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-GLD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 58.00, 0, 'active');
 SET @gpc_p14_v5 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p14_v5, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Gold'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-SLV', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 58.00, 0, 'active');
+(UUID(), @gpc_p14, @gpc_vendor, 'GPC-NAIL-GLOSS-SLV', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 58.00, 0, 'active');
 SET @gpc_p14_v6 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p14_v6, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Silver'));
@@ -4530,7 +4530,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p15, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p15, @gpc_vendor, 'GPC-KAJAL-WTRPRF-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 75.00, 48.00, 1, 'active');
+(UUID(), @gpc_p15, @gpc_vendor, 'GPC-KAJAL-WTRPRF-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 75.00, 48.00, 1, 'active');
 
 -- ===== Product 16: Sandalwood & Turmeric Herbal Face Pack Powder =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4544,25 +4544,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p16, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p16, @gpc_vendor, 'GPC-PACK-SNDLTUR-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 80.00, 54.00, 1, 'active');
+(UUID(), @gpc_p16, @gpc_vendor, 'GPC-PACK-SNDLTUR-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 80.00, 54.00, 1, 'active');
 SET @gpc_p16_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p16_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p16, @gpc_vendor, 'GPC-PACK-SNDLTUR-250G', (SELECT id FROM units WHERE code='pcs'), NULL, 170.00, 115.00, 0, 'active');
+(UUID(), @gpc_p16, @gpc_vendor, 'GPC-PACK-SNDLTUR-250G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 170.00, 115.00, 0, 'active');
 SET @gpc_p16_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p16_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='250g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p16, @gpc_vendor, 'GPC-PACK-SNDLTUR-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 300.00, 203.00, 0, 'active');
+(UUID(), @gpc_p16, @gpc_vendor, 'GPC-PACK-SNDLTUR-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 300.00, 203.00, 0, 'active');
 SET @gpc_p16_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p16_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p16, @gpc_vendor, 'GPC-PACK-SNDLTUR-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 520.00, 352.00, 0, 'active');
+(UUID(), @gpc_p16, @gpc_vendor, 'GPC-PACK-SNDLTUR-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 520.00, 352.00, 0, 'active');
 SET @gpc_p16_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p16_v4, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='1kg'));
@@ -4579,7 +4579,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p17, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p17, @gpc_vendor, 'GPC-CR-EYECRM-50G', (SELECT id FROM units WHERE code='pcs'), NULL, 260.00, 175.00, 1, 'active');
+(UUID(), @gpc_p17, @gpc_vendor, 'GPC-CR-EYECRM-50G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 260.00, 175.00, 1, 'active');
 
 -- ===== Product 18: Anti-Dandruff Shampoo =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4593,25 +4593,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p18, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p18, @gpc_vendor, 'GPC-SHMP-ANTIDND-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 64.00, 1, 'active');
+(UUID(), @gpc_p18, @gpc_vendor, 'GPC-SHMP-ANTIDND-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 64.00, 1, 'active');
 SET @gpc_p18_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p18_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p18, @gpc_vendor, 'GPC-SHMP-ANTIDND-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 112.00, 0, 'active');
+(UUID(), @gpc_p18, @gpc_vendor, 'GPC-SHMP-ANTIDND-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 112.00, 0, 'active');
 SET @gpc_p18_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p18_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p18, @gpc_vendor, 'GPC-SHMP-ANTIDND-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 330.00, 223.00, 0, 'active');
+(UUID(), @gpc_p18, @gpc_vendor, 'GPC-SHMP-ANTIDND-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 330.00, 223.00, 0, 'active');
 SET @gpc_p18_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p18_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p18, @gpc_vendor, 'GPC-SHMP-ANTIDND-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 590.00, 398.00, 0, 'active');
+(UUID(), @gpc_p18, @gpc_vendor, 'GPC-SHMP-ANTIDND-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 590.00, 398.00, 0, 'active');
 SET @gpc_p18_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p18_v4, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='1L'));
@@ -4628,19 +4628,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p19, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p19, @gpc_vendor, 'GPC-OIL-ONION-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 120.00, 82.00, 1, 'active');
+(UUID(), @gpc_p19, @gpc_vendor, 'GPC-OIL-ONION-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 120.00, 82.00, 1, 'active');
 SET @gpc_p19_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p19_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p19, @gpc_vendor, 'GPC-OIL-ONION-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 142.00, 0, 'active');
+(UUID(), @gpc_p19, @gpc_vendor, 'GPC-OIL-ONION-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 142.00, 0, 'active');
 SET @gpc_p19_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p19_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p19, @gpc_vendor, 'GPC-OIL-ONION-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 430.00, 290.00, 0, 'active');
+(UUID(), @gpc_p19, @gpc_vendor, 'GPC-OIL-ONION-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 430.00, 290.00, 0, 'active');
 SET @gpc_p19_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p19_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
@@ -4657,25 +4657,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p20, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p20, @gpc_vendor, 'GPC-PWDR-SHIKAKAI-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 55.00, 37.00, 1, 'active');
+(UUID(), @gpc_p20, @gpc_vendor, 'GPC-PWDR-SHIKAKAI-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 55.00, 37.00, 1, 'active');
 SET @gpc_p20_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p20_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p20, @gpc_vendor, 'GPC-PWDR-SHIKAKAI-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 64.00, 0, 'active');
+(UUID(), @gpc_p20, @gpc_vendor, 'GPC-PWDR-SHIKAKAI-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 64.00, 0, 'active');
 SET @gpc_p20_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p20_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p20, @gpc_vendor, 'GPC-PWDR-SHIKAKAI-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 190.00, 128.00, 0, 'active');
+(UUID(), @gpc_p20, @gpc_vendor, 'GPC-PWDR-SHIKAKAI-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 190.00, 128.00, 0, 'active');
 SET @gpc_p20_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p20_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p20, @gpc_vendor, 'GPC-PWDR-SHIKAKAI-1KG', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 230.00, 0, 'active');
+(UUID(), @gpc_p20, @gpc_vendor, 'GPC-PWDR-SHIKAKAI-1KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 230.00, 0, 'active');
 SET @gpc_p20_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p20_v4, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='1kg'));
@@ -4692,7 +4692,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p21, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p21, @gpc_vendor, 'GPC-SER-KERATIN-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 255.00, 1, 'active');
+(UUID(), @gpc_p21, @gpc_vendor, 'GPC-SER-KERATIN-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 255.00, 1, 'active');
 
 -- ===== Product 22: Argan Oil Deep Conditioning Hair Mask =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4706,19 +4706,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p22, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p22, @gpc_vendor, 'GPC-MASK-ARGAN-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 150.00, 101.00, 1, 'active');
+(UUID(), @gpc_p22, @gpc_vendor, 'GPC-MASK-ARGAN-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 150.00, 101.00, 1, 'active');
 SET @gpc_p22_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p22_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p22, @gpc_vendor, 'GPC-MASK-ARGAN-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 260.00, 175.00, 0, 'active');
+(UUID(), @gpc_p22, @gpc_vendor, 'GPC-MASK-ARGAN-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 260.00, 175.00, 0, 'active');
 SET @gpc_p22_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p22_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200g'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p22, @gpc_vendor, 'GPC-MASK-ARGAN-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 520.00, 350.00, 0, 'active');
+(UUID(), @gpc_p22, @gpc_vendor, 'GPC-MASK-ARGAN-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 520.00, 350.00, 0, 'active');
 SET @gpc_p22_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p22_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500g'));
@@ -4735,7 +4735,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p23, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p23, @gpc_vendor, 'GPC-WAX-STYLE-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 111.00, 1, 'active');
+(UUID(), @gpc_p23, @gpc_vendor, 'GPC-WAX-STYLE-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 111.00, 1, 'active');
 
 -- ===== Product 24: Hair Color Cream Natural Black 100g =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4749,7 +4749,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p24, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p24, @gpc_vendor, 'GPC-CLR-BLACK-100G', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 62.00, 1, 'active');
+(UUID(), @gpc_p24, @gpc_vendor, 'GPC-CLR-BLACK-100G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 62.00, 1, 'active');
 
 -- ===== Product 25: Coconut Milk Hair Conditioner =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4763,19 +4763,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p25, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p25, @gpc_vendor, 'GPC-COND-CCNT-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 61.00, 1, 'active');
+(UUID(), @gpc_p25, @gpc_vendor, 'GPC-COND-CCNT-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 61.00, 1, 'active');
 SET @gpc_p25_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p25_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p25, @gpc_vendor, 'GPC-COND-CCNT-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 155.00, 105.00, 0, 'active');
+(UUID(), @gpc_p25, @gpc_vendor, 'GPC-COND-CCNT-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 155.00, 105.00, 0, 'active');
 SET @gpc_p25_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p25_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p25, @gpc_vendor, 'GPC-COND-CCNT-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 210.00, 0, 'active');
+(UUID(), @gpc_p25, @gpc_vendor, 'GPC-COND-CCNT-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 210.00, 0, 'active');
 SET @gpc_p25_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p25_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
@@ -4792,25 +4792,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p26, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p26, @gpc_vendor, 'GPC-OIL-BHRNGRJ-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 110.00, 74.00, 1, 'active');
+(UUID(), @gpc_p26, @gpc_vendor, 'GPC-OIL-BHRNGRJ-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 110.00, 74.00, 1, 'active');
 SET @gpc_p26_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p26_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p26, @gpc_vendor, 'GPC-OIL-BHRNGRJ-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 190.00, 128.00, 0, 'active');
+(UUID(), @gpc_p26, @gpc_vendor, 'GPC-OIL-BHRNGRJ-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 190.00, 128.00, 0, 'active');
 SET @gpc_p26_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p26_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p26, @gpc_vendor, 'GPC-OIL-BHRNGRJ-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 257.00, 0, 'active');
+(UUID(), @gpc_p26, @gpc_vendor, 'GPC-OIL-BHRNGRJ-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 257.00, 0, 'active');
 SET @gpc_p26_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p26_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p26, @gpc_vendor, 'GPC-OIL-BHRNGRJ-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 680.00, 459.00, 0, 'active');
+(UUID(), @gpc_p26, @gpc_vendor, 'GPC-OIL-BHRNGRJ-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 680.00, 459.00, 0, 'active');
 SET @gpc_p26_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p26_v4, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='1L'));
@@ -4827,25 +4827,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p27, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p27, @gpc_vendor, 'GPC-SHMP-HAIRFALL-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 105.00, 71.00, 1, 'active');
+(UUID(), @gpc_p27, @gpc_vendor, 'GPC-SHMP-HAIRFALL-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 105.00, 71.00, 1, 'active');
 SET @gpc_p27_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p27_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p27, @gpc_vendor, 'GPC-SHMP-HAIRFALL-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 185.00, 125.00, 0, 'active');
+(UUID(), @gpc_p27, @gpc_vendor, 'GPC-SHMP-HAIRFALL-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 185.00, 125.00, 0, 'active');
 SET @gpc_p27_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p27_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p27, @gpc_vendor, 'GPC-SHMP-HAIRFALL-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 370.00, 250.00, 0, 'active');
+(UUID(), @gpc_p27, @gpc_vendor, 'GPC-SHMP-HAIRFALL-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 370.00, 250.00, 0, 'active');
 SET @gpc_p27_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p27_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p27, @gpc_vendor, 'GPC-SHMP-HAIRFALL-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 660.00, 446.00, 0, 'active');
+(UUID(), @gpc_p27, @gpc_vendor, 'GPC-SHMP-HAIRFALL-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 660.00, 446.00, 0, 'active');
 SET @gpc_p27_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p27_v4, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='1L'));
@@ -4862,13 +4862,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p28, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p28, @gpc_vendor, 'GPC-SER-REDENSYL-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 283.00, 1, 'active');
+(UUID(), @gpc_p28, @gpc_vendor, 'GPC-SER-REDENSYL-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 283.00, 1, 'active');
 SET @gpc_p28_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p28_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p28, @gpc_vendor, 'GPC-SER-REDENSYL-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 750.00, 506.00, 0, 'active');
+(UUID(), @gpc_p28, @gpc_vendor, 'GPC-SER-REDENSYL-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 750.00, 506.00, 0, 'active');
 SET @gpc_p28_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p28_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
@@ -4885,7 +4885,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p29, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p29, @gpc_vendor, 'GPC-SPA-HERBAL-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 255.00, 1, 'active');
+(UUID(), @gpc_p29, @gpc_vendor, 'GPC-SPA-HERBAL-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 255.00, 1, 'active');
 
 -- ===== Product 30: Texturizing Hair Spray Strong Hold =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4899,13 +4899,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p30, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p30, @gpc_vendor, 'GPC-SPR-TXTUR-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 111.00, 1, 'active');
+(UUID(), @gpc_p30, @gpc_vendor, 'GPC-SPR-TXTUR-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 111.00, 1, 'active');
 SET @gpc_p30_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p30_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p30, @gpc_vendor, 'GPC-SPR-TXTUR-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 280.00, 189.00, 0, 'active');
+(UUID(), @gpc_p30, @gpc_vendor, 'GPC-SPR-TXTUR-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 280.00, 189.00, 0, 'active');
 SET @gpc_p30_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p30_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
@@ -4922,7 +4922,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p31, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p31, @gpc_vendor, 'GPC-GEL-CURL-200G', (SELECT id FROM units WHERE code='pcs'), NULL, 190.00, 128.00, 1, 'active');
+(UUID(), @gpc_p31, @gpc_vendor, 'GPC-GEL-CURL-200G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 190.00, 128.00, 1, 'active');
 
 -- ===== Product 32: Volumizing Hair Mousse 200ml =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4936,7 +4936,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p32, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p32, @gpc_vendor, 'GPC-MOUS-VOL-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 240.00, 162.00, 1, 'active');
+(UUID(), @gpc_p32, @gpc_vendor, 'GPC-MOUS-VOL-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 240.00, 162.00, 1, 'active');
 
 -- ===== Product 33: Rosemary Hair Oil =====
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -4950,19 +4950,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p33, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p33, @gpc_vendor, 'GPC-OIL-ROSEMARY-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 88.00, 1, 'active');
+(UUID(), @gpc_p33, @gpc_vendor, 'GPC-OIL-ROSEMARY-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 88.00, 1, 'active');
 SET @gpc_p33_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p33_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='100ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p33, @gpc_vendor, 'GPC-OIL-ROSEMARY-200ML', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 149.00, 0, 'active');
+(UUID(), @gpc_p33, @gpc_vendor, 'GPC-OIL-ROSEMARY-200ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 149.00, 0, 'active');
 SET @gpc_p33_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p33_v2, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='200ml'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p33, @gpc_vendor, 'GPC-OIL-ROSEMARY-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 440.00, 297.00, 0, 'active');
+(UUID(), @gpc_p33, @gpc_vendor, 'GPC-OIL-ROSEMARY-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 440.00, 297.00, 0, 'active');
 SET @gpc_p33_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@gpc_p33_v3, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
@@ -4979,7 +4979,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@gpc_p34, @gpc_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @gpc_p34, @gpc_vendor, 'GPC-SER-SILK-100ML', (SELECT id FROM units WHERE code='pcs'), NULL, 350.00, 236.00, 1, 'active');
+(UUID(), @gpc_p34, @gpc_vendor, 'GPC-SER-SILK-100ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 350.00, 236.00, 1, 'active');
 
 -- ---------------------------------------------------------------------
 -- Manufacturer 8/15 [cwf]: Craftwood Furniture Manufacturing Pvt Ltd — Furniture & Home Decor (Jodhpur, Rajasthan)
@@ -5015,13 +5015,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p1, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p1, @cwf_vendor, 'CWF-SOFA3S-001-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 24500.00, 17000.00, 1, 'active');
+(UUID(), @cwf_p1, @cwf_vendor, 'CWF-SOFA3S-001-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 24500.00, 17000.00, 1, 'active');
 SET @cwf_p1_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p1_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p1, @cwf_vendor, 'CWF-SOFA3S-001-MAR', (SELECT id FROM units WHERE code='pcs'), NULL, 24500.00, 17000.00, 0, 'active');
+(UUID(), @cwf_p1, @cwf_vendor, 'CWF-SOFA3S-001-MAR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 24500.00, 17000.00, 0, 'active');
 SET @cwf_p1_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p1_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
@@ -5038,7 +5038,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p2, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p2, @cwf_vendor, 'CWF-SOFA2S-001', (SELECT id FROM units WHERE code='pcs'), NULL, 16500.00, 11000.00, 1, 'active');
+(UUID(), @cwf_p2, @cwf_vendor, 'CWF-SOFA2S-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 16500.00, 11000.00, 1, 'active');
 
 -- ================= PRODUCT 3: Solid Wood Coffee Table - Round (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5052,7 +5052,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p3, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p3, @cwf_vendor, 'CWF-CTBL-RND-001', (SELECT id FROM units WHERE code='pcs'), NULL, 4200.00, 2700.00, 1, 'active');
+(UUID(), @cwf_p3, @cwf_vendor, 'CWF-CTBL-RND-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4200.00, 2700.00, 1, 'active');
 
 -- ================= PRODUCT 4: Solid Wood Coffee Table - Rectangular (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5066,7 +5066,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p4, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p4, @cwf_vendor, 'CWF-CTBL-REC-001', (SELECT id FROM units WHERE code='pcs'), NULL, 4800.00, 3100.00, 1, 'active');
+(UUID(), @cwf_p4, @cwf_vendor, 'CWF-CTBL-REC-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4800.00, 3100.00, 1, 'active');
 
 -- ================= PRODUCT 5: Wooden TV Entertainment Unit - 5ft (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5080,19 +5080,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p5, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p5, @cwf_vendor, 'CWF-TVU-5FT-001-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 10500.00, 7200.00, 1, 'active');
+(UUID(), @cwf_p5, @cwf_vendor, 'CWF-TVU-5FT-001-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 10500.00, 7200.00, 1, 'active');
 SET @cwf_p5_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p5_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p5, @cwf_vendor, 'CWF-TVU-5FT-001-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 10500.00, 7200.00, 0, 'active');
+(UUID(), @cwf_p5, @cwf_vendor, 'CWF-TVU-5FT-001-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 10500.00, 7200.00, 0, 'active');
 SET @cwf_p5_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p5_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p5, @cwf_vendor, 'CWF-TVU-5FT-001-BEI', (SELECT id FROM units WHERE code='pcs'), NULL, 10500.00, 7200.00, 0, 'active');
+(UUID(), @cwf_p5, @cwf_vendor, 'CWF-TVU-5FT-001-BEI', (SELECT id FROM units WHERE code='pcs'), 0.0000, 10500.00, 7200.00, 0, 'active');
 SET @cwf_p5_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p5_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
@@ -5109,7 +5109,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p6, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p6, @cwf_vendor, 'CWF-TVU-6FT-001', (SELECT id FROM units WHERE code='pcs'), NULL, 13500.00, 9200.00, 1, 'active');
+(UUID(), @cwf_p6, @cwf_vendor, 'CWF-TVU-6FT-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 13500.00, 9200.00, 1, 'active');
 
 -- ================= PRODUCT 7: Sheesham Wood Recliner Armchair (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5123,19 +5123,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p7, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p7, @cwf_vendor, 'CWF-RECL-ARM-001-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 13800.00, 9500.00, 1, 'active');
+(UUID(), @cwf_p7, @cwf_vendor, 'CWF-RECL-ARM-001-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 13800.00, 9500.00, 1, 'active');
 SET @cwf_p7_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p7_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p7, @cwf_vendor, 'CWF-RECL-ARM-001-MAR', (SELECT id FROM units WHERE code='pcs'), NULL, 13800.00, 9500.00, 0, 'active');
+(UUID(), @cwf_p7, @cwf_vendor, 'CWF-RECL-ARM-001-MAR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 13800.00, 9500.00, 0, 'active');
 SET @cwf_p7_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p7_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p7, @cwf_vendor, 'CWF-RECL-ARM-001-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 13800.00, 9500.00, 0, 'active');
+(UUID(), @cwf_p7, @cwf_vendor, 'CWF-RECL-ARM-001-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 13800.00, 9500.00, 0, 'active');
 SET @cwf_p7_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p7_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
@@ -5152,7 +5152,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p8, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p8, @cwf_vendor, 'CWF-BKSH-5T-001', (SELECT id FROM units WHERE code='pcs'), NULL, 7200.00, 4800.00, 1, 'active');
+(UUID(), @cwf_p8, @cwf_vendor, 'CWF-BKSH-5T-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 7200.00, 4800.00, 1, 'active');
 
 -- ================= PRODUCT 9: Wooden Console Table - Hallway (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5166,7 +5166,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p9, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p9, @cwf_vendor, 'CWF-CNSL-HW-001', (SELECT id FROM units WHERE code='pcs'), NULL, 5600.00, 3700.00, 1, 'active');
+(UUID(), @cwf_p9, @cwf_vendor, 'CWF-CNSL-HW-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 5600.00, 3700.00, 1, 'active');
 
 -- ================= PRODUCT 10: Wooden Center Table with Storage (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5180,7 +5180,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p10, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p10, @cwf_vendor, 'CWF-CTBL-STG-001', (SELECT id FROM units WHERE code='pcs'), NULL, 5400.00, 3600.00, 1, 'active');
+(UUID(), @cwf_p10, @cwf_vendor, 'CWF-CTBL-STG-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 5400.00, 3600.00, 1, 'active');
 
 -- ================= PRODUCT 11: Sheesham Wood Dining Table 6-Seater (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5194,7 +5194,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p11, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p11, @cwf_vendor, 'CWF-DTBL-6S-001', (SELECT id FROM units WHERE code='pcs'), NULL, 28500.00, 19500.00, 1, 'active');
+(UUID(), @cwf_p11, @cwf_vendor, 'CWF-DTBL-6S-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 28500.00, 19500.00, 1, 'active');
 
 -- ================= PRODUCT 12: Sheesham Wood Dining Chair Set (Set of 4) (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5208,19 +5208,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p12, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p12, @cwf_vendor, 'CWF-DCHR-SET4-001-BLK', (SELECT id FROM units WHERE code='set'), NULL, 11200.00, 7600.00, 1, 'active');
+(UUID(), @cwf_p12, @cwf_vendor, 'CWF-DCHR-SET4-001-BLK', (SELECT id FROM units WHERE code='set'), 0.0000, 11200.00, 7600.00, 1, 'active');
 SET @cwf_p12_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p12_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p12, @cwf_vendor, 'CWF-DCHR-SET4-001-MAR', (SELECT id FROM units WHERE code='set'), NULL, 11200.00, 7600.00, 0, 'active');
+(UUID(), @cwf_p12, @cwf_vendor, 'CWF-DCHR-SET4-001-MAR', (SELECT id FROM units WHERE code='set'), 0.0000, 11200.00, 7600.00, 0, 'active');
 SET @cwf_p12_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p12_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p12, @cwf_vendor, 'CWF-DCHR-SET4-001-BEI', (SELECT id FROM units WHERE code='set'), NULL, 11200.00, 7600.00, 0, 'active');
+(UUID(), @cwf_p12, @cwf_vendor, 'CWF-DCHR-SET4-001-BEI', (SELECT id FROM units WHERE code='set'), 0.0000, 11200.00, 7600.00, 0, 'active');
 SET @cwf_p12_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p12_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
@@ -5237,7 +5237,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p13, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p13, @cwf_vendor, 'CWF-STBL-NST2-001', (SELECT id FROM units WHERE code='set'), NULL, 3600.00, 2300.00, 1, 'active');
+(UUID(), @cwf_p13, @cwf_vendor, 'CWF-STBL-NST2-001', (SELECT id FROM units WHERE code='set'), 0.0000, 3600.00, 2300.00, 1, 'active');
 
 -- ================= PRODUCT 14: Sheesham Wood Ottoman Pouffe - Storage (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5251,25 +5251,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p14, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p14, @cwf_vendor, 'CWF-OTTM-STG-001-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 2800.00, 1800.00, 1, 'active');
+(UUID(), @cwf_p14, @cwf_vendor, 'CWF-OTTM-STG-001-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2800.00, 1800.00, 1, 'active');
 SET @cwf_p14_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p14_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p14, @cwf_vendor, 'CWF-OTTM-STG-001-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 2800.00, 1800.00, 0, 'active');
+(UUID(), @cwf_p14, @cwf_vendor, 'CWF-OTTM-STG-001-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2800.00, 1800.00, 0, 'active');
 SET @cwf_p14_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p14_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p14, @cwf_vendor, 'CWF-OTTM-STG-001-MAR', (SELECT id FROM units WHERE code='pcs'), NULL, 2800.00, 1800.00, 0, 'active');
+(UUID(), @cwf_p14, @cwf_vendor, 'CWF-OTTM-STG-001-MAR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2800.00, 1800.00, 0, 'active');
 SET @cwf_p14_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p14_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p14, @cwf_vendor, 'CWF-OTTM-STG-001-BEI', (SELECT id FROM units WHERE code='pcs'), NULL, 2800.00, 1800.00, 0, 'active');
+(UUID(), @cwf_p14, @cwf_vendor, 'CWF-OTTM-STG-001-BEI', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2800.00, 1800.00, 0, 'active');
 SET @cwf_p14_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p14_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
@@ -5286,7 +5286,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p15, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p15, @cwf_vendor, 'CWF-SHRK-3SH-001', (SELECT id FROM units WHERE code='pcs'), NULL, 3400.00, 2200.00, 1, 'active');
+(UUID(), @cwf_p15, @cwf_vendor, 'CWF-SHRK-3SH-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3400.00, 2200.00, 1, 'active');
 
 -- ================= PRODUCT 16: Sheesham Wood Wall Shelf Unit (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5300,7 +5300,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p16, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p16, @cwf_vendor, 'CWF-WSHF-UNIT-001', (SELECT id FROM units WHERE code='pcs'), NULL, 2200.00, 1400.00, 1, 'active');
+(UUID(), @cwf_p16, @cwf_vendor, 'CWF-WSHF-UNIT-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2200.00, 1400.00, 1, 'active');
 
 -- ================= PRODUCT 17: Wooden Corner Cabinet Display Unit (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5314,7 +5314,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p17, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p17, @cwf_vendor, 'CWF-CRNR-CAB-001', (SELECT id FROM units WHERE code='pcs'), NULL, 8200.00, 5600.00, 1, 'active');
+(UUID(), @cwf_p17, @cwf_vendor, 'CWF-CRNR-CAB-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 8200.00, 5600.00, 1, 'active');
 
 -- ================= PRODUCT 18: Sheesham Wood Study Table with Drawer (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5328,7 +5328,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p18, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p18, @cwf_vendor, 'CWF-STDY-TBL-001', (SELECT id FROM units WHERE code='pcs'), NULL, 6400.00, 4300.00, 1, 'active');
+(UUID(), @cwf_p18, @cwf_vendor, 'CWF-STDY-TBL-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 6400.00, 4300.00, 1, 'active');
 
 -- ================= PRODUCT 19: Wooden Bar Cabinet - 2 Door (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5342,19 +5342,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p19, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p19, @cwf_vendor, 'CWF-BARC-2D-001-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 12800.00, 8700.00, 1, 'active');
+(UUID(), @cwf_p19, @cwf_vendor, 'CWF-BARC-2D-001-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 12800.00, 8700.00, 1, 'active');
 SET @cwf_p19_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p19_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p19, @cwf_vendor, 'CWF-BARC-2D-001-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 12800.00, 8700.00, 0, 'active');
+(UUID(), @cwf_p19, @cwf_vendor, 'CWF-BARC-2D-001-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 12800.00, 8700.00, 0, 'active');
 SET @cwf_p19_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p19_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p19, @cwf_vendor, 'CWF-BARC-2D-001-BEI', (SELECT id FROM units WHERE code='pcs'), NULL, 12800.00, 8700.00, 0, 'active');
+(UUID(), @cwf_p19, @cwf_vendor, 'CWF-BARC-2D-001-BEI', (SELECT id FROM units WHERE code='pcs'), 0.0000, 12800.00, 8700.00, 0, 'active');
 SET @cwf_p19_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p19_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
@@ -5371,7 +5371,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p20, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p20, @cwf_vendor, 'CWF-ROCK-CHR-001', (SELECT id FROM units WHERE code='pcs'), NULL, 8600.00, 5800.00, 1, 'active');
+(UUID(), @cwf_p20, @cwf_vendor, 'CWF-ROCK-CHR-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 8600.00, 5800.00, 1, 'active');
 
 -- ================= PRODUCT 21: Wooden Wall Mirror Frame - Round (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5385,19 +5385,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p21, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p21, @cwf_vendor, 'CWF-MIRR-RND-001-GLD', (SELECT id FROM units WHERE code='pcs'), NULL, 2400.00, 1500.00, 1, 'active');
+(UUID(), @cwf_p21, @cwf_vendor, 'CWF-MIRR-RND-001-GLD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2400.00, 1500.00, 1, 'active');
 SET @cwf_p21_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p21_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Gold'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p21, @cwf_vendor, 'CWF-MIRR-RND-001-SLV', (SELECT id FROM units WHERE code='pcs'), NULL, 2400.00, 1500.00, 0, 'active');
+(UUID(), @cwf_p21, @cwf_vendor, 'CWF-MIRR-RND-001-SLV', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2400.00, 1500.00, 0, 'active');
 SET @cwf_p21_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p21_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Silver'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p21, @cwf_vendor, 'CWF-MIRR-RND-001-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 2400.00, 1500.00, 0, 'active');
+(UUID(), @cwf_p21, @cwf_vendor, 'CWF-MIRR-RND-001-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2400.00, 1500.00, 0, 'active');
 SET @cwf_p21_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p21_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
@@ -5414,7 +5414,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p22, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p22, @cwf_vendor, 'CWF-PHFR-SET5-001', (SELECT id FROM units WHERE code='set'), NULL, 1200.00, 750.00, 1, 'active');
+(UUID(), @cwf_p22, @cwf_vendor, 'CWF-PHFR-SET5-001', (SELECT id FROM units WHERE code='set'), 0.0000, 1200.00, 750.00, 1, 'active');
 
 -- ================= PRODUCT 23: Wooden Wall Clock - Round Carved (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5428,19 +5428,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p23, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p23, @cwf_vendor, 'CWF-CLCK-RND-001-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1800.00, 1150.00, 1, 'active');
+(UUID(), @cwf_p23, @cwf_vendor, 'CWF-CLCK-RND-001-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1800.00, 1150.00, 1, 'active');
 SET @cwf_p23_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p23_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p23, @cwf_vendor, 'CWF-CLCK-RND-001-GLD', (SELECT id FROM units WHERE code='pcs'), NULL, 1800.00, 1150.00, 0, 'active');
+(UUID(), @cwf_p23, @cwf_vendor, 'CWF-CLCK-RND-001-GLD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1800.00, 1150.00, 0, 'active');
 SET @cwf_p23_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p23_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Gold'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p23, @cwf_vendor, 'CWF-CLCK-RND-001-MAR', (SELECT id FROM units WHERE code='pcs'), NULL, 1800.00, 1150.00, 0, 'active');
+(UUID(), @cwf_p23, @cwf_vendor, 'CWF-CLCK-RND-001-MAR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1800.00, 1150.00, 0, 'active');
 SET @cwf_p23_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p23_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
@@ -5457,7 +5457,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p24, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p24, @cwf_vendor, 'CWF-CNDL-PAIR-001', (SELECT id FROM units WHERE code='pair'), NULL, 850.00, 520.00, 1, 'active');
+(UUID(), @cwf_p24, @cwf_vendor, 'CWF-CNDL-PAIR-001', (SELECT id FROM units WHERE code='pair'), 0.0000, 850.00, 520.00, 1, 'active');
 
 -- ================= PRODUCT 25: Wooden Table Lamp Base (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5471,7 +5471,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p25, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p25, @cwf_vendor, 'CWF-LAMP-BASE-001', (SELECT id FROM units WHERE code='pcs'), NULL, 1600.00, 1000.00, 1, 'active');
+(UUID(), @cwf_p25, @cwf_vendor, 'CWF-LAMP-BASE-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1600.00, 1000.00, 1, 'active');
 
 -- ================= PRODUCT 26: Sheesham Wood Wall Shelf - Floating Set of 3 (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5485,7 +5485,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p26, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p26, @cwf_vendor, 'CWF-FSHF-SET3-001', (SELECT id FROM units WHERE code='set'), NULL, 2100.00, 1350.00, 1, 'active');
+(UUID(), @cwf_p26, @cwf_vendor, 'CWF-FSHF-SET3-001', (SELECT id FROM units WHERE code='set'), 0.0000, 2100.00, 1350.00, 1, 'active');
 
 -- ================= PRODUCT 27: Wooden Decorative Tray - Serving (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5499,19 +5499,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p27, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p27, @cwf_vendor, 'CWF-TRAY-SRV-001-GLD', (SELECT id FROM units WHERE code='pcs'), NULL, 780.00, 480.00, 1, 'active');
+(UUID(), @cwf_p27, @cwf_vendor, 'CWF-TRAY-SRV-001-GLD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 780.00, 480.00, 1, 'active');
 SET @cwf_p27_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p27_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Gold'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p27, @cwf_vendor, 'CWF-TRAY-SRV-001-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 780.00, 480.00, 0, 'active');
+(UUID(), @cwf_p27, @cwf_vendor, 'CWF-TRAY-SRV-001-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 780.00, 480.00, 0, 'active');
 SET @cwf_p27_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p27_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p27, @cwf_vendor, 'CWF-TRAY-SRV-001-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 780.00, 480.00, 0, 'active');
+(UUID(), @cwf_p27, @cwf_vendor, 'CWF-TRAY-SRV-001-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 780.00, 480.00, 0, 'active');
 SET @cwf_p27_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p27_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
@@ -5528,7 +5528,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p28, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p28, @cwf_vendor, 'CWF-PLNT-3T-001', (SELECT id FROM units WHERE code='pcs'), NULL, 2600.00, 1650.00, 1, 'active');
+(UUID(), @cwf_p28, @cwf_vendor, 'CWF-PLNT-3T-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2600.00, 1650.00, 1, 'active');
 
 -- ================= PRODUCT 29: Wooden Wall Art Panel - Carved (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5542,7 +5542,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p29, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p29, @cwf_vendor, 'CWF-WART-PNL-001', (SELECT id FROM units WHERE code='pcs'), NULL, 3600.00, 2300.00, 1, 'active');
+(UUID(), @cwf_p29, @cwf_vendor, 'CWF-WART-PNL-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3600.00, 2300.00, 1, 'active');
 
 -- ================= PRODUCT 30: Sheesham Wood Jewelry Box - Handcrafted (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5556,19 +5556,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p30, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p30, @cwf_vendor, 'CWF-JBOX-HC-001-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 900.00, 1, 'active');
+(UUID(), @cwf_p30, @cwf_vendor, 'CWF-JBOX-HC-001-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 900.00, 1, 'active');
 SET @cwf_p30_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p30_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p30, @cwf_vendor, 'CWF-JBOX-HC-001-MAR', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 900.00, 0, 'active');
+(UUID(), @cwf_p30, @cwf_vendor, 'CWF-JBOX-HC-001-MAR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 900.00, 0, 'active');
 SET @cwf_p30_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p30_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p30, @cwf_vendor, 'CWF-JBOX-HC-001-BEI', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 900.00, 0, 'active');
+(UUID(), @cwf_p30, @cwf_vendor, 'CWF-JBOX-HC-001-BEI', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 900.00, 0, 'active');
 SET @cwf_p30_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p30_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
@@ -5585,7 +5585,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p31, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p31, @cwf_vendor, 'CWF-MRCK-STD-001', (SELECT id FROM units WHERE code='pcs'), NULL, 1350.00, 850.00, 1, 'active');
+(UUID(), @cwf_p31, @cwf_vendor, 'CWF-MRCK-STD-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1350.00, 850.00, 1, 'active');
 
 -- ================= PRODUCT 32: Sheesham Wood Key Holder Wall Hanger (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5599,7 +5599,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p32, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p32, @cwf_vendor, 'CWF-KEYH-WH-001', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 290.00, 1, 'active');
+(UUID(), @cwf_p32, @cwf_vendor, 'CWF-KEYH-WH-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 290.00, 1, 'active');
 
 -- ================= PRODUCT 33: Wooden Curtain Rod Finials - Pair (VARIANT: color) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5613,19 +5613,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p33, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p33, @cwf_vendor, 'CWF-FNL-PAIR-001-GLD', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 250.00, 1, 'active');
+(UUID(), @cwf_p33, @cwf_vendor, 'CWF-FNL-PAIR-001-GLD', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 250.00, 1, 'active');
 SET @cwf_p33_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p33_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Gold'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p33, @cwf_vendor, 'CWF-FNL-PAIR-001-SLV', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 250.00, 0, 'active');
+(UUID(), @cwf_p33, @cwf_vendor, 'CWF-FNL-PAIR-001-SLV', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 250.00, 0, 'active');
 SET @cwf_p33_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p33_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Silver'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p33, @cwf_vendor, 'CWF-FNL-PAIR-001-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 420.00, 250.00, 0, 'active');
+(UUID(), @cwf_p33, @cwf_vendor, 'CWF-FNL-PAIR-001-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 420.00, 250.00, 0, 'active');
 SET @cwf_p33_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@cwf_p33_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
@@ -5642,7 +5642,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p34, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p34, @cwf_vendor, 'CWF-COAS-SET6-001', (SELECT id FROM units WHERE code='set'), NULL, 550.00, 330.00, 1, 'active');
+(UUID(), @cwf_p34, @cwf_vendor, 'CWF-COAS-SET6-001', (SELECT id FROM units WHERE code='set'), 0.0000, 550.00, 330.00, 1, 'active');
 
 -- ================= PRODUCT 35: Wooden Room Divider Screen - 4 Panel (SIMPLE) =================
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -5656,7 +5656,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@cwf_p35, @cwf_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @cwf_p35, @cwf_vendor, 'CWF-RDIV-4P-001', (SELECT id FROM units WHERE code='pcs'), NULL, 9800.00, 6600.00, 1, 'active');
+(UUID(), @cwf_p35, @cwf_vendor, 'CWF-RDIV-4P-001', (SELECT id FROM units WHERE code='pcs'), 0.0000, 9800.00, 6600.00, 1, 'active');
 
 -- ---------------------------------------------------------------------
 -- Manufacturer 9/15 [scw]: SteelChef Kitchenware Pvt Ltd — Kitchenware & Cookware (Delhi)
@@ -5688,13 +5688,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p1, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p1, @scw_vendor, 'SCW-PRC-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 620.00, 1, 'active');
+(UUID(), @scw_p1, @scw_vendor, 'SCW-PRC-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 620.00, 1, 'active');
 SET @scw_p1_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p1, @scw_vendor, 'SCW-PRC-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 1150.00, 750.00, 0, 'active');
+(UUID(), @scw_p1, @scw_vendor, 'SCW-PRC-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1150.00, 750.00, 0, 'active');
 SET @scw_p1_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p1, @scw_vendor, 'SCW-PRC-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 950.00, 0, 'active');
+(UUID(), @scw_p1, @scw_vendor, 'SCW-PRC-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 950.00, 0, 'active');
 SET @scw_p1_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p1_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='2L')),
@@ -5709,13 +5709,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p2, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p2, @scw_vendor, 'SCW-KAD-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 820.00, 1, 'active');
+(UUID(), @scw_p2, @scw_vendor, 'SCW-KAD-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 820.00, 1, 'active');
 SET @scw_p2_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p2, @scw_vendor, 'SCW-KAD-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 950.00, 0, 'active');
+(UUID(), @scw_p2, @scw_vendor, 'SCW-KAD-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 950.00, 0, 'active');
 SET @scw_p2_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p2, @scw_vendor, 'SCW-KAD-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 1750.00, 1150.00, 0, 'active');
+(UUID(), @scw_p2, @scw_vendor, 'SCW-KAD-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1750.00, 1150.00, 0, 'active');
 SET @scw_p2_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p2_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1.5L')),
@@ -5730,13 +5730,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p3, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p3, @scw_vendor, 'SCW-NSP-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 300.00, 1, 'active');
+(UUID(), @scw_p3, @scw_vendor, 'SCW-NSP-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 300.00, 1, 'active');
 SET @scw_p3_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p3, @scw_vendor, 'SCW-NSP-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 560.00, 350.00, 0, 'active');
+(UUID(), @scw_p3, @scw_vendor, 'SCW-NSP-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 560.00, 350.00, 0, 'active');
 SET @scw_p3_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p3, @scw_vendor, 'SCW-NSP-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 410.00, 0, 'active');
+(UUID(), @scw_p3, @scw_vendor, 'SCW-NSP-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 410.00, 0, 'active');
 SET @scw_p3_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p3_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1L')),
@@ -5751,13 +5751,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p4, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p4, @scw_vendor, 'SCW-TK-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 240.00, 1, 'active');
+(UUID(), @scw_p4, @scw_vendor, 'SCW-TK-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 240.00, 1, 'active');
 SET @scw_p4_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p4, @scw_vendor, 'SCW-TK-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 430.00, 270.00, 0, 'active');
+(UUID(), @scw_p4, @scw_vendor, 'SCW-TK-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 430.00, 270.00, 0, 'active');
 SET @scw_p4_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p4, @scw_vendor, 'SCW-TK-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 490.00, 310.00, 0, 'active');
+(UUID(), @scw_p4, @scw_vendor, 'SCW-TK-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 490.00, 310.00, 0, 'active');
 SET @scw_p4_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p4_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1L')),
@@ -5772,13 +5772,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p5, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p5, @scw_vendor, 'SCW-HANDI-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 520.00, 330.00, 1, 'active');
+(UUID(), @scw_p5, @scw_vendor, 'SCW-HANDI-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 520.00, 330.00, 1, 'active');
 SET @scw_p5_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p5, @scw_vendor, 'SCW-HANDI-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 410.00, 0, 'active');
+(UUID(), @scw_p5, @scw_vendor, 'SCW-HANDI-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 410.00, 0, 'active');
 SET @scw_p5_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p5, @scw_vendor, 'SCW-HANDI-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 820.00, 520.00, 0, 'active');
+(UUID(), @scw_p5, @scw_vendor, 'SCW-HANDI-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 820.00, 520.00, 0, 'active');
 SET @scw_p5_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p5_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='2L')),
@@ -5793,13 +5793,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p6, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p6, @scw_vendor, 'SCW-MLKP-0.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 280.00, 175.00, 1, 'active');
+(UUID(), @scw_p6, @scw_vendor, 'SCW-MLKP-0.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 280.00, 175.00, 1, 'active');
 SET @scw_p6_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p6, @scw_vendor, 'SCW-MLKP-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 215.00, 0, 'active');
+(UUID(), @scw_p6, @scw_vendor, 'SCW-MLKP-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 215.00, 0, 'active');
 SET @scw_p6_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p6, @scw_vendor, 'SCW-MLKP-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 400.00, 250.00, 0, 'active');
+(UUID(), @scw_p6, @scw_vendor, 'SCW-MLKP-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 400.00, 250.00, 0, 'active');
 SET @scw_p6_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p6_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='0.5L')),
@@ -5814,10 +5814,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p7, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p7, @scw_vendor, 'SCW-HAFK-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 1, 'active');
+(UUID(), @scw_p7, @scw_vendor, 'SCW-HAFK-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 1, 'active');
 SET @scw_p7_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p7, @scw_vendor, 'SCW-HAFK-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 1080.00, 690.00, 0, 'active');
+(UUID(), @scw_p7, @scw_vendor, 'SCW-HAFK-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1080.00, 690.00, 0, 'active');
 SET @scw_p7_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p7_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='2L')),
@@ -5831,13 +5831,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p8, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p8, @scw_vendor, 'SCW-CBCS-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 620.00, 390.00, 1, 'active');
+(UUID(), @scw_p8, @scw_vendor, 'SCW-CBCS-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 620.00, 390.00, 1, 'active');
 SET @scw_p8_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p8, @scw_vendor, 'SCW-CBCS-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 720.00, 460.00, 0, 'active');
+(UUID(), @scw_p8, @scw_vendor, 'SCW-CBCS-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 720.00, 460.00, 0, 'active');
 SET @scw_p8_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p8, @scw_vendor, 'SCW-CBCS-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 830.00, 530.00, 0, 'active');
+(UUID(), @scw_p8, @scw_vendor, 'SCW-CBCS-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 830.00, 530.00, 0, 'active');
 SET @scw_p8_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p8_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1L')),
@@ -5852,10 +5852,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p9, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p9, @scw_vendor, 'SCW-PP-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 1080.00, 700.00, 1, 'active');
+(UUID(), @scw_p9, @scw_vendor, 'SCW-PP-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1080.00, 700.00, 1, 'active');
 SET @scw_p9_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p9, @scw_vendor, 'SCW-PP-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 1350.00, 880.00, 0, 'active');
+(UUID(), @scw_p9, @scw_vendor, 'SCW-PP-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1350.00, 880.00, 0, 'active');
 SET @scw_p9_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p9_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='3L')),
@@ -5869,10 +5869,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p10, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p10, @scw_vendor, 'SCW-TSPL-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 690.00, 440.00, 1, 'active');
+(UUID(), @scw_p10, @scw_vendor, 'SCW-TSPL-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 690.00, 440.00, 1, 'active');
 SET @scw_p10_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p10, @scw_vendor, 'SCW-TSPL-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 790.00, 500.00, 0, 'active');
+(UUID(), @scw_p10, @scw_vendor, 'SCW-TSPL-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 790.00, 500.00, 0, 'active');
 SET @scw_p10_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p10_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1L')),
@@ -5886,13 +5886,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p11, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p11, @scw_vendor, 'SCW-NSFP-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 540.00, 340.00, 1, 'active');
+(UUID(), @scw_p11, @scw_vendor, 'SCW-NSFP-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 540.00, 340.00, 1, 'active');
 SET @scw_p11_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p11, @scw_vendor, 'SCW-NSFP-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 620.00, 390.00, 0, 'active');
+(UUID(), @scw_p11, @scw_vendor, 'SCW-NSFP-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 620.00, 390.00, 0, 'active');
 SET @scw_p11_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p11, @scw_vendor, 'SCW-NSFP-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 720.00, 460.00, 0, 'active');
+(UUID(), @scw_p11, @scw_vendor, 'SCW-NSFP-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 720.00, 460.00, 0, 'active');
 SET @scw_p11_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p11_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1.5L')),
@@ -5907,10 +5907,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p12, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p12, @scw_vendor, 'SCW-SAUTE-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 760.00, 480.00, 1, 'active');
+(UUID(), @scw_p12, @scw_vendor, 'SCW-SAUTE-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 760.00, 480.00, 1, 'active');
 SET @scw_p12_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p12, @scw_vendor, 'SCW-SAUTE-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 870.00, 550.00, 0, 'active');
+(UUID(), @scw_p12, @scw_vendor, 'SCW-SAUTE-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 870.00, 550.00, 0, 'active');
 SET @scw_p12_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p12_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1.5L')),
@@ -5924,10 +5924,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p13, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p13, @scw_vendor, 'SCW-HAPC-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 1580.00, 1020.00, 1, 'active');
+(UUID(), @scw_p13, @scw_vendor, 'SCW-HAPC-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1580.00, 1020.00, 1, 'active');
 SET @scw_p13_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p13, @scw_vendor, 'SCW-HAPC-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 1890.00, 1230.00, 0, 'active');
+(UUID(), @scw_p13, @scw_vendor, 'SCW-HAPC-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1890.00, 1230.00, 0, 'active');
 SET @scw_p13_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p13_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='3L')),
@@ -5941,13 +5941,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p14, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p14, @scw_vendor, 'SCW-STMR-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 980.00, 620.00, 1, 'active');
+(UUID(), @scw_p14, @scw_vendor, 'SCW-STMR-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 980.00, 620.00, 1, 'active');
 SET @scw_p14_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p14, @scw_vendor, 'SCW-STMR-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 1180.00, 750.00, 0, 'active');
+(UUID(), @scw_p14, @scw_vendor, 'SCW-STMR-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1180.00, 750.00, 0, 'active');
 SET @scw_p14_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p14, @scw_vendor, 'SCW-STMR-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 1480.00, 950.00, 0, 'active');
+(UUID(), @scw_p14, @scw_vendor, 'SCW-STMR-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1480.00, 950.00, 0, 'active');
 SET @scw_p14_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p14_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='2L')),
@@ -5962,13 +5962,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p15, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p15, @scw_vendor, 'SCW-ANSK-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 450.00, 280.00, 1, 'active');
+(UUID(), @scw_p15, @scw_vendor, 'SCW-ANSK-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 450.00, 280.00, 1, 'active');
 SET @scw_p15_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p15, @scw_vendor, 'SCW-ANSK-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 520.00, 330.00, 0, 'active');
+(UUID(), @scw_p15, @scw_vendor, 'SCW-ANSK-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 520.00, 330.00, 0, 'active');
 SET @scw_p15_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p15, @scw_vendor, 'SCW-ANSK-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 600.00, 380.00, 0, 'active');
+(UUID(), @scw_p15, @scw_vendor, 'SCW-ANSK-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 600.00, 380.00, 0, 'active');
 SET @scw_p15_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p15_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1L')),
@@ -5983,13 +5983,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p16, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p16, @scw_vendor, 'SCW-RICE-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 720.00, 460.00, 1, 'active');
+(UUID(), @scw_p16, @scw_vendor, 'SCW-RICE-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 720.00, 460.00, 1, 'active');
 SET @scw_p16_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p16, @scw_vendor, 'SCW-RICE-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 860.00, 550.00, 0, 'active');
+(UUID(), @scw_p16, @scw_vendor, 'SCW-RICE-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 860.00, 550.00, 0, 'active');
 SET @scw_p16_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p16, @scw_vendor, 'SCW-RICE-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 1080.00, 690.00, 0, 'active');
+(UUID(), @scw_p16, @scw_vendor, 'SCW-RICE-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1080.00, 690.00, 0, 'active');
 SET @scw_p16_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p16_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='2L')),
@@ -6004,10 +6004,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p17, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p17, @scw_vendor, 'SCW-TSP-3L', (SELECT id FROM units WHERE code='pcs'), NULL, 1650.00, 1080.00, 1, 'active');
+(UUID(), @scw_p17, @scw_vendor, 'SCW-TSP-3L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1650.00, 1080.00, 1, 'active');
 SET @scw_p17_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p17, @scw_vendor, 'SCW-TSP-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 2050.00, 1350.00, 0, 'active');
+(UUID(), @scw_p17, @scw_vendor, 'SCW-TSP-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2050.00, 1350.00, 0, 'active');
 SET @scw_p17_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p17_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='3L')),
@@ -6021,10 +6021,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p18, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p18, @scw_vendor, 'SCW-MBP-0.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 260.00, 165.00, 1, 'active');
+(UUID(), @scw_p18, @scw_vendor, 'SCW-MBP-0.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 260.00, 165.00, 1, 'active');
 SET @scw_p18_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p18, @scw_vendor, 'SCW-MBP-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 195.00, 0, 'active');
+(UUID(), @scw_p18, @scw_vendor, 'SCW-MBP-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 195.00, 0, 'active');
 SET @scw_p18_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p18_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='0.5L')),
@@ -6038,10 +6038,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p19, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p19, @scw_vendor, 'SCW-GRILL-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 640.00, 400.00, 1, 'active');
+(UUID(), @scw_p19, @scw_vendor, 'SCW-GRILL-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 640.00, 400.00, 1, 'active');
 SET @scw_p19_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p19, @scw_vendor, 'SCW-GRILL-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 730.00, 460.00, 0, 'active');
+(UUID(), @scw_p19, @scw_vendor, 'SCW-GRILL-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 730.00, 460.00, 0, 'active');
 SET @scw_p19_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p19_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1.5L')),
@@ -6055,13 +6055,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p20, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p20, @scw_vendor, 'SCW-SVCS-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 300.00, 1, 'active');
+(UUID(), @scw_p20, @scw_vendor, 'SCW-SVCS-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 300.00, 1, 'active');
 SET @scw_p20_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p20, @scw_vendor, 'SCW-SVCS-1.5L', (SELECT id FROM units WHERE code='pcs'), NULL, 560.00, 350.00, 0, 'active');
+(UUID(), @scw_p20, @scw_vendor, 'SCW-SVCS-1.5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 560.00, 350.00, 0, 'active');
 SET @scw_p20_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p20, @scw_vendor, 'SCW-SVCS-2L', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 410.00, 0, 'active');
+(UUID(), @scw_p20, @scw_vendor, 'SCW-SVCS-2L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 410.00, 0, 'active');
 SET @scw_p20_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@scw_p20_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1L')),
@@ -6076,7 +6076,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p21, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p21, @scw_vendor, 'SCW-KNIFESET-5PC', (SELECT id FROM units WHERE code='set'), NULL, 650.00, 400.00, 1, 'active');
+(UUID(), @scw_p21, @scw_vendor, 'SCW-KNIFESET-5PC', (SELECT id FROM units WHERE code='set'), 0.0000, 650.00, 400.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Heavy Duty Vegetable Chopper', 'scw-heavy-duty-veg-chopper', 'Manual heavy-duty vegetable chopper with stainless steel blades and a shatterproof container.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 12, 'both');
@@ -6086,7 +6086,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p22, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p22, @scw_vendor, 'SCW-CHOP-HD', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 235.00, 1, 'active');
+(UUID(), @scw_p22, @scw_vendor, 'SCW-CHOP-HD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 235.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='set'), 'Stainless Steel Ladle & Spatula Set (6-Piece)', 'scw-ss-ladle-spatula-set-6pc', 'Six-piece stainless steel cooking utensil set covering ladles, spatulas, a skimmer and a turner, with a hanging stand.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 12, 6, 'both');
@@ -6096,7 +6096,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p23, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p23, @scw_vendor, 'SCW-LDSPSET-6PC', (SELECT id FROM units WHERE code='set'), NULL, 420.00, 260.00, 1, 'active');
+(UUID(), @scw_p23, @scw_vendor, 'SCW-LDSPSET-6PC', (SELECT id FROM units WHERE code='set'), 0.0000, 420.00, 260.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Sheesham Wood Rolling Pin 12 Inch', 'scw-sheesham-rolling-pin-12in', 'Solid sheesham wood rolling pin (belan), 12 inch, with tapered ends for even dough pressure.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 25, 'both');
@@ -6106,7 +6106,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p24, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p24, @scw_vendor, 'SCW-ROLLPIN-12IN', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 105.00, 1, 'active');
+(UUID(), @scw_p24, @scw_vendor, 'SCW-ROLLPIN-12IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 105.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Stainless Steel Swivel Peeler', 'scw-ss-swivel-peeler', 'Ergonomic stainless steel swivel-blade vegetable peeler with a non-slip grip handle.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 100, 50, 'both');
@@ -6116,7 +6116,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p25, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p25, @scw_vendor, 'SCW-PEELER-SWV', (SELECT id FROM units WHERE code='pcs'), NULL, 45.00, 25.00, 1, 'active');
+(UUID(), @scw_p25, @scw_vendor, 'SCW-PEELER-SWV', (SELECT id FROM units WHERE code='pcs'), 0.0000, 45.00, 25.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Multi-Purpose 4-Side Box Grater', 'scw-multi-purpose-box-grater', 'Stainless steel 4-side box grater with a stable base and a built-in catch container.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 12, 'both');
@@ -6126,7 +6126,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p26, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p26, @scw_vendor, 'SCW-GRATER-4S', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 130.00, 1, 'active');
+(UUID(), @scw_p26, @scw_vendor, 'SCW-GRATER-4S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 130.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Stainless Steel Kitchen Tongs 9 Inch', 'scw-ss-kitchen-tongs-9in', 'Stainless steel kitchen tongs, 9 inch, with a scalloped grip and a locking mechanism.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 25, 'both');
@@ -6136,7 +6136,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p27, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p27, @scw_vendor, 'SCW-TONGS-9IN', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 55.00, 1, 'active');
+(UUID(), @scw_p27, @scw_vendor, 'SCW-TONGS-9IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 55.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Heavy Duty Balloon Whisk', 'scw-heavy-duty-balloon-whisk', 'Stainless steel balloon whisk with reinforced wire loops and an ergonomic handle.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 25, 'both');
@@ -6146,7 +6146,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p28, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p28, @scw_vendor, 'SCW-WHISK-HD', (SELECT id FROM units WHERE code='pcs'), NULL, 110.00, 65.00, 1, 'active');
+(UUID(), @scw_p28, @scw_vendor, 'SCW-WHISK-HD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 110.00, 65.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Stainless Steel Colander 24cm', 'scw-ss-colander-24cm', 'Stainless steel colander, 24cm diameter, with a stable base and side handles.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 12, 'both');
@@ -6156,7 +6156,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p29, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p29, @scw_vendor, 'SCW-COLAND-24CM', (SELECT id FROM units WHERE code='pcs'), NULL, 280.00, 170.00, 1, 'active');
+(UUID(), @scw_p29, @scw_vendor, 'SCW-COLAND-24CM', (SELECT id FROM units WHERE code='pcs'), 0.0000, 280.00, 170.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Sheesham Wood Chopping Board', 'scw-sheesham-chopping-board', 'Solid sheesham wood chopping board with a juice groove and a hanging hole.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 12, 'both');
@@ -6166,7 +6166,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p30, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p30, @scw_vendor, 'SCW-CHOPBOARD-SH', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 195.00, 1, 'active');
+(UUID(), @scw_p30, @scw_vendor, 'SCW-CHOPBOARD-SH', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 195.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Stainless Steel Potato Masher', 'scw-ss-potato-masher', 'Stainless steel potato masher with a wavy-head design and an ergonomic handle.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 25, 'both');
@@ -6176,7 +6176,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p31, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p31, @scw_vendor, 'SCW-MASHER-SS', (SELECT id FROM units WHERE code='pcs'), NULL, 90.00, 52.00, 1, 'active');
+(UUID(), @scw_p31, @scw_vendor, 'SCW-MASHER-SS', (SELECT id FROM units WHERE code='pcs'), 0.0000, 90.00, 52.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Heavy Duty Kitchen Shears', 'scw-heavy-duty-kitchen-shears', 'Heavy-duty stainless steel kitchen shears with a bottle opener and nutcracker notch.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 12, 'both');
@@ -6186,7 +6186,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p32, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p32, @scw_vendor, 'SCW-SHEARS-HD', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 135.00, 1, 'active');
+(UUID(), @scw_p32, @scw_vendor, 'SCW-SHEARS-HD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 135.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Stainless Steel Skimmer Ladle (Jhara)', 'scw-ss-skimmer-ladle-jhara', 'Stainless steel wire-mesh skimmer ladle (jhara) for frying and straining.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 25, 'both');
@@ -6196,7 +6196,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p33, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p33, @scw_vendor, 'SCW-SKIMMER-JH', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 48.00, 1, 'active');
+(UUID(), @scw_p33, @scw_vendor, 'SCW-SKIMMER-JH', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 48.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@scw_vendor, (SELECT id FROM categories WHERE slug='mfg-kitchenware-tools'), @scw_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Heavy Duty Manual Can Opener', 'scw-heavy-duty-can-opener', 'Heavy-duty manual can opener with a stainless steel cutting wheel and a comfort-grip handle.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 25, 'both');
@@ -6206,7 +6206,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@scw_p34, @scw_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @scw_p34, @scw_vendor, 'SCW-CANOPEN-HD', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 78.00, 1, 'active');
+(UUID(), @scw_p34, @scw_vendor, 'SCW-CANOPEN-HD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 78.00, 1, 'active');
 
 -- ---------------------------------------------------------------------
 -- Manufacturer 10/15 [ftg]: Funtime Toys & Games Pvt Ltd — Toys & Games (Sivakasi, Tamil Nadu)
@@ -6244,7 +6244,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p1, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p1, @ftg_vendor, 'FTG-ALPHABLOCK-001', (SELECT id FROM units WHERE code='set'), NULL, 450.00, 310.00, 1, 'active');
+(UUID(), @ftg_p1, @ftg_vendor, 'FTG-ALPHABLOCK-001', (SELECT id FROM units WHERE code='set'), 0.0000, 450.00, 310.00, 1, 'active');
 
 -- ============================================================
 -- Product 2: Magnetic Number Learning Puzzle Board (simple)
@@ -6260,7 +6260,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p2, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p2, @ftg_vendor, 'FTG-MAGNUMBOARD-002', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 260.00, 1, 'active');
+(UUID(), @ftg_p2, @ftg_vendor, 'FTG-MAGNUMBOARD-002', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 260.00, 1, 'active');
 
 -- ============================================================
 -- Product 3: STEM Mechanical Gears Building Kit - 150 Pieces (variant: color)
@@ -6276,19 +6276,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p3, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p3, @ftg_vendor, 'FTG-STEMGEAR-003-RED', (SELECT id FROM units WHERE code='box'), NULL, 720.00, 480.00, 1, 'active');
+(UUID(), @ftg_p3, @ftg_vendor, 'FTG-STEMGEAR-003-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 720.00, 480.00, 1, 'active');
 SET @ftg_p3_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p3_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p3, @ftg_vendor, 'FTG-STEMGEAR-003-BLU', (SELECT id FROM units WHERE code='box'), NULL, 720.00, 480.00, 0, 'active');
+(UUID(), @ftg_p3, @ftg_vendor, 'FTG-STEMGEAR-003-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 720.00, 480.00, 0, 'active');
 SET @ftg_p3_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p3_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p3, @ftg_vendor, 'FTG-STEMGEAR-003-GRN', (SELECT id FROM units WHERE code='box'), NULL, 720.00, 480.00, 0, 'active');
+(UUID(), @ftg_p3, @ftg_vendor, 'FTG-STEMGEAR-003-GRN', (SELECT id FROM units WHERE code='box'), 0.0000, 720.00, 480.00, 0, 'active');
 SET @ftg_p3_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p3_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -6307,7 +6307,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p4, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p4, @ftg_vendor, 'FTG-ABACUS-004', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 145.00, 1, 'active');
+(UUID(), @ftg_p4, @ftg_vendor, 'FTG-ABACUS-004', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 145.00, 1, 'active');
 
 -- ============================================================
 -- Product 5: Interactive Talking Globe - English & Hindi (simple)
@@ -6323,7 +6323,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p5, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p5, @ftg_vendor, 'FTG-TALKGLOBE-005', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 640.00, 1, 'active');
+(UUID(), @ftg_p5, @ftg_vendor, 'FTG-TALKGLOBE-005', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 640.00, 1, 'active');
 
 -- ============================================================
 -- Product 6: DIY Science Experiment Kit - Volcano & Crystal Growing (simple)
@@ -6339,7 +6339,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p6, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p6, @ftg_vendor, 'FTG-SCIKIT-006', (SELECT id FROM units WHERE code='set'), NULL, 380.00, 250.00, 1, 'active');
+(UUID(), @ftg_p6, @ftg_vendor, 'FTG-SCIKIT-006', (SELECT id FROM units WHERE code='set'), 0.0000, 380.00, 250.00, 1, 'active');
 
 -- ============================================================
 -- Product 7: Montessori Wooden Shape Sorter Cube (variant: color)
@@ -6355,19 +6355,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p7, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p7, @ftg_vendor, 'FTG-SHAPESORT-007-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 210.00, 1, 'active');
+(UUID(), @ftg_p7, @ftg_vendor, 'FTG-SHAPESORT-007-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 210.00, 1, 'active');
 SET @ftg_p7_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p7_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p7, @ftg_vendor, 'FTG-SHAPESORT-007-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 210.00, 0, 'active');
+(UUID(), @ftg_p7, @ftg_vendor, 'FTG-SHAPESORT-007-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 210.00, 0, 'active');
 SET @ftg_p7_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p7_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p7, @ftg_vendor, 'FTG-SHAPESORT-007-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 210.00, 0, 'active');
+(UUID(), @ftg_p7, @ftg_vendor, 'FTG-SHAPESORT-007-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 210.00, 0, 'active');
 SET @ftg_p7_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p7_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -6386,7 +6386,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p8, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p8, @ftg_vendor, 'FTG-CODEROBOT-008', (SELECT id FROM units WHERE code='set'), NULL, 2200.00, 1450.00, 1, 'active');
+(UUID(), @ftg_p8, @ftg_vendor, 'FTG-CODEROBOT-008', (SELECT id FROM units WHERE code='set'), 0.0000, 2200.00, 1450.00, 1, 'active');
 
 -- ============================================================
 -- Product 9: Wooden Jigsaw Puzzle - Animal Kingdom 100 Pieces (simple)
@@ -6402,7 +6402,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p9, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p9, @ftg_vendor, 'FTG-JIGSAWANIMAL-009', (SELECT id FROM units WHERE code='box'), NULL, 260.00, 170.00, 1, 'active');
+(UUID(), @ftg_p9, @ftg_vendor, 'FTG-JIGSAWANIMAL-009', (SELECT id FROM units WHERE code='box'), 0.0000, 260.00, 170.00, 1, 'active');
 
 -- ============================================================
 -- Product 10: Magnetic Building Tiles Construction Set - 60 Pieces (variant: color)
@@ -6418,19 +6418,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p10, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p10, @ftg_vendor, 'FTG-MAGTILES-010-RED', (SELECT id FROM units WHERE code='box'), NULL, 1450.00, 980.00, 1, 'active');
+(UUID(), @ftg_p10, @ftg_vendor, 'FTG-MAGTILES-010-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 1450.00, 980.00, 1, 'active');
 SET @ftg_p10_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p10_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p10, @ftg_vendor, 'FTG-MAGTILES-010-BLU', (SELECT id FROM units WHERE code='box'), NULL, 1450.00, 980.00, 0, 'active');
+(UUID(), @ftg_p10, @ftg_vendor, 'FTG-MAGTILES-010-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 1450.00, 980.00, 0, 'active');
 SET @ftg_p10_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p10_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p10, @ftg_vendor, 'FTG-MAGTILES-010-GRN', (SELECT id FROM units WHERE code='box'), NULL, 1450.00, 980.00, 0, 'active');
+(UUID(), @ftg_p10, @ftg_vendor, 'FTG-MAGTILES-010-GRN', (SELECT id FROM units WHERE code='box'), 0.0000, 1450.00, 980.00, 0, 'active');
 SET @ftg_p10_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p10_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -6449,19 +6449,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p11, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p11, @ftg_vendor, 'FTG-MICROSCOPE-011-PNK', (SELECT id FROM units WHERE code='set'), NULL, 890.00, 590.00, 1, 'active');
+(UUID(), @ftg_p11, @ftg_vendor, 'FTG-MICROSCOPE-011-PNK', (SELECT id FROM units WHERE code='set'), 0.0000, 890.00, 590.00, 1, 'active');
 SET @ftg_p11_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p11_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p11, @ftg_vendor, 'FTG-MICROSCOPE-011-BLU', (SELECT id FROM units WHERE code='set'), NULL, 890.00, 590.00, 0, 'active');
+(UUID(), @ftg_p11, @ftg_vendor, 'FTG-MICROSCOPE-011-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 890.00, 590.00, 0, 'active');
 SET @ftg_p11_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p11_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p11, @ftg_vendor, 'FTG-MICROSCOPE-011-YLW', (SELECT id FROM units WHERE code='set'), NULL, 890.00, 590.00, 0, 'active');
+(UUID(), @ftg_p11, @ftg_vendor, 'FTG-MICROSCOPE-011-YLW', (SELECT id FROM units WHERE code='set'), 0.0000, 890.00, 590.00, 0, 'active');
 SET @ftg_p11_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p11_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -6480,13 +6480,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p12, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p12, @ftg_vendor, 'FTG-ALPHATAB-012-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 680.00, 450.00, 1, 'active');
+(UUID(), @ftg_p12, @ftg_vendor, 'FTG-ALPHATAB-012-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 680.00, 450.00, 1, 'active');
 SET @ftg_p12_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p12_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p12, @ftg_vendor, 'FTG-ALPHATAB-012-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 680.00, 450.00, 0, 'active');
+(UUID(), @ftg_p12, @ftg_vendor, 'FTG-ALPHATAB-012-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 680.00, 450.00, 0, 'active');
 SET @ftg_p12_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p12_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -6505,7 +6505,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p13, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p13, @ftg_vendor, 'FTG-ANATOMYKIT-013', (SELECT id FROM units WHERE code='set'), NULL, 680.00, 440.00, 1, 'active');
+(UUID(), @ftg_p13, @ftg_vendor, 'FTG-ANATOMYKIT-013', (SELECT id FROM units WHERE code='set'), 0.0000, 680.00, 440.00, 1, 'active');
 
 -- ============================================================
 -- Product 14: Wooden Learning Clock Toy (variant: color)
@@ -6521,19 +6521,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p14, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p14, @ftg_vendor, 'FTG-LEARNCLOCK-014-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 240.00, 155.00, 1, 'active');
+(UUID(), @ftg_p14, @ftg_vendor, 'FTG-LEARNCLOCK-014-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 240.00, 155.00, 1, 'active');
 SET @ftg_p14_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p14_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p14, @ftg_vendor, 'FTG-LEARNCLOCK-014-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 240.00, 155.00, 0, 'active');
+(UUID(), @ftg_p14, @ftg_vendor, 'FTG-LEARNCLOCK-014-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 240.00, 155.00, 0, 'active');
 SET @ftg_p14_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p14_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p14, @ftg_vendor, 'FTG-LEARNCLOCK-014-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 240.00, 155.00, 0, 'active');
+(UUID(), @ftg_p14, @ftg_vendor, 'FTG-LEARNCLOCK-014-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 240.00, 155.00, 0, 'active');
 SET @ftg_p14_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p14_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -6552,13 +6552,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p15, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p15, @ftg_vendor, 'FTG-PUZZLEMAT-015-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 520.00, 340.00, 1, 'active');
+(UUID(), @ftg_p15, @ftg_vendor, 'FTG-PUZZLEMAT-015-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 520.00, 340.00, 1, 'active');
 SET @ftg_p15_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p15_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p15, @ftg_vendor, 'FTG-PUZZLEMAT-015-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 520.00, 340.00, 0, 'active');
+(UUID(), @ftg_p15, @ftg_vendor, 'FTG-PUZZLEMAT-015-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 520.00, 340.00, 0, 'active');
 SET @ftg_p15_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p15_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -6577,7 +6577,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p16, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p16, @ftg_vendor, 'FTG-CHEMLAB-016', (SELECT id FROM units WHERE code='set'), NULL, 850.00, 560.00, 1, 'active');
+(UUID(), @ftg_p16, @ftg_vendor, 'FTG-CHEMLAB-016', (SELECT id FROM units WHERE code='set'), 0.0000, 850.00, 560.00, 1, 'active');
 
 -- ============================================================
 -- Product 17: Musical Xylophone Learning Toy for Toddlers (variant: color)
@@ -6593,25 +6593,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p17, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p17, @ftg_vendor, 'FTG-XYLOPHONE-017-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 390.00, 250.00, 1, 'active');
+(UUID(), @ftg_p17, @ftg_vendor, 'FTG-XYLOPHONE-017-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 390.00, 250.00, 1, 'active');
 SET @ftg_p17_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p17_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p17, @ftg_vendor, 'FTG-XYLOPHONE-017-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 390.00, 250.00, 0, 'active');
+(UUID(), @ftg_p17, @ftg_vendor, 'FTG-XYLOPHONE-017-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 390.00, 250.00, 0, 'active');
 SET @ftg_p17_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p17_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p17, @ftg_vendor, 'FTG-XYLOPHONE-017-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 390.00, 250.00, 0, 'active');
+(UUID(), @ftg_p17, @ftg_vendor, 'FTG-XYLOPHONE-017-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 390.00, 250.00, 0, 'active');
 SET @ftg_p17_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p17_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p17, @ftg_vendor, 'FTG-XYLOPHONE-017-PUR', (SELECT id FROM units WHERE code='pcs'), NULL, 390.00, 250.00, 0, 'active');
+(UUID(), @ftg_p17, @ftg_vendor, 'FTG-XYLOPHONE-017-PUR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 390.00, 250.00, 0, 'active');
 SET @ftg_p17_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p17_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Purple'));
@@ -6630,25 +6630,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p18, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p18, @ftg_vendor, 'FTG-TRICYCLE-018-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2150.00, 1, 'active');
+(UUID(), @ftg_p18, @ftg_vendor, 'FTG-TRICYCLE-018-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2150.00, 1, 'active');
 SET @ftg_p18_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p18_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p18, @ftg_vendor, 'FTG-TRICYCLE-018-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2150.00, 0, 'active');
+(UUID(), @ftg_p18, @ftg_vendor, 'FTG-TRICYCLE-018-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2150.00, 0, 'active');
 SET @ftg_p18_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p18_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p18, @ftg_vendor, 'FTG-TRICYCLE-018-YLW', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2150.00, 0, 'active');
+(UUID(), @ftg_p18, @ftg_vendor, 'FTG-TRICYCLE-018-YLW', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2150.00, 0, 'active');
 SET @ftg_p18_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p18_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p18, @ftg_vendor, 'FTG-TRICYCLE-018-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2150.00, 0, 'active');
+(UUID(), @ftg_p18, @ftg_vendor, 'FTG-TRICYCLE-018-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2150.00, 0, 'active');
 SET @ftg_p18_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p18_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -6667,7 +6667,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p19, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p19, @ftg_vendor, 'FTG-TRAMPOLINE8FT-019', (SELECT id FROM units WHERE code='pcs'), NULL, 5800.00, 3900.00, 1, 'active');
+(UUID(), @ftg_p19, @ftg_vendor, 'FTG-TRAMPOLINE8FT-019', (SELECT id FROM units WHERE code='pcs'), 0.0000, 5800.00, 3900.00, 1, 'active');
 
 -- ============================================================
 -- Product 20: Kids Bicycle 16 Inch with Training Wheels (variant: color)
@@ -6683,13 +6683,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p20, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p20, @ftg_vendor, 'FTG-BICYCLE16-020-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 4200.00, 2850.00, 1, 'active');
+(UUID(), @ftg_p20, @ftg_vendor, 'FTG-BICYCLE16-020-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4200.00, 2850.00, 1, 'active');
 SET @ftg_p20_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p20_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p20, @ftg_vendor, 'FTG-BICYCLE16-020-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 4200.00, 2850.00, 0, 'active');
+(UUID(), @ftg_p20, @ftg_vendor, 'FTG-BICYCLE16-020-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4200.00, 2850.00, 0, 'active');
 SET @ftg_p20_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p20_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
@@ -6708,13 +6708,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p21, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p21, @ftg_vendor, 'FTG-SPLASHMAT-021-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 420.00, 1, 'active');
+(UUID(), @ftg_p21, @ftg_vendor, 'FTG-SPLASHMAT-021-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 420.00, 1, 'active');
 SET @ftg_p21_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p21_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p21, @ftg_vendor, 'FTG-SPLASHMAT-021-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 420.00, 0, 'active');
+(UUID(), @ftg_p21, @ftg_vendor, 'FTG-SPLASHMAT-021-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 420.00, 0, 'active');
 SET @ftg_p21_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p21_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -6733,13 +6733,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p22, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p22, @ftg_vendor, 'FTG-BADMINTONSET-022-BLU', (SELECT id FROM units WHERE code='set'), NULL, 420.00, 270.00, 1, 'active');
+(UUID(), @ftg_p22, @ftg_vendor, 'FTG-BADMINTONSET-022-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 420.00, 270.00, 1, 'active');
 SET @ftg_p22_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p22_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p22, @ftg_vendor, 'FTG-BADMINTONSET-022-RED', (SELECT id FROM units WHERE code='set'), NULL, 420.00, 270.00, 0, 'active');
+(UUID(), @ftg_p22, @ftg_vendor, 'FTG-BADMINTONSET-022-RED', (SELECT id FROM units WHERE code='set'), 0.0000, 420.00, 270.00, 0, 'active');
 SET @ftg_p22_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p22_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -6758,7 +6758,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p23, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p23, @ftg_vendor, 'FTG-POOL6FT-023', (SELECT id FROM units WHERE code='pcs'), NULL, 1350.00, 880.00, 1, 'active');
+(UUID(), @ftg_p23, @ftg_vendor, 'FTG-POOL6FT-023', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1350.00, 880.00, 1, 'active');
 
 -- ============================================================
 -- Product 24: Kids 3-Wheel Kick Scooter (variant: color)
@@ -6774,25 +6774,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p24, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p24, @ftg_vendor, 'FTG-SCOOTER3W-024-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 1650.00, 1080.00, 1, 'active');
+(UUID(), @ftg_p24, @ftg_vendor, 'FTG-SCOOTER3W-024-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1650.00, 1080.00, 1, 'active');
 SET @ftg_p24_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p24_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p24, @ftg_vendor, 'FTG-SCOOTER3W-024-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 1650.00, 1080.00, 0, 'active');
+(UUID(), @ftg_p24, @ftg_vendor, 'FTG-SCOOTER3W-024-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1650.00, 1080.00, 0, 'active');
 SET @ftg_p24_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p24_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p24, @ftg_vendor, 'FTG-SCOOTER3W-024-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 1650.00, 1080.00, 0, 'active');
+(UUID(), @ftg_p24, @ftg_vendor, 'FTG-SCOOTER3W-024-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1650.00, 1080.00, 0, 'active');
 SET @ftg_p24_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p24_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p24, @ftg_vendor, 'FTG-SCOOTER3W-024-ORG', (SELECT id FROM units WHERE code='pcs'), NULL, 1650.00, 1080.00, 0, 'active');
+(UUID(), @ftg_p24, @ftg_vendor, 'FTG-SCOOTER3W-024-ORG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1650.00, 1080.00, 0, 'active');
 SET @ftg_p24_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p24_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Orange'));
@@ -6811,7 +6811,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p25, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p25, @ftg_vendor, 'FTG-HOOPSTAND-025', (SELECT id FROM units WHERE code='pcs'), NULL, 2400.00, 1600.00, 1, 'active');
+(UUID(), @ftg_p25, @ftg_vendor, 'FTG-HOOPSTAND-025', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2400.00, 1600.00, 1, 'active');
 
 -- ============================================================
 -- Product 26: Kids Skipping Rope Set with Foam Handles (variant: color)
@@ -6827,19 +6827,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p26, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p26, @ftg_vendor, 'FTG-SKIPROPE-026-RED', (SELECT id FROM units WHERE code='set'), NULL, 95.00, 58.00, 1, 'active');
+(UUID(), @ftg_p26, @ftg_vendor, 'FTG-SKIPROPE-026-RED', (SELECT id FROM units WHERE code='set'), 0.0000, 95.00, 58.00, 1, 'active');
 SET @ftg_p26_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p26_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p26, @ftg_vendor, 'FTG-SKIPROPE-026-BLU', (SELECT id FROM units WHERE code='set'), NULL, 95.00, 58.00, 0, 'active');
+(UUID(), @ftg_p26, @ftg_vendor, 'FTG-SKIPROPE-026-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 95.00, 58.00, 0, 'active');
 SET @ftg_p26_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p26_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p26, @ftg_vendor, 'FTG-SKIPROPE-026-YLW', (SELECT id FROM units WHERE code='set'), NULL, 95.00, 58.00, 0, 'active');
+(UUID(), @ftg_p26, @ftg_vendor, 'FTG-SKIPROPE-026-YLW', (SELECT id FROM units WHERE code='set'), 0.0000, 95.00, 58.00, 0, 'active');
 SET @ftg_p26_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p26_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -6858,7 +6858,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p27, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p27, @ftg_vendor, 'FTG-CRICKETSET-027', (SELECT id FROM units WHERE code='set'), NULL, 480.00, 310.00, 1, 'active');
+(UUID(), @ftg_p27, @ftg_vendor, 'FTG-CRICKETSET-027', (SELECT id FROM units WHERE code='set'), 0.0000, 480.00, 310.00, 1, 'active');
 
 -- ============================================================
 -- Product 28: Beach Sand Pit Play Set with Tools (variant: color)
@@ -6874,13 +6874,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p28, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p28, @ftg_vendor, 'FTG-SANDPIT-028-BLU', (SELECT id FROM units WHERE code='set'), NULL, 1150.00, 750.00, 1, 'active');
+(UUID(), @ftg_p28, @ftg_vendor, 'FTG-SANDPIT-028-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 1150.00, 750.00, 1, 'active');
 SET @ftg_p28_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p28_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p28, @ftg_vendor, 'FTG-SANDPIT-028-YLW', (SELECT id FROM units WHERE code='set'), NULL, 1150.00, 750.00, 0, 'active');
+(UUID(), @ftg_p28, @ftg_vendor, 'FTG-SANDPIT-028-YLW', (SELECT id FROM units WHERE code='set'), 0.0000, 1150.00, 750.00, 0, 'active');
 SET @ftg_p28_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p28_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -6899,13 +6899,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p29, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p29, @ftg_vendor, 'FTG-SWINGSET-029-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 2650.00, 1750.00, 1, 'active');
+(UUID(), @ftg_p29, @ftg_vendor, 'FTG-SWINGSET-029-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2650.00, 1750.00, 1, 'active');
 SET @ftg_p29_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p29_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p29, @ftg_vendor, 'FTG-SWINGSET-029-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 2650.00, 1750.00, 0, 'active');
+(UUID(), @ftg_p29, @ftg_vendor, 'FTG-SWINGSET-029-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2650.00, 1750.00, 0, 'active');
 SET @ftg_p29_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p29_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -6924,19 +6924,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p30, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p30, @ftg_vendor, 'FTG-FRISBEESET-030-RED', (SELECT id FROM units WHERE code='set'), NULL, 220.00, 140.00, 1, 'active');
+(UUID(), @ftg_p30, @ftg_vendor, 'FTG-FRISBEESET-030-RED', (SELECT id FROM units WHERE code='set'), 0.0000, 220.00, 140.00, 1, 'active');
 SET @ftg_p30_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p30_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p30, @ftg_vendor, 'FTG-FRISBEESET-030-BLU', (SELECT id FROM units WHERE code='set'), NULL, 220.00, 140.00, 0, 'active');
+(UUID(), @ftg_p30, @ftg_vendor, 'FTG-FRISBEESET-030-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 220.00, 140.00, 0, 'active');
 SET @ftg_p30_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p30_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p30, @ftg_vendor, 'FTG-FRISBEESET-030-YLW', (SELECT id FROM units WHERE code='set'), NULL, 220.00, 140.00, 0, 'active');
+(UUID(), @ftg_p30, @ftg_vendor, 'FTG-FRISBEESET-030-YLW', (SELECT id FROM units WHERE code='set'), 0.0000, 220.00, 140.00, 0, 'active');
 SET @ftg_p30_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p30_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -6955,25 +6955,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p31, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p31, @ftg_vendor, 'FTG-FOOTBALL3-031-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 210.00, 1, 'active');
+(UUID(), @ftg_p31, @ftg_vendor, 'FTG-FOOTBALL3-031-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 210.00, 1, 'active');
 SET @ftg_p31_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p31_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p31, @ftg_vendor, 'FTG-FOOTBALL3-031-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 210.00, 0, 'active');
+(UUID(), @ftg_p31, @ftg_vendor, 'FTG-FOOTBALL3-031-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 210.00, 0, 'active');
 SET @ftg_p31_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p31_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p31, @ftg_vendor, 'FTG-FOOTBALL3-031-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 210.00, 0, 'active');
+(UUID(), @ftg_p31, @ftg_vendor, 'FTG-FOOTBALL3-031-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 210.00, 0, 'active');
 SET @ftg_p31_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p31_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p31, @ftg_vendor, 'FTG-FOOTBALL3-031-YLW', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 210.00, 0, 'active');
+(UUID(), @ftg_p31, @ftg_vendor, 'FTG-FOOTBALL3-031-YLW', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 210.00, 0, 'active');
 SET @ftg_p31_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p31_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -6992,7 +6992,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p32, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p32, @ftg_vendor, 'FTG-PLAYTENT-032', (SELECT id FROM units WHERE code='pcs'), NULL, 1850.00, 1200.00, 1, 'active');
+(UUID(), @ftg_p32, @ftg_vendor, 'FTG-PLAYTENT-032', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1850.00, 1200.00, 1, 'active');
 
 -- ============================================================
 -- Product 33: Kids Adjustable Roller Skates (variant: color)
@@ -7008,19 +7008,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p33, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p33, @ftg_vendor, 'FTG-ROLLERSKATE-033-PNK', (SELECT id FROM units WHERE code='pair'), NULL, 990.00, 640.00, 1, 'active');
+(UUID(), @ftg_p33, @ftg_vendor, 'FTG-ROLLERSKATE-033-PNK', (SELECT id FROM units WHERE code='pair'), 0.0000, 990.00, 640.00, 1, 'active');
 SET @ftg_p33_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p33_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p33, @ftg_vendor, 'FTG-ROLLERSKATE-033-BLU', (SELECT id FROM units WHERE code='pair'), NULL, 990.00, 640.00, 0, 'active');
+(UUID(), @ftg_p33, @ftg_vendor, 'FTG-ROLLERSKATE-033-BLU', (SELECT id FROM units WHERE code='pair'), 0.0000, 990.00, 640.00, 0, 'active');
 SET @ftg_p33_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p33_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p33, @ftg_vendor, 'FTG-ROLLERSKATE-033-BLK', (SELECT id FROM units WHERE code='pair'), NULL, 990.00, 640.00, 0, 'active');
+(UUID(), @ftg_p33, @ftg_vendor, 'FTG-ROLLERSKATE-033-BLK', (SELECT id FROM units WHERE code='pair'), 0.0000, 990.00, 640.00, 0, 'active');
 SET @ftg_p33_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p33_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
@@ -7039,13 +7039,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@ftg_p34, @ftg_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p34, @ftg_vendor, 'FTG-ARCHERYSET-034-BLU', (SELECT id FROM units WHERE code='set'), NULL, 560.00, 360.00, 1, 'active');
+(UUID(), @ftg_p34, @ftg_vendor, 'FTG-ARCHERYSET-034-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 560.00, 360.00, 1, 'active');
 SET @ftg_p34_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p34_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @ftg_p34, @ftg_vendor, 'FTG-ARCHERYSET-034-GRN', (SELECT id FROM units WHERE code='set'), NULL, 560.00, 360.00, 0, 'active');
+(UUID(), @ftg_p34, @ftg_vendor, 'FTG-ARCHERYSET-034-GRN', (SELECT id FROM units WHERE code='set'), 0.0000, 560.00, 360.00, 0, 'active');
 SET @ftg_p34_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@ftg_p34_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -7083,19 +7083,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p1, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p1, @bsi_vendor, 'BSI-BP-CG07-BLU', (SELECT id FROM units WHERE code='box'), NULL, 85.00, 58.00, 1, 'active');
+(UUID(), @bsi_p1, @bsi_vendor, 'BSI-BP-CG07-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 85.00, 58.00, 1, 'active');
 SET @bsi_p1_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p1_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p1, @bsi_vendor, 'BSI-BP-CG07-BLK', (SELECT id FROM units WHERE code='box'), NULL, 85.00, 58.00, 0, 'active');
+(UUID(), @bsi_p1, @bsi_vendor, 'BSI-BP-CG07-BLK', (SELECT id FROM units WHERE code='box'), 0.0000, 85.00, 58.00, 0, 'active');
 SET @bsi_p1_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p1_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p1, @bsi_vendor, 'BSI-BP-CG07-RED', (SELECT id FROM units WHERE code='box'), NULL, 85.00, 58.00, 0, 'active');
+(UUID(), @bsi_p1, @bsi_vendor, 'BSI-BP-CG07-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 85.00, 58.00, 0, 'active');
 SET @bsi_p1_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p1_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -7111,25 +7111,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p2, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p2, @bsi_vendor, 'BSI-GP-SG05-BLU', (SELECT id FROM units WHERE code='box'), NULL, 120.00, 82.00, 1, 'active');
+(UUID(), @bsi_p2, @bsi_vendor, 'BSI-GP-SG05-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 120.00, 82.00, 1, 'active');
 SET @bsi_p2_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p2_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p2, @bsi_vendor, 'BSI-GP-SG05-BLK', (SELECT id FROM units WHERE code='box'), NULL, 120.00, 82.00, 0, 'active');
+(UUID(), @bsi_p2, @bsi_vendor, 'BSI-GP-SG05-BLK', (SELECT id FROM units WHERE code='box'), 0.0000, 120.00, 82.00, 0, 'active');
 SET @bsi_p2_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p2_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p2, @bsi_vendor, 'BSI-GP-SG05-RED', (SELECT id FROM units WHERE code='box'), NULL, 120.00, 82.00, 0, 'active');
+(UUID(), @bsi_p2, @bsi_vendor, 'BSI-GP-SG05-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 120.00, 82.00, 0, 'active');
 SET @bsi_p2_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p2_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p2, @bsi_vendor, 'BSI-GP-SG05-GRN', (SELECT id FROM units WHERE code='box'), NULL, 120.00, 82.00, 0, 'active');
+(UUID(), @bsi_p2, @bsi_vendor, 'BSI-GP-SG05-GRN', (SELECT id FROM units WHERE code='box'), 0.0000, 120.00, 82.00, 0, 'active');
 SET @bsi_p2_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p2_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -7145,7 +7145,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p3, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p3, @bsi_vendor, 'BSI-FTN-EXEC-STL', (SELECT id FROM units WHERE code='pcs'), NULL, 350.00, 230.00, 1, 'active');
+(UUID(), @bsi_p3, @bsi_vendor, 'BSI-FTN-EXEC-STL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 350.00, 230.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-writing'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='box'), 'HB Graphite Pencil - Pack of 10', 'bsi-hb-graphite-pencil-pack-of-10', 'Hexagonal HB graphite pencils with break-resistant lead, packed 10 to a box for school and office bulk supply.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 20, 'both');
@@ -7158,7 +7158,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p4, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p4, @bsi_vendor, 'BSI-PNC-HB10', (SELECT id FROM units WHERE code='box'), NULL, 45.00, 28.00, 1, 'active');
+(UUID(), @bsi_p4, @bsi_vendor, 'BSI-PNC-HB10', (SELECT id FROM units WHERE code='box'), 0.0000, 45.00, 28.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-writing'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='box'), 'Mechanical Pencil 0.5mm', 'bsi-mechanical-pencil-05mm', 'Retractable 0.5mm mechanical pencils with a rubberized grip zone, boxed 10 to a pack.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 10, 10, 'both');
@@ -7171,19 +7171,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p5, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p5, @bsi_vendor, 'BSI-MP-05-BLK', (SELECT id FROM units WHERE code='box'), NULL, 150.00, 100.00, 1, 'active');
+(UUID(), @bsi_p5, @bsi_vendor, 'BSI-MP-05-BLK', (SELECT id FROM units WHERE code='box'), 0.0000, 150.00, 100.00, 1, 'active');
 SET @bsi_p5_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p5_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p5, @bsi_vendor, 'BSI-MP-05-BLU', (SELECT id FROM units WHERE code='box'), NULL, 150.00, 100.00, 0, 'active');
+(UUID(), @bsi_p5, @bsi_vendor, 'BSI-MP-05-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 150.00, 100.00, 0, 'active');
 SET @bsi_p5_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p5_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p5, @bsi_vendor, 'BSI-MP-05-GRY', (SELECT id FROM units WHERE code='box'), NULL, 150.00, 100.00, 0, 'active');
+(UUID(), @bsi_p5, @bsi_vendor, 'BSI-MP-05-GRY', (SELECT id FROM units WHERE code='box'), 0.0000, 150.00, 100.00, 0, 'active');
 SET @bsi_p5_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p5_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
@@ -7199,25 +7199,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p6, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p6, @bsi_vendor, 'BSI-HL-MKR-YLW', (SELECT id FROM units WHERE code='box'), NULL, 180.00, 120.00, 1, 'active');
+(UUID(), @bsi_p6, @bsi_vendor, 'BSI-HL-MKR-YLW', (SELECT id FROM units WHERE code='box'), 0.0000, 180.00, 120.00, 1, 'active');
 SET @bsi_p6_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p6_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p6, @bsi_vendor, 'BSI-HL-MKR-GRN', (SELECT id FROM units WHERE code='box'), NULL, 180.00, 120.00, 0, 'active');
+(UUID(), @bsi_p6, @bsi_vendor, 'BSI-HL-MKR-GRN', (SELECT id FROM units WHERE code='box'), 0.0000, 180.00, 120.00, 0, 'active');
 SET @bsi_p6_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p6_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p6, @bsi_vendor, 'BSI-HL-MKR-PNK', (SELECT id FROM units WHERE code='box'), NULL, 180.00, 120.00, 0, 'active');
+(UUID(), @bsi_p6, @bsi_vendor, 'BSI-HL-MKR-PNK', (SELECT id FROM units WHERE code='box'), 0.0000, 180.00, 120.00, 0, 'active');
 SET @bsi_p6_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p6_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p6, @bsi_vendor, 'BSI-HL-MKR-ORG', (SELECT id FROM units WHERE code='box'), NULL, 180.00, 120.00, 0, 'active');
+(UUID(), @bsi_p6, @bsi_vendor, 'BSI-HL-MKR-ORG', (SELECT id FROM units WHERE code='box'), 0.0000, 180.00, 120.00, 0, 'active');
 SET @bsi_p6_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p6_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Orange'));
@@ -7233,19 +7233,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p7, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p7, @bsi_vendor, 'BSI-PM-FT-BLK', (SELECT id FROM units WHERE code='box'), NULL, 210.00, 145.00, 1, 'active');
+(UUID(), @bsi_p7, @bsi_vendor, 'BSI-PM-FT-BLK', (SELECT id FROM units WHERE code='box'), 0.0000, 210.00, 145.00, 1, 'active');
 SET @bsi_p7_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p7_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p7, @bsi_vendor, 'BSI-PM-FT-BLU', (SELECT id FROM units WHERE code='box'), NULL, 210.00, 145.00, 0, 'active');
+(UUID(), @bsi_p7, @bsi_vendor, 'BSI-PM-FT-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 210.00, 145.00, 0, 'active');
 SET @bsi_p7_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p7_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p7, @bsi_vendor, 'BSI-PM-FT-RED', (SELECT id FROM units WHERE code='box'), NULL, 210.00, 145.00, 0, 'active');
+(UUID(), @bsi_p7, @bsi_vendor, 'BSI-PM-FT-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 210.00, 145.00, 0, 'active');
 SET @bsi_p7_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p7_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -7261,25 +7261,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p8, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p8, @bsi_vendor, 'BSI-WBM-BT-BLK', (SELECT id FROM units WHERE code='box'), NULL, 240.00, 165.00, 1, 'active');
+(UUID(), @bsi_p8, @bsi_vendor, 'BSI-WBM-BT-BLK', (SELECT id FROM units WHERE code='box'), 0.0000, 240.00, 165.00, 1, 'active');
 SET @bsi_p8_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p8_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p8, @bsi_vendor, 'BSI-WBM-BT-BLU', (SELECT id FROM units WHERE code='box'), NULL, 240.00, 165.00, 0, 'active');
+(UUID(), @bsi_p8, @bsi_vendor, 'BSI-WBM-BT-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 240.00, 165.00, 0, 'active');
 SET @bsi_p8_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p8_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p8, @bsi_vendor, 'BSI-WBM-BT-RED', (SELECT id FROM units WHERE code='box'), NULL, 240.00, 165.00, 0, 'active');
+(UUID(), @bsi_p8, @bsi_vendor, 'BSI-WBM-BT-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 240.00, 165.00, 0, 'active');
 SET @bsi_p8_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p8_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p8, @bsi_vendor, 'BSI-WBM-BT-GRN', (SELECT id FROM units WHERE code='box'), NULL, 240.00, 165.00, 0, 'active');
+(UUID(), @bsi_p8, @bsi_vendor, 'BSI-WBM-BT-GRN', (SELECT id FROM units WHERE code='box'), 0.0000, 240.00, 165.00, 0, 'active');
 SET @bsi_p8_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p8_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -7295,7 +7295,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p9, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p9, @bsi_vendor, 'BSI-SKS-12', (SELECT id FROM units WHERE code='set'), NULL, 55.00, 35.00, 1, 'active');
+(UUID(), @bsi_p9, @bsi_vendor, 'BSI-SKS-12', (SELECT id FROM units WHERE code='set'), 0.0000, 55.00, 35.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-writing'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Correction Pen - Quick Dry 8ml', 'bsi-correction-pen-quick-dry-8ml', 'Quick-dry metal-tip correction pen with 8ml fluid, sold as individual pieces for bulk resale.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 20, 'both');
@@ -7308,7 +7308,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p10, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p10, @bsi_vendor, 'BSI-CP-8ML', (SELECT id FROM units WHERE code='pcs'), NULL, 38.00, 24.00, 1, 'active');
+(UUID(), @bsi_p10, @bsi_vendor, 'BSI-CP-8ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 38.00, 24.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-writing'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='box'), 'Non-Dust Eraser - Pack of 20', 'bsi-non-dust-eraser-pack-of-20', 'Smudge-free, non-dust rubber erasers, packed 20 to a box for school and office bulk supply.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 10, 10, 'both');
@@ -7321,13 +7321,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p11, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p11, @bsi_vendor, 'BSI-ERS-ND20-WHT', (SELECT id FROM units WHERE code='box'), NULL, 90.00, 58.00, 1, 'active');
+(UUID(), @bsi_p11, @bsi_vendor, 'BSI-ERS-ND20-WHT', (SELECT id FROM units WHERE code='box'), 0.0000, 90.00, 58.00, 1, 'active');
 SET @bsi_p11_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p11_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p11, @bsi_vendor, 'BSI-ERS-ND20-BLU', (SELECT id FROM units WHERE code='box'), NULL, 90.00, 58.00, 0, 'active');
+(UUID(), @bsi_p11, @bsi_vendor, 'BSI-ERS-ND20-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 90.00, 58.00, 0, 'active');
 SET @bsi_p11_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p11_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
@@ -7343,7 +7343,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p12, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p12, @bsi_vendor, 'BSI-SHP-DH', (SELECT id FROM units WHERE code='pcs'), NULL, 12.00, 7.00, 1, 'active');
+(UUID(), @bsi_p12, @bsi_vendor, 'BSI-SHP-DH', (SELECT id FROM units WHERE code='pcs'), 0.0000, 12.00, 7.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-writing'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='box'), 'Wax Crayons - Pack of 24', 'bsi-wax-crayons-pack-of-24', 'Non-toxic wax crayons in 24 assorted shades, packed as one box for school and craft supply.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 12, 12, 'both');
@@ -7356,7 +7356,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p13, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p13, @bsi_vendor, 'BSI-WCR-24', (SELECT id FROM units WHERE code='box'), NULL, 65.00, 42.00, 1, 'active');
+(UUID(), @bsi_p13, @bsi_vendor, 'BSI-WCR-24', (SELECT id FROM units WHERE code='box'), 0.0000, 65.00, 42.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-writing'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='box'), 'Color Pencils - Pack of 24 Assorted', 'bsi-color-pencils-pack-of-24-assorted', 'Pre-sharpened colour pencils in 24 assorted shades, packed as one box for school and art supply.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 10, 10, 'both');
@@ -7369,7 +7369,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p14, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p14, @bsi_vendor, 'BSI-CLP-24', (SELECT id FROM units WHERE code='box'), NULL, 140.00, 92.00, 1, 'active');
+(UUID(), @bsi_p14, @bsi_vendor, 'BSI-CLP-24', (SELECT id FROM units WHERE code='box'), 0.0000, 140.00, 92.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-writing'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='box'), 'Ball Pen Refill - 0.7mm', 'bsi-ball-pen-refill-07mm', 'Standard 0.7mm ball pen refills, packed 10 to a box, compatible with common retractable pen bodies.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 20, 'both');
@@ -7382,19 +7382,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p15, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p15, @bsi_vendor, 'BSI-BPR-07-BLU', (SELECT id FROM units WHERE code='box'), NULL, 55.00, 35.00, 1, 'active');
+(UUID(), @bsi_p15, @bsi_vendor, 'BSI-BPR-07-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 55.00, 35.00, 1, 'active');
 SET @bsi_p15_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p15_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p15, @bsi_vendor, 'BSI-BPR-07-BLK', (SELECT id FROM units WHERE code='box'), NULL, 55.00, 35.00, 0, 'active');
+(UUID(), @bsi_p15, @bsi_vendor, 'BSI-BPR-07-BLK', (SELECT id FROM units WHERE code='box'), 0.0000, 55.00, 35.00, 0, 'active');
 SET @bsi_p15_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p15_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p15, @bsi_vendor, 'BSI-BPR-07-RED', (SELECT id FROM units WHERE code='box'), NULL, 55.00, 35.00, 0, 'active');
+(UUID(), @bsi_p15, @bsi_vendor, 'BSI-BPR-07-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 55.00, 35.00, 0, 'active');
 SET @bsi_p15_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p15_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -7410,7 +7410,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p16, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p16, @bsi_vendor, 'BSI-CAL-4N', (SELECT id FROM units WHERE code='set'), NULL, 320.00, 210.00, 1, 'active');
+(UUID(), @bsi_p16, @bsi_vendor, 'BSI-CAL-4N', (SELECT id FROM units WHERE code='set'), 0.0000, 320.00, 210.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-writing'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='box'), 'Gel Pen Refill - 0.5mm', 'bsi-gel-pen-refill-05mm', '0.5mm gel pen refills compatible with common retractable gel pen bodies, packed 10 to a box.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 20, 'both');
@@ -7423,19 +7423,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p17, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p17, @bsi_vendor, 'BSI-GPR-05-BLU', (SELECT id FROM units WHERE code='box'), NULL, 65.00, 42.00, 1, 'active');
+(UUID(), @bsi_p17, @bsi_vendor, 'BSI-GPR-05-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 65.00, 42.00, 1, 'active');
 SET @bsi_p17_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p17_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p17, @bsi_vendor, 'BSI-GPR-05-BLK', (SELECT id FROM units WHERE code='box'), NULL, 65.00, 42.00, 0, 'active');
+(UUID(), @bsi_p17, @bsi_vendor, 'BSI-GPR-05-BLK', (SELECT id FROM units WHERE code='box'), 0.0000, 65.00, 42.00, 0, 'active');
 SET @bsi_p17_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p17_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p17, @bsi_vendor, 'BSI-GPR-05-RED', (SELECT id FROM units WHERE code='box'), NULL, 65.00, 42.00, 0, 'active');
+(UUID(), @bsi_p17, @bsi_vendor, 'BSI-GPR-05-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 65.00, 42.00, 0, 'active');
 SET @bsi_p17_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p17_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -7451,19 +7451,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p18, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p18, @bsi_vendor, 'BSI-INK-50-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 1, 'active');
+(UUID(), @bsi_p18, @bsi_vendor, 'BSI-INK-50-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 1, 'active');
 SET @bsi_p18_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p18_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p18, @bsi_vendor, 'BSI-INK-50-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 0, 'active');
+(UUID(), @bsi_p18, @bsi_vendor, 'BSI-INK-50-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 0, 'active');
 SET @bsi_p18_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p18_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p18, @bsi_vendor, 'BSI-INK-50-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 0, 'active');
+(UUID(), @bsi_p18, @bsi_vendor, 'BSI-INK-50-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 0, 'active');
 SET @bsi_p18_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p18_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Navy'));
@@ -7479,25 +7479,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p19, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p19, @bsi_vendor, 'BSI-STP-N10-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 75.00, 48.00, 1, 'active');
+(UUID(), @bsi_p19, @bsi_vendor, 'BSI-STP-N10-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 75.00, 48.00, 1, 'active');
 SET @bsi_p19_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p19_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p19, @bsi_vendor, 'BSI-STP-N10-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 75.00, 48.00, 0, 'active');
+(UUID(), @bsi_p19, @bsi_vendor, 'BSI-STP-N10-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 75.00, 48.00, 0, 'active');
 SET @bsi_p19_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p19_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p19, @bsi_vendor, 'BSI-STP-N10-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 75.00, 48.00, 0, 'active');
+(UUID(), @bsi_p19, @bsi_vendor, 'BSI-STP-N10-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 75.00, 48.00, 0, 'active');
 SET @bsi_p19_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p19_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p19, @bsi_vendor, 'BSI-STP-N10-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 75.00, 48.00, 0, 'active');
+(UUID(), @bsi_p19, @bsi_vendor, 'BSI-STP-N10-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 75.00, 48.00, 0, 'active');
 SET @bsi_p19_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p19_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
@@ -7513,7 +7513,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p20, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p20, @bsi_vendor, 'BSI-PIN-N10', (SELECT id FROM units WHERE code='box'), NULL, 40.00, 25.00, 1, 'active');
+(UUID(), @bsi_p20, @bsi_vendor, 'BSI-PIN-N10', (SELECT id FROM units WHERE code='box'), 0.0000, 40.00, 25.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-office'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Heavy Duty Stapler - 50 Sheet Capacity', 'bsi-heavy-duty-stapler-50-sheet-capacity', 'Heavy-duty stapler for up to 50 sheets, all-metal chassis, sold individually for office bulk supply.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 5, 5, 'both');
@@ -7526,13 +7526,13 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p21, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p21, @bsi_vendor, 'BSI-STP-HD50-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 220.00, 1, 'active');
+(UUID(), @bsi_p21, @bsi_vendor, 'BSI-STP-HD50-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 220.00, 1, 'active');
 SET @bsi_p21_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p21_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p21, @bsi_vendor, 'BSI-STP-HD50-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 220.00, 0, 'active');
+(UUID(), @bsi_p21, @bsi_vendor, 'BSI-STP-HD50-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 220.00, 0, 'active');
 SET @bsi_p21_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p21_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
@@ -7548,25 +7548,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p22, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p22, @bsi_vendor, 'BSI-PCL-28-BLU', (SELECT id FROM units WHERE code='box'), NULL, 48.00, 30.00, 1, 'active');
+(UUID(), @bsi_p22, @bsi_vendor, 'BSI-PCL-28-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 48.00, 30.00, 1, 'active');
 SET @bsi_p22_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p22_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p22, @bsi_vendor, 'BSI-PCL-28-RED', (SELECT id FROM units WHERE code='box'), NULL, 48.00, 30.00, 0, 'active');
+(UUID(), @bsi_p22, @bsi_vendor, 'BSI-PCL-28-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 48.00, 30.00, 0, 'active');
 SET @bsi_p22_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p22_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p22, @bsi_vendor, 'BSI-PCL-28-GRN', (SELECT id FROM units WHERE code='box'), NULL, 48.00, 30.00, 0, 'active');
+(UUID(), @bsi_p22, @bsi_vendor, 'BSI-PCL-28-GRN', (SELECT id FROM units WHERE code='box'), 0.0000, 48.00, 30.00, 0, 'active');
 SET @bsi_p22_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p22_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p22, @bsi_vendor, 'BSI-PCL-28-YLW', (SELECT id FROM units WHERE code='box'), NULL, 48.00, 30.00, 0, 'active');
+(UUID(), @bsi_p22, @bsi_vendor, 'BSI-PCL-28-YLW', (SELECT id FROM units WHERE code='box'), 0.0000, 48.00, 30.00, 0, 'active');
 SET @bsi_p22_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p22_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -7582,19 +7582,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p23, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p23, @bsi_vendor, 'BSI-BC-25-BLK', (SELECT id FROM units WHERE code='box'), NULL, 60.00, 38.00, 1, 'active');
+(UUID(), @bsi_p23, @bsi_vendor, 'BSI-BC-25-BLK', (SELECT id FROM units WHERE code='box'), 0.0000, 60.00, 38.00, 1, 'active');
 SET @bsi_p23_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p23_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p23, @bsi_vendor, 'BSI-BC-25-BLU', (SELECT id FROM units WHERE code='box'), NULL, 60.00, 38.00, 0, 'active');
+(UUID(), @bsi_p23, @bsi_vendor, 'BSI-BC-25-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 60.00, 38.00, 0, 'active');
 SET @bsi_p23_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p23_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p23, @bsi_vendor, 'BSI-BC-25-RED', (SELECT id FROM units WHERE code='box'), NULL, 60.00, 38.00, 0, 'active');
+(UUID(), @bsi_p23, @bsi_vendor, 'BSI-BC-25-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 60.00, 38.00, 0, 'active');
 SET @bsi_p23_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p23_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -7610,7 +7610,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p24, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p24, @bsi_vendor, 'BSI-GUM-100', (SELECT id FROM units WHERE code='pcs'), NULL, 35.00, 20.00, 1, 'active');
+(UUID(), @bsi_p24, @bsi_vendor, 'BSI-GUM-100', (SELECT id FROM units WHERE code='pcs'), 0.0000, 35.00, 20.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-office'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Self Adhesive Tape - 1 Inch Roll', 'bsi-self-adhesive-tape-1-inch-roll', 'Clear BOPP self-adhesive tape, 1 inch width, standard roll length, for packing and sealing.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 50, 'both');
@@ -7623,7 +7623,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p25, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p25, @bsi_vendor, 'BSI-TAPE-1IN', (SELECT id FROM units WHERE code='pcs'), NULL, 22.00, 13.00, 1, 'active');
+(UUID(), @bsi_p25, @bsi_vendor, 'BSI-TAPE-1IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 22.00, 13.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-office'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Cardboard File Folder - Legal Size', 'bsi-cardboard-file-folder-legal-size', 'Legal-size cardboard file folder with a fastener clip, sold individually for document storage.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 50, 'both');
@@ -7636,25 +7636,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p26, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p26, @bsi_vendor, 'BSI-FF-LGL-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 18.00, 11.00, 1, 'active');
+(UUID(), @bsi_p26, @bsi_vendor, 'BSI-FF-LGL-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 18.00, 11.00, 1, 'active');
 SET @bsi_p26_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p26_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p26, @bsi_vendor, 'BSI-FF-LGL-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 18.00, 11.00, 0, 'active');
+(UUID(), @bsi_p26, @bsi_vendor, 'BSI-FF-LGL-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 18.00, 11.00, 0, 'active');
 SET @bsi_p26_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p26_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p26, @bsi_vendor, 'BSI-FF-LGL-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 18.00, 11.00, 0, 'active');
+(UUID(), @bsi_p26, @bsi_vendor, 'BSI-FF-LGL-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 18.00, 11.00, 0, 'active');
 SET @bsi_p26_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p26_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p26, @bsi_vendor, 'BSI-FF-LGL-YLW', (SELECT id FROM units WHERE code='pcs'), NULL, 18.00, 11.00, 0, 'active');
+(UUID(), @bsi_p26, @bsi_vendor, 'BSI-FF-LGL-YLW', (SELECT id FROM units WHERE code='pcs'), 0.0000, 18.00, 11.00, 0, 'active');
 SET @bsi_p26_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p26_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -7670,25 +7670,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p27, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p27, @bsi_vendor, 'BSI-BXF-4IN-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 40.00, 1, 'active');
+(UUID(), @bsi_p27, @bsi_vendor, 'BSI-BXF-4IN-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 40.00, 1, 'active');
 SET @bsi_p27_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p27_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p27, @bsi_vendor, 'BSI-BXF-4IN-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 40.00, 0, 'active');
+(UUID(), @bsi_p27, @bsi_vendor, 'BSI-BXF-4IN-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 40.00, 0, 'active');
 SET @bsi_p27_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p27_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p27, @bsi_vendor, 'BSI-BXF-4IN-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 40.00, 0, 'active');
+(UUID(), @bsi_p27, @bsi_vendor, 'BSI-BXF-4IN-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 40.00, 0, 'active');
 SET @bsi_p27_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p27_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p27, @bsi_vendor, 'BSI-BXF-4IN-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 65.00, 40.00, 0, 'active');
+(UUID(), @bsi_p27, @bsi_vendor, 'BSI-BXF-4IN-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 65.00, 40.00, 0, 'active');
 SET @bsi_p27_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p27_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
@@ -7704,25 +7704,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p28, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p28, @bsi_vendor, 'BSI-REG-200-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 1, 'active');
+(UUID(), @bsi_p28, @bsi_vendor, 'BSI-REG-200-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 1, 'active');
 SET @bsi_p28_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p28_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p28, @bsi_vendor, 'BSI-REG-200-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 0, 'active');
+(UUID(), @bsi_p28, @bsi_vendor, 'BSI-REG-200-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 0, 'active');
 SET @bsi_p28_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p28_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p28, @bsi_vendor, 'BSI-REG-200-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 0, 'active');
+(UUID(), @bsi_p28, @bsi_vendor, 'BSI-REG-200-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 0, 'active');
 SET @bsi_p28_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p28_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p28, @bsi_vendor, 'BSI-REG-200-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 0, 'active');
+(UUID(), @bsi_p28, @bsi_vendor, 'BSI-REG-200-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 0, 'active');
 SET @bsi_p28_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p28_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -7738,25 +7738,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p29, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p29, @bsi_vendor, 'BSI-STN-3X3-YLW', (SELECT id FROM units WHERE code='pcs'), NULL, 32.00, 19.00, 1, 'active');
+(UUID(), @bsi_p29, @bsi_vendor, 'BSI-STN-3X3-YLW', (SELECT id FROM units WHERE code='pcs'), 0.0000, 32.00, 19.00, 1, 'active');
 SET @bsi_p29_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p29_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p29, @bsi_vendor, 'BSI-STN-3X3-PNK', (SELECT id FROM units WHERE code='pcs'), NULL, 32.00, 19.00, 0, 'active');
+(UUID(), @bsi_p29, @bsi_vendor, 'BSI-STN-3X3-PNK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 32.00, 19.00, 0, 'active');
 SET @bsi_p29_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p29_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p29, @bsi_vendor, 'BSI-STN-3X3-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 32.00, 19.00, 0, 'active');
+(UUID(), @bsi_p29, @bsi_vendor, 'BSI-STN-3X3-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 32.00, 19.00, 0, 'active');
 SET @bsi_p29_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p29_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p29, @bsi_vendor, 'BSI-STN-3X3-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 32.00, 19.00, 0, 'active');
+(UUID(), @bsi_p29, @bsi_vendor, 'BSI-STN-3X3-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 32.00, 19.00, 0, 'active');
 SET @bsi_p29_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p29_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -7772,7 +7772,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p30, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p30, @bsi_vendor, 'BSI-RB-100G', (SELECT id FROM units WHERE code='box'), NULL, 28.00, 16.00, 1, 'active');
+(UUID(), @bsi_p30, @bsi_vendor, 'BSI-RB-100G', (SELECT id FROM units WHERE code='box'), 0.0000, 28.00, 16.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-office'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Office Scissors - Soft Grip Handle 8 Inch', 'bsi-office-scissors-soft-grip-handle-8-inch', 'Stainless steel office scissors, 8 inch, with a soft-grip handle, sold individually for office bulk supply.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 12, 12, 'both');
@@ -7785,19 +7785,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p31, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p31, @bsi_vendor, 'BSI-SCS-8IN-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 52.00, 1, 'active');
+(UUID(), @bsi_p31, @bsi_vendor, 'BSI-SCS-8IN-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 52.00, 1, 'active');
 SET @bsi_p31_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p31_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p31, @bsi_vendor, 'BSI-SCS-8IN-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 52.00, 0, 'active');
+(UUID(), @bsi_p31, @bsi_vendor, 'BSI-SCS-8IN-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 52.00, 0, 'active');
 SET @bsi_p31_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p31_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p31, @bsi_vendor, 'BSI-SCS-8IN-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 52.00, 0, 'active');
+(UUID(), @bsi_p31, @bsi_vendor, 'BSI-SCS-8IN-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 52.00, 0, 'active');
 SET @bsi_p31_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p31_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -7813,7 +7813,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p32, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p32, @bsi_vendor, 'BSI-CUT-HD', (SELECT id FROM units WHERE code='pcs'), NULL, 45.00, 27.00, 1, 'active');
+(UUID(), @bsi_p32, @bsi_vendor, 'BSI-CUT-HD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 45.00, 27.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-office'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Paper Punching Machine - Double Hole', 'bsi-paper-punching-machine-double-hole', 'Double-hole paper punching machine with a metal base and up to 20-sheet capacity, sold individually.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 5, 5, 'both');
@@ -7826,7 +7826,7 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p33, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p33, @bsi_vendor, 'BSI-PNCH-DH', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 135.00, 1, 'active');
+(UUID(), @bsi_p33, @bsi_vendor, 'BSI-PNCH-DH', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 135.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@bsi_vendor, (SELECT id FROM categories WHERE slug='mfg-stationery-office'), @bsi_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Desk Organizer Tray - Multi Compartment', 'bsi-desk-organizer-tray-multi-compartment', 'Multi-compartment plastic desk organizer tray for pens, clips and small office supplies, sold individually.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 5, 5, 'both');
@@ -7839,19 +7839,19 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p34, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p34, @bsi_vendor, 'BSI-DOT-MC-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 115.00, 1, 'active');
+(UUID(), @bsi_p34, @bsi_vendor, 'BSI-DOT-MC-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 115.00, 1, 'active');
 SET @bsi_p34_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p34_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p34, @bsi_vendor, 'BSI-DOT-MC-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 115.00, 0, 'active');
+(UUID(), @bsi_p34, @bsi_vendor, 'BSI-DOT-MC-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 115.00, 0, 'active');
 SET @bsi_p34_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p34_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p34, @bsi_vendor, 'BSI-DOT-MC-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 115.00, 0, 'active');
+(UUID(), @bsi_p34, @bsi_vendor, 'BSI-DOT-MC-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 115.00, 0, 'active');
 SET @bsi_p34_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p34_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
@@ -7867,25 +7867,25 @@ INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@bsi_p35, @bsi_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p35, @bsi_vendor, 'BSI-PP-100-RED', (SELECT id FROM units WHERE code='box'), NULL, 30.00, 17.00, 1, 'active');
+(UUID(), @bsi_p35, @bsi_vendor, 'BSI-PP-100-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 30.00, 17.00, 1, 'active');
 SET @bsi_p35_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p35_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p35, @bsi_vendor, 'BSI-PP-100-BLU', (SELECT id FROM units WHERE code='box'), NULL, 30.00, 17.00, 0, 'active');
+(UUID(), @bsi_p35, @bsi_vendor, 'BSI-PP-100-BLU', (SELECT id FROM units WHERE code='box'), 0.0000, 30.00, 17.00, 0, 'active');
 SET @bsi_p35_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p35_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p35, @bsi_vendor, 'BSI-PP-100-GRN', (SELECT id FROM units WHERE code='box'), NULL, 30.00, 17.00, 0, 'active');
+(UUID(), @bsi_p35, @bsi_vendor, 'BSI-PP-100-GRN', (SELECT id FROM units WHERE code='box'), 0.0000, 30.00, 17.00, 0, 'active');
 SET @bsi_p35_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p35_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @bsi_p35, @bsi_vendor, 'BSI-PP-100-YLW', (SELECT id FROM units WHERE code='box'), NULL, 30.00, 17.00, 0, 'active');
+(UUID(), @bsi_p35, @bsi_vendor, 'BSI-PP-100-YLW', (SELECT id FROM units WHERE code='box'), 0.0000, 30.00, 17.00, 0, 'active');
 SET @bsi_p35_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@bsi_p35_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -7924,7 +7924,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p1, 'Single-cast 12kg kettlebell, powder-coated, wide grip handle.', 'Manufactured from single-piece cast iron for balanced weight distribution and long-term durability. Powder-coated finish resists chipping and rust in high-usage gym environments. Suitable for CrossFit boxes, home gyms, and physiotherapy centres. Minimum order applies for bulk gym-fitout supply.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p1, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p1, @pfs_vendor, 'PFS-KB-12KG', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 650.00, 1, 'active');
+VALUES (UUID(), @pfs_p1, @pfs_vendor, 'PFS-KB-12KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 650.00, 1, 'active');
 
 -- p2: Cast Iron Kettlebell 16kg (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -7934,7 +7934,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p2, 'Single-cast 16kg kettlebell, powder-coated, wide grip handle.', 'Manufactured from single-piece cast iron for balanced weight distribution and long-term durability. Powder-coated finish resists chipping and rust in high-usage gym environments. Suitable for CrossFit boxes, home gyms, and physiotherapy centres. Minimum order applies for bulk gym-fitout supply.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p2, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p2, @pfs_vendor, 'PFS-KB-16KG', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 850.00, 1, 'active');
+VALUES (UUID(), @pfs_p2, @pfs_vendor, 'PFS-KB-16KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 850.00, 1, 'active');
 
 -- p3: Cast Iron Kettlebell 20kg (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -7944,7 +7944,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p3, 'Single-cast 20kg kettlebell, powder-coated, wide grip handle.', 'Manufactured from single-piece cast iron for balanced weight distribution and long-term durability. Powder-coated finish resists chipping and rust in high-usage gym environments. Suitable for CrossFit boxes, home gyms, and physiotherapy centres. Minimum order applies for bulk gym-fitout supply.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p3, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p3, @pfs_vendor, 'PFS-KB-20KG', (SELECT id FROM units WHERE code='pcs'), NULL, 1550.00, 1050.00, 1, 'active');
+VALUES (UUID(), @pfs_p3, @pfs_vendor, 'PFS-KB-20KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1550.00, 1050.00, 1, 'active');
 
 -- p4: Rubber Hex Dumbbell Pair 10kg (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -7954,7 +7954,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p4, 'Rubber hex dumbbell pair, 5kg x 2, chrome handle, anti-roll.', 'Cast iron core encased in dense rubber to protect flooring and reduce noise in commercial gym settings. Knurled chrome handle offers a secure grip for high-repetition sets. Hex shape prevents rolling when racked or set down. Bulk pricing available for gym-equipment retailers and franchise fit-outs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p4, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p4, @pfs_vendor, 'PFS-DMB-HEX-10KG', (SELECT id FROM units WHERE code='pair'), NULL, 2200.00, 1500.00, 1, 'active');
+VALUES (UUID(), @pfs_p4, @pfs_vendor, 'PFS-DMB-HEX-10KG', (SELECT id FROM units WHERE code='pair'), 0.0000, 2200.00, 1500.00, 1, 'active');
 
 -- p5: Rubber Hex Dumbbell Pair 20kg (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -7964,7 +7964,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p5, 'Rubber hex dumbbell pair, 10kg x 2, chrome handle, anti-roll.', 'Cast iron core encased in dense rubber to protect flooring and reduce noise in commercial gym settings. Knurled chrome handle offers a secure grip for high-repetition sets. Hex shape prevents rolling when racked or set down. Bulk pricing available for gym-equipment retailers and franchise fit-outs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p5, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p5, @pfs_vendor, 'PFS-DMB-HEX-20KG', (SELECT id FROM units WHERE code='pair'), NULL, 4200.00, 2900.00, 1, 'active');
+VALUES (UUID(), @pfs_p5, @pfs_vendor, 'PFS-DMB-HEX-20KG', (SELECT id FROM units WHERE code='pair'), 0.0000, 4200.00, 2900.00, 1, 'active');
 
 -- p6: Olympic Cast Iron Weight Plate 20kg (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -7974,7 +7974,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p6, 'Olympic 20kg cast iron plate, 50mm bore, machined face.', 'Precision-cast iron plate with a 50mm centre bore fitting standard 28mm/50mm Olympic bars. Machined face keeps plates flush when stacked, reducing rack rattle. Weight-stamped and powder-coated for identification and rust resistance. Sold to gym equipment distributors in bulk lots.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p6, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p6, @pfs_vendor, 'PFS-PLATE-OLY-20KG', (SELECT id FROM units WHERE code='pcs'), NULL, 1800.00, 1250.00, 1, 'active');
+VALUES (UUID(), @pfs_p6, @pfs_vendor, 'PFS-PLATE-OLY-20KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1800.00, 1250.00, 1, 'active');
 
 -- p7: Chrome Plated Barbell Rod 5 Feet (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -7984,7 +7984,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p7, '5ft chrome barbell rod, knurled grip, spring collar ends.', 'Solid steel rod finished with corrosion-resistant chrome plating and precision-knurled grip zones for a firm hold under load. Rated for standard plate loading up to 100kg. Supplied with spring collar ends; suitable for home gyms and small training studios. Bulk packing available for wholesale orders.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p7, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p7, @pfs_vendor, 'PFS-BAR-ROD-5FT', (SELECT id FROM units WHERE code='pcs'), NULL, 1600.00, 1100.00, 1, 'active');
+VALUES (UUID(), @pfs_p7, @pfs_vendor, 'PFS-BAR-ROD-5FT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1600.00, 1100.00, 1, 'active');
 
 -- p8: Wall Mounted Pull-Up Bar Heavy Duty (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -7994,7 +7994,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p8, 'Wall-mount steel pull-up bar, powder-coated, non-slip grip.', 'Fabricated from box-section mild steel and load-tested to support commercial gym usage. Powder-coated finish protects against corrosion in high-humidity training spaces. Fixing hardware included for concrete or brick wall mounting. Popular with budget gym-fitout contractors buying in volume.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p8, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p8, @pfs_vendor, 'PFS-PULLUP-BAR-HD', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 950.00, 1, 'active');
+VALUES (UUID(), @pfs_p8, @pfs_vendor, 'PFS-PULLUP-BAR-HD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 950.00, 1, 'active');
 
 -- p9: Foldable Magnetic Exercise Bike (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -8004,7 +8004,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p9, 'Foldable magnetic-resistance stationary bike with LCD console.', 'Silent magnetic resistance mechanism with 8-level adjustment suits home and small-studio use. Steel frame folds flat for compact storage between deliveries. LCD console tracks time, distance, speed and calories. Ships in a single carton with basic assembly required.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p9, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p9, @pfs_vendor, 'PFS-BIKE-FOLD-MAG', (SELECT id FROM units WHERE code='pcs'), NULL, 6800.00, 4700.00, 1, 'active');
+VALUES (UUID(), @pfs_p9, @pfs_vendor, 'PFS-BIKE-FOLD-MAG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 6800.00, 4700.00, 1, 'active');
 
 -- p10: Adjustable Multi-Purpose Gym Bench (variant: color x2)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -8015,13 +8015,13 @@ VALUES (@pfs_p10, 'Multi-position steel gym bench, foam padded, PU upholstery.',
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p10, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p10, @pfs_vendor, 'PFS-BENCH-ADJ-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2150.00, 1, 'active');
+VALUES (UUID(), @pfs_p10, @pfs_vendor, 'PFS-BENCH-ADJ-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2150.00, 1, 'active');
 SET @pfs_p10_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p10_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p10, @pfs_vendor, 'PFS-BENCH-ADJ-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2150.00, 0, 'active');
+VALUES (UUID(), @pfs_p10, @pfs_vendor, 'PFS-BENCH-ADJ-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2150.00, 0, 'active');
 SET @pfs_p10_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p10_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -8035,31 +8035,31 @@ VALUES (@pfs_p11, 'Latex loop resistance bands, colour-coded by tension level.',
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p11, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-YEL', (SELECT id FROM units WHERE code='set'), NULL, 450.00, 280.00, 1, 'active');
+VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-YEL', (SELECT id FROM units WHERE code='set'), 0.0000, 450.00, 280.00, 1, 'active');
 SET @pfs_p11_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p11_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-GRN', (SELECT id FROM units WHERE code='set'), NULL, 450.00, 280.00, 0, 'active');
+VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-GRN', (SELECT id FROM units WHERE code='set'), 0.0000, 450.00, 280.00, 0, 'active');
 SET @pfs_p11_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p11_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-RED', (SELECT id FROM units WHERE code='set'), NULL, 480.00, 300.00, 0, 'active');
+VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-RED', (SELECT id FROM units WHERE code='set'), 0.0000, 480.00, 300.00, 0, 'active');
 SET @pfs_p11_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p11_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-BLU', (SELECT id FROM units WHERE code='set'), NULL, 500.00, 310.00, 0, 'active');
+VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 500.00, 310.00, 0, 'active');
 SET @pfs_p11_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p11_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-BLK', (SELECT id FROM units WHERE code='set'), NULL, 520.00, 330.00, 0, 'active');
+VALUES (UUID(), @pfs_p11, @pfs_vendor, 'PFS-BAND-LOOP-BLK', (SELECT id FROM units WHERE code='set'), 0.0000, 520.00, 330.00, 0, 'active');
 SET @pfs_p11_v5 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p11_v5, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
@@ -8073,25 +8073,25 @@ VALUES (@pfs_p12, '6mm NBR yoga mat, non-slip texture, cushioned support.', 'Clo
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p12, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p12, @pfs_vendor, 'PFS-YOGA-MAT-PUR', (SELECT id FROM units WHERE code='pcs'), NULL, 550.00, 350.00, 1, 'active');
+VALUES (UUID(), @pfs_p12, @pfs_vendor, 'PFS-YOGA-MAT-PUR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 550.00, 350.00, 1, 'active');
 SET @pfs_p12_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p12_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Purple'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p12, @pfs_vendor, 'PFS-YOGA-MAT-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 550.00, 350.00, 0, 'active');
+VALUES (UUID(), @pfs_p12, @pfs_vendor, 'PFS-YOGA-MAT-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 550.00, 350.00, 0, 'active');
 SET @pfs_p12_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p12_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p12, @pfs_vendor, 'PFS-YOGA-MAT-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 550.00, 350.00, 0, 'active');
+VALUES (UUID(), @pfs_p12, @pfs_vendor, 'PFS-YOGA-MAT-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 550.00, 350.00, 0, 'active');
 SET @pfs_p12_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p12_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p12, @pfs_vendor, 'PFS-YOGA-MAT-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 550.00, 350.00, 0, 'active');
+VALUES (UUID(), @pfs_p12, @pfs_vendor, 'PFS-YOGA-MAT-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 550.00, 350.00, 0, 'active');
 SET @pfs_p12_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p12_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
@@ -8105,19 +8105,19 @@ VALUES (@pfs_p13, 'Weighted cotton skipping rope with ball-bearing swivel handle
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p13, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p13, @pfs_vendor, 'PFS-ROPE-SKIP-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 130.00, 1, 'active');
+VALUES (UUID(), @pfs_p13, @pfs_vendor, 'PFS-ROPE-SKIP-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 130.00, 1, 'active');
 SET @pfs_p13_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p13_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p13, @pfs_vendor, 'PFS-ROPE-SKIP-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 130.00, 0, 'active');
+VALUES (UUID(), @pfs_p13, @pfs_vendor, 'PFS-ROPE-SKIP-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 130.00, 0, 'active');
 SET @pfs_p13_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p13_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p13, @pfs_vendor, 'PFS-ROPE-SKIP-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 130.00, 0, 'active');
+VALUES (UUID(), @pfs_p13, @pfs_vendor, 'PFS-ROPE-SKIP-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 130.00, 0, 'active');
 SET @pfs_p13_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p13_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
@@ -8131,25 +8131,25 @@ VALUES (@pfs_p14, 'Leather-palm training gloves with mesh back and wrist strap.'
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p14, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p14, @pfs_vendor, 'PFS-GLOVE-GYM-S', (SELECT id FROM units WHERE code='pair'), NULL, 380.00, 230.00, 1, 'active');
+VALUES (UUID(), @pfs_p14, @pfs_vendor, 'PFS-GLOVE-GYM-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 380.00, 230.00, 1, 'active');
 SET @pfs_p14_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p14_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p14, @pfs_vendor, 'PFS-GLOVE-GYM-M', (SELECT id FROM units WHERE code='pair'), NULL, 380.00, 230.00, 0, 'active');
+VALUES (UUID(), @pfs_p14, @pfs_vendor, 'PFS-GLOVE-GYM-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 380.00, 230.00, 0, 'active');
 SET @pfs_p14_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p14_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p14, @pfs_vendor, 'PFS-GLOVE-GYM-L', (SELECT id FROM units WHERE code='pair'), NULL, 380.00, 230.00, 0, 'active');
+VALUES (UUID(), @pfs_p14, @pfs_vendor, 'PFS-GLOVE-GYM-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 380.00, 230.00, 0, 'active');
 SET @pfs_p14_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p14_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p14, @pfs_vendor, 'PFS-GLOVE-GYM-XL', (SELECT id FROM units WHERE code='pair'), NULL, 380.00, 230.00, 0, 'active');
+VALUES (UUID(), @pfs_p14, @pfs_vendor, 'PFS-GLOVE-GYM-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 380.00, 230.00, 0, 'active');
 SET @pfs_p14_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p14_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL'));
@@ -8162,7 +8162,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p15, '5kg PU leather medicine ball, sand-blend core, non-slip skin.', 'Textured PU leather shell provides secure grip during dynamic throws, slams and rotational core drills. Sand-blend internal fill keeps the weight centred and stops it bouncing unpredictably. Double-stitched seams are built to withstand repeated floor impact. Suited for functional training studios and school sports departments.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p15, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p15, @pfs_vendor, 'PFS-MEDBALL-5KG', (SELECT id FROM units WHERE code='pcs'), NULL, 1100.00, 750.00, 1, 'active');
+VALUES (UUID(), @pfs_p15, @pfs_vendor, 'PFS-MEDBALL-5KG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1100.00, 750.00, 1, 'active');
 
 -- p16: Professional Sparring Boxing Gloves (variant: size x4)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -8173,25 +8173,25 @@ VALUES (@pfs_p16, 'Leather sparring boxing gloves, multi-layer foam, hook-loop s
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p16, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p16, @pfs_vendor, 'PFS-BOXGLOVE-S', (SELECT id FROM units WHERE code='pair'), NULL, 950.00, 600.00, 1, 'active');
+VALUES (UUID(), @pfs_p16, @pfs_vendor, 'PFS-BOXGLOVE-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 950.00, 600.00, 1, 'active');
 SET @pfs_p16_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p16_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p16, @pfs_vendor, 'PFS-BOXGLOVE-M', (SELECT id FROM units WHERE code='pair'), NULL, 950.00, 600.00, 0, 'active');
+VALUES (UUID(), @pfs_p16, @pfs_vendor, 'PFS-BOXGLOVE-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 950.00, 600.00, 0, 'active');
 SET @pfs_p16_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p16_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p16, @pfs_vendor, 'PFS-BOXGLOVE-L', (SELECT id FROM units WHERE code='pair'), NULL, 1000.00, 630.00, 0, 'active');
+VALUES (UUID(), @pfs_p16, @pfs_vendor, 'PFS-BOXGLOVE-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 1000.00, 630.00, 0, 'active');
 SET @pfs_p16_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p16_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p16, @pfs_vendor, 'PFS-BOXGLOVE-XL', (SELECT id FROM units WHERE code='pair'), NULL, 1050.00, 660.00, 0, 'active');
+VALUES (UUID(), @pfs_p16, @pfs_vendor, 'PFS-BOXGLOVE-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 1050.00, 660.00, 0, 'active');
 SET @pfs_p16_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p16_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL'));
@@ -8205,25 +8205,25 @@ VALUES (@pfs_p17, 'Leather weightlifting belt, double-prong buckle, 10mm thickne
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p17, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p17, @pfs_vendor, 'PFS-BELT-LIFT-S', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 1, 'active');
+VALUES (UUID(), @pfs_p17, @pfs_vendor, 'PFS-BELT-LIFT-S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 1, 'active');
 SET @pfs_p17_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p17_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p17, @pfs_vendor, 'PFS-BELT-LIFT-M', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 0, 'active');
+VALUES (UUID(), @pfs_p17, @pfs_vendor, 'PFS-BELT-LIFT-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 0, 'active');
 SET @pfs_p17_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p17_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p17, @pfs_vendor, 'PFS-BELT-LIFT-L', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 0, 'active');
+VALUES (UUID(), @pfs_p17, @pfs_vendor, 'PFS-BELT-LIFT-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 0, 'active');
 SET @pfs_p17_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p17_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p17, @pfs_vendor, 'PFS-BELT-LIFT-XL', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 0, 'active');
+VALUES (UUID(), @pfs_p17, @pfs_vendor, 'PFS-BELT-LIFT-XL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 0, 'active');
 SET @pfs_p17_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p17_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL'));
@@ -8237,25 +8237,25 @@ VALUES (@pfs_p18, 'Size 5 hand-stitched football, 32-panel synthetic leather cov
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p18, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p18, @pfs_vendor, 'PFS-FOOTBALL-S5-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 400.00, 1, 'active');
+VALUES (UUID(), @pfs_p18, @pfs_vendor, 'PFS-FOOTBALL-S5-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 400.00, 1, 'active');
 SET @pfs_p18_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p18_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p18, @pfs_vendor, 'PFS-FOOTBALL-S5-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 400.00, 0, 'active');
+VALUES (UUID(), @pfs_p18, @pfs_vendor, 'PFS-FOOTBALL-S5-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 400.00, 0, 'active');
 SET @pfs_p18_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p18_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p18, @pfs_vendor, 'PFS-FOOTBALL-S5-ORG', (SELECT id FROM units WHERE code='pcs'), NULL, 680.00, 420.00, 0, 'active');
+VALUES (UUID(), @pfs_p18, @pfs_vendor, 'PFS-FOOTBALL-S5-ORG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 680.00, 420.00, 0, 'active');
 SET @pfs_p18_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p18_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Orange'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p18, @pfs_vendor, 'PFS-FOOTBALL-S5-YEL', (SELECT id FROM units WHERE code='pcs'), NULL, 680.00, 420.00, 0, 'active');
+VALUES (UUID(), @pfs_p18, @pfs_vendor, 'PFS-FOOTBALL-S5-YEL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 680.00, 420.00, 0, 'active');
 SET @pfs_p18_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p18_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -8268,7 +8268,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p19, 'Kashmir willow bat, short handle, toe-guarded, club grade.', 'Solid Kashmir willow blade is machine-pressed for consistent knock-in performance straight out of the box. Short cane handle wrapped in rubber grip suits players seeking a lower pick-up weight. Fitted toe guard extends blade life against yorkers and damp pitches. Popular with cricket academies for team and bulk retail orders.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p19, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p19, @pfs_vendor, 'PFS-BAT-KW-SH', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 950.00, 1, 'active');
+VALUES (UUID(), @pfs_p19, @pfs_vendor, 'PFS-BAT-KW-SH', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 950.00, 1, 'active');
 
 -- p20: English Willow Cricket Bat Grade A (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -8278,7 +8278,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p20, 'Grade A English willow bat, concave profile, premium handle.', 'Selected Grade A English willow with 8-10 straight grains delivers a large, responsive sweet spot for competitive batting. Concave profile shaves weight from the edges without reducing power on the middle. Premium multi-piece cane handle absorbs shock through extended innings. Supplied to cricket equipment retailers and state-level academies.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p20, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p20, @pfs_vendor, 'PFS-BAT-EW-GRA', (SELECT id FROM units WHERE code='pcs'), NULL, 5200.00, 3600.00, 1, 'active');
+VALUES (UUID(), @pfs_p20, @pfs_vendor, 'PFS-BAT-EW-GRA', (SELECT id FROM units WHERE code='pcs'), 0.0000, 5200.00, 3600.00, 1, 'active');
 
 -- p21: Cricket Leather Ball Red Test Match (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -8288,7 +8288,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p21, 'Four-piece leather cricket ball, cork-rubber core, red finish.', 'Hand-stitched four-piece leather construction over a cork-and-rubber core delivers a pronounced, durable seam for swing bowling. Full-grain leather cover is dyed and polished to standard match-red specification. Weight and circumference are checked against standard cricket-ball tolerances before packing. Sold in bulk boxes to clubs, academies and league organisers.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p21, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p21, @pfs_vendor, 'PFS-BALL-CRIC-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 300.00, 1, 'active');
+VALUES (UUID(), @pfs_p21, @pfs_vendor, 'PFS-BALL-CRIC-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 300.00, 1, 'active');
 
 -- p22: Cricket Tennis Ball Pack of 6 (variant: color x3)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -8299,19 +8299,19 @@ VALUES (@pfs_p22, 'Rubber tennis balls, pack of 6, for street and box cricket.',
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p22, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p22, @pfs_vendor, 'PFS-TBALL-PK6-RED', (SELECT id FROM units WHERE code='box'), NULL, 320.00, 190.00, 1, 'active');
+VALUES (UUID(), @pfs_p22, @pfs_vendor, 'PFS-TBALL-PK6-RED', (SELECT id FROM units WHERE code='box'), 0.0000, 320.00, 190.00, 1, 'active');
 SET @pfs_p22_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p22_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p22, @pfs_vendor, 'PFS-TBALL-PK6-YEL', (SELECT id FROM units WHERE code='box'), NULL, 320.00, 190.00, 0, 'active');
+VALUES (UUID(), @pfs_p22, @pfs_vendor, 'PFS-TBALL-PK6-YEL', (SELECT id FROM units WHERE code='box'), 0.0000, 320.00, 190.00, 0, 'active');
 SET @pfs_p22_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p22_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p22, @pfs_vendor, 'PFS-TBALL-PK6-GRN', (SELECT id FROM units WHERE code='box'), NULL, 320.00, 190.00, 0, 'active');
+VALUES (UUID(), @pfs_p22, @pfs_vendor, 'PFS-TBALL-PK6-GRN', (SELECT id FROM units WHERE code='box'), 0.0000, 320.00, 190.00, 0, 'active');
 SET @pfs_p22_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p22_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
@@ -8325,19 +8325,19 @@ VALUES (@pfs_p23, 'Wheeled cricket kit bag, padded compartments, three size opti
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p23, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p23, @pfs_vendor, 'PFS-KITBAG-CRIC-S', (SELECT id FROM units WHERE code='set'), NULL, 2200.00, 1450.00, 1, 'active');
+VALUES (UUID(), @pfs_p23, @pfs_vendor, 'PFS-KITBAG-CRIC-S', (SELECT id FROM units WHERE code='set'), 0.0000, 2200.00, 1450.00, 1, 'active');
 SET @pfs_p23_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p23_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p23, @pfs_vendor, 'PFS-KITBAG-CRIC-M', (SELECT id FROM units WHERE code='set'), NULL, 2600.00, 1700.00, 0, 'active');
+VALUES (UUID(), @pfs_p23, @pfs_vendor, 'PFS-KITBAG-CRIC-M', (SELECT id FROM units WHERE code='set'), 0.0000, 2600.00, 1700.00, 0, 'active');
 SET @pfs_p23_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p23_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p23, @pfs_vendor, 'PFS-KITBAG-CRIC-L', (SELECT id FROM units WHERE code='set'), NULL, 3100.00, 2050.00, 0, 'active');
+VALUES (UUID(), @pfs_p23, @pfs_vendor, 'PFS-KITBAG-CRIC-L', (SELECT id FROM units WHERE code='set'), 0.0000, 3100.00, 2050.00, 0, 'active');
 SET @pfs_p23_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p23_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
@@ -8351,25 +8351,25 @@ VALUES (@pfs_p24, 'Carbon fibre badminton racket, isometric head, pre-strung.', 
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p24, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p24, @pfs_vendor, 'PFS-RACKET-BAD-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1350.00, 850.00, 1, 'active');
+VALUES (UUID(), @pfs_p24, @pfs_vendor, 'PFS-RACKET-BAD-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1350.00, 850.00, 1, 'active');
 SET @pfs_p24_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p24_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p24, @pfs_vendor, 'PFS-RACKET-BAD-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 1350.00, 850.00, 0, 'active');
+VALUES (UUID(), @pfs_p24, @pfs_vendor, 'PFS-RACKET-BAD-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1350.00, 850.00, 0, 'active');
 SET @pfs_p24_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p24_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p24, @pfs_vendor, 'PFS-RACKET-BAD-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 1350.00, 850.00, 0, 'active');
+VALUES (UUID(), @pfs_p24, @pfs_vendor, 'PFS-RACKET-BAD-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1350.00, 850.00, 0, 'active');
 SET @pfs_p24_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p24_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p24, @pfs_vendor, 'PFS-RACKET-BAD-SIL', (SELECT id FROM units WHERE code='pcs'), NULL, 1400.00, 880.00, 0, 'active');
+VALUES (UUID(), @pfs_p24, @pfs_vendor, 'PFS-RACKET-BAD-SIL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1400.00, 880.00, 0, 'active');
 SET @pfs_p24_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p24_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Silver'));
@@ -8383,13 +8383,13 @@ VALUES (@pfs_p25, 'Nylon shuttlecocks, cork base, 10 per tube, consistent flight
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p25, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p25, @pfs_vendor, 'PFS-SHUTTLE-TUBE-WHT', (SELECT id FROM units WHERE code='box'), NULL, 780.00, 480.00, 1, 'active');
+VALUES (UUID(), @pfs_p25, @pfs_vendor, 'PFS-SHUTTLE-TUBE-WHT', (SELECT id FROM units WHERE code='box'), 0.0000, 780.00, 480.00, 1, 'active');
 SET @pfs_p25_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p25_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p25, @pfs_vendor, 'PFS-SHUTTLE-TUBE-YEL', (SELECT id FROM units WHERE code='box'), NULL, 780.00, 480.00, 0, 'active');
+VALUES (UUID(), @pfs_p25, @pfs_vendor, 'PFS-SHUTTLE-TUBE-YEL', (SELECT id FROM units WHERE code='box'), 0.0000, 780.00, 480.00, 0, 'active');
 SET @pfs_p25_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p25_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -8403,19 +8403,19 @@ VALUES (@pfs_p26, '18-panel synthetic leather volleyball, butyl bladder.', 'Eigh
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p26, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p26, @pfs_vendor, 'PFS-VBALL-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 1, 'active');
+VALUES (UUID(), @pfs_p26, @pfs_vendor, 'PFS-VBALL-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 1, 'active');
 SET @pfs_p26_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p26_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p26, @pfs_vendor, 'PFS-VBALL-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 0, 'active');
+VALUES (UUID(), @pfs_p26, @pfs_vendor, 'PFS-VBALL-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 0, 'active');
 SET @pfs_p26_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p26_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p26, @pfs_vendor, 'PFS-VBALL-YEL', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 560.00, 0, 'active');
+VALUES (UUID(), @pfs_p26, @pfs_vendor, 'PFS-VBALL-YEL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 560.00, 0, 'active');
 SET @pfs_p26_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p26_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
@@ -8429,19 +8429,19 @@ VALUES (@pfs_p27, 'Size 7 rubber basketball, deep-channel grip, outdoor durable.
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p27, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p27, @pfs_vendor, 'PFS-BBALL-S7-ORG', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 600.00, 1, 'active');
+VALUES (UUID(), @pfs_p27, @pfs_vendor, 'PFS-BBALL-S7-ORG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 600.00, 1, 'active');
 SET @pfs_p27_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p27_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Orange'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p27, @pfs_vendor, 'PFS-BBALL-S7-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 600.00, 0, 'active');
+VALUES (UUID(), @pfs_p27, @pfs_vendor, 'PFS-BBALL-S7-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 600.00, 0, 'active');
 SET @pfs_p27_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p27_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p27, @pfs_vendor, 'PFS-BBALL-S7-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 600.00, 0, 'active');
+VALUES (UUID(), @pfs_p27, @pfs_vendor, 'PFS-BBALL-S7-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 600.00, 0, 'active');
 SET @pfs_p27_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p27_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -8454,7 +8454,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p28, 'Senior fibreglass hockey stick, low bow profile, wood core.', 'Laminated wood core reinforced with a fibreglass wrap balances stiffness with a comfortable feel on the ball. Low bow profile aids drag-flick and 3D skill work for club-level players. Textured grip section improves control in wet field conditions. Bulk-packed for school sports departments and hockey academy procurement.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p28, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p28, @pfs_vendor, 'PFS-HOCKEY-FG-SR', (SELECT id FROM units WHERE code='pcs'), NULL, 2100.00, 1400.00, 1, 'active');
+VALUES (UUID(), @pfs_p28, @pfs_vendor, 'PFS-HOCKEY-FG-SR', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2100.00, 1400.00, 1, 'active');
 
 -- p29: Table Tennis Racket Set with Balls (variant: color x3)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -8465,19 +8465,19 @@ VALUES (@pfs_p29, 'TT racket set: 2 pips-out rackets + 3 balls, recreational gra
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p29, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p29, @pfs_vendor, 'PFS-TT-SET-RED', (SELECT id FROM units WHERE code='set'), NULL, 680.00, 420.00, 1, 'active');
+VALUES (UUID(), @pfs_p29, @pfs_vendor, 'PFS-TT-SET-RED', (SELECT id FROM units WHERE code='set'), 0.0000, 680.00, 420.00, 1, 'active');
 SET @pfs_p29_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p29_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p29, @pfs_vendor, 'PFS-TT-SET-BLK', (SELECT id FROM units WHERE code='set'), NULL, 680.00, 420.00, 0, 'active');
+VALUES (UUID(), @pfs_p29, @pfs_vendor, 'PFS-TT-SET-BLK', (SELECT id FROM units WHERE code='set'), 0.0000, 680.00, 420.00, 0, 'active');
 SET @pfs_p29_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p29_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p29, @pfs_vendor, 'PFS-TT-SET-BLU', (SELECT id FROM units WHERE code='set'), NULL, 680.00, 420.00, 0, 'active');
+VALUES (UUID(), @pfs_p29, @pfs_vendor, 'PFS-TT-SET-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 680.00, 420.00, 0, 'active');
 SET @pfs_p29_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p29_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
@@ -8491,25 +8491,25 @@ VALUES (@pfs_p30, '50L polyester duffel bag, reinforced base, shoe compartment.'
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p30, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p30, @pfs_vendor, 'PFS-DUFFEL-50L-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 800.00, 1, 'active');
+VALUES (UUID(), @pfs_p30, @pfs_vendor, 'PFS-DUFFEL-50L-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 800.00, 1, 'active');
 SET @pfs_p30_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p30_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p30, @pfs_vendor, 'PFS-DUFFEL-50L-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 800.00, 0, 'active');
+VALUES (UUID(), @pfs_p30, @pfs_vendor, 'PFS-DUFFEL-50L-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 800.00, 0, 'active');
 SET @pfs_p30_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p30_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Navy'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p30, @pfs_vendor, 'PFS-DUFFEL-50L-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 800.00, 0, 'active');
+VALUES (UUID(), @pfs_p30, @pfs_vendor, 'PFS-DUFFEL-50L-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 800.00, 0, 'active');
 SET @pfs_p30_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p30_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p30, @pfs_vendor, 'PFS-DUFFEL-50L-MRN', (SELECT id FROM units WHERE code='pcs'), NULL, 1300.00, 830.00, 0, 'active');
+VALUES (UUID(), @pfs_p30, @pfs_vendor, 'PFS-DUFFEL-50L-MRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1300.00, 830.00, 0, 'active');
 SET @pfs_p30_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p30_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
@@ -8523,37 +8523,37 @@ VALUES (@pfs_p31, 'Jersey and shorts set, moisture-wicking polyester, team colou
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p31, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-S-BLU', (SELECT id FROM units WHERE code='set'), NULL, 480.00, 290.00, 1, 'active');
+VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-S-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 480.00, 290.00, 1, 'active');
 SET @pfs_p31_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-M-BLU', (SELECT id FROM units WHERE code='set'), NULL, 480.00, 290.00, 0, 'active');
+VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-M-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 480.00, 290.00, 0, 'active');
 SET @pfs_p31_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-L-BLU', (SELECT id FROM units WHERE code='set'), NULL, 500.00, 305.00, 0, 'active');
+VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-L-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 500.00, 305.00, 0, 'active');
 SET @pfs_p31_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-S-RED', (SELECT id FROM units WHERE code='set'), NULL, 480.00, 290.00, 0, 'active');
+VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-S-RED', (SELECT id FROM units WHERE code='set'), 0.0000, 480.00, 290.00, 0, 'active');
 SET @pfs_p31_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-M-RED', (SELECT id FROM units WHERE code='set'), NULL, 480.00, 290.00, 0, 'active');
+VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-M-RED', (SELECT id FROM units WHERE code='set'), 0.0000, 480.00, 290.00, 0, 'active');
 SET @pfs_p31_v5 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v5, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v5, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-L-RED', (SELECT id FROM units WHERE code='set'), NULL, 500.00, 305.00, 0, 'active');
+VALUES (UUID(), @pfs_p31, @pfs_vendor, 'PFS-JERSEY-L-RED', (SELECT id FROM units WHERE code='set'), 0.0000, 500.00, 305.00, 0, 'active');
 SET @pfs_p31_v6 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v6, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@pfs_p31_v6, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -8567,19 +8567,19 @@ VALUES (@pfs_p32, 'In-mould cycling helmet, dial-fit adjustment, multi-vent shel
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p32, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p32, @pfs_vendor, 'PFS-HELMET-CYC-S', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 950.00, 1, 'active');
+VALUES (UUID(), @pfs_p32, @pfs_vendor, 'PFS-HELMET-CYC-S', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 950.00, 1, 'active');
 SET @pfs_p32_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p32_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p32, @pfs_vendor, 'PFS-HELMET-CYC-M', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 950.00, 0, 'active');
+VALUES (UUID(), @pfs_p32, @pfs_vendor, 'PFS-HELMET-CYC-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 950.00, 0, 'active');
 SET @pfs_p32_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p32_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p32, @pfs_vendor, 'PFS-HELMET-CYC-L', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 950.00, 0, 'active');
+VALUES (UUID(), @pfs_p32, @pfs_vendor, 'PFS-HELMET-CYC-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 950.00, 0, 'active');
 SET @pfs_p32_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p32_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
@@ -8592,7 +8592,7 @@ INSERT INTO product_content (product_id, short_description, full_description)
 VALUES (@pfs_p33, 'Dome 4-person tent, polyester rainfly, taped seams, fibreglass poles.', 'Double-wall dome design with a full-coverage polyester rainfly keeps occupants dry in sustained rain. Taped and sealed seams prevent water ingress at high-stress joints. Lightweight fibreglass pole set assembles in minutes without tools. Ships in a compact carry bag, well suited to trekking retailers and outdoor gear distributors.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p33, @pfs_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p33, @pfs_vendor, 'PFS-TENT-4P-WTPF', (SELECT id FROM units WHERE code='pcs'), NULL, 4200.00, 2900.00, 1, 'active');
+VALUES (UUID(), @pfs_p33, @pfs_vendor, 'PFS-TENT-4P-WTPF', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4200.00, 2900.00, 1, 'active');
 
 -- p34: Trekking Backpack 60L (variant: color x4)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction)
@@ -8603,25 +8603,25 @@ VALUES (@pfs_p34, '60L trekking backpack, adjustable harness, rain cover include
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p34, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p34, @pfs_vendor, 'PFS-TREKBAG-60L-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 2350.00, 1550.00, 1, 'active');
+VALUES (UUID(), @pfs_p34, @pfs_vendor, 'PFS-TREKBAG-60L-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2350.00, 1550.00, 1, 'active');
 SET @pfs_p34_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p34_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p34, @pfs_vendor, 'PFS-TREKBAG-60L-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 2350.00, 1550.00, 0, 'active');
+VALUES (UUID(), @pfs_p34, @pfs_vendor, 'PFS-TREKBAG-60L-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2350.00, 1550.00, 0, 'active');
 SET @pfs_p34_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p34_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p34, @pfs_vendor, 'PFS-TREKBAG-60L-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 2350.00, 1550.00, 0, 'active');
+VALUES (UUID(), @pfs_p34, @pfs_vendor, 'PFS-TREKBAG-60L-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2350.00, 1550.00, 0, 'active');
 SET @pfs_p34_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p34_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Navy'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p34, @pfs_vendor, 'PFS-TREKBAG-60L-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 2400.00, 1580.00, 0, 'active');
+VALUES (UUID(), @pfs_p34, @pfs_vendor, 'PFS-TREKBAG-60L-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2400.00, 1580.00, 0, 'active');
 SET @pfs_p34_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p34_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
@@ -8635,25 +8635,25 @@ VALUES (@pfs_p35, 'Neoprene ankle support, compression fit, reinforced strapping
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@pfs_p35, @pfs_mshop, 'active', NOW());
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p35, @pfs_vendor, 'PFS-ANKLE-SUP-S', (SELECT id FROM units WHERE code='pair'), NULL, 320.00, 190.00, 1, 'active');
+VALUES (UUID(), @pfs_p35, @pfs_vendor, 'PFS-ANKLE-SUP-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 320.00, 190.00, 1, 'active');
 SET @pfs_p35_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p35_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p35, @pfs_vendor, 'PFS-ANKLE-SUP-M', (SELECT id FROM units WHERE code='pair'), NULL, 320.00, 190.00, 0, 'active');
+VALUES (UUID(), @pfs_p35, @pfs_vendor, 'PFS-ANKLE-SUP-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 320.00, 190.00, 0, 'active');
 SET @pfs_p35_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p35_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p35, @pfs_vendor, 'PFS-ANKLE-SUP-L', (SELECT id FROM units WHERE code='pair'), NULL, 320.00, 190.00, 0, 'active');
+VALUES (UUID(), @pfs_p35, @pfs_vendor, 'PFS-ANKLE-SUP-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 320.00, 190.00, 0, 'active');
 SET @pfs_p35_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p35_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
 
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status)
-VALUES (UUID(), @pfs_p35, @pfs_vendor, 'PFS-ANKLE-SUP-XL', (SELECT id FROM units WHERE code='pair'), NULL, 320.00, 190.00, 0, 'active');
+VALUES (UUID(), @pfs_p35, @pfs_vendor, 'PFS-ANKLE-SUP-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 320.00, 190.00, 0, 'active');
 SET @pfs_p35_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id)
 VALUES (@pfs_p35_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL'));
@@ -8696,7 +8696,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p1, 'Drop-forged combination spanner set, 8-24mm, chrome vanadium steel, 12 pieces with pouch.', 'Set of 12 drop-forged combination spanners ranging from 8mm to 24mm, manufactured from chrome vanadium steel for high torque resistance. Each set includes a rugged storage pouch and mirror-polished finish for corrosion resistance. Suitable for automotive workshops, fabrication units and maintenance teams. Supplied in bulk cartons; minimum order 5 sets.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p1, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p1, @igt_vendor, 'IGT-SPN-SET-12PC', (SELECT id FROM units WHERE code='set'), NULL, 850.00, 560.00, 1, 'active');
+(UUID(), @igt_p1, @igt_vendor, 'IGT-SPN-SET-12PC', (SELECT id FROM units WHERE code='set'), 0.0000, 850.00, 560.00, 1, 'active');
 
 -- P2: Bench Vice (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8706,7 +8706,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p2, 'Heavy duty 6 inch cast iron bench vice with swivel base for workshop and fabrication use.', '6 inch heavy-duty bench vice cast from high-grade grey iron with a 360-degree swivel base and hardened steel jaws. Designed for continuous use in fabrication shops, tool rooms and assembly lines. Each unit is sand-tested for casting defects before dispatch. Minimum order 2 units, bulk freight rates available above 20 units.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p2, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p2, @igt_vendor, 'IGT-VICE-6IN', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 950.00, 1, 'active');
+(UUID(), @igt_p2, @igt_vendor, 'IGT-VICE-6IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 950.00, 1, 'active');
 
 -- P3: Claw Hammer (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8716,7 +8716,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p3, '500g claw hammer with shock-absorbing fiberglass handle and drop-forged head.', 'Drop-forged carbon steel claw hammer, 500g head weight, fitted with a fiberglass shaft and anti-slip rubber grip for reduced hand fatigue. Heat-treated head resists chipping under repeated impact. Popular with carpentry, packaging and general maintenance crews. Sold in cartons of 12.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p3, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p3, @igt_vendor, 'IGT-HMR-CLW-500G', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 135.00, 1, 'active');
+(UUID(), @igt_p3, @igt_vendor, 'IGT-HMR-CLW-500G', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 135.00, 1, 'active');
 
 -- P4: Adjustable Wrench (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8726,7 +8726,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p4, '10 inch adjustable wrench, chrome vanadium steel, precision worm gear jaw.', '10 inch adjustable spanner forged from chrome vanadium steel with a precision worm-gear mechanism for smooth jaw adjustment. Chrome-plated finish resists rust in humid workshop conditions. Suited for plumbing, electrical and general mechanical maintenance. Carton pack of 12, minimum order 12 pieces.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p4, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p4, @igt_vendor, 'IGT-WRN-ADJ-10IN', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 205.00, 1, 'active');
+(UUID(), @igt_p4, @igt_vendor, 'IGT-WRN-ADJ-10IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 205.00, 1, 'active');
 
 -- P5: Hacksaw Frame (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8736,7 +8736,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p5, 'Adjustable 12 inch hacksaw frame, tubular steel, fits standard hacksaw blades.', 'Tubular steel hacksaw frame with adjustable length to fit standard 10 and 12 inch blades. Pistol-grip handle with soft-touch coating improves control during extended cutting jobs. Designed for metal fabrication, plumbing and site maintenance work. Supplied in cartons of 12 pieces.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p5, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p5, @igt_vendor, 'IGT-HKS-FRM-12IN', (SELECT id FROM units WHERE code='pcs'), NULL, 180.00, 115.00, 1, 'active');
+(UUID(), @igt_p5, @igt_vendor, 'IGT-HKS-FRM-12IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 180.00, 115.00, 1, 'active');
 
 -- P6: Steel Measuring Tape (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8746,7 +8746,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p6, '5 meter steel measuring tape with auto-lock and shock-absorbing rubber casing.', '5 meter nylon-coated steel measuring tape with a magnetic hook end, auto-lock blade and impact-resistant rubber casing. Blade markings are laser-etched for long-term readability in workshop conditions. Ideal for construction sites, carpentry and fabrication measurement. Bulk packed in cartons of 12.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p6, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p6, @igt_vendor, 'IGT-TAPE-5M', (SELECT id FROM units WHERE code='pcs'), NULL, 150.00, 95.00, 1, 'active');
+(UUID(), @igt_p6, @igt_vendor, 'IGT-TAPE-5M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 150.00, 95.00, 1, 'active');
 
 -- P7: Bolt Cutter (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8756,7 +8756,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p7, '24 inch heavy duty bolt cutter with drop-forged jaws for rods, bolts and chains.', '24 inch bolt cutter with drop-forged, heat-treated jaws capable of cutting mild steel rods, bolts and chain links up to 8mm. Compound-lever action multiplies hand force for reduced cutting effort. Widely used in construction, scrap processing and security removal work. Minimum order 2 units.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p7, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p7, @igt_vendor, 'IGT-BLC-24IN', (SELECT id FROM units WHERE code='pcs'), NULL, 1100.00, 720.00, 1, 'active');
+(UUID(), @igt_p7, @igt_vendor, 'IGT-BLC-24IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1100.00, 720.00, 1, 'active');
 
 -- P8: Cut-Resistant Safety Gloves (variant: size S,M,L,XL,XXL)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8766,19 +8766,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p8, 'Level 5 cut-resistant safety gloves, HPPE knit, sizes S to XXL.', 'HPPE knit safety gloves rated to ANSI/ISEA cut level 5, coated with a textured nitrile palm for secure grip in oily and dry conditions. Breathable knit back keeps hands comfortable during long shifts. Used across metal fabrication, glass handling and general industrial work. Minimum order 10 pairs per size.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p8, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-S', (SELECT id FROM units WHERE code='pair'), NULL, 185.00, 120.00, 1, 'active');
+(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 185.00, 120.00, 1, 'active');
 SET @igt_p8_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-M', (SELECT id FROM units WHERE code='pair'), NULL, 185.00, 120.00, 0, 'active');
+(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 185.00, 120.00, 0, 'active');
 SET @igt_p8_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-L', (SELECT id FROM units WHERE code='pair'), NULL, 185.00, 120.00, 0, 'active');
+(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 185.00, 120.00, 0, 'active');
 SET @igt_p8_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-XL', (SELECT id FROM units WHERE code='pair'), NULL, 190.00, 122.00, 0, 'active');
+(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 190.00, 122.00, 0, 'active');
 SET @igt_p8_v4 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-XXL', (SELECT id FROM units WHERE code='pair'), NULL, 190.00, 122.00, 0, 'active');
+(UUID(), @igt_p8, @igt_vendor, 'IGT-GLV-CR5-XXL', (SELECT id FROM units WHERE code='pair'), 0.0000, 190.00, 122.00, 0, 'active');
 SET @igt_p8_v5 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p8_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
@@ -8799,13 +8799,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p9, 'Full-body split leather welding apron, flame-resistant, sizes M to XL.', 'Full-body apron stitched from split leather, offering flame and spatter resistance for MIG, TIG and arc welding operations. Adjustable neck and waist straps ensure a secure fit across body sizes. Reinforced double-stitched seams extend service life in daily industrial use. Minimum order 10 pieces per size.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p9, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p9, @igt_vendor, 'IGT-APR-WLD-M', (SELECT id FROM units WHERE code='pcs'), NULL, 460.00, 300.00, 1, 'active');
+(UUID(), @igt_p9, @igt_vendor, 'IGT-APR-WLD-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 460.00, 300.00, 1, 'active');
 SET @igt_p9_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p9, @igt_vendor, 'IGT-APR-WLD-L', (SELECT id FROM units WHERE code='pcs'), NULL, 460.00, 300.00, 0, 'active');
+(UUID(), @igt_p9, @igt_vendor, 'IGT-APR-WLD-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 460.00, 300.00, 0, 'active');
 SET @igt_p9_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p9, @igt_vendor, 'IGT-APR-WLD-XL', (SELECT id FROM units WHERE code='pcs'), NULL, 465.00, 302.00, 0, 'active');
+(UUID(), @igt_p9, @igt_vendor, 'IGT-APR-WLD-XL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 465.00, 302.00, 0, 'active');
 SET @igt_p9_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p9_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
@@ -8822,7 +8822,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p10, '14 inch cast iron pipe wrench with self-tightening serrated jaws.', '14 inch pipe wrench cast from high-strength iron with hardened, self-tightening serrated jaws that grip tighter under load. Knurled adjustment nut allows quick jaw-width changes for varied pipe diameters. Standard tool for plumbing, HVAC and pipeline maintenance crews. Packed in cartons of 6.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p10, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p10, @igt_vendor, 'IGT-PWR-14IN', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 310.00, 1, 'active');
+(UUID(), @igt_p10, @igt_vendor, 'IGT-PWR-14IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 310.00, 1, 'active');
 
 -- P11: Insulated Flat Screwdriver Set (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8832,7 +8832,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p11, '6-piece VDE-insulated flat screwdriver set rated to 1000V for electrical work.', 'Set of 6 flat-blade screwdrivers with VDE-certified 1000V insulation, chrome-vanadium shafts and precision-ground tips. Double-layer insulated handles protect against accidental live contact during electrical maintenance. Supplied with a compact storage wallet. Minimum order 5 sets.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p11, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p11, @igt_vendor, 'IGT-SDR-INS-6PC', (SELECT id FROM units WHERE code='set'), NULL, 650.00, 420.00, 1, 'active');
+(UUID(), @igt_p11, @igt_vendor, 'IGT-SDR-INS-6PC', (SELECT id FROM units WHERE code='set'), 0.0000, 650.00, 420.00, 1, 'active');
 
 -- P12: Magnetic Phillips Screwdriver Set (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8842,7 +8842,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p12, '6-piece Phillips screwdriver set with magnetic tips and cushion grip handles.', 'Set of 6 Phillips screwdrivers featuring magnetized tips for one-handed fastener placement and soft cushion-grip handles for reduced hand strain. Shafts are heat-treated chrome vanadium steel for twist resistance. Suited for assembly lines, electronics and general maintenance. Minimum order 5 sets.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p12, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p12, @igt_vendor, 'IGT-SDR-PH-6PC', (SELECT id FROM units WHERE code='set'), NULL, 580.00, 375.00, 1, 'active');
+(UUID(), @igt_p12, @igt_vendor, 'IGT-SDR-PH-6PC', (SELECT id FROM units WHERE code='set'), 0.0000, 580.00, 375.00, 1, 'active');
 
 -- P13: Long Nose Plier (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8852,7 +8852,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p13, '8 inch precision long nose plier with induction-hardened cutting edge.', '8 inch long nose plier forged from chrome vanadium steel with an induction-hardened cutting edge and knurled, insulated handles. Fine tapered jaws suit electrical, electronic and precision assembly work. Smooth double-leaf spring ensures consistent jaw return. Carton pack of 12.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p13, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p13, @igt_vendor, 'IGT-PLR-LN-8IN', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 135.00, 1, 'active');
+(UUID(), @igt_p13, @igt_vendor, 'IGT-PLR-LN-8IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 135.00, 1, 'active');
 
 -- P14: Diagonal Cutting Plier (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8862,7 +8862,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p14, '6 inch diagonal cutting plier, chrome vanadium steel, for wire and cable work.', '6 inch diagonal cutting plier with hardened, precision-ground cutting edges for clean cuts on copper and aluminium wire up to 2.5mm. Cushion-grip dual-material handles reduce hand fatigue during repetitive use. Widely used in electrical panel assembly and cabling work. Carton pack of 12.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p14, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p14, @igt_vendor, 'IGT-PLR-DC-6IN', (SELECT id FROM units WHERE code='pcs'), NULL, 175.00, 112.00, 1, 'active');
+(UUID(), @igt_p14, @igt_vendor, 'IGT-PLR-DC-6IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 175.00, 112.00, 1, 'active');
 
 -- P15: Steel File Set (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8872,7 +8872,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p15, '6-piece steel file set - flat, round and half-round profiles with handles.', 'Set of 6 high-carbon steel files covering flat, round and half-round profiles, double-cut for fast stock removal on metal surfaces. Each file is fitted with an ergonomic plastic handle for controlled use. Suited for fabrication, tool rooms and finishing work. Minimum order 5 sets.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p15, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p15, @igt_vendor, 'IGT-FIL-SET-6PC', (SELECT id FROM units WHERE code='set'), NULL, 320.00, 205.00, 1, 'active');
+(UUID(), @igt_p15, @igt_vendor, 'IGT-FIL-SET-6PC', (SELECT id FROM units WHERE code='set'), 0.0000, 320.00, 205.00, 1, 'active');
 
 -- P16: Cold Chisel Set (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8882,7 +8882,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p16, '4-piece drop-forged cold chisel set with octagonal shank and hardened tip.', 'Set of 4 drop-forged cold chisels with octagonal shanks for secure grip and hardened, chamfered striking ends to resist mushrooming. Cutting edges are precision-ground for clean metal shearing. Commonly used in fabrication shops and demolition work. Minimum order 5 sets.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p16, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p16, @igt_vendor, 'IGT-CHS-SET-4PC', (SELECT id FROM units WHERE code='set'), NULL, 380.00, 245.00, 1, 'active');
+(UUID(), @igt_p16, @igt_vendor, 'IGT-CHS-SET-4PC', (SELECT id FROM units WHERE code='set'), 0.0000, 380.00, 245.00, 1, 'active');
 
 -- P17: Canvas Tool Bag (variant: color Black,Grey,Blue)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8892,13 +8892,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p17, '16 inch heavy-duty canvas tool bag with reinforced base, multiple pockets.', '16 inch tool bag stitched from heavy-duty waxed canvas with a reinforced PVC base and multiple internal and external pockets for tool organisation. Double-stitched carry handles and a padded shoulder strap support heavy daily loads. Popular with field service technicians and site electricians. Minimum order 5 pieces per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p17, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p17, @igt_vendor, 'IGT-BAG-16IN-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 270.00, 1, 'active');
+(UUID(), @igt_p17, @igt_vendor, 'IGT-BAG-16IN-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 270.00, 1, 'active');
 SET @igt_p17_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p17, @igt_vendor, 'IGT-BAG-16IN-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 270.00, 0, 'active');
+(UUID(), @igt_p17, @igt_vendor, 'IGT-BAG-16IN-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 270.00, 0, 'active');
 SET @igt_p17_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p17, @igt_vendor, 'IGT-BAG-16IN-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 270.00, 0, 'active');
+(UUID(), @igt_p17, @igt_vendor, 'IGT-BAG-16IN-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 270.00, 0, 'active');
 SET @igt_p17_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p17_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
@@ -8915,16 +8915,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p18, 'Chemical-resistant rubber hand gloves, natural rubber, sizes S to XL.', 'Natural rubber hand gloves with a textured grip surface, resistant to mild acids, alkalis and industrial solvents. Reinforced cuff prevents tearing during repeated donning and removal. Used in plating, cleaning and chemical handling operations. Minimum order 10 pairs per size.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p18, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p18, @igt_vendor, 'IGT-GLV-CHM-S', (SELECT id FROM units WHERE code='pair'), NULL, 150.00, 95.00, 1, 'active');
+(UUID(), @igt_p18, @igt_vendor, 'IGT-GLV-CHM-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 150.00, 95.00, 1, 'active');
 SET @igt_p18_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p18, @igt_vendor, 'IGT-GLV-CHM-M', (SELECT id FROM units WHERE code='pair'), NULL, 150.00, 95.00, 0, 'active');
+(UUID(), @igt_p18, @igt_vendor, 'IGT-GLV-CHM-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 150.00, 95.00, 0, 'active');
 SET @igt_p18_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p18, @igt_vendor, 'IGT-GLV-CHM-L', (SELECT id FROM units WHERE code='pair'), NULL, 150.00, 95.00, 0, 'active');
+(UUID(), @igt_p18, @igt_vendor, 'IGT-GLV-CHM-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 150.00, 95.00, 0, 'active');
 SET @igt_p18_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p18, @igt_vendor, 'IGT-GLV-CHM-XL', (SELECT id FROM units WHERE code='pair'), NULL, 155.00, 98.00, 0, 'active');
+(UUID(), @igt_p18, @igt_vendor, 'IGT-GLV-CHM-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 155.00, 98.00, 0, 'active');
 SET @igt_p18_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p18_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
@@ -8943,16 +8943,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p19, 'High-visibility reflective safety vest, mesh fabric, sizes M to XXL.', 'High-visibility polyester mesh safety vest fitted with reflective tape strips for low-light visibility on shop floors and construction sites. Front hook-and-loop closure allows quick wear over regular clothing. Meets general workplace visibility requirements for site personnel. Minimum order 10 pieces per size.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p19, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p19, @igt_vendor, 'IGT-VST-HV-M', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 140.00, 1, 'active');
+(UUID(), @igt_p19, @igt_vendor, 'IGT-VST-HV-M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 140.00, 1, 'active');
 SET @igt_p19_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p19, @igt_vendor, 'IGT-VST-HV-L', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 140.00, 0, 'active');
+(UUID(), @igt_p19, @igt_vendor, 'IGT-VST-HV-L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 140.00, 0, 'active');
 SET @igt_p19_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p19, @igt_vendor, 'IGT-VST-HV-XL', (SELECT id FROM units WHERE code='pcs'), NULL, 225.00, 143.00, 0, 'active');
+(UUID(), @igt_p19, @igt_vendor, 'IGT-VST-HV-XL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 225.00, 143.00, 0, 'active');
 SET @igt_p19_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p19, @igt_vendor, 'IGT-VST-HV-XXL', (SELECT id FROM units WHERE code='pcs'), NULL, 225.00, 143.00, 0, 'active');
+(UUID(), @igt_p19, @igt_vendor, 'IGT-VST-HV-XXL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 225.00, 143.00, 0, 'active');
 SET @igt_p19_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p19_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
@@ -8975,7 +8975,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p20, '5-piece HSS twist drill bit set, 1-6mm, for metal and wood drilling.', 'Set of 5 high-speed steel twist drill bits sized 1mm to 6mm, ground with a 135-degree split point for accurate starts without centre-punching. Suitable for drilling mild steel, aluminium and hardwood. Supplied in a compact plastic index case. Minimum order 5 sets.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p20, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p20, @igt_vendor, 'IGT-DRL-HSS-5PC', (SELECT id FROM units WHERE code='set'), NULL, 240.00, 155.00, 1, 'active');
+(UUID(), @igt_p20, @igt_vendor, 'IGT-DRL-HSS-5PC', (SELECT id FROM units WHERE code='set'), 0.0000, 240.00, 155.00, 1, 'active');
 
 -- P21: Angle Grinder Cutting Disc pack of 10 (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8985,7 +8985,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p21, '4 inch metal cutting discs for angle grinders, pack of 10.', 'Reinforced abrasive cutting discs, 4 inch diameter, engineered for fast clean cuts on mild steel and stainless sheet, rod and pipe. Multi-layer fibreglass mesh construction resists disc bursting under load. Each pack contains 10 discs rated for standard angle grinders. Minimum order 5 packs.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p21, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p21, @igt_vendor, 'IGT-DSC-CUT-4IN', (SELECT id FROM units WHERE code='box'), NULL, 320.00, 205.00, 1, 'active');
+(UUID(), @igt_p21, @igt_vendor, 'IGT-DSC-CUT-4IN', (SELECT id FROM units WHERE code='box'), 0.0000, 320.00, 205.00, 1, 'active');
 
 -- P22: Angle Grinder Grinding Wheel (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -8995,7 +8995,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p22, '4.5 inch coarse grinding wheel for angle grinders, weld and burr removal.', 'Coarse-grit grinding wheel, 4.5 inch diameter, formulated for aggressive stock removal on weld beads, burrs and rough steel surfaces. Fibreglass-reinforced core meets standard safety burst-strength requirements. Fits all standard angle grinders with 22.2mm arbor. Minimum order 10 pieces.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p22, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p22, @igt_vendor, 'IGT-WHL-GRD-4-5IN', (SELECT id FROM units WHERE code='pcs'), NULL, 140.00, 90.00, 1, 'active');
+(UUID(), @igt_p22, @igt_vendor, 'IGT-WHL-GRD-4-5IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 140.00, 90.00, 1, 'active');
 
 -- P23: Extension Cord Reel 20m (variant: color Red,Yellow,Orange)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -9005,13 +9005,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p23, '20 meter heavy-duty extension cord reel with thermal cut-out, industrial rated.', '20 meter extension reel wound with heavy-duty 3-core copper cable, rated for industrial power tool loads, with a built-in thermal cut-out to prevent overheating. High-visibility cable colour improves workplace safety around moving machinery. Fitted with an IP44-rated socket outlet. Minimum order 3 units per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p23, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p23, @igt_vendor, 'IGT-COR-REEL-20M-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 800.00, 1, 'active');
+(UUID(), @igt_p23, @igt_vendor, 'IGT-COR-REEL-20M-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 800.00, 1, 'active');
 SET @igt_p23_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p23, @igt_vendor, 'IGT-COR-REEL-20M-YEL', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 800.00, 0, 'active');
+(UUID(), @igt_p23, @igt_vendor, 'IGT-COR-REEL-20M-YEL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 800.00, 0, 'active');
 SET @igt_p23_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p23, @igt_vendor, 'IGT-COR-REEL-20M-ORG', (SELECT id FROM units WHERE code='pcs'), NULL, 1250.00, 800.00, 0, 'active');
+(UUID(), @igt_p23, @igt_vendor, 'IGT-COR-REEL-20M-ORG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1250.00, 800.00, 0, 'active');
 SET @igt_p23_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p23_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
@@ -9028,13 +9028,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p24, 'Hydraulic bottle jack for heavy lifting, available in 1 to 2 ton capacities.', 'Compact hydraulic bottle jack built with a hardened ram and precision seals for reliable heavy-duty lifting in workshops and load-handling operations. Wide base plate improves stability under rated load. Available across multiple lifting capacities to match application needs. Minimum order 2 units per capacity.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p24, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p24, @igt_vendor, 'IGT-JCK-BTL-1T', (SELECT id FROM units WHERE code='pcs'), NULL, 1650.00, 1050.00, 1, 'active');
+(UUID(), @igt_p24, @igt_vendor, 'IGT-JCK-BTL-1T', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1650.00, 1050.00, 1, 'active');
 SET @igt_p24_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p24, @igt_vendor, 'IGT-JCK-BTL-1-5T', (SELECT id FROM units WHERE code='pcs'), NULL, 1950.00, 1250.00, 0, 'active');
+(UUID(), @igt_p24, @igt_vendor, 'IGT-JCK-BTL-1-5T', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1950.00, 1250.00, 0, 'active');
 SET @igt_p24_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p24, @igt_vendor, 'IGT-JCK-BTL-2T', (SELECT id FROM units WHERE code='pcs'), NULL, 2350.00, 1500.00, 0, 'active');
+(UUID(), @igt_p24, @igt_vendor, 'IGT-JCK-BTL-2T', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2350.00, 1500.00, 0, 'active');
 SET @igt_p24_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p24_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1Ton'));
@@ -9051,13 +9051,13 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p25, 'Manual chain pulley block hoist for material lifting, 1 to 2 ton capacity.', 'Manual chain pulley block with hardened-steel load chain, forged hooks and an enclosed gear train for smooth, controlled lifting. Load-limiting design and dual-pawl braking improve operator safety during suspended loads. Used in warehouses, workshops and assembly bays. Minimum order 2 units per capacity.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p25, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p25, @igt_vendor, 'IGT-HST-CPB-1T', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2100.00, 1, 'active');
+(UUID(), @igt_p25, @igt_vendor, 'IGT-HST-CPB-1T', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2100.00, 1, 'active');
 SET @igt_p25_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p25, @igt_vendor, 'IGT-HST-CPB-1-5T', (SELECT id FROM units WHERE code='pcs'), NULL, 3800.00, 2500.00, 0, 'active');
+(UUID(), @igt_p25, @igt_vendor, 'IGT-HST-CPB-1-5T', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3800.00, 2500.00, 0, 'active');
 SET @igt_p25_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p25, @igt_vendor, 'IGT-HST-CPB-2T', (SELECT id FROM units WHERE code='pcs'), NULL, 4500.00, 3000.00, 0, 'active');
+(UUID(), @igt_p25, @igt_vendor, 'IGT-HST-CPB-2T', (SELECT id FROM units WHERE code='pcs'), 0.0000, 4500.00, 3000.00, 0, 'active');
 SET @igt_p25_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p25_v1, (SELECT id FROM attributes WHERE code='capacity'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='capacity' AND av.value='1Ton'));
@@ -9074,7 +9074,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p26, '10mm welding cable set, 5 meter, with earth clamp and electrode holder.', 'Set of 5 meter welding cables in 10mm cross-section flexible copper, fitted with a spring-loaded earth clamp and an insulated electrode holder rated for continuous arc welding duty. Heat-resistant rubber sheathing withstands workshop conditions. Supplied ready to connect to standard welding machines. Minimum order 5 sets.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p26, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p26, @igt_vendor, 'IGT-CBL-WLD-10MM', (SELECT id FROM units WHERE code='set'), NULL, 950.00, 610.00, 1, 'active');
+(UUID(), @igt_p26, @igt_vendor, 'IGT-CBL-WLD-10MM', (SELECT id FROM units WHERE code='set'), 0.0000, 950.00, 610.00, 1, 'active');
 
 -- P27: MIG Welding Gloves (variant: size S,M,L,XL)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -9084,16 +9084,16 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p27, 'Heat-resistant MIG welding gloves, split leather, sizes S to XL.', 'Split leather welding gloves with Kevlar stitching and a heat-resistant lining, designed for MIG and general arc welding tasks. Extended cuff protects the forearm from sparks and radiant heat. Reinforced palm patch adds durability under repeated gripping. Minimum order 10 pairs per size.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p27, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p27, @igt_vendor, 'IGT-GLV-MIG-S', (SELECT id FROM units WHERE code='pair'), NULL, 260.00, 165.00, 1, 'active');
+(UUID(), @igt_p27, @igt_vendor, 'IGT-GLV-MIG-S', (SELECT id FROM units WHERE code='pair'), 0.0000, 260.00, 165.00, 1, 'active');
 SET @igt_p27_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p27, @igt_vendor, 'IGT-GLV-MIG-M', (SELECT id FROM units WHERE code='pair'), NULL, 260.00, 165.00, 0, 'active');
+(UUID(), @igt_p27, @igt_vendor, 'IGT-GLV-MIG-M', (SELECT id FROM units WHERE code='pair'), 0.0000, 260.00, 165.00, 0, 'active');
 SET @igt_p27_v2 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p27, @igt_vendor, 'IGT-GLV-MIG-L', (SELECT id FROM units WHERE code='pair'), NULL, 260.00, 165.00, 0, 'active');
+(UUID(), @igt_p27, @igt_vendor, 'IGT-GLV-MIG-L', (SELECT id FROM units WHERE code='pair'), 0.0000, 260.00, 165.00, 0, 'active');
 SET @igt_p27_v3 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p27, @igt_vendor, 'IGT-GLV-MIG-XL', (SELECT id FROM units WHERE code='pair'), NULL, 265.00, 168.00, 0, 'active');
+(UUID(), @igt_p27, @igt_vendor, 'IGT-GLV-MIG-XL', (SELECT id FROM units WHERE code='pair'), 0.0000, 265.00, 168.00, 0, 'active');
 SET @igt_p27_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p27_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
@@ -9112,10 +9112,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p28, 'Heavy-duty kerosene blow lamp with brass body, 500ml and 1L tank options.', 'Solid brass-body blow lamp designed for kerosene fuel, used for pipe soldering, tar melting and general heating tasks on site. Pressure-sealed pump and control valve deliver a steady, adjustable flame. Available in two tank capacities to match job duration. Minimum order 5 units per size.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p28, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p28, @igt_vendor, 'IGT-LMP-BLW-500ML', (SELECT id FROM units WHERE code='pcs'), NULL, 480.00, 305.00, 1, 'active');
+(UUID(), @igt_p28, @igt_vendor, 'IGT-LMP-BLW-500ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 480.00, 305.00, 1, 'active');
 SET @igt_p28_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p28, @igt_vendor, 'IGT-LMP-BLW-1L', (SELECT id FROM units WHERE code='pcs'), NULL, 580.00, 365.00, 0, 'active');
+(UUID(), @igt_p28, @igt_vendor, 'IGT-LMP-BLW-1L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 580.00, 365.00, 0, 'active');
 SET @igt_p28_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p28_v1, (SELECT id FROM attributes WHERE code='pack_size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='pack_size' AND av.value='500ml'));
@@ -9130,7 +9130,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p29, 'Diamond-point bench grinder wheel dresser for truing and cleaning grinding wheels.', 'Single-point diamond wheel dresser used to true, clean and re-sharpen the cutting face of bench and pedestal grinding wheels. Cast handle houses an industrial-grade diamond tip for extended tool life. Standard accessory for tool rooms maintaining sharpening equipment. Minimum order 5 units.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p29, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p29, @igt_vendor, 'IGT-DRS-WHL', (SELECT id FROM units WHERE code='pcs'), NULL, 320.00, 205.00, 1, 'active');
+(UUID(), @igt_p29, @igt_vendor, 'IGT-DRS-WHL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 320.00, 205.00, 1, 'active');
 
 -- P30: Air Compressor Hose Pipe (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -9140,7 +9140,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p30, '10 meter PU braided air hose for pneumatic tools, with quick-connect fittings.', '10 meter polyurethane braided air hose rated for standard workshop compressor pressures, fitted with quick-connect couplers at both ends. Lightweight, kink-resistant construction eases handling around pneumatic tools and spray equipment. Suitable for tyre shops, paint booths and assembly lines. Minimum order 5 units.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p30, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p30, @igt_vendor, 'IGT-HOSE-PU-10M', (SELECT id FROM units WHERE code='pcs'), NULL, 680.00, 435.00, 1, 'active');
+(UUID(), @igt_p30, @igt_vendor, 'IGT-HOSE-PU-10M', (SELECT id FROM units WHERE code='pcs'), 0.0000, 680.00, 435.00, 1, 'active');
 
 -- P31: Cutting Oil Lubricant Can 5L (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -9150,7 +9150,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p31, '5 liter cutting oil lubricant for machining, drilling and metal cutting.', 'Soluble cutting oil formulated to reduce friction and heat during drilling, turning and milling operations on ferrous and non-ferrous metals. Extends tool life and improves surface finish on machined parts. Supplied in a sealed 5 litre can for workshop use. Minimum order 4 cans.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p31, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p31, @igt_vendor, 'IGT-OIL-CUT-5L', (SELECT id FROM units WHERE code='pcs'), NULL, 950.00, 610.00, 1, 'active');
+(UUID(), @igt_p31, @igt_vendor, 'IGT-OIL-CUT-5L', (SELECT id FROM units WHERE code='pcs'), 0.0000, 950.00, 610.00, 1, 'active');
 
 -- P32: Rust Penetrating Spray Lubricant (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -9160,7 +9160,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p32, '400ml rust penetrating spray lubricant for stuck bolts and machine parts.', 'Penetrating spray lubricant formulated to loosen corroded nuts, bolts and mechanical joints while leaving a protective anti-rust film. Fast-acting formula also displaces moisture from electrical contacts and hinges. Standard maintenance item for workshops and fleet servicing. Minimum order 12 cans.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p32, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p32, @igt_vendor, 'IGT-SPR-RST-400ML', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 135.00, 1, 'active');
+(UUID(), @igt_p32, @igt_vendor, 'IGT-SPR-RST-400ML', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 135.00, 1, 'active');
 
 -- P33: Industrial Extension Board 4 Socket (variant: color White,Black)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -9170,10 +9170,10 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p33, '4-socket industrial extension board with surge protection and indicator.', 'Heavy-duty 4-socket extension board built with flame-retardant housing, surge protection and an illuminated power indicator. Individually switched sockets allow safe isolation of connected equipment. Suitable for workshop benches and control panel power distribution. Minimum order 5 units per colour.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p33, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p33, @igt_vendor, 'IGT-BRD-EXT-4SKT-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 550.00, 350.00, 1, 'active');
+(UUID(), @igt_p33, @igt_vendor, 'IGT-BRD-EXT-4SKT-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 550.00, 350.00, 1, 'active');
 SET @igt_p33_v1 := LAST_INSERT_ID();
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p33, @igt_vendor, 'IGT-BRD-EXT-4SKT-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 550.00, 350.00, 0, 'active');
+(UUID(), @igt_p33, @igt_vendor, 'IGT-BRD-EXT-4SKT-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 550.00, 350.00, 0, 'active');
 SET @igt_p33_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@igt_p33_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
@@ -9188,7 +9188,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p34, '150mm digital vernier caliper, stainless steel, LCD readout, 0.01mm resolution.', 'Stainless steel digital vernier caliper with a 150mm measuring range, LCD readout and 0.01mm resolution for precise inside, outside, depth and step measurements. IP54-rated body resists dust and coolant splash on the shop floor. Supplied with a protective storage case. Minimum order 2 units.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p34, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p34, @igt_vendor, 'IGT-CAL-DVC-150MM', (SELECT id FROM units WHERE code='pcs'), NULL, 1450.00, 930.00, 1, 'active');
+(UUID(), @igt_p34, @igt_vendor, 'IGT-CAL-DVC-150MM', (SELECT id FROM units WHERE code='pcs'), 0.0000, 1450.00, 930.00, 1, 'active');
 
 -- P35: Torque Wrench 1/2 Inch Drive (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -9198,7 +9198,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p35, '1/2 inch drive click-type torque wrench, 10-150Nm range, calibrated.', 'Click-type torque wrench with 1/2 inch square drive and a 10-150Nm adjustable range, calibrated to +/-4% accuracy for critical fastening applications. Knurled micrometer handle allows fine torque setting with an audible click at the set value. Supplied in a fitted carrying case with calibration certificate. Minimum order 2 units.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p35, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p35, @igt_vendor, 'IGT-TRQ-WRN-12IN', (SELECT id FROM units WHERE code='pcs'), NULL, 2200.00, 1420.00, 1, 'active');
+(UUID(), @igt_p35, @igt_vendor, 'IGT-TRQ-WRN-12IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 2200.00, 1420.00, 1, 'active');
 
 -- P36: Pneumatic Impact Wrench 1/2 Inch Drive (simple)
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
@@ -9208,7 +9208,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 (@igt_p36, '1/2 inch drive pneumatic impact wrench, twin-hammer mechanism, heavy duty.', 'Pneumatic impact wrench with 1/2 inch square drive and a twin-hammer mechanism delivering high torque output for tyre shops, assembly lines and heavy maintenance work. Composite housing reduces tool weight without sacrificing durability. Reversible operation with variable speed trigger control. Minimum order 2 units.');
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES (@igt_p36, @igt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @igt_p36, @igt_vendor, 'IGT-IMP-WRN-12IN', (SELECT id FROM units WHERE code='pcs'), NULL, 3200.00, 2050.00, 1, 'active');
+(UUID(), @igt_p36, @igt_vendor, 'IGT-IMP-WRN-12IN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 3200.00, 2050.00, 1, 'active');
 
 -- ---------------------------------------------------------------------
 -- Manufacturer 14/15 [sac]: Suraksha Auto Components Pvt Ltd — Automotive Parts (Chennai, Tamil Nadu)
@@ -9256,7 +9256,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p1, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p1, @sac_vendor, 'SAC-BRKPAD-FR-001', @sac_unit_set, NULL, 850.00, 550.00, 1, 'active');
+(UUID(), @sac_p1, @sac_vendor, 'SAC-BRKPAD-FR-001', @sac_unit_set, 0.0000, 850.00, 550.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_car, @sac_brand, @sac_tax_gst28, @sac_unit_pcs, 'Clutch Plate Assembly - Single Plate Dry Type', 'sac-clutch-plate-assembly-single-dry', 'Single-plate dry-type clutch plate assembly with high-grip organic friction lining for smooth power transfer in passenger vehicles.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 10, 1, 'both');
@@ -9266,7 +9266,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p2, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p2, @sac_vendor, 'SAC-CLTPLT-002', @sac_unit_pcs, NULL, 1450.00, 980.00, 1, 'active');
+(UUID(), @sac_p2, @sac_vendor, 'SAC-CLTPLT-002', @sac_unit_pcs, 0.0000, 1450.00, 980.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_car, @sac_brand, @sac_tax_gst28, @sac_unit_pcs, 'Radiator Assembly - Aluminium Core with Plastic Tank', 'sac-radiator-assembly-aluminium-core', 'Brazed aluminium-core radiator with reinforced plastic end tanks for efficient engine cooling in passenger cars.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 5, 1, 'both');
@@ -9276,7 +9276,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p3, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p3, @sac_vendor, 'SAC-RAD-003', @sac_unit_pcs, NULL, 3200.00, 2100.00, 1, 'active');
+(UUID(), @sac_p3, @sac_vendor, 'SAC-RAD-003', @sac_unit_pcs, 0.0000, 3200.00, 2100.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_car, @sac_brand, @sac_tax_gst18, @sac_unit_pcs, 'Engine Air Filter Cartridge - Pleated Paper Element', 'sac-engine-air-filter-cartridge', 'Pleated paper air filter cartridge offering high dust-holding capacity as a direct OEM-fit replacement for passenger cars.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 10, 'both');
@@ -9286,7 +9286,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p4, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p4, @sac_vendor, 'SAC-AIRFLT-004', @sac_unit_pcs, NULL, 220.00, 140.00, 1, 'active');
+(UUID(), @sac_p4, @sac_vendor, 'SAC-AIRFLT-004', @sac_unit_pcs, 0.0000, 220.00, 140.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_car, @sac_brand, @sac_tax_gst18, @sac_unit_pcs, 'Oil Filter Cartridge - Spin-On Type', 'sac-oil-filter-spin-on-cartridge', 'Spin-on oil filter cartridge with anti-drain-back and bypass valves, compatible with most passenger car engines.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 10, 'both');
@@ -9296,7 +9296,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p5, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p5, @sac_vendor, 'SAC-OILFLT-005', @sac_unit_pcs, NULL, 145.00, 90.00, 1, 'active');
+(UUID(), @sac_p5, @sac_vendor, 'SAC-OILFLT-005', @sac_unit_pcs, 0.0000, 145.00, 90.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_car, @sac_brand, @sac_tax_gst28, @sac_unit_pcs, 'Suspension Coil Spring (Front, Heavy Duty)', 'sac-suspension-coil-spring-front-hd', 'Heavy-duty front suspension coil spring made from shot-peened alloy steel wire for consistent load-bearing performance.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 10, 2, 'both');
@@ -9306,7 +9306,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p6, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p6, @sac_vendor, 'SAC-COILSPR-006', @sac_unit_pcs, NULL, 980.00, 640.00, 1, 'active');
+(UUID(), @sac_p6, @sac_vendor, 'SAC-COILSPR-006', @sac_unit_pcs, 0.0000, 980.00, 640.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_car, @sac_brand, @sac_tax_gst18, @sac_unit_pcs, 'Car Sun Shade - Foldable Windshield Type', 'sac-car-sun-shade-foldable-windshield', 'Foldable reflective windshield sun shade that blocks UV heat and protects the dashboard from sun damage.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 6, 'both');
@@ -9316,7 +9316,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p7, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p7, @sac_vendor, 'SAC-SUNSHD-007', @sac_unit_pcs, NULL, 260.00, 165.00, 1, 'active');
+(UUID(), @sac_p7, @sac_vendor, 'SAC-SUNSHD-007', @sac_unit_pcs, 0.0000, 260.00, 165.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_car, @sac_brand, @sac_tax_gst28, @sac_unit_pcs, 'Engine Mounting Bush - Rubber Bonded Steel', 'sac-engine-mounting-bush-rubber-steel', 'Rubber-bonded steel engine mounting bush designed to absorb vibration and reduce noise transfer.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 4, 'both');
@@ -9326,7 +9326,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p8, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p8, @sac_vendor, 'SAC-ENGMNT-008', @sac_unit_pcs, NULL, 420.00, 270.00, 1, 'active');
+(UUID(), @sac_p8, @sac_vendor, 'SAC-ENGMNT-008', @sac_unit_pcs, 0.0000, 420.00, 270.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_car, @sac_brand, @sac_tax_gst18, @sac_unit_set, 'Car Floor Mats - 3D Fitted Set', 'sac-car-floor-mats-3d-fitted-set', '3D-fitted rubber floor mat set designed for full footwell coverage and easy cleaning in passenger cars.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 24, 6, 'both');
@@ -9336,15 +9336,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p9, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p9, @sac_vendor, 'SAC-FLRMAT-009-BLK', @sac_unit_set, NULL, 650.00, 400.00, 1, 'active');
+(UUID(), @sac_p9, @sac_vendor, 'SAC-FLRMAT-009-BLK', @sac_unit_set, 0.0000, 650.00, 400.00, 1, 'active');
 SET @sac_p9_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p9_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p9, @sac_vendor, 'SAC-FLRMAT-009-GRY', @sac_unit_set, NULL, 650.00, 400.00, 0, 'active');
+(UUID(), @sac_p9, @sac_vendor, 'SAC-FLRMAT-009-GRY', @sac_unit_set, 0.0000, 650.00, 400.00, 0, 'active');
 SET @sac_p9_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p9_v2, @sac_attr_color, @sac_col_grey);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p9, @sac_vendor, 'SAC-FLRMAT-009-BEG', @sac_unit_set, NULL, 650.00, 400.00, 0, 'active');
+(UUID(), @sac_p9, @sac_vendor, 'SAC-FLRMAT-009-BEG', @sac_unit_set, 0.0000, 650.00, 400.00, 0, 'active');
 SET @sac_p9_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p9_v3, @sac_attr_color, @sac_col_beige);
 
@@ -9356,19 +9356,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p10, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p10, @sac_vendor, 'SAC-SEATCVR-010-BLK', @sac_unit_set, NULL, 2200.00, 1450.00, 1, 'active');
+(UUID(), @sac_p10, @sac_vendor, 'SAC-SEATCVR-010-BLK', @sac_unit_set, 0.0000, 2200.00, 1450.00, 1, 'active');
 SET @sac_p10_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p10_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p10, @sac_vendor, 'SAC-SEATCVR-010-RED', @sac_unit_set, NULL, 2200.00, 1450.00, 0, 'active');
+(UUID(), @sac_p10, @sac_vendor, 'SAC-SEATCVR-010-RED', @sac_unit_set, 0.0000, 2200.00, 1450.00, 0, 'active');
 SET @sac_p10_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p10_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p10, @sac_vendor, 'SAC-SEATCVR-010-BEG', @sac_unit_set, NULL, 2200.00, 1450.00, 0, 'active');
+(UUID(), @sac_p10, @sac_vendor, 'SAC-SEATCVR-010-BEG', @sac_unit_set, 0.0000, 2200.00, 1450.00, 0, 'active');
 SET @sac_p10_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p10_v3, @sac_attr_color, @sac_col_beige);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p10, @sac_vendor, 'SAC-SEATCVR-010-GRY', @sac_unit_set, NULL, 2200.00, 1450.00, 0, 'active');
+(UUID(), @sac_p10, @sac_vendor, 'SAC-SEATCVR-010-GRY', @sac_unit_set, 0.0000, 2200.00, 1450.00, 0, 'active');
 SET @sac_p10_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p10_v4, @sac_attr_color, @sac_col_grey);
 
@@ -9380,15 +9380,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p11, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p11, @sac_vendor, 'SAC-NPFRM-CAR-011-BLK', @sac_unit_pcs, NULL, 180.00, 110.00, 1, 'active');
+(UUID(), @sac_p11, @sac_vendor, 'SAC-NPFRM-CAR-011-BLK', @sac_unit_pcs, 0.0000, 180.00, 110.00, 1, 'active');
 SET @sac_p11_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p11_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p11, @sac_vendor, 'SAC-NPFRM-CAR-011-SIL', @sac_unit_pcs, NULL, 180.00, 110.00, 0, 'active');
+(UUID(), @sac_p11, @sac_vendor, 'SAC-NPFRM-CAR-011-SIL', @sac_unit_pcs, 0.0000, 180.00, 110.00, 0, 'active');
 SET @sac_p11_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p11_v2, @sac_attr_color, @sac_col_silver);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p11, @sac_vendor, 'SAC-NPFRM-CAR-011-GLD', @sac_unit_pcs, NULL, 180.00, 110.00, 0, 'active');
+(UUID(), @sac_p11, @sac_vendor, 'SAC-NPFRM-CAR-011-GLD', @sac_unit_pcs, 0.0000, 180.00, 110.00, 0, 'active');
 SET @sac_p11_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p11_v3, @sac_attr_color, @sac_col_gold);
 
@@ -9400,19 +9400,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p12, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p12, @sac_vendor, 'SAC-STRCVR-012-BLK', @sac_unit_pcs, NULL, 340.00, 210.00, 1, 'active');
+(UUID(), @sac_p12, @sac_vendor, 'SAC-STRCVR-012-BLK', @sac_unit_pcs, 0.0000, 340.00, 210.00, 1, 'active');
 SET @sac_p12_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p12_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p12, @sac_vendor, 'SAC-STRCVR-012-RED', @sac_unit_pcs, NULL, 340.00, 210.00, 0, 'active');
+(UUID(), @sac_p12, @sac_vendor, 'SAC-STRCVR-012-RED', @sac_unit_pcs, 0.0000, 340.00, 210.00, 0, 'active');
 SET @sac_p12_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p12_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p12, @sac_vendor, 'SAC-STRCVR-012-BEG', @sac_unit_pcs, NULL, 340.00, 210.00, 0, 'active');
+(UUID(), @sac_p12, @sac_vendor, 'SAC-STRCVR-012-BEG', @sac_unit_pcs, 0.0000, 340.00, 210.00, 0, 'active');
 SET @sac_p12_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p12_v3, @sac_attr_color, @sac_col_beige);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p12, @sac_vendor, 'SAC-STRCVR-012-GRY', @sac_unit_pcs, NULL, 340.00, 210.00, 0, 'active');
+(UUID(), @sac_p12, @sac_vendor, 'SAC-STRCVR-012-GRY', @sac_unit_pcs, 0.0000, 340.00, 210.00, 0, 'active');
 SET @sac_p12_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p12_v4, @sac_attr_color, @sac_col_grey);
 
@@ -9424,15 +9424,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p13, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p13, @sac_vendor, 'SAC-DASHMAT-013-BLK', @sac_unit_set, NULL, 480.00, 300.00, 1, 'active');
+(UUID(), @sac_p13, @sac_vendor, 'SAC-DASHMAT-013-BLK', @sac_unit_set, 0.0000, 480.00, 300.00, 1, 'active');
 SET @sac_p13_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p13_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p13, @sac_vendor, 'SAC-DASHMAT-013-BEG', @sac_unit_set, NULL, 480.00, 300.00, 0, 'active');
+(UUID(), @sac_p13, @sac_vendor, 'SAC-DASHMAT-013-BEG', @sac_unit_set, 0.0000, 480.00, 300.00, 0, 'active');
 SET @sac_p13_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p13_v2, @sac_attr_color, @sac_col_beige);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p13, @sac_vendor, 'SAC-DASHMAT-013-GRY', @sac_unit_set, NULL, 480.00, 300.00, 0, 'active');
+(UUID(), @sac_p13, @sac_vendor, 'SAC-DASHMAT-013-GRY', @sac_unit_set, 0.0000, 480.00, 300.00, 0, 'active');
 SET @sac_p13_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p13_v3, @sac_attr_color, @sac_col_grey);
 
@@ -9444,15 +9444,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p14, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p14, @sac_vendor, 'SAC-WHLCAP-014-SIL', @sac_unit_set, NULL, 560.00, 350.00, 1, 'active');
+(UUID(), @sac_p14, @sac_vendor, 'SAC-WHLCAP-014-SIL', @sac_unit_set, 0.0000, 560.00, 350.00, 1, 'active');
 SET @sac_p14_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p14_v1, @sac_attr_color, @sac_col_silver);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p14, @sac_vendor, 'SAC-WHLCAP-014-BLK', @sac_unit_set, NULL, 560.00, 350.00, 0, 'active');
+(UUID(), @sac_p14, @sac_vendor, 'SAC-WHLCAP-014-BLK', @sac_unit_set, 0.0000, 560.00, 350.00, 0, 'active');
 SET @sac_p14_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p14_v2, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p14, @sac_vendor, 'SAC-WHLCAP-014-GLD', @sac_unit_set, NULL, 560.00, 350.00, 0, 'active');
+(UUID(), @sac_p14, @sac_vendor, 'SAC-WHLCAP-014-GLD', @sac_unit_set, 0.0000, 560.00, 350.00, 0, 'active');
 SET @sac_p14_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p14_v3, @sac_attr_color, @sac_col_gold);
 
@@ -9464,19 +9464,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p15, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p15, @sac_vendor, 'SAC-KEYCVR-015-BLK', @sac_unit_pcs, NULL, 150.00, 90.00, 1, 'active');
+(UUID(), @sac_p15, @sac_vendor, 'SAC-KEYCVR-015-BLK', @sac_unit_pcs, 0.0000, 150.00, 90.00, 1, 'active');
 SET @sac_p15_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p15_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p15, @sac_vendor, 'SAC-KEYCVR-015-RED', @sac_unit_pcs, NULL, 150.00, 90.00, 0, 'active');
+(UUID(), @sac_p15, @sac_vendor, 'SAC-KEYCVR-015-RED', @sac_unit_pcs, 0.0000, 150.00, 90.00, 0, 'active');
 SET @sac_p15_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p15_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p15, @sac_vendor, 'SAC-KEYCVR-015-BLU', @sac_unit_pcs, NULL, 150.00, 90.00, 0, 'active');
+(UUID(), @sac_p15, @sac_vendor, 'SAC-KEYCVR-015-BLU', @sac_unit_pcs, 0.0000, 150.00, 90.00, 0, 'active');
 SET @sac_p15_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p15_v3, @sac_attr_color, @sac_col_blue);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p15, @sac_vendor, 'SAC-KEYCVR-015-SIL', @sac_unit_pcs, NULL, 150.00, 90.00, 0, 'active');
+(UUID(), @sac_p15, @sac_vendor, 'SAC-KEYCVR-015-SIL', @sac_unit_pcs, 0.0000, 150.00, 90.00, 0, 'active');
 SET @sac_p15_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p15_v4, @sac_attr_color, @sac_col_silver);
 
@@ -9488,15 +9488,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p16, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p16, @sac_vendor, 'SAC-GEARKNB-016-BLK', @sac_unit_pcs, NULL, 190.00, 115.00, 1, 'active');
+(UUID(), @sac_p16, @sac_vendor, 'SAC-GEARKNB-016-BLK', @sac_unit_pcs, 0.0000, 190.00, 115.00, 1, 'active');
 SET @sac_p16_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p16_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p16, @sac_vendor, 'SAC-GEARKNB-016-RED', @sac_unit_pcs, NULL, 190.00, 115.00, 0, 'active');
+(UUID(), @sac_p16, @sac_vendor, 'SAC-GEARKNB-016-RED', @sac_unit_pcs, 0.0000, 190.00, 115.00, 0, 'active');
 SET @sac_p16_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p16_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p16, @sac_vendor, 'SAC-GEARKNB-016-GRY', @sac_unit_pcs, NULL, 190.00, 115.00, 0, 'active');
+(UUID(), @sac_p16, @sac_vendor, 'SAC-GEARKNB-016-GRY', @sac_unit_pcs, 0.0000, 190.00, 115.00, 0, 'active');
 SET @sac_p16_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p16_v3, @sac_attr_color, @sac_col_grey);
 
@@ -9508,19 +9508,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p17, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p17, @sac_vendor, 'SAC-BELTPAD-017-BLK', @sac_unit_set, NULL, 320.00, 195.00, 1, 'active');
+(UUID(), @sac_p17, @sac_vendor, 'SAC-BELTPAD-017-BLK', @sac_unit_set, 0.0000, 320.00, 195.00, 1, 'active');
 SET @sac_p17_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p17_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p17, @sac_vendor, 'SAC-BELTPAD-017-RED', @sac_unit_set, NULL, 320.00, 195.00, 0, 'active');
+(UUID(), @sac_p17, @sac_vendor, 'SAC-BELTPAD-017-RED', @sac_unit_set, 0.0000, 320.00, 195.00, 0, 'active');
 SET @sac_p17_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p17_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p17, @sac_vendor, 'SAC-BELTPAD-017-GRY', @sac_unit_set, NULL, 320.00, 195.00, 0, 'active');
+(UUID(), @sac_p17, @sac_vendor, 'SAC-BELTPAD-017-GRY', @sac_unit_set, 0.0000, 320.00, 195.00, 0, 'active');
 SET @sac_p17_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p17_v3, @sac_attr_color, @sac_col_grey);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p17, @sac_vendor, 'SAC-BELTPAD-017-BEG', @sac_unit_set, NULL, 320.00, 195.00, 0, 'active');
+(UUID(), @sac_p17, @sac_vendor, 'SAC-BELTPAD-017-BEG', @sac_unit_set, 0.0000, 320.00, 195.00, 0, 'active');
 SET @sac_p17_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p17_v4, @sac_attr_color, @sac_col_beige);
 
@@ -9532,15 +9532,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p18, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p18, @sac_vendor, 'SAC-BODYSTRIP-018-BLK', @sac_unit_pcs, NULL, 410.00, 250.00, 1, 'active');
+(UUID(), @sac_p18, @sac_vendor, 'SAC-BODYSTRIP-018-BLK', @sac_unit_pcs, 0.0000, 410.00, 250.00, 1, 'active');
 SET @sac_p18_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p18_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p18, @sac_vendor, 'SAC-BODYSTRIP-018-SIL', @sac_unit_pcs, NULL, 410.00, 250.00, 0, 'active');
+(UUID(), @sac_p18, @sac_vendor, 'SAC-BODYSTRIP-018-SIL', @sac_unit_pcs, 0.0000, 410.00, 250.00, 0, 'active');
 SET @sac_p18_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p18_v2, @sac_attr_color, @sac_col_silver);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p18, @sac_vendor, 'SAC-BODYSTRIP-018-GRY', @sac_unit_pcs, NULL, 410.00, 250.00, 0, 'active');
+(UUID(), @sac_p18, @sac_vendor, 'SAC-BODYSTRIP-018-GRY', @sac_unit_pcs, 0.0000, 410.00, 250.00, 0, 'active');
 SET @sac_p18_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p18_v3, @sac_attr_color, @sac_col_grey);
 
@@ -9552,7 +9552,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p19, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p19, @sac_vendor, 'SAC-MUDGRD-019', @sac_unit_pcs, NULL, 310.00, 195.00, 1, 'active');
+(UUID(), @sac_p19, @sac_vendor, 'SAC-MUDGRD-019', @sac_unit_pcs, 0.0000, 310.00, 195.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_2w, @sac_brand, @sac_tax_gst28, @sac_unit_set, 'Chain Sprocket Kit - 428 Pitch', 'sac-chain-sprocket-kit-428-pitch', 'Complete 428-pitch drive chain and front/rear sprocket kit for motorcycles, built from heat-treated alloy steel.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 5, 'both');
@@ -9562,7 +9562,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p20, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p20, @sac_vendor, 'SAC-SPRKT-020', @sac_unit_set, NULL, 680.00, 440.00, 1, 'active');
+(UUID(), @sac_p20, @sac_vendor, 'SAC-SPRKT-020', @sac_unit_set, 0.0000, 680.00, 440.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_2w, @sac_brand, @sac_tax_gst28, @sac_unit_set, 'Brake Shoe Set (Rear Drum)', 'sac-brake-shoe-set-rear-drum', 'Rear drum brake shoe set with riveted friction lining for consistent motorcycle braking performance.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 10, 'both');
@@ -9572,7 +9572,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p21, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p21, @sac_vendor, 'SAC-BRKSHOE-021', @sac_unit_set, NULL, 165.00, 105.00, 1, 'active');
+(UUID(), @sac_p21, @sac_vendor, 'SAC-BRKSHOE-021', @sac_unit_set, 0.0000, 165.00, 105.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_2w, @sac_brand, @sac_tax_gst18, @sac_unit_pcs, 'Bike Air Filter Element - Foam Type', 'sac-bike-air-filter-element-foam', 'Oil-coated washable foam air filter element for motorcycles offering high filtration efficiency.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 100, 20, 'both');
@@ -9582,7 +9582,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p22, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p22, @sac_vendor, 'SAC-BAIRFLT-022', @sac_unit_pcs, NULL, 95.00, 58.00, 1, 'active');
+(UUID(), @sac_p22, @sac_vendor, 'SAC-BAIRFLT-022', @sac_unit_pcs, 0.0000, 95.00, 58.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_2w, @sac_brand, @sac_tax_gst18, @sac_unit_pcs, 'Clutch Cable - Standard Length', 'sac-clutch-cable-standard-length', 'Galvanized steel-core clutch cable with nylon outer casing for smooth motorcycle clutch actuation.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 100, 25, 'both');
@@ -9592,7 +9592,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p23, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p23, @sac_vendor, 'SAC-CLTCBL-023', @sac_unit_pcs, NULL, 78.00, 48.00, 1, 'active');
+(UUID(), @sac_p23, @sac_vendor, 'SAC-CLTCBL-023', @sac_unit_pcs, 0.0000, 78.00, 48.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_2w, @sac_brand, @sac_tax_gst28, @sac_unit_pcs, 'Disc Brake Rotor - Ventilated', 'sac-disc-brake-rotor-ventilated', 'Ventilated disc brake rotor machined from high-carbon steel for reduced brake judder on motorcycles.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 4, 'both');
@@ -9602,7 +9602,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p24, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p24, @sac_vendor, 'SAC-DISCROT-024', @sac_unit_pcs, NULL, 540.00, 350.00, 1, 'active');
+(UUID(), @sac_p24, @sac_vendor, 'SAC-DISCROT-024', @sac_unit_pcs, 0.0000, 540.00, 350.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_2w, @sac_brand, @sac_tax_gst18, @sac_unit_set, 'Bike Indicator Lens Set', 'sac-bike-indicator-lens-set', 'Replacement indicator lens set for motorcycles, moulded from impact-resistant amber polycarbonate.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 40, 8, 'both');
@@ -9612,7 +9612,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p25, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p25, @sac_vendor, 'SAC-INDLENS-025', @sac_unit_set, NULL, 210.00, 130.00, 1, 'active');
+(UUID(), @sac_p25, @sac_vendor, 'SAC-INDLENS-025', @sac_unit_set, 0.0000, 210.00, 130.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_2w, @sac_brand, @sac_tax_gst18, @sac_unit_pcs, 'Electric Horn - 12V', 'sac-electric-horn-12v', '12V electromagnetic horn for motorcycles delivering a loud, clear tone with low current draw.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 60, 12, 'both');
@@ -9622,7 +9622,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p26, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p26, @sac_vendor, 'SAC-HORN-026', @sac_unit_pcs, NULL, 145.00, 88.00, 1, 'active');
+(UUID(), @sac_p26, @sac_vendor, 'SAC-HORN-026', @sac_unit_pcs, 0.0000, 145.00, 88.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@sac_vendor, @sac_cat_2w, @sac_brand, @sac_tax_gst18, @sac_unit_pcs, 'Chrome Headlight Guard - Motorcycle', 'sac-chrome-headlight-guard-motorcycle', 'Bolt-on headlight guard for motorcycles that shields the lens from stone chips and minor impacts.', 'variant', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 4, 'both');
@@ -9632,11 +9632,11 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p27, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p27, @sac_vendor, 'SAC-HDLGUARD-027-BLK', @sac_unit_pcs, NULL, 380.00, 235.00, 1, 'active');
+(UUID(), @sac_p27, @sac_vendor, 'SAC-HDLGUARD-027-BLK', @sac_unit_pcs, 0.0000, 380.00, 235.00, 1, 'active');
 SET @sac_p27_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p27_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p27, @sac_vendor, 'SAC-HDLGUARD-027-SIL', @sac_unit_pcs, NULL, 380.00, 235.00, 0, 'active');
+(UUID(), @sac_p27, @sac_vendor, 'SAC-HDLGUARD-027-SIL', @sac_unit_pcs, 0.0000, 380.00, 235.00, 0, 'active');
 SET @sac_p27_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p27_v2, @sac_attr_color, @sac_col_silver);
 
@@ -9648,15 +9648,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p28, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p28, @sac_vendor, 'SAC-BSEATCVR-028-BLK', @sac_unit_pcs, NULL, 420.00, 260.00, 1, 'active');
+(UUID(), @sac_p28, @sac_vendor, 'SAC-BSEATCVR-028-BLK', @sac_unit_pcs, 0.0000, 420.00, 260.00, 1, 'active');
 SET @sac_p28_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p28_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p28, @sac_vendor, 'SAC-BSEATCVR-028-RED', @sac_unit_pcs, NULL, 420.00, 260.00, 0, 'active');
+(UUID(), @sac_p28, @sac_vendor, 'SAC-BSEATCVR-028-RED', @sac_unit_pcs, 0.0000, 420.00, 260.00, 0, 'active');
 SET @sac_p28_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p28_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p28, @sac_vendor, 'SAC-BSEATCVR-028-BLU', @sac_unit_pcs, NULL, 420.00, 260.00, 0, 'active');
+(UUID(), @sac_p28, @sac_vendor, 'SAC-BSEATCVR-028-BLU', @sac_unit_pcs, 0.0000, 420.00, 260.00, 0, 'active');
 SET @sac_p28_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p28_v3, @sac_attr_color, @sac_col_blue);
 
@@ -9668,19 +9668,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p29, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p29, @sac_vendor, 'SAC-GRIP-029-BLK', @sac_unit_set, NULL, 165.00, 100.00, 1, 'active');
+(UUID(), @sac_p29, @sac_vendor, 'SAC-GRIP-029-BLK', @sac_unit_set, 0.0000, 165.00, 100.00, 1, 'active');
 SET @sac_p29_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p29_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p29, @sac_vendor, 'SAC-GRIP-029-RED', @sac_unit_set, NULL, 165.00, 100.00, 0, 'active');
+(UUID(), @sac_p29, @sac_vendor, 'SAC-GRIP-029-RED', @sac_unit_set, 0.0000, 165.00, 100.00, 0, 'active');
 SET @sac_p29_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p29_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p29, @sac_vendor, 'SAC-GRIP-029-BLU', @sac_unit_set, NULL, 165.00, 100.00, 0, 'active');
+(UUID(), @sac_p29, @sac_vendor, 'SAC-GRIP-029-BLU', @sac_unit_set, 0.0000, 165.00, 100.00, 0, 'active');
 SET @sac_p29_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p29_v3, @sac_attr_color, @sac_col_blue);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p29, @sac_vendor, 'SAC-GRIP-029-GRY', @sac_unit_set, NULL, 165.00, 100.00, 0, 'active');
+(UUID(), @sac_p29, @sac_vendor, 'SAC-GRIP-029-GRY', @sac_unit_set, 0.0000, 165.00, 100.00, 0, 'active');
 SET @sac_p29_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p29_v4, @sac_attr_color, @sac_col_grey);
 
@@ -9692,15 +9692,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p30, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p30, @sac_vendor, 'SAC-NPFRM-BIKE-030-BLK', @sac_unit_pcs, NULL, 140.00, 85.00, 1, 'active');
+(UUID(), @sac_p30, @sac_vendor, 'SAC-NPFRM-BIKE-030-BLK', @sac_unit_pcs, 0.0000, 140.00, 85.00, 1, 'active');
 SET @sac_p30_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p30_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p30, @sac_vendor, 'SAC-NPFRM-BIKE-030-SIL', @sac_unit_pcs, NULL, 140.00, 85.00, 0, 'active');
+(UUID(), @sac_p30, @sac_vendor, 'SAC-NPFRM-BIKE-030-SIL', @sac_unit_pcs, 0.0000, 140.00, 85.00, 0, 'active');
 SET @sac_p30_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p30_v2, @sac_attr_color, @sac_col_silver);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p30, @sac_vendor, 'SAC-NPFRM-BIKE-030-BLU', @sac_unit_pcs, NULL, 140.00, 85.00, 0, 'active');
+(UUID(), @sac_p30, @sac_vendor, 'SAC-NPFRM-BIKE-030-BLU', @sac_unit_pcs, 0.0000, 140.00, 85.00, 0, 'active');
 SET @sac_p30_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p30_v3, @sac_attr_color, @sac_col_blue);
 
@@ -9712,19 +9712,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p31, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p31, @sac_vendor, 'SAC-TANKCVR-031-BLK', @sac_unit_pcs, NULL, 520.00, 320.00, 1, 'active');
+(UUID(), @sac_p31, @sac_vendor, 'SAC-TANKCVR-031-BLK', @sac_unit_pcs, 0.0000, 520.00, 320.00, 1, 'active');
 SET @sac_p31_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p31_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p31, @sac_vendor, 'SAC-TANKCVR-031-RED', @sac_unit_pcs, NULL, 520.00, 320.00, 0, 'active');
+(UUID(), @sac_p31, @sac_vendor, 'SAC-TANKCVR-031-RED', @sac_unit_pcs, 0.0000, 520.00, 320.00, 0, 'active');
 SET @sac_p31_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p31_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p31, @sac_vendor, 'SAC-TANKCVR-031-BLU', @sac_unit_pcs, NULL, 520.00, 320.00, 0, 'active');
+(UUID(), @sac_p31, @sac_vendor, 'SAC-TANKCVR-031-BLU', @sac_unit_pcs, 0.0000, 520.00, 320.00, 0, 'active');
 SET @sac_p31_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p31_v3, @sac_attr_color, @sac_col_blue);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p31, @sac_vendor, 'SAC-TANKCVR-031-SIL', @sac_unit_pcs, NULL, 520.00, 320.00, 0, 'active');
+(UUID(), @sac_p31, @sac_vendor, 'SAC-TANKCVR-031-SIL', @sac_unit_pcs, 0.0000, 520.00, 320.00, 0, 'active');
 SET @sac_p31_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p31_v4, @sac_attr_color, @sac_col_silver);
 
@@ -9736,15 +9736,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p32, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p32, @sac_vendor, 'SAC-TANKPAD-032-BLK', @sac_unit_set, NULL, 290.00, 175.00, 1, 'active');
+(UUID(), @sac_p32, @sac_vendor, 'SAC-TANKPAD-032-BLK', @sac_unit_set, 0.0000, 290.00, 175.00, 1, 'active');
 SET @sac_p32_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p32_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p32, @sac_vendor, 'SAC-TANKPAD-032-RED', @sac_unit_set, NULL, 290.00, 175.00, 0, 'active');
+(UUID(), @sac_p32, @sac_vendor, 'SAC-TANKPAD-032-RED', @sac_unit_set, 0.0000, 290.00, 175.00, 0, 'active');
 SET @sac_p32_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p32_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p32, @sac_vendor, 'SAC-TANKPAD-032-BLU', @sac_unit_set, NULL, 290.00, 175.00, 0, 'active');
+(UUID(), @sac_p32, @sac_vendor, 'SAC-TANKPAD-032-BLU', @sac_unit_set, 0.0000, 290.00, 175.00, 0, 'active');
 SET @sac_p32_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p32_v3, @sac_attr_color, @sac_col_blue);
 
@@ -9756,19 +9756,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p33, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p33, @sac_vendor, 'SAC-RIMSTICK-033-RED', @sac_unit_set, NULL, 175.00, 105.00, 1, 'active');
+(UUID(), @sac_p33, @sac_vendor, 'SAC-RIMSTICK-033-RED', @sac_unit_set, 0.0000, 175.00, 105.00, 1, 'active');
 SET @sac_p33_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p33_v1, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p33, @sac_vendor, 'SAC-RIMSTICK-033-BLU', @sac_unit_set, NULL, 175.00, 105.00, 0, 'active');
+(UUID(), @sac_p33, @sac_vendor, 'SAC-RIMSTICK-033-BLU', @sac_unit_set, 0.0000, 175.00, 105.00, 0, 'active');
 SET @sac_p33_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p33_v2, @sac_attr_color, @sac_col_blue);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p33, @sac_vendor, 'SAC-RIMSTICK-033-SIL', @sac_unit_set, NULL, 175.00, 105.00, 0, 'active');
+(UUID(), @sac_p33, @sac_vendor, 'SAC-RIMSTICK-033-SIL', @sac_unit_set, 0.0000, 175.00, 105.00, 0, 'active');
 SET @sac_p33_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p33_v3, @sac_attr_color, @sac_col_silver);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p33, @sac_vendor, 'SAC-RIMSTICK-033-YLW', @sac_unit_set, NULL, 175.00, 105.00, 0, 'active');
+(UUID(), @sac_p33, @sac_vendor, 'SAC-RIMSTICK-033-YLW', @sac_unit_set, 0.0000, 175.00, 105.00, 0, 'active');
 SET @sac_p33_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p33_v4, @sac_attr_color, @sac_col_yellow);
 
@@ -9780,15 +9780,15 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p34, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p34, @sac_vendor, 'SAC-MIRRCAP-034-BLK', @sac_unit_set, NULL, 220.00, 135.00, 1, 'active');
+(UUID(), @sac_p34, @sac_vendor, 'SAC-MIRRCAP-034-BLK', @sac_unit_set, 0.0000, 220.00, 135.00, 1, 'active');
 SET @sac_p34_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p34_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p34, @sac_vendor, 'SAC-MIRRCAP-034-RED', @sac_unit_set, NULL, 220.00, 135.00, 0, 'active');
+(UUID(), @sac_p34, @sac_vendor, 'SAC-MIRRCAP-034-RED', @sac_unit_set, 0.0000, 220.00, 135.00, 0, 'active');
 SET @sac_p34_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p34_v2, @sac_attr_color, @sac_col_red);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p34, @sac_vendor, 'SAC-MIRRCAP-034-SIL', @sac_unit_set, NULL, 220.00, 135.00, 0, 'active');
+(UUID(), @sac_p34, @sac_vendor, 'SAC-MIRRCAP-034-SIL', @sac_unit_set, 0.0000, 220.00, 135.00, 0, 'active');
 SET @sac_p34_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p34_v3, @sac_attr_color, @sac_col_silver);
 
@@ -9800,11 +9800,11 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@sac_p35, @sac_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p35, @sac_vendor, 'SAC-CRASHGRD-035-BLK', @sac_unit_pcs, NULL, 950.00, 620.00, 1, 'active');
+(UUID(), @sac_p35, @sac_vendor, 'SAC-CRASHGRD-035-BLK', @sac_unit_pcs, 0.0000, 950.00, 620.00, 1, 'active');
 SET @sac_p35_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p35_v1, @sac_attr_color, @sac_col_black);
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @sac_p35, @sac_vendor, 'SAC-CRASHGRD-035-SIL', @sac_unit_pcs, NULL, 950.00, 620.00, 0, 'active');
+(UUID(), @sac_p35, @sac_vendor, 'SAC-CRASHGRD-035-SIL', @sac_unit_pcs, 0.0000, 950.00, 620.00, 0, 'active');
 SET @sac_p35_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES (@sac_p35_v2, @sac_attr_color, @sac_col_silver);
 
@@ -9840,7 +9840,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p1, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p1, @glt_vendor, 'GLT-FAB-GREY60-KG', (SELECT id FROM units WHERE code='kg'), NULL, 195.00, 140.00, 1, 'active');
+(UUID(), @glt_p1, @glt_vendor, 'GLT-FAB-GREY60-KG', (SELECT id FROM units WHERE code='kg'), 0.0000, 195.00, 140.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst5'), (SELECT id FROM units WHERE code='kg'), 'Organic Cotton Yarn Cone 20s Count', 'glt-organic-cotton-yarn-cone-20s', 'Ring-spun 20s count organic cotton yarn wound on cones, suited for weaving and knitting mills.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 25, 5, 'both');
@@ -9850,7 +9850,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p2, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p2, @glt_vendor, 'GLT-YARN-20S-KG', (SELECT id FROM units WHERE code='kg'), NULL, 340.00, 245.00, 1, 'active');
+(UUID(), @glt_p2, @glt_vendor, 'GLT-YARN-20S-KG', (SELECT id FROM units WHERE code='kg'), 0.0000, 340.00, 245.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='set'), 'Handloom Organic Cotton Bedsheet Double Bed Set', 'glt-handloom-organic-cotton-bedsheet-double-set', 'Handloom-woven organic cotton double bedsheet set including two pillow covers, naturally dyed.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 10, 2, 'both');
@@ -9860,7 +9860,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p3, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p3, @glt_vendor, 'GLT-BEDSHEET-DBL-SET', (SELECT id FROM units WHERE code='set'), NULL, 850.00, 600.00, 1, 'active');
+(UUID(), @glt_p3, @glt_vendor, 'GLT-BEDSHEET-DBL-SET', (SELECT id FROM units WHERE code='set'), 0.0000, 850.00, 600.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='set'), 'Organic Cotton Bath Towel Set of 2', 'glt-organic-cotton-bath-towel-set-of-2', 'Heavyweight 500 GSM organic cotton bath towel set of two, undyed natural finish.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 4, 'both');
@@ -9870,7 +9870,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p4, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p4, @glt_vendor, 'GLT-TOWEL-SET2', (SELECT id FROM units WHERE code='set'), NULL, 420.00, 300.00, 1, 'active');
+(UUID(), @glt_p4, @glt_vendor, 'GLT-TOWEL-SET2', (SELECT id FROM units WHERE code='set'), 0.0000, 420.00, 300.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='box'), 'Organic Cotton Kitchen Napkin Pack of 6', 'glt-organic-cotton-kitchen-napkin-pack-of-6', 'Absorbent organic cotton kitchen napkins, pack of 6, woven in a durable plain weave.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 10, 'both');
@@ -9880,7 +9880,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p5, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p5, @glt_vendor, 'GLT-NAPKIN-PK6', (SELECT id FROM units WHERE code='box'), NULL, 180.00, 125.00, 1, 'active');
+(UUID(), @glt_p5, @glt_vendor, 'GLT-NAPKIN-PK6', (SELECT id FROM units WHERE code='box'), 0.0000, 180.00, 125.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst5'), (SELECT id FROM units WHERE code='box'), 'Organic Cotton Muslin Baby Swaddle Wrap Pack of 3', 'glt-organic-cotton-muslin-baby-swaddle-pack-of-3', 'Breathable organic cotton muslin swaddle wraps for infants, sold in packs of three.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 5, 'both');
@@ -9890,7 +9890,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p6, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p6, @glt_vendor, 'GLT-BABYSWADDLE-PK3', (SELECT id FROM units WHERE code='box'), NULL, 550.00, 385.00, 1, 'active');
+(UUID(), @glt_p6, @glt_vendor, 'GLT-BABYSWADDLE-PK3', (SELECT id FROM units WHERE code='box'), 0.0000, 550.00, 385.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Organic Cotton Canvas Tote Bag Plain', 'glt-organic-cotton-canvas-tote-bag-plain', 'Heavy canvas-weight organic cotton tote bag, unprinted, for retail branding and packaging use.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 100, 12, 'both');
@@ -9900,7 +9900,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p7, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p7, @glt_vendor, 'GLT-TOTEBAG-PLAIN', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 1, 'active');
+(UUID(), @glt_p7, @glt_vendor, 'GLT-TOTEBAG-PLAIN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Organic Cotton Kitchen Apron Unisex', 'glt-organic-cotton-kitchen-apron-unisex', 'Adjustable unisex kitchen apron stitched from durable organic cotton drill fabric.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 10, 'both');
@@ -9910,7 +9910,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p8, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p8, @glt_vendor, 'GLT-APRON-KITCHEN', (SELECT id FROM units WHERE code='pcs'), NULL, 140.00, 95.00, 1, 'active');
+(UUID(), @glt_p8, @glt_vendor, 'GLT-APRON-KITCHEN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 140.00, 95.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='box'), 'Organic Cotton Reusable Dish Cloth Pack of 10', 'glt-organic-cotton-reusable-dish-cloth-pack-of-10', 'Quick-dry organic cotton dish cloths, pack of 10, a plastic-free alternative to synthetic scourers.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 30, 5, 'both');
@@ -9920,7 +9920,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p9, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p9, @glt_vendor, 'GLT-DISHCLOTH-PK10', (SELECT id FROM units WHERE code='box'), NULL, 220.00, 150.00, 1, 'active');
+(UUID(), @glt_p9, @glt_vendor, 'GLT-DISHCLOTH-PK10', (SELECT id FROM units WHERE code='box'), 0.0000, 220.00, 150.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Organic Cotton Mattress Protector Single Bed', 'glt-organic-cotton-mattress-protector-single', 'Breathable quilted organic cotton mattress protector sized for single beds, elasticated corners.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 15, 5, 'both');
@@ -9930,7 +9930,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p10, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p10, @glt_vendor, 'GLT-MATTRESSPROTECT-SGL', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 450.00, 1, 'active');
+(UUID(), @glt_p10, @glt_vendor, 'GLT-MATTRESSPROTECT-SGL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 450.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst5'), (SELECT id FROM units WHERE code='box'), 'Organic Cotton 3-Ply Face Mask Pack of 5', 'glt-organic-cotton-3ply-face-mask-pack-of-5', 'Washable 3-ply organic cotton face masks with ear loops, sold in packs of five.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 100, 20, 'both');
@@ -9940,7 +9940,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p11, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p11, @glt_vendor, 'GLT-FACEMASK-PK5', (SELECT id FROM units WHERE code='box'), NULL, 90.00, 55.00, 1, 'active');
+(UUID(), @glt_p11, @glt_vendor, 'GLT-FACEMASK-PK5', (SELECT id FROM units WHERE code='box'), 0.0000, 90.00, 55.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Organic Cotton Heavy Duty Laundry Bag', 'glt-organic-cotton-heavy-duty-laundry-bag', 'Drawstring laundry bag stitched from heavy organic cotton canvas for hotel and household use.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 10, 'both');
@@ -9950,7 +9950,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p12, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p12, @glt_vendor, 'GLT-LAUNDRYBAG-HD', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 145.00, 1, 'active');
+(UUID(), @glt_p12, @glt_vendor, 'GLT-LAUNDRYBAG-HD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 145.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='pcs'), 'Organic Cotton Handwoven Table Runner', 'glt-organic-cotton-handwoven-table-runner', 'Handwoven organic cotton table runner with a self-woven border, natural undyed tones.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 30, 6, 'both');
@@ -9960,7 +9960,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p13, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p13, @glt_vendor, 'GLT-TABLERUNNER-HW', (SELECT id FROM units WHERE code='pcs'), NULL, 260.00, 175.00, 1, 'active');
+(UUID(), @glt_p13, @glt_vendor, 'GLT-TABLERUNNER-HW', (SELECT id FROM units WHERE code='pcs'), 0.0000, 260.00, 175.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst18'), (SELECT id FROM units WHERE code='pcs'), 'Organic Cotton Yoga Mat Carry Bag', 'glt-organic-cotton-yoga-mat-carry-bag', 'Durable organic cotton canvas carry bag sized for standard yoga mats with adjustable strap.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 50, 10, 'both');
@@ -9970,7 +9970,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p14, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p14, @glt_vendor, 'GLT-YOGABAG', (SELECT id FROM units WHERE code='pcs'), NULL, 175.00, 115.00, 1, 'active');
+(UUID(), @glt_p14, @glt_vendor, 'GLT-YOGABAG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 175.00, 115.00, 1, 'active');
 
 INSERT INTO products (vendor_id, category_id, brand_id, tax_class_id, base_unit_id, title, slug, description, product_type, product_condition, gst_type, is_pos_enabled, is_online_enabled, visibility, status, min_purchase_qty, qty_step, payment_restriction) VALUES
 (@glt_vendor, (SELECT id FROM categories WHERE slug='mfg-textiles-organic'), @glt_brand, (SELECT id FROM tax_classes WHERE code='gst12'), (SELECT id FROM units WHERE code='set'), 'Organic Cotton Cushion Cover Set of 5', 'glt-organic-cotton-cushion-cover-set-of-5', 'Zippered organic cotton cushion covers, set of five, in a natural canvas-weight fabric.', 'simple', 'new', 'exclusive', 0, 0, 'vendor', 'published', 20, 4, 'both');
@@ -9980,7 +9980,7 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p15, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p15, @glt_vendor, 'GLT-CUSHIONCOVER-SET5', (SELECT id FROM units WHERE code='set'), NULL, 480.00, 330.00, 1, 'active');
+(UUID(), @glt_p15, @glt_vendor, 'GLT-CUSHIONCOVER-SET5', (SELECT id FROM units WHERE code='set'), 0.0000, 480.00, 330.00, 1, 'active');
 
 -- ===================== VARIANT PRODUCTS (16-36) =====================
 
@@ -9992,25 +9992,25 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p16, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p16, @glt_vendor, 'GLT-TSHIRT-RN-S-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 110.00, 1, 'active');
+(UUID(), @glt_p16, @glt_vendor, 'GLT-TSHIRT-RN-S-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 110.00, 1, 'active');
 SET @glt_p16_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p16_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p16_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p16, @glt_vendor, 'GLT-TSHIRT-RN-M-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 110.00, 0, 'active');
+(UUID(), @glt_p16, @glt_vendor, 'GLT-TSHIRT-RN-M-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 110.00, 0, 'active');
 SET @glt_p16_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p16_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p16_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p16, @glt_vendor, 'GLT-TSHIRT-RN-L-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 110.00, 0, 'active');
+(UUID(), @glt_p16, @glt_vendor, 'GLT-TSHIRT-RN-L-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 110.00, 0, 'active');
 SET @glt_p16_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p16_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
 (@glt_p16_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p16, @glt_vendor, 'GLT-TSHIRT-RN-XL-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 110.00, 0, 'active');
+(UUID(), @glt_p16, @glt_vendor, 'GLT-TSHIRT-RN-XL-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 110.00, 0, 'active');
 SET @glt_p16_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p16_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL')),
@@ -10024,25 +10024,25 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p17, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p17, @glt_vendor, 'GLT-SHIRT-FML-S-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 290.00, 1, 'active');
+(UUID(), @glt_p17, @glt_vendor, 'GLT-SHIRT-FML-S-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 290.00, 1, 'active');
 SET @glt_p17_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p17_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p17_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p17, @glt_vendor, 'GLT-SHIRT-FML-M-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @glt_p17, @glt_vendor, 'GLT-SHIRT-FML-M-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @glt_p17_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p17_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p17_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p17, @glt_vendor, 'GLT-SHIRT-FML-L-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @glt_p17, @glt_vendor, 'GLT-SHIRT-FML-L-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @glt_p17_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p17_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
 (@glt_p17_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p17, @glt_vendor, 'GLT-SHIRT-FML-XL-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @glt_p17, @glt_vendor, 'GLT-SHIRT-FML-XL-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @glt_p17_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p17_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL')),
@@ -10056,25 +10056,25 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p18, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p18, @glt_vendor, 'GLT-KURTA-STR-M-BEG', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 260.00, 1, 'active');
+(UUID(), @glt_p18, @glt_vendor, 'GLT-KURTA-STR-M-BEG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 260.00, 1, 'active');
 SET @glt_p18_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p18_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p18_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p18, @glt_vendor, 'GLT-KURTA-STR-L-BEG', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 260.00, 0, 'active');
+(UUID(), @glt_p18, @glt_vendor, 'GLT-KURTA-STR-L-BEG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 260.00, 0, 'active');
 SET @glt_p18_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p18_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
 (@glt_p18_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p18, @glt_vendor, 'GLT-KURTA-STR-XL-MRN', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 260.00, 0, 'active');
+(UUID(), @glt_p18, @glt_vendor, 'GLT-KURTA-STR-XL-MRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 260.00, 0, 'active');
 SET @glt_p18_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p18_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL')),
 (@glt_p18_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p18, @glt_vendor, 'GLT-KURTA-STR-XXL-MRN', (SELECT id FROM units WHERE code='pcs'), NULL, 380.00, 260.00, 0, 'active');
+(UUID(), @glt_p18, @glt_vendor, 'GLT-KURTA-STR-XXL-MRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 380.00, 260.00, 0, 'active');
 SET @glt_p18_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p18_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XXL')),
@@ -10088,25 +10088,25 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p19, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p19, @glt_vendor, 'GLT-POLO-PQ-S-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 245.00, 165.00, 1, 'active');
+(UUID(), @glt_p19, @glt_vendor, 'GLT-POLO-PQ-S-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 245.00, 165.00, 1, 'active');
 SET @glt_p19_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p19_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p19_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Navy'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p19, @glt_vendor, 'GLT-POLO-PQ-M-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 245.00, 165.00, 0, 'active');
+(UUID(), @glt_p19, @glt_vendor, 'GLT-POLO-PQ-M-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 245.00, 165.00, 0, 'active');
 SET @glt_p19_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p19_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p19_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Navy'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p19, @glt_vendor, 'GLT-POLO-PQ-L-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 245.00, 165.00, 0, 'active');
+(UUID(), @glt_p19, @glt_vendor, 'GLT-POLO-PQ-L-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 245.00, 165.00, 0, 'active');
 SET @glt_p19_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p19_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
 (@glt_p19_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p19, @glt_vendor, 'GLT-POLO-PQ-XL-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 245.00, 165.00, 0, 'active');
+(UUID(), @glt_p19, @glt_vendor, 'GLT-POLO-PQ-XL-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 245.00, 165.00, 0, 'active');
 SET @glt_p19_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p19_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL')),
@@ -10120,19 +10120,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p20, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p20, @glt_vendor, 'GLT-KIDS-TEE-XS-YLW', (SELECT id FROM units WHERE code='pcs'), NULL, 140.00, 90.00, 1, 'active');
+(UUID(), @glt_p20, @glt_vendor, 'GLT-KIDS-TEE-XS-YLW', (SELECT id FROM units WHERE code='pcs'), 0.0000, 140.00, 90.00, 1, 'active');
 SET @glt_p20_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p20_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XS')),
 (@glt_p20_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p20, @glt_vendor, 'GLT-KIDS-TEE-S-YLW', (SELECT id FROM units WHERE code='pcs'), NULL, 140.00, 90.00, 0, 'active');
+(UUID(), @glt_p20, @glt_vendor, 'GLT-KIDS-TEE-S-YLW', (SELECT id FROM units WHERE code='pcs'), 0.0000, 140.00, 90.00, 0, 'active');
 SET @glt_p20_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p20_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p20_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p20, @glt_vendor, 'GLT-KIDS-TEE-M-ORG', (SELECT id FROM units WHERE code='pcs'), NULL, 140.00, 90.00, 0, 'active');
+(UUID(), @glt_p20, @glt_vendor, 'GLT-KIDS-TEE-M-ORG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 140.00, 90.00, 0, 'active');
 SET @glt_p20_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p20_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
@@ -10146,31 +10146,31 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p21, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-S-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 450.00, 1, 'active');
+(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-S-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 450.00, 1, 'active');
 SET @glt_p21_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p21_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p21_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-M-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 450.00, 0, 'active');
+(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-M-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 450.00, 0, 'active');
 SET @glt_p21_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p21_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p21_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-L-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 450.00, 0, 'active');
+(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-L-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 450.00, 0, 'active');
 SET @glt_p21_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p21_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
 (@glt_p21_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-XL-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 450.00, 0, 'active');
+(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-XL-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 450.00, 0, 'active');
 SET @glt_p21_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p21_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL')),
 (@glt_p21_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-XXL-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 650.00, 450.00, 0, 'active');
+(UUID(), @glt_p21, @glt_vendor, 'GLT-HOODIE-XXL-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 650.00, 450.00, 0, 'active');
 SET @glt_p21_v5 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p21_v5, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XXL')),
@@ -10184,22 +10184,22 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p22, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p22, @glt_vendor, 'GLT-DUPATTA-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 150.00, 1, 'active');
+(UUID(), @glt_p22, @glt_vendor, 'GLT-DUPATTA-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 150.00, 1, 'active');
 SET @glt_p22_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p22_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p22, @glt_vendor, 'GLT-DUPATTA-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 150.00, 0, 'active');
+(UUID(), @glt_p22, @glt_vendor, 'GLT-DUPATTA-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 150.00, 0, 'active');
 SET @glt_p22_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p22_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p22, @glt_vendor, 'GLT-DUPATTA-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 150.00, 0, 'active');
+(UUID(), @glt_p22, @glt_vendor, 'GLT-DUPATTA-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 150.00, 0, 'active');
 SET @glt_p22_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p22_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p22, @glt_vendor, 'GLT-DUPATTA-PPL', (SELECT id FROM units WHERE code='pcs'), NULL, 220.00, 150.00, 0, 'active');
+(UUID(), @glt_p22, @glt_vendor, 'GLT-DUPATTA-PPL', (SELECT id FROM units WHERE code='pcs'), 0.0000, 220.00, 150.00, 0, 'active');
 SET @glt_p22_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p22_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Purple'));
@@ -10212,17 +10212,17 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p23, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p23, @glt_vendor, 'GLT-SAREE-BLOUSE-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 210.00, 1, 'active');
+(UUID(), @glt_p23, @glt_vendor, 'GLT-SAREE-BLOUSE-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 210.00, 1, 'active');
 SET @glt_p23_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p23_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p23, @glt_vendor, 'GLT-SAREE-BLOUSE-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 210.00, 0, 'active');
+(UUID(), @glt_p23, @glt_vendor, 'GLT-SAREE-BLOUSE-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 210.00, 0, 'active');
 SET @glt_p23_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p23_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p23, @glt_vendor, 'GLT-SAREE-BLOUSE-MRN', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 210.00, 0, 'active');
+(UUID(), @glt_p23, @glt_vendor, 'GLT-SAREE-BLOUSE-MRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 210.00, 0, 'active');
 SET @glt_p23_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p23_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
@@ -10235,19 +10235,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p24, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p24, @glt_vendor, 'GLT-PYJAMA-S-PNK', (SELECT id FROM units WHERE code='set'), NULL, 390.00, 270.00, 1, 'active');
+(UUID(), @glt_p24, @glt_vendor, 'GLT-PYJAMA-S-PNK', (SELECT id FROM units WHERE code='set'), 0.0000, 390.00, 270.00, 1, 'active');
 SET @glt_p24_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p24_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p24_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p24, @glt_vendor, 'GLT-PYJAMA-M-PNK', (SELECT id FROM units WHERE code='set'), NULL, 390.00, 270.00, 0, 'active');
+(UUID(), @glt_p24, @glt_vendor, 'GLT-PYJAMA-M-PNK', (SELECT id FROM units WHERE code='set'), 0.0000, 390.00, 270.00, 0, 'active');
 SET @glt_p24_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p24_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p24_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Pink'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p24, @glt_vendor, 'GLT-PYJAMA-L-BLU', (SELECT id FROM units WHERE code='set'), NULL, 390.00, 270.00, 0, 'active');
+(UUID(), @glt_p24, @glt_vendor, 'GLT-PYJAMA-L-BLU', (SELECT id FROM units WHERE code='set'), 0.0000, 390.00, 270.00, 0, 'active');
 SET @glt_p24_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p24_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
@@ -10261,19 +10261,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p25, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p25, @glt_vendor, 'GLT-BABY-ONESIE-XS-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 110.00, 1, 'active');
+(UUID(), @glt_p25, @glt_vendor, 'GLT-BABY-ONESIE-XS-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 110.00, 1, 'active');
 SET @glt_p25_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p25_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XS')),
 (@glt_p25_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p25, @glt_vendor, 'GLT-BABY-ONESIE-S-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 110.00, 0, 'active');
+(UUID(), @glt_p25, @glt_vendor, 'GLT-BABY-ONESIE-S-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 110.00, 0, 'active');
 SET @glt_p25_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p25_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p25_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p25, @glt_vendor, 'GLT-BABY-ONESIE-XS-YLW', (SELECT id FROM units WHERE code='pcs'), NULL, 165.00, 110.00, 0, 'active');
+(UUID(), @glt_p25, @glt_vendor, 'GLT-BABY-ONESIE-XS-YLW', (SELECT id FROM units WHERE code='pcs'), 0.0000, 165.00, 110.00, 0, 'active');
 SET @glt_p25_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p25_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XS')),
@@ -10287,25 +10287,25 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p26, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p26, @glt_vendor, 'GLT-TRACKPANT-S-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 215.00, 1, 'active');
+(UUID(), @glt_p26, @glt_vendor, 'GLT-TRACKPANT-S-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 215.00, 1, 'active');
 SET @glt_p26_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p26_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p26_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p26, @glt_vendor, 'GLT-TRACKPANT-M-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 215.00, 0, 'active');
+(UUID(), @glt_p26, @glt_vendor, 'GLT-TRACKPANT-M-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 215.00, 0, 'active');
 SET @glt_p26_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p26_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p26_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p26, @glt_vendor, 'GLT-TRACKPANT-L-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 215.00, 0, 'active');
+(UUID(), @glt_p26, @glt_vendor, 'GLT-TRACKPANT-L-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 215.00, 0, 'active');
 SET @glt_p26_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p26_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
 (@glt_p26_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p26, @glt_vendor, 'GLT-TRACKPANT-XL-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 310.00, 215.00, 0, 'active');
+(UUID(), @glt_p26, @glt_vendor, 'GLT-TRACKPANT-XL-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 310.00, 215.00, 0, 'active');
 SET @glt_p26_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p26_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL')),
@@ -10319,19 +10319,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p27, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p27, @glt_vendor, 'GLT-JACKET-HEMP-M-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 620.00, 1, 'active');
+(UUID(), @glt_p27, @glt_vendor, 'GLT-JACKET-HEMP-M-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 620.00, 1, 'active');
 SET @glt_p27_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p27_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p27_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p27, @glt_vendor, 'GLT-JACKET-HEMP-L-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 620.00, 0, 'active');
+(UUID(), @glt_p27, @glt_vendor, 'GLT-JACKET-HEMP-L-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 620.00, 0, 'active');
 SET @glt_p27_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p27_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
 (@glt_p27_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p27, @glt_vendor, 'GLT-JACKET-HEMP-XL-BEG', (SELECT id FROM units WHERE code='pcs'), NULL, 890.00, 620.00, 0, 'active');
+(UUID(), @glt_p27, @glt_vendor, 'GLT-JACKET-HEMP-XL-BEG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 890.00, 620.00, 0, 'active');
 SET @glt_p27_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p27_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL')),
@@ -10345,17 +10345,17 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p28, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p28, @glt_vendor, 'GLT-DHOTI-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 275.00, 190.00, 1, 'active');
+(UUID(), @glt_p28, @glt_vendor, 'GLT-DHOTI-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 275.00, 190.00, 1, 'active');
 SET @glt_p28_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p28_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p28, @glt_vendor, 'GLT-DHOTI-BEG', (SELECT id FROM units WHERE code='pcs'), NULL, 275.00, 190.00, 0, 'active');
+(UUID(), @glt_p28, @glt_vendor, 'GLT-DHOTI-BEG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 275.00, 190.00, 0, 'active');
 SET @glt_p28_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p28_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p28, @glt_vendor, 'GLT-DHOTI-GLD', (SELECT id FROM units WHERE code='pcs'), NULL, 275.00, 190.00, 0, 'active');
+(UUID(), @glt_p28, @glt_vendor, 'GLT-DHOTI-GLD', (SELECT id FROM units WHERE code='pcs'), 0.0000, 275.00, 190.00, 0, 'active');
 SET @glt_p28_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p28_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Gold'));
@@ -10368,27 +10368,27 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p29, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-RED', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 85.00, 1, 'active');
+(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-RED', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 85.00, 1, 'active');
 SET @glt_p29_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p29_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Red'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 85.00, 0, 'active');
+(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 85.00, 0, 'active');
 SET @glt_p29_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p29_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 85.00, 0, 'active');
+(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 85.00, 0, 'active');
 SET @glt_p29_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p29_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-BEG', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 85.00, 0, 'active');
+(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-BEG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 85.00, 0, 'active');
 SET @glt_p29_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p29_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-MRN', (SELECT id FROM units WHERE code='pcs'), NULL, 130.00, 85.00, 0, 'active');
+(UUID(), @glt_p29, @glt_vendor, 'GLT-SCARF-MRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 130.00, 85.00, 0, 'active');
 SET @glt_p29_v5 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p29_v5, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Maroon'));
@@ -10401,25 +10401,25 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p30, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p30, @glt_vendor, 'GLT-UNIFORM-SHIRT-S-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 145.00, 1, 'active');
+(UUID(), @glt_p30, @glt_vendor, 'GLT-UNIFORM-SHIRT-S-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 145.00, 1, 'active');
 SET @glt_p30_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p30_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p30_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p30, @glt_vendor, 'GLT-UNIFORM-SHIRT-M-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 145.00, 0, 'active');
+(UUID(), @glt_p30, @glt_vendor, 'GLT-UNIFORM-SHIRT-M-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 145.00, 0, 'active');
 SET @glt_p30_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p30_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p30_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p30, @glt_vendor, 'GLT-UNIFORM-SHIRT-L-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 145.00, 0, 'active');
+(UUID(), @glt_p30, @glt_vendor, 'GLT-UNIFORM-SHIRT-L-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 145.00, 0, 'active');
 SET @glt_p30_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p30_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
 (@glt_p30_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Blue'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p30, @glt_vendor, 'GLT-UNIFORM-SHIRT-XL-BLU', (SELECT id FROM units WHERE code='pcs'), NULL, 210.00, 145.00, 0, 'active');
+(UUID(), @glt_p30, @glt_vendor, 'GLT-UNIFORM-SHIRT-XL-BLU', (SELECT id FROM units WHERE code='pcs'), 0.0000, 210.00, 145.00, 0, 'active');
 SET @glt_p30_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p30_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL')),
@@ -10433,22 +10433,22 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p31, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p31, @glt_vendor, 'GLT-BOXER-PK3-S', (SELECT id FROM units WHERE code='box'), NULL, 190.00, 125.00, 1, 'active');
+(UUID(), @glt_p31, @glt_vendor, 'GLT-BOXER-PK3-S', (SELECT id FROM units WHERE code='box'), 0.0000, 190.00, 125.00, 1, 'active');
 SET @glt_p31_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p31_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p31, @glt_vendor, 'GLT-BOXER-PK3-M', (SELECT id FROM units WHERE code='box'), NULL, 190.00, 125.00, 0, 'active');
+(UUID(), @glt_p31, @glt_vendor, 'GLT-BOXER-PK3-M', (SELECT id FROM units WHERE code='box'), 0.0000, 190.00, 125.00, 0, 'active');
 SET @glt_p31_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p31_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p31, @glt_vendor, 'GLT-BOXER-PK3-L', (SELECT id FROM units WHERE code='box'), NULL, 190.00, 125.00, 0, 'active');
+(UUID(), @glt_p31, @glt_vendor, 'GLT-BOXER-PK3-L', (SELECT id FROM units WHERE code='box'), 0.0000, 190.00, 125.00, 0, 'active');
 SET @glt_p31_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p31_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p31, @glt_vendor, 'GLT-BOXER-PK3-XL', (SELECT id FROM units WHERE code='box'), NULL, 190.00, 125.00, 0, 'active');
+(UUID(), @glt_p31, @glt_vendor, 'GLT-BOXER-PK3-XL', (SELECT id FROM units WHERE code='box'), 0.0000, 190.00, 125.00, 0, 'active');
 SET @glt_p31_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p31_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL'));
@@ -10461,27 +10461,27 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p32, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-S', (SELECT id FROM units WHERE code='box'), NULL, 150.00, 100.00, 1, 'active');
+(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-S', (SELECT id FROM units WHERE code='box'), 0.0000, 150.00, 100.00, 1, 'active');
 SET @glt_p32_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p32_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-M', (SELECT id FROM units WHERE code='box'), NULL, 150.00, 100.00, 0, 'active');
+(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-M', (SELECT id FROM units WHERE code='box'), 0.0000, 150.00, 100.00, 0, 'active');
 SET @glt_p32_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p32_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-L', (SELECT id FROM units WHERE code='box'), NULL, 150.00, 100.00, 0, 'active');
+(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-L', (SELECT id FROM units WHERE code='box'), 0.0000, 150.00, 100.00, 0, 'active');
 SET @glt_p32_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p32_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-XL', (SELECT id FROM units WHERE code='box'), NULL, 150.00, 100.00, 0, 'active');
+(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-XL', (SELECT id FROM units WHERE code='box'), 0.0000, 150.00, 100.00, 0, 'active');
 SET @glt_p32_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p32_v4, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-XXL', (SELECT id FROM units WHERE code='box'), NULL, 150.00, 100.00, 0, 'active');
+(UUID(), @glt_p32, @glt_vendor, 'GLT-VEST-PK5-XXL', (SELECT id FROM units WHERE code='box'), 0.0000, 150.00, 100.00, 0, 'active');
 SET @glt_p32_v5 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p32_v5, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XXL'));
@@ -10494,19 +10494,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p33, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p33, @glt_vendor, 'GLT-MATERNITY-TOP-S-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 235.00, 1, 'active');
+(UUID(), @glt_p33, @glt_vendor, 'GLT-MATERNITY-TOP-S-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 235.00, 1, 'active');
 SET @glt_p33_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p33_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='S')),
 (@glt_p33_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p33, @glt_vendor, 'GLT-MATERNITY-TOP-M-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 235.00, 0, 'active');
+(UUID(), @glt_p33, @glt_vendor, 'GLT-MATERNITY-TOP-M-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 235.00, 0, 'active');
 SET @glt_p33_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p33_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p33_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p33, @glt_vendor, 'GLT-MATERNITY-TOP-L-PNK', (SELECT id FROM units WHERE code='pcs'), NULL, 340.00, 235.00, 0, 'active');
+(UUID(), @glt_p33, @glt_vendor, 'GLT-MATERNITY-TOP-L-PNK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 340.00, 235.00, 0, 'active');
 SET @glt_p33_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p33_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
@@ -10520,19 +10520,19 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p34, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p34, @glt_vendor, 'GLT-CHEFCOAT-M-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 290.00, 1, 'active');
+(UUID(), @glt_p34, @glt_vendor, 'GLT-CHEFCOAT-M-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 290.00, 1, 'active');
 SET @glt_p34_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p34_v1, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='M')),
 (@glt_p34_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p34, @glt_vendor, 'GLT-CHEFCOAT-L-WHT', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @glt_p34, @glt_vendor, 'GLT-CHEFCOAT-L-WHT', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @glt_p34_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p34_v2, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='L')),
 (@glt_p34_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='White'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p34, @glt_vendor, 'GLT-CHEFCOAT-XL-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 420.00, 290.00, 0, 'active');
+(UUID(), @glt_p34, @glt_vendor, 'GLT-CHEFCOAT-XL-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 420.00, 290.00, 0, 'active');
 SET @glt_p34_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p34_v3, (SELECT id FROM attributes WHERE code='size'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='size' AND av.value='XL')),
@@ -10546,22 +10546,22 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p35, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p35, @glt_vendor, 'GLT-CAP-BLK', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 1, 'active');
+(UUID(), @glt_p35, @glt_vendor, 'GLT-CAP-BLK', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 1, 'active');
 SET @glt_p35_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p35_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Black'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p35, @glt_vendor, 'GLT-CAP-NVY', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 0, 'active');
+(UUID(), @glt_p35, @glt_vendor, 'GLT-CAP-NVY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 0, 'active');
 SET @glt_p35_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p35_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Navy'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p35, @glt_vendor, 'GLT-CAP-BEG', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 0, 'active');
+(UUID(), @glt_p35, @glt_vendor, 'GLT-CAP-BEG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 0, 'active');
 SET @glt_p35_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p35_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p35, @glt_vendor, 'GLT-CAP-GRY', (SELECT id FROM units WHERE code='pcs'), NULL, 95.00, 60.00, 0, 'active');
+(UUID(), @glt_p35, @glt_vendor, 'GLT-CAP-GRY', (SELECT id FROM units WHERE code='pcs'), 0.0000, 95.00, 60.00, 0, 'active');
 SET @glt_p35_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p35_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Grey'));
@@ -10574,22 +10574,22 @@ INSERT INTO product_content (product_id, short_description, full_description) VA
 INSERT INTO product_mshops (product_id, mshop_id, status, listed_at) VALUES
 (@glt_p36, @glt_mshop, 'active', NOW());
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p36, @glt_vendor, 'GLT-GROCERYBAG-GRN', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 55.00, 1, 'active');
+(UUID(), @glt_p36, @glt_vendor, 'GLT-GROCERYBAG-GRN', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 55.00, 1, 'active');
 SET @glt_p36_v1 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p36_v1, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Green'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p36, @glt_vendor, 'GLT-GROCERYBAG-YLW', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 55.00, 0, 'active');
+(UUID(), @glt_p36, @glt_vendor, 'GLT-GROCERYBAG-YLW', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 55.00, 0, 'active');
 SET @glt_p36_v2 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p36_v2, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Yellow'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p36, @glt_vendor, 'GLT-GROCERYBAG-ORG', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 55.00, 0, 'active');
+(UUID(), @glt_p36, @glt_vendor, 'GLT-GROCERYBAG-ORG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 55.00, 0, 'active');
 SET @glt_p36_v3 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p36_v3, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Orange'));
 INSERT INTO product_variants (uuid, product_id, vendor_id, sku, unit_id, mrp, base_price, making_price, is_default, status) VALUES
-(UUID(), @glt_p36, @glt_vendor, 'GLT-GROCERYBAG-BEG', (SELECT id FROM units WHERE code='pcs'), NULL, 85.00, 55.00, 0, 'active');
+(UUID(), @glt_p36, @glt_vendor, 'GLT-GROCERYBAG-BEG', (SELECT id FROM units WHERE code='pcs'), 0.0000, 85.00, 55.00, 0, 'active');
 SET @glt_p36_v4 := LAST_INSERT_ID();
 INSERT INTO variant_attribute_values (variant_id, attribute_id, attribute_value_id) VALUES
 (@glt_p36_v4, (SELECT id FROM attributes WHERE code='color'), (SELECT av.id FROM attribute_values av JOIN attributes a ON a.id=av.attribute_id WHERE a.code='color' AND av.value='Beige'));
