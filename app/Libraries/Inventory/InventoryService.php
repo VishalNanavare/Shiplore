@@ -103,8 +103,15 @@ final class InventoryService
         $db->transBegin();
         try {
             $this->ensureRow($variantId, $shopId, $db);
-            $lvl = $this->levels($variantId, $shopId);
-            if ((float) $lvl['available'] < $qty) {
+            // Audit M18: lock the row this check authorises a write against — the
+            // same read-check-write shape H7 fixed on checkout. Without FOR UPDATE,
+            // two concurrent reservations for the last unit could both read the same
+            // available qty, both pass, and both reserve.
+            $avail = (float) ($db->query(
+                'SELECT available FROM inventory WHERE variant_id = ? AND shop_id = ? FOR UPDATE',
+                [$variantId, $shopId],
+            )->getRowArray()['available'] ?? 0);
+            if ($avail < $qty) {
                 $db->transRollback();
 
                 return false;
@@ -387,17 +394,25 @@ final class InventoryService
     /** Consume $qty from the oldest open cost batches (FIFO) so layers track on_hand. */
     private function consumeBatches(int $variantId, int $shopId, float $qty, object $db): void
     {
-        $need    = max(0.0, $qty);
-        $batches = $db->table('stock_batches')->select('id, qty')
-            ->where('variant_id', $variantId)->where('shop_id', $shopId)->where('qty >', 0)
-            ->where('status', 'active')->where('deleted_at', null)
-            ->orderBy('COALESCE(mfg_date, created_at) ASC, id ASC', '', false)->get()->getResultArray();
+        $need = max(0.0, $qty);
+        // Audit M18: FOR UPDATE locks the layer rows this method is about to
+        // decrement, so two concurrent consumers (e.g. two POS terminals selling
+        // the same variant) can't both read the same qty and both take from it.
+        $batches = $db->query(
+            "SELECT id, qty FROM stock_batches
+              WHERE variant_id = ? AND shop_id = ? AND qty > 0 AND status = 'active' AND deleted_at IS NULL
+              ORDER BY COALESCE(mfg_date, created_at) ASC, id ASC
+              FOR UPDATE",
+            [$variantId, $shopId],
+        )->getResultArray();
         foreach ($batches as $b) {
             if ($need <= 0) {
                 break;
             }
             $take = min((float) $b['qty'], $need);
-            $db->table('stock_batches')->where('id', (int) $b['id'])->set('qty', 'qty - ' . $take, false)->update();
+            // Floored to match bump()'s existing GREATEST floor — defence in depth
+            // alongside the lock above, not a substitute for it.
+            $db->table('stock_batches')->where('id', (int) $b['id'])->set('qty', 'GREATEST(qty - ' . $take . ', 0)', false)->update();
             $need -= $take;
         }
     }
