@@ -57,10 +57,13 @@ final class RefundSubOrderResolutionTest extends CIUnitTestCase
             $body,
             'must look up the return to find the sub-order it actually names, or a multi-product refund keeps using the first sub-order of the order',
         );
-        $this->assertStringContainsString(
-            "where('so.id', \$subOrderId)",
+        // Not just present in the method — genuinely gated on $subOrderId !== null,
+        // so a mutation like `if (false)` (which still contains the where() text)
+        // is caught rather than passing vacuously.
+        $this->assertMatchesRegularExpression(
+            "/if\s*\(\s*\\\$subOrderId\s*!==\s*null\s*\)\s*\{\s*\\\$builder->where\('so\.id',\s*\\\$subOrderId\)/",
             $body,
-            'the payment/sub-order query must be constrained to the returned sub-order once one is known',
+            'the payment/sub-order query must be constrained to the returned sub-order once one is known, and that constraint must actually run',
         );
 
         // $subOrderId must be resolved BEFORE the payment/sub-order row is queried,
