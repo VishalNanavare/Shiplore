@@ -162,6 +162,17 @@ final class StoreOrderRepository
             // sub-order so cancel / return / refund + invoicing are managed per
             // product. (Invoicing is already per sub-order, so each product bills
             // independently for free.)
+            // H11 (safe half): allocate the order-level coupon discount pro-rata by
+            // line value and RECORD it on each sub-order, so the drift between
+            // orders.discount_total and SUM(sub_orders.*) is visible/auditable.
+            // Deliberately NOT applied to GST or commission below — that basis
+            // change is High regression risk (moves stored money on every future
+            // couponed order) and is a separate, deferred accounting decision.
+            $discAllocations = self::allocateDiscount(
+                (float) ($totals['discount'] ?? 0),
+                array_map(static fn ($it) => (float) $it['line_total'], $items),
+            );
+
             $seq = 0;
             $placedSubs = []; // for the T+0 "new order" shop notification (after commit)
             foreach ($items as $it) {
@@ -187,6 +198,7 @@ final class StoreOrderRepository
                     'sgst'              => $this->n((float) $g['sgst']),
                     'igst'              => $this->n((float) $g['igst']),
                     'delivery_total'    => '0.0000',
+                    'discount_total'    => $discAllocations[$seq - 1],
                     'grand_total'       => $this->n($lineTotal),
                     'commission_amount' => $this->n($comm),
                     'place_of_supply'   => $custState,
@@ -880,5 +892,34 @@ final class StoreOrderRepository
     private function n(float $v, int $dp = 4): string
     {
         return number_format(round($v, $dp), $dp, '.', '');
+    }
+
+    /**
+     * Pro-rata allocation of an order-level discount across cart lines by line
+     * value; the last line absorbs the rounding remainder so the parts always sum
+     * back to $discountTotal exactly, to the paisa (audit H11, safe half). Pure.
+     *
+     * @param  list<float> $lineTotals
+     * @return list<string> one 4dp amount per line, same order as $lineTotals
+     */
+    public static function allocateDiscount(float $discountTotal, array $lineTotals): array
+    {
+        $lineSum = array_sum($lineTotals);
+        if ($discountTotal <= 0 || $lineSum <= 0) {
+            return array_fill(0, count($lineTotals), '0.0000');
+        }
+
+        $out       = [];
+        $allocated = 0.0;
+        $last      = count($lineTotals) - 1;
+        foreach (array_values($lineTotals) as $i => $gross) {
+            $disc = $i === $last
+                ? round($discountTotal - $allocated, 2)
+                : round($discountTotal * $gross / $lineSum, 2);
+            $allocated += $disc;
+            $out[]      = number_format($disc, 4, '.', '');
+        }
+
+        return $out;
     }
 }
