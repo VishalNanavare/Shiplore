@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Libraries\Workflow\StatusMachine;
 use Config\Database;
 use Throwable;
 
@@ -45,22 +46,6 @@ final class DeliveryRepository
         return $row ?: null;
     }
 
-    /**
-     * Forward delivery-status transitions (admin manual control). Mirrors the
-     * deliveries enum (database/sql/65_delivery_arrived.sql) which inserts
-     * 'arrived' between picked_up and out_for_delivery.
-     */
-    public const FLOW = [
-        'pending'          => ['assigned', 'out_for_delivery', 'failed'],
-        'assigned'         => ['picked_up', 'arrived', 'out_for_delivery', 'failed'],
-        'picked_up'        => ['arrived', 'out_for_delivery', 'failed'],
-        'arrived'          => ['out_for_delivery', 'failed'],
-        'out_for_delivery' => ['delivered', 'failed', 'returned'],
-        'failed'           => ['out_for_delivery', 'returned'],
-        'delivered'        => [],
-        'returned'         => [],
-    ];
-
     /** All real delivery states — the allowed targets for a $force admin override. */
     public const STATES = ['pending', 'assigned', 'picked_up', 'arrived', 'out_for_delivery', 'delivered', 'failed', 'returned'];
 
@@ -83,8 +68,8 @@ final class DeliveryRepository
             if (! in_array($to, self::STATES, true)) {
                 return false; // override still requires a real target state
             }
-        } elseif ($from !== $to && ! in_array($to, self::FLOW[$from] ?? [], true)) {
-            return false; // normal path: only forward transitions
+        } elseif (! StatusMachine::canDelivery($from, $to)) {
+            return false; // normal path: only forward transitions (StatusMachine::allowed() treats from===to as a no-op)
         }
 
         $patch = ['status' => $to, 'updated_by' => $actorId];

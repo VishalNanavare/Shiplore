@@ -43,7 +43,7 @@ final class DeliveryController extends BaseController
             'active'    => 'deliveries',
             'userName'  => session()->get('user_name') ?: 'User',
             'delivery'  => $delivery,
-            'next'      => \App\Models\DeliveryRepository::FLOW[$delivery['status']] ?? [],
+            'next'      => \App\Libraries\Workflow\StatusMachine::allowedNextDelivery((string) $delivery['status']),
         ]);
     }
 

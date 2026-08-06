@@ -47,13 +47,20 @@ final class StatusMachine
         'rejected'           => [], 'cancelled' => [], 'closed' => [],
     ];
 
+    /**
+     * Reconciled (audit M27) with the private copy DeliveryRepository::FLOW used
+     * to carry — the union of what either door already allowed, so nothing that
+     * worked before stops working. Drops the phantom 'reassigned' state: it is a
+     * value of delivery_assignments.status, not deliveries.status, so it can never
+     * legitimately appear here as a FROM state.
+     */
     private const DELIVERY = [
-        'pending' => ['assigned', 'failed'],
-        'assigned' => ['picked_up', 'failed', 'reassigned'],
+        'pending' => ['assigned', 'out_for_delivery', 'failed'],
+        'assigned' => ['picked_up', 'arrived', 'out_for_delivery', 'failed'],
         'picked_up' => ['arrived', 'out_for_delivery', 'failed', 'returned'],
         'arrived' => ['out_for_delivery', 'failed', 'returned'],
         'out_for_delivery' => ['delivered', 'failed', 'returned'],
-        'delivered' => [], 'failed' => ['assigned', 'returned'], 'returned' => [], 'reassigned' => ['assigned'],
+        'delivered' => [], 'failed' => ['assigned', 'out_for_delivery', 'returned'], 'returned' => [],
     ];
 
     private const REFUND = [
@@ -78,6 +85,12 @@ final class StatusMachine
     public static function allowedNextSubOrder(string $from): array
     {
         return self::SUB_ORDER[$from] ?? [];
+    }
+
+    /** @return list<string> Valid next statuses for a delivery in the given state — the admin "next status" UI hint. */
+    public static function allowedNextDelivery(string $from): array
+    {
+        return self::DELIVERY[$from] ?? [];
     }
 
     public static function canProduct(string $from, string $to): bool

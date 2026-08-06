@@ -38,6 +38,44 @@ final class StatusMachineTest extends TestCase
         $this->assertFalse(StatusMachine::canDelivery('delivered', 'assigned'));
     }
 
+    /**
+     * M27: DeliveryRepository::FLOW (admin panel) and StatusMachine::DELIVERY
+     * (rider app) disagreed on 5 transitions — whichever door a request came
+     * through decided if it was legal. The fix reconciles DELIVERY to the union:
+     * every one of the 5 previously one-door-only moves must now be legal from
+     * both, and the phantom 'reassigned' state (a delivery_assignments.status
+     * value, not a deliveries.status one) must be gone.
+     */
+    public function testDeliveryUnionIncludesTransitionsThatOnlyOneDoorAllowedBefore(): void
+    {
+        // Previously admin-only (DeliveryRepository::FLOW), now must also hold via StatusMachine.
+        $this->assertTrue(StatusMachine::canDelivery('pending', 'out_for_delivery'));
+        $this->assertTrue(StatusMachine::canDelivery('assigned', 'arrived'));
+        // Previously rider-only (StatusMachine::DELIVERY), now must also hold via the union.
+        $this->assertTrue(StatusMachine::canDelivery('picked_up', 'returned'));
+        $this->assertTrue(StatusMachine::canDelivery('arrived', 'returned'));
+    }
+
+    /** The phantom 'reassigned' state described a delivery_assignments row, not a deliveries.status value. */
+    public function testReassignedIsNotAValidDeliveryFromState(): void
+    {
+        $this->assertFalse(StatusMachine::canDelivery('reassigned', 'assigned'));
+    }
+
+    /** Truly illegal moves must stay rejected after reconciliation — the union widens, it doesn't legalise everything. */
+    public function testDeliveryStillRejectsGenuinelyIllegalMoves(): void
+    {
+        $this->assertFalse(StatusMachine::canDelivery('delivered', 'pending'));
+        $this->assertFalse(StatusMachine::canDelivery('returned', 'assigned'));
+    }
+
+    /** The admin "what can this move to next" UI hint must now read from StatusMachine, the single owner. */
+    public function testAllowedNextDeliveryMirrorsTheReconciledMap(): void
+    {
+        $this->assertSame(['assigned', 'out_for_delivery', 'failed'], StatusMachine::allowedNextDelivery('pending'));
+        $this->assertSame([], StatusMachine::allowedNextDelivery('delivered'));
+    }
+
     public function testRefundTransitions(): void
     {
         $this->assertTrue(StatusMachine::canRefund('initiated', 'completed'));
