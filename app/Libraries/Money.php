@@ -83,6 +83,17 @@ final class Money
         return self::fromUnits(self::roundDiv($this->units * $qtyUnits, self::FACTOR));
     }
 
+    /**
+     * Multiply by an exact rational ratio num/den (both integers), rounded
+     * half-up at scale 4. Lets a caller apply a percentage/ratio (e.g. inclusive
+     * GST division) entirely in integer arithmetic instead of a float division —
+     * the class exists to avoid exactly that representation error.
+     */
+    public function mulRatio(int $num, int $den): self
+    {
+        return self::fromUnits(self::roundDiv($this->units * $num, $den));
+    }
+
     /** Round to $dp decimal places (0..4), half-up, returned at scale 4. */
     public function roundTo(int $dp): self
     {

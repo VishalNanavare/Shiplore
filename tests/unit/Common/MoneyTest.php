@@ -50,6 +50,14 @@ final class MoneyTest extends TestCase
         $this->assertSame('1.0100', Money::of('1.005')->roundTo(2)->amount());
     }
 
+    /** Audit L10: GstCalculator needs an exact-ratio multiply to do inclusive-GST division without float. */
+    public function testMultiplyByRatio(): void
+    {
+        $this->assertSame('50.0000', Money::of('100')->mulRatio(1, 2)->amount());
+        // 100 / 1.18, expressed as the ratio 10000/11800 — half-up at scale 4.
+        $this->assertSame('84.7458', Money::of('100')->mulRatio(10000, 11800)->amount());
+    }
+
     public function testEquals(): void
     {
         $this->assertTrue(Money::of('10')->equals(Money::of('10.0000')));

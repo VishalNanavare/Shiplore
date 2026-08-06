@@ -68,4 +68,37 @@ final class GstCalculatorTest extends TestCase
         $this->assertTrue($c->isInterState('27', '29'));
         $this->assertFalse($c->isInterState('27', '27'));
     }
+
+    // ------------------------------------------------------------------ L10 (Money-backed arithmetic)
+
+    /** Hand-verified reference values for ₹1000 inclusive @ 18% — pins the Money-backed computation exactly. */
+    public function testInclusiveEighteenPercentOnOneThousandRupees(): void
+    {
+        $r = (new GstCalculator())->compute('1000', 18.0, true, false);
+        $this->assertSame('847.46', $r['taxable']);
+        $this->assertSame('152.54', $r['tax']);
+        $this->assertSame('76.27', $r['cgst']);
+        $this->assertSame('76.27', $r['sgst']);
+        $this->assertSame('1000.00', $r['total']);
+    }
+
+    /**
+     * A malformed amount must not throw — callers pass (string) casts of float
+     * expressions, which can render as "1.0E-5"; Money::of() throws on that, and
+     * an exception inside StoreOrderRepository::place() would roll back the whole
+     * order. The norm() guard must catch this before it ever reaches Money::of().
+     */
+    public function testMalformedAmountIsNormalisedRatherThanThrown(): void
+    {
+        $r = (new GstCalculator())->compute('1.0E-5', 18.0, true, false);
+        $this->assertSame('0.00', $r['taxable']);
+        $this->assertSame('0.00', $r['total']);
+    }
+
+    /** A plain decimal amount must still work exactly as before after norm(). */
+    public function testNormLeavesAPlainDecimalUnchanged(): void
+    {
+        $r = (new GstCalculator())->compute('  100.50  ', 18.0, false, false);
+        $this->assertSame('100.50', $r['taxable']);
+    }
 }
