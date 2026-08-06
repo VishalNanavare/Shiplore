@@ -24,7 +24,12 @@ final class AuditLogRepository
             ->limit($limit);
 
         if ($action !== null && $action !== '') {
-            $builder->like('a.action', $action);
+            // Prefix match, not a leading-wildcard scan: action codes are dotted
+            // prefixes (order., product., monline.), and idx_audit_action can serve
+            // 'action%' as a range scan on this append-only, ever-growing table.
+            // Narrower than before on purpose — 'login' no longer matches
+            // 'auth.login' (audit L8).
+            $builder->like('a.action', $action, 'after');
         }
 
         return $builder->get()->getResultArray();
