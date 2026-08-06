@@ -115,12 +115,12 @@ final class VendorPosController extends BaseApiController
         }
 
         // Issue a mobile JWT identical in structure to AuthApiController::otpVerify.
-        $token = service('tokenService')->issue(
-            ['sub' => (int) $user['id'], 'typ' => 'vendor', 'name' => (string) $user['name']],
-            self::TOKEN_TTL,
-            \App\Libraries\TokenService::secret(),
-            time(),
-        );
+        $claims = ['sub' => (int) $user['id'], 'typ' => 'vendor', 'name' => (string) $user['name']];
+        $pwd    = \App\Libraries\TokenService::pwdClaim($user['password_hash'] ?? null);
+        if ($pwd !== null) {
+            $claims['pwd'] = $pwd;
+        }
+        $token = service('tokenService')->issue($claims, self::TOKEN_TTL, \App\Libraries\TokenService::secret(), time());
 
         return $this->ok([
             'token'      => $token,
@@ -225,12 +225,12 @@ final class VendorPosController extends BaseApiController
             return $this->failWith('FORBIDDEN', 'No vendor profile found for this account.');
         }
 
-        $token = service('tokenService')->issue(
-            ['sub' => (int) $user['id'], 'typ' => 'vendor', 'name' => (string) $user['name']],
-            self::TOKEN_TTL,
-            \App\Libraries\TokenService::secret(),
-            time(),
-        );
+        $claims = ['sub' => (int) $user['id'], 'typ' => 'vendor', 'name' => (string) $user['name']];
+        $pwd    = \App\Libraries\TokenService::pwdClaim($user['password_hash'] ?? null);
+        if ($pwd !== null) {
+            $claims['pwd'] = $pwd;
+        }
+        $token = service('tokenService')->issue($claims, self::TOKEN_TTL, \App\Libraries\TokenService::secret(), time());
 
         return $this->ok([
             'token'      => $token,

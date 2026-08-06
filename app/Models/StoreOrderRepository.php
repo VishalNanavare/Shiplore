@@ -25,34 +25,51 @@ final class StoreOrderRepository
             return null;
         }
 
-        $db  = Database::connect();
+        $db = Database::connect();
 
-        // Backstop validation for EVERY caller (web checkout + mobile API): enforce
-        // purchase rules (min/max/step) and an oversell guard on each line. The web
-        // controller validates earlier with nicer messages; this guarantees the API
-        // and any stale cart can never bypass it.
-        $catalog = service('storeCatalogRepository');
-        foreach ($items as $it) {
-            $vid = (int) $it['variant_id'];
-            $qty = (float) $it['qty'];
-            if (! \App\Libraries\Catalog\PurchaseRules::validate($qty, $catalog->purchaseRulesForVariant($vid))['ok']) {
-                return null; // qty violates min/max/step
-            }
-            $avail = (float) ($db->table('inventory i')
-                ->selectSum('i.available', 'avail')
-                ->join('shops s', 's.id = i.shop_id', 'left')
-                ->where('i.variant_id', $vid)->where('s.vendor_id', (int) $it['vendor_id'])
-                ->where('s.deleted_at', null)->get()->getRowArray()['avail'] ?? 0);
-            if ($avail > 0 && $avail < $qty) {
-                return null; // insufficient stock -> checkout shows a retry message
-            }
-        }
+        // Sort by variant id BEFORE any locking begins, so two multi-item carts
+        // racing for the same variants always acquire their FOR UPDATE locks in the
+        // same order (audit H7 fix note) — avoids a deadlock between two concurrent
+        // checkouts. $items order is not otherwise significant ($seq below is just
+        // a counter and the cart is single-vertical).
+        usort($items, static fn ($a, $b) => ((int) $a['variant_id']) <=> ((int) $b['variant_id']));
 
-        $gst = service('gstCalculator');
+        $catalog    = service('storeCatalogRepository');
+        $gst        = service('gstCalculator');
         $commission = service('commissionService');
         $db->transBegin();
 
         try {
+            // Backstop validation for EVERY caller (web checkout + mobile API). This
+            // now runs INSIDE the transaction and takes row locks: the stock check
+            // used to run before transBegin(), unlocked — two (or twenty) concurrent
+            // checkouts for the last unit could all read the same available qty, all
+            // pass, and all decrement. FOR UPDATE serialises them; only as many as
+            // there is real stock for pass. The $avail > 0 zero-stock hole (both live
+            // callers already catch that via qtyError()) is deliberately left as-is,
+            // so no currently-accepted order starts failing.
+            foreach ($items as $it) {
+                $vid = (int) $it['variant_id'];
+                $qty = (float) $it['qty'];
+                if (! \App\Libraries\Catalog\PurchaseRules::validate($qty, $catalog->purchaseRulesForVariant($vid))['ok']) {
+                    $db->transRollback();
+
+                    return null; // qty violates min/max/step
+                }
+                $avail = (float) ($db->query(
+                    'SELECT COALESCE(SUM(i.available),0) AS avail FROM inventory i
+                       LEFT JOIN shops s ON s.id = i.shop_id
+                      WHERE i.variant_id = ? AND s.vendor_id = ? AND s.deleted_at IS NULL
+                      FOR UPDATE',
+                    [$vid, (int) $it['vendor_id']],
+                )->getRowArray()['avail'] ?? 0);
+                if ($avail > 0 && $avail < $qty) {
+                    $db->transRollback();
+
+                    return null; // insufficient stock -> checkout shows a retry message
+                }
+            }
+
             $now     = date('Y-m-d H:i:s');
             $orderNo = 'ORD-' . date('Ymd') . '-' . $rand;
             $custState = (string) ($address['state_code'] ?? '27');
@@ -85,18 +102,58 @@ final class StoreOrderRepository
             ]);
             $orderId = (int) $db->insertID();
 
-            // Record coupon redemption + bump usage (audit trail; enforces usage_limit).
+            // Record coupon redemption + bump usage (audit trail; enforces usage_limit
+            // and per_user_limit — audit H8). Both limits used to be checked only in
+            // validate(), a separate request phase from this increment, with no lock
+            // between them and no predicate on the UPDATE: N concurrent checkouts
+            // could all read used_count = limit - 1 and all place, or the same
+            // customer could redeem a per-user-limited coupon N times in parallel.
+            // $totals already has the discount baked in by the caller, so a coupon
+            // that turns out to be exhausted under the race can only be handled by
+            // aborting this order (the caller already treats a null return as a
+            // generic "could not place order, please retry", and a retry's own
+            // pre-place validate() step drops an exhausted coupon before ever
+            // reaching here) — silently dropping it here would charge/record totals
+            // that assumed the discount applied.
             if ($coupon !== null && $coupon !== '') {
-                $cp = $db->table('coupons')->select('id')->where('code', strtoupper($coupon))->where('deleted_at', null)->get()->getRowArray();
+                $cp = $db->table('coupons')->select('id, per_user_limit')->where('code', strtoupper($coupon))->where('deleted_at', null)->get()->getRowArray();
                 if ($cp !== null) {
+                    $couponId = (int) $cp['id'];
+
+                    // The UPDATE carries the limit predicate so it is the enforcement
+                    // point, not validate(): two concurrent checkouts both read the
+                    // same used_count, but only one can satisfy
+                    // `used_count < usage_limit` under the row lock the UPDATE itself
+                    // takes.
+                    $db->table('coupons')->where('id', $couponId)
+                        ->groupStart()->where('usage_limit', null)
+                            ->orWhere('used_count < usage_limit', null, false)->groupEnd()
+                        ->set('used_count', 'used_count + 1', false)->update();
+
+                    if ($db->affectedRows() !== 1) {
+                        $db->transRollback();
+
+                        return null;
+                    }
+
+                    $lim = $cp['per_user_limit'] !== null ? (int) $cp['per_user_limit'] : 0;
+                    if ($lim > 0) {
+                        $used = $db->table('coupon_redemptions')
+                            ->where('coupon_id', $couponId)->where('customer_id', $customerId)->countAllResults();
+                        if ($used >= $lim) {
+                            $db->transRollback();
+
+                            return null;
+                        }
+                    }
+
                     $db->table('coupon_redemptions')->insert([
-                        'coupon_id'       => (int) $cp['id'],
+                        'coupon_id'       => $couponId,
                         'customer_id'     => $customerId,
                         'order_id'        => $orderId,
                         'discount_amount' => $this->n((float) ($totals['discount'] ?? 0)),
                         'redeemed_at'     => $now,
                     ]);
-                    $db->table('coupons')->where('id', (int) $cp['id'])->set('used_count', 'used_count + 1', false)->update();
                 }
             }
 
@@ -162,6 +219,25 @@ final class StoreOrderRepository
                 if ($shopId !== null) {
                     $db->table('inventory')->where('shop_id', $shopId)->where('variant_id', (int) $it['variant_id'])
                         ->set('on_hand', 'GREATEST(on_hand - ' . (float) $it['qty'] . ', 0)', false)->update();
+
+                    // Post the movement InventoryService would have posted (audit
+                    // M19). Every other movement — POS sales, transfers, adjustments,
+                    // PO receipts, returns — writes an inventory_ledger row; this, the
+                    // PRIMARY sales channel, wrote nothing, so inventory_ledger.
+                    // balance_after diverged from inventory.on_hand the first time a
+                    // web order was placed and any stock-history screen built on the
+                    // ledger was wrong for every shop selling online. Written here
+                    // rather than delegating to InventoryService::sell() — that also
+                    // consumes stock_batches cost layers and would change FIFO
+                    // valuation for every existing vendor.
+                    $bal = (float) ($db->table('inventory')->select('on_hand')
+                        ->where('shop_id', $shopId)->where('variant_id', (int) $it['variant_id'])
+                        ->get()->getRowArray()['on_hand'] ?? 0);
+                    $db->table('inventory_ledger')->insert([
+                        'uuid' => bin2hex(random_bytes(18)), 'variant_id' => (int) $it['variant_id'], 'shop_id' => $shopId,
+                        'movement_type' => 'sale', 'qty_delta' => -(float) $it['qty'], 'balance_after' => $bal,
+                        'ref_type' => 'order', 'ref_id' => $subOrderId, 'reason_code' => 'sale', 'origin' => 'server',
+                    ]);
                 }
             }
 

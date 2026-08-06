@@ -175,6 +175,110 @@ final class AuthSessionHardeningTest extends CIUnitTestCase
         }
     }
 
+    // ------------------------------------------------------------------ M6
+
+    /** Every mobile-JWT mint site must stamp the password-binding claim so a password change can invalidate the token. */
+    public function testAllFourMintSitesStampThePwdClaim(): void
+    {
+        $sites = [
+            ['Controllers/Api/V1/AuthApiController.php', 'session'],
+            ['Controllers/Api/V1/VendorPosController.php', 'firebaseVerify'],
+            ['Controllers/Api/V1/VendorPosController.php', 'otpVerify'],
+        ];
+
+        foreach ($sites as [$rel, $method]) {
+            $body = $this->methodBody($this->read($rel), $method);
+
+            $this->assertStringContainsString(
+                'TokenService::pwdClaim(',
+                $body,
+                "{$rel}::{$method}() must stamp the pwd claim, or a password change never revokes its tokens",
+            );
+        }
+    }
+
+    /** Nullable-tolerant on purpose: tokens already in the wild must keep working, so the claim can only be conditionally added. */
+    public function testPwdClaimIsOnlyAddedWhenNotNull(): void
+    {
+        foreach (['session', 'firebaseVerify', 'otpVerify'] as $method) {
+            $rel  = str_contains($method, 'Verify') ? 'Controllers/Api/V1/VendorPosController.php' : 'Controllers/Api/V1/AuthApiController.php';
+            $body = $this->methodBody($this->read($rel), $method);
+
+            $this->assertMatchesRegularExpression(
+                '/if\s*\(\s*\$pwd\s*!==\s*null\s*\)/',
+                $body,
+                "{$rel}::{$method}() must only add the pwd claim when TokenService::pwdClaim() returned non-null",
+            );
+        }
+    }
+
+    /** JwtAuthFilter must verify the claim after confirming the account is active, and reject a stale one. */
+    public function testJwtAuthFilterVerifiesThePwdClaim(): void
+    {
+        $body = $this->methodBody($this->read('Filters/JwtAuthFilter.php'), 'before');
+
+        $this->assertStringContainsString('TokenService::pwdClaim(', $body);
+        $this->assertStringContainsString('hash_equals(', $body);
+
+        $isActive = strpos($body, 'isActive(');
+        $pwdCheck = strpos($body, "\$ctx['token_claims']['pwd']");
+        $this->assertNotFalse($isActive);
+        $this->assertNotFalse($pwdCheck);
+        $this->assertLessThan($pwdCheck, $isActive, 'the account-active re-check must run before the password-claim check');
+    }
+
+    /** A self-service password change must rotate the web session so a pre-change session ID cannot ride the account past the change. */
+    public function testSelfServicePasswordChangesRegenerateTheSession(): void
+    {
+        foreach ([
+            ['Controllers/Admin/ProfileController.php', 'savePassword'],
+            ['Controllers/Vendor/MeController.php', 'savePassword'],
+        ] as [$rel, $method]) {
+            $body = $this->methodBody($this->read($rel), $method);
+
+            $this->assertStringContainsString('regenerate(true)', $body, "{$rel}::{$method}() must rotate the session ID after a password change");
+
+            $update = strpos($body, 'updatePassword(');
+            $regen  = strpos($body, 'regenerate(true)');
+            $this->assertNotFalse($update);
+            $this->assertNotFalse($regen);
+            $this->assertLessThan($regen, $update, 'the session must rotate AFTER the password is actually changed, not before');
+        }
+    }
+
+    // ------------------------------------------------------------------ M8 step 1
+
+    /**
+     * Every staff/customer/rider sign-in point must fully destroy the pre-rotation
+     * session file (`regenerate(true)`), not leave it on disk still accepted until
+     * GC. Low risk specifically here: the pre-login session holds only flashdata and
+     * CSRF state, both carried across a regenerate() call regardless of the destroy
+     * flag — unlike the mid-session auto-rotation this finding also covers (step 2,
+     * not done in this pass).
+     */
+    public function testEverySignInPointDestroysThePriorSessionFile(): void
+    {
+        $sites = [
+            ['Controllers/Auth/LoginController.php', 'attempt', 1],
+            ['Controllers/Auth/LoginController.php', 'otpLogin', 1],
+            ['Controllers/Store/AccountController.php', 'otpLogin', 1],
+            ['Controllers/Store/AccountController.php', 'verify', 2], // phone branch + email branch
+            ['Controllers/Rider/AuthController.php', 'otpLogin', 1],
+            ['Controllers/Rider/AuthController.php', 'signIn', 1],
+        ];
+
+        foreach ($sites as [$rel, $method, $expected]) {
+            $body = $this->methodBody($this->read($rel), $method);
+            $this->assertNotSame('', $body, "{$rel}::{$method}() not found — has it been renamed?");
+
+            $this->assertSame(
+                $expected,
+                substr_count($body, 'regenerate(true)'),
+                "{$rel}::{$method}() must call regenerate(true) at every sign-in branch, or a cookie captured before sign-in survives sign-out",
+            );
+        }
+    }
+
     // ------------------------------------------------------------------ L7
 
     /** Failing open is correct; failing open SILENTLY is not. */

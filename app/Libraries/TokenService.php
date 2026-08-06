@@ -85,6 +85,23 @@ final class TokenService
         return $claims;
     }
 
+    /**
+     * Password-binding claim: a one-way fingerprint of the account's current
+     * password_hash, so a token minted before a password change can be told
+     * apart from one minted after. Never the raw hash — a stolen/decoded token
+     * must not hand an attacker bcrypt material to attack offline. Null when
+     * the account has no password set (OTP-only), so nothing is stamped and
+     * JwtAuthFilter's check stays a no-op for those tokens.
+     */
+    public static function pwdClaim(?string $passwordHash): ?string
+    {
+        if ($passwordHash === null || $passwordHash === '') {
+            return null;
+        }
+
+        return substr(hash('sha256', $passwordHash), 0, 16);
+    }
+
     private function sign(string $data, string $secret): string
     {
         return $this->b64UrlEncode(hash_hmac('sha256', $data, $secret, true));

@@ -100,7 +100,7 @@ final class AuthController extends BaseRiderController
         if (($rider['status'] ?? '') !== 'active') {
             return $this->response->setStatusCode(403)->setJSON(['ok' => false, 'message' => 'This rider account is not active.', 'csrf' => csrf_hash()]);
         }
-        session()->regenerate();
+        session()->regenerate(true);
         session()->set(['rider_id' => (int) $rider['user_id'], 'rider_name' => $rider['name'] ?? 'Rider']);
 
         return $this->response->setJSON(['ok' => true, 'redirect' => site_url('rider/dashboard'), 'csrf' => csrf_hash()]);
@@ -116,7 +116,7 @@ final class AuthController extends BaseRiderController
             return redirect()->to($back)->with('error', 'This rider account is not active.');
         }
         session()->remove('rider_login_phone');
-        session()->regenerate();
+        session()->regenerate(true);
         session()->set(['rider_id' => (int) $rider['user_id'], 'rider_name' => $rider['name'] ?? 'Rider']);
 
         return redirect()->to('rider/dashboard')->with('success', 'Signed in.');

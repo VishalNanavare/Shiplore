@@ -66,7 +66,7 @@ final class AccountController extends BaseStoreController
         if ($cust === null) {
             return $this->response->setStatusCode(500)->setJSON(['ok' => false, 'message' => 'Could not create your account. Please try again.', 'csrf' => csrf_hash()]);
         }
-        session()->regenerate();
+        session()->regenerate(true);
         session()->set(['customer_id' => $cust['customer_id'], 'customer_user_id' => $cust['user_id'], 'customer_name' => $cust['name']]);
 
         return $this->response->setJSON(['ok' => true, 'redirect' => site_url($this->loginRedirect()), 'csrf' => csrf_hash()]);
@@ -165,7 +165,7 @@ final class AccountController extends BaseStoreController
             // session ID the browser presented (fixation). The cookie is scoped to
             // .shiplore.in, so anything running on a sibling subdomain can set it.
             // regenerate() moves the payload, so login_return and my_orders survive.
-            session()->regenerate();
+            session()->regenerate(true);
             session()->set(['customer_id' => $cust['customer_id'], 'customer_user_id' => $cust['user_id'], 'customer_name' => $cust['name']]);
 
             return redirect()->to($this->loginRedirect())->with('success', 'Signed in.');
@@ -181,7 +181,7 @@ final class AccountController extends BaseStoreController
             return redirect()->to('store/login')->with('error', 'Account not found.');
         }
         session()->remove('login_email');
-        session()->regenerate();  // see the phone path above — rotate before elevating
+        session()->regenerate(true);  // see the phone path above — rotate before elevating
         session()->set(['customer_id' => $cust['customer_id'], 'customer_user_id' => $cust['user_id'], 'customer_name' => $cust['name']]);
 
         return redirect()->to($this->loginRedirect())->with('success', 'Signed in.');

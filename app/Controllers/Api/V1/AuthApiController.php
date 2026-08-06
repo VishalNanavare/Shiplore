@@ -212,12 +212,12 @@ final class AuthApiController extends BaseApiController
     private function session(array $user): array
     {
         $secret = \App\Libraries\TokenService::secret();
-        $token  = service('tokenService')->issue(
-            ['sub' => (int) $user['id'], 'typ' => $user['principal_type'], 'name' => $user['name']],
-            self::TTL,
-            $secret,
-            time(),
-        );
+        $claims = ['sub' => (int) $user['id'], 'typ' => $user['principal_type'], 'name' => $user['name']];
+        $pwd    = \App\Libraries\TokenService::pwdClaim($user['password_hash'] ?? null);
+        if ($pwd !== null) {
+            $claims['pwd'] = $pwd;
+        }
+        $token = service('tokenService')->issue($claims, self::TTL, $secret, time());
 
         return [
             'token'      => $token,

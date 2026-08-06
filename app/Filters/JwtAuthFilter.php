@@ -48,10 +48,27 @@ final class JwtAuthFilter implements FilterInterface
         // Re-check the account is still active on EVERY request — a suspended/deleted
         // user (or a vendor staffer whose JWT was revoked) must lose API access at once,
         // not keep it for the token's 30-day TTL.
-        if (! service('apiAuthRepository')->isActive((int) ($ctx['actor_id'] ?? 0))) {
+        $actorId = (int) ($ctx['actor_id'] ?? 0);
+        if (! service('apiAuthRepository')->isActive($actorId)) {
             return service('response')
                 ->setStatusCode(ApiResponse::statusFor('UNAUTHENTICATED'))
                 ->setJSON(ApiResponse::error('UNAUTHENTICATED', 'Account is not active.'));
+        }
+
+        // Bind the token to the password it was minted under. Nullable-tolerant on
+        // purpose: tokens already in the wild (minted before this claim existed) carry
+        // no `pwd` claim and keep working until they expire — no shipped app is signed
+        // out by this deploy. Once a token DOES carry the claim, a password change
+        // invalidates it immediately instead of leaving it valid for the full 30-day TTL.
+        $pwdClaim = $ctx['token_claims']['pwd'] ?? null;
+        if ($pwdClaim !== null) {
+            $current    = service('apiAuthRepository')->findById($actorId);
+            $currentPwd = $current !== null ? \App\Libraries\TokenService::pwdClaim($current['password_hash'] ?? null) : null;
+            if ($currentPwd === null || ! hash_equals($currentPwd, (string) $pwdClaim)) {
+                return service('response')
+                    ->setStatusCode(ApiResponse::statusFor('UNAUTHENTICATED'))
+                    ->setJSON(ApiResponse::error('UNAUTHENTICATED', 'Session is no longer valid. Please sign in again.'));
+            }
         }
 
         service('scopeContext')->set($ctx);

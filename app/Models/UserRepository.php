@@ -62,7 +62,10 @@ final class UserRepository
         $candidates = [$e164, $last10, '0' . $last10, '91' . $last10, '+91 ' . $last10];
 
         $rows = Database::connect()->table('users')
-            ->select('id, name, email, phone, status, principal_type')
+            // password_hash: needed by VendorPosController's token mint sites to stamp
+            // the JWT 'pwd' claim (audit M6) — unused by other callers, but harmless
+            // to select alongside the columns they already read.
+            ->select('id, name, email, phone, status, principal_type, password_hash')
             ->whereIn('phone', $candidates)
             ->where('deleted_at', null)
             ->limit(2)

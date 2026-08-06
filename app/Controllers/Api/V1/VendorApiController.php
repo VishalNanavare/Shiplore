@@ -1056,6 +1056,11 @@ final class VendorApiController extends BaseApiController
         if ($vid === null) {
             return $this->notVendor();
         }
+        // Vendor-wide GST figures are owner-only, exactly as on the web panel where a
+        // shop-scoped staffer never sees a sibling branch's tax data.
+        if (! $this->isOwner()) {
+            return $this->failWith('FORBIDDEN', 'Only the vendor owner can view GST summary.');
+        }
         $repo    = service('vendorGstRepository');
         $summary = $repo->summary($vid);
         $lines   = $repo->lines($vid, 50);
@@ -1069,6 +1074,11 @@ final class VendorApiController extends BaseApiController
         $vid  = $this->vendorId();
         if ($vid === null) {
             return $this->notVendor();
+        }
+        // Vendor-wide money is owner-only, exactly as on the web panel where a
+        // shop-scoped staffer never sees a sibling branch's figures.
+        if (! $this->isOwner()) {
+            return $this->failWith('FORBIDDEN', 'Only the vendor owner can view settlements.');
         }
         $page   = max(1, (int) $this->request->getGet('page'));
         $per    = min(100, max(1, (int) ($this->request->getGet('per_page') ?: 30)));
@@ -1086,6 +1096,9 @@ final class VendorApiController extends BaseApiController
         $vid  = $this->vendorId();
         if ($vid === null) {
             return $this->notVendor();
+        }
+        if (! $this->isOwner()) {
+            return $this->failWith('FORBIDDEN', 'Only the vendor owner can view settlements.');
         }
         $repo = service('vendorSettlementRepository');
         $row  = $repo->findById($id, $vid);
@@ -1123,6 +1136,9 @@ final class VendorApiController extends BaseApiController
         if ($vid === null) {
             return $this->notVendor();
         }
+        if (! $this->isOwner()) {
+            return $this->failWith('FORBIDDEN', 'Only the vendor owner can view transfers.');
+        }
         $page   = max(1, (int) $this->request->getGet('page'));
         $per    = min(100, max(1, (int) ($this->request->getGet('per_page') ?: 30)));
         $offset = ($page - 1) * $per;
@@ -1139,6 +1155,9 @@ final class VendorApiController extends BaseApiController
         $vid = $this->vendorId();
         if ($vid === null) {
             return $this->notVendor();
+        }
+        if (! $this->isOwner()) {
+            return $this->failWith('FORBIDDEN', 'Only the vendor owner can request transfers.');
         }
         $in        = $this->input();
         $fromShop  = (int) ($in['from_shop_id'] ?? 0);
@@ -1389,6 +1408,9 @@ final class VendorApiController extends BaseApiController
         if ($vid === null) {
             return $this->notVendor();
         }
+        if (! $this->isOwner()) {
+            return $this->failWith('FORBIDDEN', 'Only the vendor owner can view the staff roster.');
+        }
         $rows = service('vendorStaffRepository')->staffWithShops($vid);
 
         return $this->collection($rows, ['total' => count($rows)]);
@@ -1425,6 +1447,9 @@ final class VendorApiController extends BaseApiController
     {
         $vid = $this->vendorId();
         if ($vid === null) return $this->notVendor();
+        if (! $this->isOwner()) {
+            return $this->failWith('FORBIDDEN', 'Only the vendor owner can view the commission ledger.');
+        }
 
         $db = \Config\Database::connect();
         $rows = $db->table('commission_ledger cl')
@@ -1450,6 +1475,9 @@ final class VendorApiController extends BaseApiController
     {
         $vid = $this->vendorId();
         if ($vid === null) return $this->notVendor();
+        if (! $this->isOwner()) {
+            return $this->failWith('FORBIDDEN', 'Only the vendor owner can act on transfers.');
+        }
 
         $db  = \Config\Database::connect();
         $row = $db->table('stock_transfers')->where('id', $id)->where('vendor_id', $vid)->get()->getRowArray();

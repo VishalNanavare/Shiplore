@@ -111,6 +111,23 @@ final class WebAuthFilter implements FilterInterface
             return null;
         }
 
+        // Principals that can never legitimately hold a staff-panel session. Only
+        // Auth\LoginController::attempt() can produce one (it does not gate
+        // principal_type), and no route grants a customer or rider any back-office
+        // capability — so blocking these cannot lock out real staff. Unconditional:
+        // it runs even while the flag below stays log-only.
+        if ($actual === 'customer' || $actual === 'rider') {
+            log_message('warning', sprintf(
+                'principal-type mismatch [BLOCKED]: user %d is "%s" but %s requires "%s".',
+                $userId,
+                $actual,
+                $request->getUri()->getPath(),
+                $expected,
+            ));
+
+            return redirect()->to('login')->with('error', 'That area is not available for this account.');
+        }
+
         $enforcing = filter_var(env('auth.enforcePrincipalType', false), FILTER_VALIDATE_BOOLEAN);
 
         log_message(

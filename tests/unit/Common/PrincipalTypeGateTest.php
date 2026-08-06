@@ -30,8 +30,14 @@ final class PrincipalTypeGateTest extends TestCase
         if ($expected === null) {
             return 'allow';
         }
-        if ((string) ($actual ?? '') === $expected) {
+        $actualStr = (string) ($actual ?? '');
+        if ($actualStr === $expected) {
             return 'allow';
+        }
+        // H4 step 1: unconditional, independent of the rollout flag — see
+        // testCustomerAndRiderAreBlockedRegardlessOfEnforcementFlag.
+        if ($actualStr === 'customer' || $actualStr === 'rider') {
+            return 'block';
         }
 
         return $enforcing ? 'block' : 'log';
@@ -76,6 +82,22 @@ final class PrincipalTypeGateTest extends TestCase
         // A session with no principal_type must not be treated as privileged.
         $this->assertSame('block', $this->decide('platform', null, true));
         $this->assertSame('block', $this->decide('platform', '', true));
+    }
+
+    /**
+     * H4 step 1: customer/rider principals can never legitimately hold a staff-panel
+     * session — only Auth\LoginController::attempt() can mint one and it never grants
+     * staff-panel roles, so blocking these two cannot lock out real staff. This is
+     * intentionally unconditional: it must fire even while the flag stays log-only,
+     * unlike every other mismatch on this table.
+     */
+    public function testCustomerAndRiderAreBlockedRegardlessOfEnforcementFlag(): void
+    {
+        $this->assertSame('block', $this->decide('platform', 'customer', false));
+        $this->assertSame('block', $this->decide('platform', 'rider', false));
+        $this->assertSame('block', $this->decide('vendor', 'customer', false));
+        $this->assertSame('block', $this->decide('platform', 'customer', true));
+        $this->assertSame('block', $this->decide('platform', 'rider', true));
     }
 
     /** The env flag must default to log-only — an unset or junk value must not enforce. */
@@ -140,5 +162,23 @@ final class PrincipalTypeGateTest extends TestCase
         $this->assertStringContainsString("activeUser((int) \$vendor['owner_user_id'], 'vendor')", $portal);
         $this->assertStringContainsString("activeUser((int) \$m['owner_user_id'], 'manufacturer')", $portal);
         $this->assertStringContainsString("activeUser((int) \$rider['user_id'], 'rider')", $portal);
+    }
+
+    /** The real filter must implement the unconditional block, not just the pure-logic mirror above. */
+    public function testWebAuthFilterSourceBlocksCustomerAndRiderUnconditionally(): void
+    {
+        $src = (string) file_get_contents(APPPATH . 'Filters/WebAuthFilter.php');
+
+        $this->assertMatchesRegularExpression(
+            "/\\\$actual === 'customer'[\\s\\S]{0,40}\\\$actual === 'rider'/",
+            $src,
+            'checkPrincipal() must refuse customer/rider principals unconditionally',
+        );
+
+        $block = strpos($src, "\$actual === 'customer'");
+        $flag  = strpos($src, '$enforcing = filter_var(');
+        $this->assertNotFalse($block, 'no unconditional customer/rider block found in WebAuthFilter');
+        $this->assertNotFalse($flag);
+        $this->assertLessThan($flag, $block, 'the unconditional customer/rider block must run BEFORE the log-only flag is even consulted');
     }
 }

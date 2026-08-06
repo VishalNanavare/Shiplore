@@ -15,12 +15,30 @@ use Config\Database;
  */
 final class VendorAccountRepository
 {
+    /**
+     * Vendors and manufacturers share the `vendors` table, distinguished by
+     * `party_type`. ManufacturerAccountRepository already constrains every lookup
+     * with `->where('party_type', self::PARTY_TYPE)`, stated to stop the panels
+     * resolving each other's tenants "and vice versa" — but this repository had no
+     * mirror constraint, so the guard was one-directional: a manufacturer owner
+     * reaching /vendor/* got their own `vendors` row back and requireVendor()
+     * passed (audit M11).
+     *
+     * PRE-DEPLOY CHECK (cannot be run from here — no DB access): confirm no
+     * existing row has a NULL or unexpected party_type before this ships, or that
+     * vendor is silently locked out of their own panel and mobile app —
+     * `SELECT party_type, COUNT(*) FROM vendors WHERE deleted_at IS NULL GROUP BY party_type;`
+     * must show only 'vendor' and 'manufacturer', no NULLs.
+     */
+    private const PARTY_TYPE = 'vendor';
+
     /** @return array<string,mixed>|null the vendor a user owns */
     public function findByOwnerUserId(int $userId): ?array
     {
         $row = Database::connect()->table('vendors')
             ->select('id, display_name, legal_name, slug, gstin, gstin_status, status, business_type_id')
             ->where('owner_user_id', $userId)
+            ->where('party_type', self::PARTY_TYPE)
             ->where('deleted_at', null)
             ->get()->getRowArray();
 
@@ -40,6 +58,10 @@ final class VendorAccountRepository
             ->join('vendors v', 'v.id = vs.vendor_id', 'left')
             ->where('vs.user_id', $userId)->where('vs.status', 'active')->where('vs.deleted_at', null)
             ->where('v.deleted_at', null)
+            // Mirrors findByOwnerUserId(): also (correctly) drops any staff row whose
+            // vendor was somehow a manufacturer — an orphaned assignment, not a
+            // legitimate vendor staffer.
+            ->where('v.party_type', self::PARTY_TYPE)
             ->get()->getRowArray();
         if ($row === null) {
             return null;

@@ -42,16 +42,29 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
         $this->assertStringContainsString("PARTY_TYPE = 'manufacturer'", $src);
     }
 
-    /** The vendor repository must stay untouched — it is not part of this feature. */
-    public function testVendorAccountRepositoryIsUnchanged(): void
+    /**
+     * UPDATE (audit M11) — this used to assert the opposite: that
+     * VendorAccountRepository stayed untouched by party_type, on the reasoning that
+     * the manufacturer work was a separate, one-directional addition. That reasoning
+     * was the bug: it left the guard one-directional, so a manufacturer owner
+     * reaching /vendor/* resolved their own `vendors` row and passed
+     * requireVendor(). The "separate, deliberate change" this test's old message
+     * asked for is exactly what M11 is — both directions must now hold.
+     */
+    public function testVendorAccountRepositoryAlsoConstrainsPartyType(): void
     {
         $src = $this->read('Models/VendorAccountRepository.php');
 
-        $this->assertStringNotContainsString(
-            'party_type',
+        $this->assertStringContainsString("PARTY_TYPE = 'vendor'", $src);
+        $this->assertMatchesRegularExpression(
+            "/findByOwnerUserId.*?where\('party_type', self::PARTY_TYPE\)/s",
             $src,
-            'VendorAccountRepository was modified — the manufacturer work must not touch vendor code. '
-            . 'If vendors ever need the constraint, that is a separate, deliberate change.',
+            'findByOwnerUserId() must not resolve a manufacturer as a plain vendor',
+        );
+        $this->assertMatchesRegularExpression(
+            "/findStaffVendor.*?where\('v\.party_type', self::PARTY_TYPE\)/s",
+            $src,
+            'findStaffVendor() must not resolve manufacturer staff as vendor staff',
         );
     }
 

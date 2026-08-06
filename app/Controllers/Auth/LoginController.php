@@ -95,7 +95,7 @@ final class LoginController extends BaseController
 
         $attempts->record($login, true, null, (int) $user['id'], $this->request->getIPAddress(), (string) $this->request->getUserAgent());
 
-        session()->regenerate();
+        session()->regenerate(true);
         session()->set([
             'isLoggedIn'     => true,
             'user_id'        => (int) $user['id'],
@@ -155,7 +155,7 @@ final class LoginController extends BaseController
 
         $attempts->record($phone, true, null, (int) $user['id'], $ip, $ua);
 
-        session()->regenerate();
+        session()->regenerate(true);
         session()->set([
             'isLoggedIn'     => true,
             'user_id'        => (int) $user['id'],

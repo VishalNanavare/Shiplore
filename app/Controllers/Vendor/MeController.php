@@ -68,6 +68,7 @@ final class MeController extends BaseVendorController
         }
 
         service('adminUserRepository')->updatePassword($uid, password_hash($new, PASSWORD_BCRYPT));
+        session()->regenerate(true);
 
         return redirect()->to('vendor/me')->with('status', 'Password changed successfully.');
     }

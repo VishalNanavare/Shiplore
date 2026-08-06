@@ -71,4 +71,36 @@ final class TokenServiceTest extends TestCase
         $this->expectException(TokenException::class);
         $svc->verify('not-a-jwt', $this->secret, 1_700_000_000);
     }
+
+    // ------------------------------------------------------------------ M6 pwdClaim()
+
+    public function testPwdClaimIsNullForNullOrEmptyHash(): void
+    {
+        $this->assertNull(TokenService::pwdClaim(null));
+        $this->assertNull(TokenService::pwdClaim(''));
+    }
+
+    public function testPwdClaimIsDeterministic(): void
+    {
+        $hash = '$2y$10$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01';
+        $this->assertSame(TokenService::pwdClaim($hash), TokenService::pwdClaim($hash));
+    }
+
+    public function testPwdClaimChangesWithTheHash(): void
+    {
+        $a = TokenService::pwdClaim('$2y$10$oldHashAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+        $b = TokenService::pwdClaim('$2y$10$newHashBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
+
+        $this->assertNotSame($a, $b);
+    }
+
+    public function testPwdClaimDoesNotLeakTheRawHash(): void
+    {
+        $hash  = '$2y$10$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01';
+        $claim = TokenService::pwdClaim($hash);
+
+        $this->assertNotNull($claim);
+        $this->assertStringNotContainsString($hash, (string) $claim);
+        $this->assertSame(16, strlen((string) $claim));
+    }
 }

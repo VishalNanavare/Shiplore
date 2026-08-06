@@ -78,6 +78,93 @@ final class MobileApiTest extends CIUnitTestCase
         $this->get('api/v1/rider/me')->assertStatus(401);
     }
 
+    // ---- M6: JWT password-binding claim ----
+    //
+    // These stamp their own JWT_SECRET (like MeCapabilitiesTest does) rather than
+    // relying on the getenv()/env() fallback the shared bearer() helper uses — that
+    // fallback resolves to TokenService::INSECURE_DEFAULT when no test env has
+    // jwt.secret configured, which makes secret() throw for every test in this file
+    // (a pre-existing environment gap, not specific to these three). Setting and
+    // restoring it locally keeps that gap from being masked or spread by these tests.
+
+    /** @return array<string,string> */
+    private function bearerWithPwdClaim(string $secret, int $userId, string $typ, ?string $pwdClaim): array
+    {
+        $claims = ['sub' => $userId, 'typ' => $typ, 'name' => 'Test'];
+        if ($pwdClaim !== null) {
+            $claims['pwd'] = $pwdClaim;
+        }
+        $token = service('tokenService')->issue($claims, 3600, $secret, time());
+
+        return ['Authorization' => 'Bearer ' . $token];
+    }
+
+    /** A token minted before this M6 deploy carries no `pwd` claim at all — it must keep working until it naturally expires. */
+    public function testTokenWithNoPwdClaimStillAuthenticates(): void
+    {
+        $secret = 'm6-test-secret';
+        putenv('JWT_SECRET=' . $secret);
+        try {
+            $this->riderMock();
+            Services::injectMock('apiAuthRepository', new class {
+                public function isActive(int $id): bool { return true; }
+                public function findById(int $id): ?array { return ['id' => $id, 'password_hash' => password_hash('current', PASSWORD_BCRYPT)]; }
+            });
+
+            $this->withHeaders($this->bearerWithPwdClaim($secret, 5, 'rider', null))
+                ->get('api/v1/rider/me')
+                ->assertStatus(200);
+        } finally {
+            putenv('JWT_SECRET');
+        }
+    }
+
+    /** The claim matches the account's current password_hash — issued and never invalidated. */
+    public function testTokenWithMatchingPwdClaimAuthenticates(): void
+    {
+        $secret = 'm6-test-secret';
+        putenv('JWT_SECRET=' . $secret);
+        try {
+            $this->riderMock();
+            $hash = password_hash('current', PASSWORD_BCRYPT);
+            Services::injectMock('apiAuthRepository', new class ($hash) {
+                public function __construct(private string $hash) {}
+                public function isActive(int $id): bool { return true; }
+                public function findById(int $id): ?array { return ['id' => $id, 'password_hash' => $this->hash]; }
+            });
+
+            $claim = \App\Libraries\TokenService::pwdClaim($hash);
+            $this->withHeaders($this->bearerWithPwdClaim($secret, 5, 'rider', $claim))
+                ->get('api/v1/rider/me')
+                ->assertStatus(200);
+        } finally {
+            putenv('JWT_SECRET');
+        }
+    }
+
+    /** The account's password changed since the token was minted — the stale claim must be rejected. */
+    public function testTokenWithStalePwdClaimIsRejected(): void
+    {
+        $secret = 'm6-test-secret';
+        putenv('JWT_SECRET=' . $secret);
+        try {
+            $this->riderMock();
+            $currentHash = password_hash('new-password', PASSWORD_BCRYPT);
+            Services::injectMock('apiAuthRepository', new class ($currentHash) {
+                public function __construct(private string $hash) {}
+                public function isActive(int $id): bool { return true; }
+                public function findById(int $id): ?array { return ['id' => $id, 'password_hash' => $this->hash]; }
+            });
+
+            $staleClaim = \App\Libraries\TokenService::pwdClaim(password_hash('old-password', PASSWORD_BCRYPT));
+            $this->withHeaders($this->bearerWithPwdClaim($secret, 5, 'rider', $staleClaim))
+                ->get('api/v1/rider/me')
+                ->assertStatus(401);
+        } finally {
+            putenv('JWT_SECRET');
+        }
+    }
+
     // ---- Delivery Boy app ----
     private function riderMock(bool $isRider = true): object
     {
