@@ -28,15 +28,33 @@ final class StoreShopRepository
             return $qb->orderBy('s.name', 'ASC')->limit($limit)->get()->getResultArray();
         }
 
-        // Bounding box pre-filter (≈55 km radius) before PHP Haversine loop. Capped as
-        // a safety valve — a dense metro could otherwise return every shop within
-        // ~55km with no SQL LIMIT at all; the Haversine loop below still sorts and
-        // slices to the real $limit, so this only bites if a single box holds more
-        // than max($limit*5, 500) active shops.
-        $deg   = 0.5;
+        // Bounding box pre-filter (≈55 km radius) before the PHP Haversine loop, capped
+        // as a safety valve so a dense metro cannot pull every shop in a ~55km box into
+        // PHP on every request.
+        //
+        // The ORDER BY is load-bearing, not cosmetic. This cap originally shipped
+        // WITHOUT one, so MySQL returned an arbitrary slice (in practice lowest-id
+        // first): on an install with 10k shops the box held far more than the cap, the
+        // slice never contained the genuinely nearest shops, and the whole storefront
+        // rendered "no shops deliver to your location" for a location with shops 900 m
+        // away. Ordering by squared planar distance keeps the NEAREST rows, so
+        // truncation can only ever drop shops farther than the cap-th nearest.
+        // Longitude is scaled by cos(lat) because a degree of longitude is shorter than
+        // a degree of latitude away from the equator; without it the ordering skews
+        // east-west. Squared distance is monotonic with real distance, so no sqrt is
+        // needed and the Haversine loop below still does the authoritative filtering.
+        $deg    = 0.5;
+        $lngAdj = max(0.01, cos(deg2rad($lat))); // guard against cos()→0 at the poles
+        $order  = sprintf(
+            '(POW(s.latitude - %.8F, 2) + POW((s.longitude - %.8F) * %.8F, 2)) ASC',
+            $lat,
+            $lng,
+            $lngAdj,
+        );
         $shops = $qb
             ->where('s.latitude >=', $lat - $deg)->where('s.latitude <=', $lat + $deg)
             ->where('s.longitude >=', $lng - $deg)->where('s.longitude <=', $lng + $deg)
+            ->orderBy($order, '', false)
             ->limit(max($limit * 5, 500))
             ->get()->getResultArray();
 
