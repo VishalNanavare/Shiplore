@@ -99,7 +99,12 @@ final class PayoutRepository
         } catch (Throwable $e) {
             $db->transRollback();
 
-            return ['ok' => false, 'reason' => $e->getMessage()];
+            // 'reason' is flashed straight to the admin by PayoutController, and a CI4
+            // DatabaseException carries the failing SQL in its message. Log the detail
+            // where operators can read it; show the operator-facing text only.
+            log_message('error', 'createBatch failed: ' . $e->getMessage());
+
+            return ['ok' => false, 'reason' => 'Could not create the batch. The error has been logged.'];
         }
     }
 

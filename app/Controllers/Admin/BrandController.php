@@ -91,6 +91,13 @@ final class BrandController extends BaseController
         }
         $db->transComplete();
 
+        // transComplete() rolls back on failure, so the data stays consistent — but
+        // without consulting transStatus() this reported "saved" regardless, and the
+        // admin walks away believing a mapping exists that was never written.
+        if (! $db->transStatus()) {
+            return redirect()->to('admin/brands/' . $id . '/edit')->with('error', 'Could not save the category mappings. Nothing was changed.');
+        }
+
         return redirect()->to('admin/brands/' . $id . '/edit')->with('success', 'Category mappings saved.');
     }
 

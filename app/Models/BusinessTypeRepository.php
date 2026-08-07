@@ -68,9 +68,15 @@ final class BusinessTypeRepository
     /**
      * Replace all category mappings for a business type atomically.
      * Only category IDs that actually exist in the `categories` table are kept.
+     *
      * @param list<int> $categoryIds
+     *
+     * @return bool false when the transaction failed and nothing was written. This
+     *         used to return void, so the caller reported success unconditionally —
+     *         a failed sync silently left the old mapping in place while the admin
+     *         was told the new one had been saved.
      */
-    public function syncCategories(int $businessTypeId, array $categoryIds): void
+    public function syncCategories(int $businessTypeId, array $categoryIds): bool
     {
         $db = Database::connect();
         $categoryIds = array_map('intval', array_filter($categoryIds));
@@ -87,5 +93,7 @@ final class BusinessTypeRepository
             $db->table('business_type_category_map')->insert(['business_type_id' => $businessTypeId, 'category_id' => (int) $catId]);
         }
         $db->transComplete();
+
+        return $db->transStatus();
     }
 }

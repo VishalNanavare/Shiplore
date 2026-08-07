@@ -95,7 +95,13 @@ final class BusinessTypeController extends BaseController
 
         $raw = $this->request->getPost('category_ids');
         $ids = is_array($raw) ? array_map('intval', $raw) : [];
-        service('businessTypeRepository')->syncCategories($id, $ids);
+        // Stop before the settings update if the mapping did not save: reporting one
+        // success for two writes, only one of which happened, is how an admin ends up
+        // trusting a mapping that is not there.
+        if (! service('businessTypeRepository')->syncCategories($id, $ids)) {
+            return redirect()->to('admin/business-types/' . $id . '/edit')
+                ->with('error', 'Could not save the category mapping. No changes were made.');
+        }
 
         $description = trim((string) $this->request->getPost('description'));
         $commission  = $this->request->getPost('default_commission_rate');

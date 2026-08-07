@@ -101,7 +101,12 @@ final class RiderSettlementRepository
         } catch (Throwable $e) {
             $db->transRollback();
 
-            return ['ok' => false, 'reason' => $e->getMessage()];
+            // Same leak as PayoutRepository::createBatch(): RiderFinanceController
+            // flashes 'reason' to the admin, and a DatabaseException message embeds the
+            // failing SQL.
+            log_message('error', 'rider createBatch failed: ' . $e->getMessage());
+
+            return ['ok' => false, 'reason' => 'Could not create the batch. The error has been logged.'];
         }
     }
 

@@ -201,6 +201,13 @@ final class OrderController extends BaseController
         );
         $db->transComplete();
 
+        // Without this the claim was reported — and written to the claim audit log —
+        // even when the UPDATE rolled back, leaving an audit trail that says an admin
+        // holds an order they do not.
+        if (! $db->transStatus()) {
+            return redirect()->back()->with('error', 'Could not claim the order. Please try again.');
+        }
+
         service('orderClaimService')->log(
             $subOrderId,
             'force_claimed',
@@ -303,7 +310,10 @@ final class OrderController extends BaseController
         $ok = service('deliveryRepository')->updateStatus((int) $delivery['id'], $status, $adminUserId, true); // admin force-override
         $db->transComplete();
 
-        if (! $ok) {
+        // $ok is the repository's own verdict; transStatus() is the database's. A
+        // query that failed after updateStatus() returned true rolls the whole
+        // transaction back, and only this second check notices.
+        if (! $ok || ! $db->transStatus()) {
             return redirect()->back()->with('error', 'Could not override delivery status.');
         }
 

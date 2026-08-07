@@ -202,6 +202,15 @@ final class VendorTypeMismatchController extends BaseController
         }
         $db->transComplete();
 
+        // $moved is counted in PHP as the loop runs, so it describes what was
+        // ATTEMPTED. If the transaction rolled back, nothing moved and reporting the
+        // count is simply false — the admin sees "14 product(s) moved" over an
+        // unchanged table.
+        if (! $db->transStatus()) {
+            return redirect()->to('admin/vendors/' . $vendorId . '/product-mismatches')
+                ->with('error', 'Could not move the products. Nothing was changed.');
+        }
+
         $msg = "{$moved} product(s) moved.";
         if ($skipped > 0) {
             $msg .= " {$skipped} skipped (have orders or category not allowed in target).";
@@ -268,6 +277,12 @@ final class VendorTypeMismatchController extends BaseController
             $moved++;
         }
         $db->transComplete();
+
+        // Same as bulkMove above: $moved counts attempts, not commits.
+        if (! $db->transStatus()) {
+            return redirect()->to('admin/vendors/type-mismatches')
+                ->with('error', 'Auto-fix failed. Nothing was changed.');
+        }
 
         $msg = "Auto-fix complete: {$moved} product(s) moved.";
         if ($noTarget > 0) {
