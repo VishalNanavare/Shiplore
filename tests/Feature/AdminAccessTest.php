@@ -14,8 +14,39 @@ final class AdminAccessTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
 
+    /**
+     * Every admin/... route now only registers when the request's Host header's
+     * subdomain is 'admin' (app/Config/Routes.php 'subdomain' option — see
+     * PanelSubdomainIsolationTest), so FeatureTestTrait's simulated requests need an
+     * explicit admin host or they 404 exactly like a real request to the apex would.
+     *
+     * $_SERVER['HTTP_HOST'] alone does NOT work here: IncomingRequest reads server
+     * vars through the Superglobals service (RequestTrait::getServer() ->
+     * fetchGlobal('server', ...)), which snapshots its own copy rather than reading
+     * $_SERVER live, and RouteCollection reads the host from service('request') at
+     * ITS OWN construction time. Both services must be forced fresh after the
+     * Superglobals value is set, or they keep whatever host was current when they
+     * were first built for this process.
+     *
+     * tearDown() must undo this with unsetServer(), not just Services::reset():
+     * Superglobals::setServer() writes straight into the real $_SERVER array (see
+     * system/Superglobals.php), which Services::reset() does not touch — it only
+     * drops cached service INSTANCES. Left unset, 'admin.shiplore.in' would leak into
+     * every test that runs afterward in the same PHPUnit process, silently deciding
+     * which panel's routes THEY see regardless of what they actually test.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
+    }
+
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

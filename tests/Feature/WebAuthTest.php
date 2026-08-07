@@ -21,6 +21,10 @@ final class WebAuthTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
 
         $hash = $this->hash;
         Services::injectMock('userRepository', new class ($hash) {
@@ -45,6 +49,7 @@ final class WebAuthTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

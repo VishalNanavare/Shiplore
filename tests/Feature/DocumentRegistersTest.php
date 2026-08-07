@@ -40,8 +40,24 @@ final class DocumentRegistersTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset(true);
         parent::tearDown();
+    }
+
+    /**
+     * This file hits BOTH admin/... and vendor/... routes, so the host can't be fixed
+     * once for the whole class — each test that makes a real request calls this with
+     * its OWN panel. See PanelSubdomainIsolationTest / AdminAccessTest for why plain
+     * $_SERVER assignment doesn't work and why tearDown() must unsetServer() (a
+     * leaked host here would affect every test that runs after this file).
+     */
+    private function withHost(string $host): void
+    {
+        service('superglobals')->setServer('HTTP_HOST', $host);
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
     }
 
     private function grantAdmin(array $perms): void
@@ -63,6 +79,7 @@ final class DocumentRegistersTest extends CIUnitTestCase
 
     public function testAdminInvoiceRegister(): void
     {
+        $this->withHost('admin.shiplore.in');
         // payment.view is platform-scoped. It replaced the vendor-scoped
         // invoice.view this register used to gate on — see the negative case below.
         $this->grantAdmin(['payment.view']);
@@ -76,6 +93,7 @@ final class DocumentRegistersTest extends CIUnitTestCase
 
     public function testAdminCommissionHoldQueue(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grantAdmin(['commission.view']);
 
         $r = $this->withSession($this->adminSess())->get('admin/commission-holds');
@@ -99,6 +117,7 @@ final class DocumentRegistersTest extends CIUnitTestCase
      */
     public function testVendorScopedPermissionCannotOpenAdminRegisters(string $perm, string $url): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grantAdmin([$perm]);
 
         $r = $this->withSession($this->adminSess())->get($url);
@@ -118,6 +137,7 @@ final class DocumentRegistersTest extends CIUnitTestCase
 
     public function testVendorInvoiceRegisterIsTenantScoped(): void
     {
+        $this->withHost('vendor.shiplore.in');
         Services::injectMock('capabilityRepository', new class {
             public function loadAssignments(int $u): array
             {

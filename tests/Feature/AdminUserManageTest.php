@@ -22,6 +22,10 @@ final class AdminUserManageTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
 
         $this->repo = new class {
             public array $created = [];
@@ -68,6 +72,7 @@ final class AdminUserManageTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

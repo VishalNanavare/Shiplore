@@ -14,8 +14,18 @@ final class MonlineTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'monline.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
+    }
+
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

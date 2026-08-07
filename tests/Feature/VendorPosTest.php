@@ -14,6 +14,10 @@ final class VendorPosTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
         Services::injectMock('capabilityRepository', new class {
             public function loadAssignments(int $u): array { return [['permissions' => ['pos.sell', 'pos.discount.apply', 'pos.credit.sale', 'pos.return.process'], 'scope_type' => 'vendor', 'scope_id' => 1, 'attributes' => []]]; }
         });
@@ -31,6 +35,7 @@ final class VendorPosTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

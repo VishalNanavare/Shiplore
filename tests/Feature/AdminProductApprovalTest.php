@@ -17,6 +17,10 @@ final class AdminProductApprovalTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
         $this->grant(['product.review', 'product.approve', 'product.reject']);
 
         Services::injectMock('productApprovalRepository', new class {
@@ -35,6 +39,7 @@ final class AdminProductApprovalTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

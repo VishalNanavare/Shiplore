@@ -77,8 +77,23 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset(true);
         parent::tearDown();
+    }
+
+    /**
+     * This file hits BOTH admin/... and vendor/... routes, so the host can't be fixed
+     * once for the whole class — each test that makes a real request calls this with
+     * its OWN panel. See PanelSubdomainIsolationTest / AdminAccessTest for why plain
+     * $_SERVER assignment doesn't work and why tearDown() must unsetServer().
+     */
+    private function withHost(string $host): void
+    {
+        service('superglobals')->setServer('HTTP_HOST', $host);
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
     }
 
     // ---- helpers ---------------------------------------------------------
@@ -136,6 +151,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testStaffHoursChangeBecomesChangeRequest(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->asShopStaff();
 
         $r = $this->withSession(service('session')->get() + $this->staffSess())
@@ -152,6 +168,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testVendorInboxListsPendingRequests(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->asVendorOwner();
 
         $r = $this->withSession($this->sess())->get('vendor/approvals');
@@ -164,6 +181,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testVendorDecideRoutesToEngineAsVendorRole(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->asVendorOwner();
 
         $r = $this->withSession(service('session')->get() + $this->sess())
@@ -177,6 +195,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testStaffWithoutApprovePermCannotOpenInbox(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->asShopStaff();
 
         $this->withSession($this->staffSess())->get('vendor/approvals')->assertRedirect();
@@ -203,6 +222,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testAdminQueueListsAndDecides(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grantAdmin(['request.approve.admin']);
 
         $page = $this->withSession($this->adminSess())->get('admin/approvals');
@@ -218,6 +238,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testAdminQueueBlockedWithoutPermission(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grantAdmin([]);
 
         $this->withSession($this->adminSess())->get('admin/approvals')->assertRedirect();

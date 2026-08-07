@@ -17,6 +17,10 @@ final class ShopReportExportTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
         Services::injectMock('posReportRepository', new class {
             public ?int $scopedShop = -99;
             public function byDay(int $v, ?int $shopId, string $from, string $to): array
@@ -29,6 +33,7 @@ final class ShopReportExportTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset(true);
         parent::tearDown();
     }

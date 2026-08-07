@@ -14,6 +14,10 @@ final class AdminRefundTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
         $this->grant(['payment.view', 'payment.refund']);
 
         Services::injectMock('refundRepository', new class {
@@ -33,6 +37,7 @@ final class AdminRefundTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

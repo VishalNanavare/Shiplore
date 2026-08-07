@@ -18,8 +18,32 @@ final class VendorTenantScopeTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
 
+    /**
+     * This file hits BOTH admin/... and vendor/... routes across different tests, so
+     * unlike a single-panel test file the host can't be fixed once in setUp() — each
+     * test that makes a real request must call this first with its OWN panel.
+     *
+     * Both restricted route groups (app/Config/Routes.php 'subdomain' option) only
+     * register for a matching Host header — see PanelSubdomainIsolationTest and
+     * AdminAccessTest, which this reproduces exactly. resetSingle() is required
+     * because 'request'/'routes' are cached singletons that otherwise keep whichever
+     * host was current when they were first built for this process; tearDown()'s
+     * unsetServer() is required because Superglobals::setServer() writes straight
+     * into the real $_SERVER array, which plain Services::reset() does not undo — an
+     * un-cleaned host here would leak into every test that runs after this file in
+     * the same PHPUnit process.
+     */
+    private function withHost(string $host): void
+    {
+        service('superglobals')->setServer('HTTP_HOST', $host);
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
+    }
+
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }
@@ -240,7 +264,7 @@ final class VendorTenantScopeTest extends CIUnitTestCase
         $routes = $this->read('Config/Routes.php');
 
         $leavePos = strpos($routes, "post('admin/portal/leave'");
-        $groupPos = strpos($routes, "group('admin', ['filter' => 'webAuth:platform']");
+        $groupPos = strpos($routes, "group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']");
         $this->assertNotFalse($leavePos);
         $this->assertNotFalse($groupPos);
         $this->assertLessThan($groupPos, $leavePos, 'admin/portal/leave must be declared BEFORE the pinned group — first-declaration-wins');
@@ -255,7 +279,7 @@ final class VendorTenantScopeTest extends CIUnitTestCase
     public function testPortalLeaveIsNoLongerDeclaredInsideTheAdminGroup(): void
     {
         $routes = $this->read('Config/Routes.php');
-        $groupPos = strpos($routes, "group('admin', ['filter' => 'webAuth:platform']");
+        $groupPos = strpos($routes, "group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']");
         $groupEnd = strpos($routes, "\n});", $groupPos);
         $this->assertNotFalse($groupEnd);
         $groupBody = substr($routes, $groupPos, $groupEnd - $groupPos);
@@ -298,6 +322,7 @@ final class VendorTenantScopeTest extends CIUnitTestCase
 
     public function testAdminDeleteSpecialWiresVendorIdThroughToRepo(): void
     {
+        $this->withHost('admin.shiplore.in');
         Services::injectMock('capabilityRepository', new class {
             public function loadAssignments(int $u): array
             {
@@ -323,6 +348,7 @@ final class VendorTenantScopeTest extends CIUnitTestCase
 
     public function testVendorDeleteTierWiresCallersOwnVendorId(): void
     {
+        $this->withHost('vendor.shiplore.in');
         Services::injectMock('capabilityRepository', new class {
             public function loadAssignments(int $u): array
             {

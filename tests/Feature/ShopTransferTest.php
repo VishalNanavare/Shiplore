@@ -21,6 +21,10 @@ final class ShopTransferTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
         $this->engine = new class {
             public array $submitted = [];
             public function submit(array $in, array $actor, $now = null): array { $this->submitted[] = [$in, $actor]; return ['ok' => true, 'id' => 1, 'status' => 'pending_l1']; }
@@ -36,6 +40,7 @@ final class ShopTransferTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset(true);
         parent::tearDown();
     }

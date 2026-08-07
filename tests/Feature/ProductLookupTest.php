@@ -13,8 +13,26 @@ final class ProductLookupTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
+    }
+
+    /**
+     * This file hits BOTH admin/lookup/... and vendor/lookup/... routes, so the host
+     * can't be fixed once for the whole class — each test that makes a real request
+     * calls this with its OWN panel. See PanelSubdomainIsolationTest / AdminAccessTest
+     * for why plain $_SERVER assignment doesn't work, why tearDown() must
+     * unsetServer(), and why 'router' needs resetting alongside 'request'/'routes'
+     * (Services::router() returns a cached instance that ignores new arguments once
+     * built, so a stale one from an earlier test/host survives otherwise).
+     */
+    private function withHost(string $host): void
+    {
+        service('superglobals')->setServer('HTTP_HOST', $host);
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
     }
 
     private function grantAdmin(array $perms): void
@@ -65,6 +83,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testAdminShopsReturnsVendorShops(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grantAdmin(['product.view']);
         Services::injectMock('vendorShopRepository', new class {
             public function list(int $v): array { return [['id' => 2, 'name' => 'Main Shop']]; }
@@ -78,6 +97,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testAdminCategoryDefaultsReturnsTaxAndHsn(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grantAdmin(['product.view']);
         Services::injectMock('catalogLookupRepository', new class {
             public function defaultsForCategory(int $c): array { return ['tax_class_id' => 3, 'tax_class_name' => 'GST 12%', 'gst_pct' => '12.00', 'hsn_id' => 5, 'hsn_code' => '6403']; }
@@ -90,6 +110,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testAdminLookupDeniedWithoutPermission(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grantAdmin(['order.view']);
         $r = $this->ajaxGet($this->adminSess(), 'admin/lookup/vendors/7/shops');
         $r->assertStatus(403);
@@ -97,6 +118,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testVendorShopsForcesOwnVendorId(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->grantVendor();
         $spy = new class {
             public int $askedFor = 0;
@@ -110,6 +132,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testVendorAttributesRejectsForeignCategory(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->grantVendor();
         Services::injectMock('adminProductRepository', new class {
             public function allowedCategories(int $v): array { return [['id' => 10, 'name' => 'Allowed']]; } // 99 not allowed

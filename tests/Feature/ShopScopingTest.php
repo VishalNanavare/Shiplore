@@ -15,6 +15,15 @@ final class ShopScopingTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
+    }
+
     /** Two shops on the vendor; the manager is assigned to shop 1 (Andheri) only. */
     private function shopRow(int $id, string $name): array
     {
@@ -73,6 +82,7 @@ final class ShopScopingTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset(true);
         parent::tearDown();
     }

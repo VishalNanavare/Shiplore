@@ -17,6 +17,10 @@ final class AdminOrderTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
         $this->grant(['order.view', 'order.cancel']);
 
         Services::injectMock('orderRepository', new class {
@@ -45,6 +49,7 @@ final class AdminOrderTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

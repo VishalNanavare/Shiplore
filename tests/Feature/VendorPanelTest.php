@@ -19,6 +19,10 @@ final class VendorPanelTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
 
         // webAuth filter resolves capabilities from the DB — mock it (the vendor
         // panel itself enforces isolation by vendorId, not by permissions).
@@ -48,6 +52,7 @@ final class VendorPanelTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

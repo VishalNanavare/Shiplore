@@ -14,6 +14,10 @@ final class AdminPaymentTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
         $this->grant(['payment.view']);
 
         Services::injectMock('paymentRepository', new class {
@@ -32,6 +36,7 @@ final class AdminPaymentTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
     }

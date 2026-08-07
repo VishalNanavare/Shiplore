@@ -17,8 +17,24 @@ final class SyncEngineTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
+    }
+
+    /**
+     * Only the admin/sync-health/* tests below need this — the api/v1/sync/* tests
+     * further down must keep using the default (unset) host, since api/v1 is
+     * intentionally NOT subdomain-restricted (mobile/terminal clients hit it from the
+     * apex). See PanelSubdomainIsolationTest / AdminAccessTest for why plain $_SERVER
+     * assignment doesn't work and why tearDown() must unsetServer().
+     */
+    private function withHost(string $host): void
+    {
+        service('superglobals')->setServer('HTTP_HOST', $host);
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
     }
 
     // ---- shared mocks ----
@@ -56,6 +72,7 @@ final class SyncEngineTest extends CIUnitTestCase
     // ---- Admin dashboard ----
     public function testDashboardRenders(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grant(['integration.manage']);
         $this->engineMock();
         $r = $this->withSession($this->sess())->get('admin/sync-health');
@@ -67,6 +84,7 @@ final class SyncEngineTest extends CIUnitTestCase
 
     public function testDashboardDenied(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grant(['shop.view']);
         $this->engineMock();
         $this->withSession($this->sess())->get('admin/sync-health')->assertRedirect();
@@ -74,6 +92,7 @@ final class SyncEngineTest extends CIUnitTestCase
 
     public function testManualTriggerQueuesJob(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grant(['integration.manage']);
         $this->engineMock();
         $r = $this->withSession(service('session')->get() + $this->sess())

@@ -19,6 +19,10 @@ final class ShopPosCreditNoteTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.in');
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
         $this->returns = new class {
             public array $standalone = [];
             public function recent(int $v, int $l = 100): array { return [['id' => 5, 'credit_note_no' => 'CN-26-000005', 'customer_name' => 'Asha', 'server_invoice_no' => null, 'refund_amount' => '250.00', 'refund_method' => 'cash', 'reason' => 'damaged', 'shop' => 'Andheri', 'created_at' => '2026-06-12 10:00:00']]; }
@@ -33,6 +37,7 @@ final class ShopPosCreditNoteTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset(true);
         parent::tearDown();
     }

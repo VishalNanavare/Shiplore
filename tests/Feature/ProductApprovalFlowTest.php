@@ -13,8 +13,23 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
+    }
+
+    /**
+     * This file hits BOTH admin/... and vendor/... routes, so the host can't be fixed
+     * once for the whole class — each test that makes a real request calls this with
+     * its OWN panel. See PanelSubdomainIsolationTest / AdminAccessTest for why plain
+     * $_SERVER assignment doesn't work and why tearDown() must unsetServer().
+     */
+    private function withHost(string $host): void
+    {
+        service('superglobals')->setServer('HTTP_HOST', $host);
+        Services::resetSingle('request');
+        Services::resetSingle('routes');
+        Services::resetSingle('router');
     }
 
     private function grant(array $perms, string $scope = 'platform', ?int $scopeId = null): void
@@ -31,6 +46,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
     // ---- Vendor submit ----
     public function testVendorSubmitWiresToRepoForOwnProduct(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->grant([], 'vendor', 1);
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return ['id' => 1, 'display_name' => 'Sole Mate']; }
@@ -51,6 +67,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
 
     public function testVendorCannotSubmitAnotherVendorsProduct(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->grant([], 'vendor', 1);
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return ['id' => 1, 'display_name' => 'Sole Mate']; }
@@ -72,6 +89,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
     // ---- Vendor publish / unpublish (vendor controls storefront visibility) ----
     public function testVendorPublishWiresForOwnApprovedProduct(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->grant([], 'vendor', 1);
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return ['id' => 1, 'display_name' => 'Sole Mate']; }
@@ -91,6 +109,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
 
     public function testVendorCannotPublishAnotherVendorsProduct(): void
     {
+        $this->withHost('vendor.shiplore.in');
         $this->grant([], 'vendor', 1);
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return ['id' => 1, 'display_name' => 'Sole Mate']; }
@@ -111,6 +130,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
     // ---- Admin publish ----
     public function testAdminPublishWires(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grant(['product.approve']);
         $spy = new class {
             public bool $published = false;
@@ -125,6 +145,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
 
     public function testAdminPublishDeniedWithoutPermission(): void
     {
+        $this->withHost('admin.shiplore.in');
         $this->grant(['product.view']);
         Services::injectMock('productApprovalRepository', new class {
             public function publish(int $id, int $a): bool { return true; }
