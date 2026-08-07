@@ -9,6 +9,24 @@
   }
   function appToast(type, msg) { if (window.App && App.toast) { App.toast(type, msg); } else if (type === 'error') { window.alert(msg); } }
 
+  /**
+   * Build an <option> without going through innerHTML.
+   *
+   * Every label that reaches a select on this form is free text somebody typed
+   * into the panel — category names (platform/vendor) and shop names (vendor).
+   * Concatenating those into an option string and assigning innerHTML makes any
+   * `<img src=x onerror=...>` in a name execute in the admin's session, which is
+   * how a vendor reaches an admin. textContent never parses its input as markup.
+   * Same pattern rebuildBrandSelect() already uses.
+   */
+  function optionEl(value, label) {
+    var o = document.createElement('option');
+    o.value = (value === null || value === undefined) ? '' : String(value);
+    o.textContent = (label === null || label === undefined) ? '' : String(label);
+
+    return o;
+  }
+
   ready(function () {
     var $ = window.jQuery;
 
@@ -315,12 +333,21 @@
                         var col = document.createElement('div');
                         col.className = 'col-3 col-md-2';
                         col.innerHTML = '<div class="pf-lib-tile position-relative" style="cursor:' + (isOn ? 'default' : 'pointer') + ';border:2px solid transparent;border-radius:.45rem;overflow:hidden;' + (isOn ? 'opacity:.45' : '') + '">'
-                            + '<img src="' + im.url + '" style="width:100%;height:72px;object-fit:cover;display:block">'
                             + (isOn ? '<span class="badge text-bg-success position-absolute top-0 end-0 m-1">Added</span>'
                                     : '<span class="pf-lib-check position-absolute top-0 end-0 m-1 d-none"><i class="bi bi-check-circle-fill text-primary fs-5"></i></span>')
                             + '</div>';
+                        var tile = col.querySelector('.pf-lib-tile');
+
+                        // im.url used to be concatenated straight into src="…". A stored
+                        // filename holding a double quote closes the attribute and lets the
+                        // rest become markup — `" onerror="…` runs in the uploader's own
+                        // panel session. Assigning the property keeps the value data.
+                        var thumb = document.createElement('img');
+                        thumb.src = im.url;
+                        thumb.style.cssText = 'width:100%;height:72px;object-fit:cover;display:block';
+                        tile.insertBefore(thumb, tile.firstChild);
+
                         if (!isOn) {
-                            var tile = col.querySelector('.pf-lib-tile');
                             tile.addEventListener('click', function () {
                                 if (selected[im.id]) { delete selected[im.id]; tile.style.borderColor = 'transparent'; tile.querySelector('.pf-lib-check').classList.add('d-none'); }
                                 else { selected[im.id] = true; tile.style.borderColor = '#5b21b6'; tile.querySelector('.pf-lib-check').classList.remove('d-none'); }
@@ -452,17 +479,19 @@
         fetch(lookupBase + 'vendors/' + vid + '/categories', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
           .then(function (r) { return r.json(); }).then(function (res) {
             if (!cat) { return; }
-            var opts = '<option value="">Choose…</option>';
-            ((res && res.data) || []).forEach(function (c) { opts += '<option value="' + c.id + '">' + c.name + '</option>'; });
-            cat.innerHTML = opts; refreshSelect(cat); completeness();
+            cat.innerHTML = '';
+            cat.appendChild(optionEl('', 'Choose…'));
+            ((res && res.data) || []).forEach(function (c) { cat.appendChild(optionEl(c.id, c.name)); });
+            refreshSelect(cat); completeness();
           }).catch(function () {});
         fetch(lookupBase + 'vendors/' + vid + '/shops', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
           .then(function (r) { return r.json(); }).then(function (res) {
             if (!shop) { return; }
             var rows = (res && res.data) || [];
-            var opts = '<option value="">' + (rows.length ? 'Choose a shop…' : 'This vendor has no shops yet') + '</option>';
-            rows.forEach(function (s) { opts += '<option value="' + s.id + '">' + (s.name || '') + '</option>'; });
-            shop.innerHTML = opts; refreshSelect(shop); completeness();
+            shop.innerHTML = '';
+            shop.appendChild(optionEl('', rows.length ? 'Choose a shop…' : 'This vendor has no shops yet'));
+            rows.forEach(function (s) { shop.appendChild(optionEl(s.id, s.name || '')); });
+            refreshSelect(shop); completeness();
           }).catch(function () {});
       });
     }

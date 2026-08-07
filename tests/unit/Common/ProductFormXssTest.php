@@ -26,7 +26,21 @@ use CodeIgniter\Test\CIUnitTestCase;
  */
 final class ProductFormXssTest extends CIUnitTestCase
 {
-    private const JS = FCPATH . 'assets/js/product-form.js';
+    /**
+     * This file exists TWICE, served from two roots, and XssSinkTest already
+     * requires the copies to stay byte-identical. Every check below therefore runs
+     * against both: fixing only the served copy would leave the sink sitting in the
+     * other one, one `cp` away from coming back.
+     *
+     * @return array<string, array{string}>
+     */
+    public static function copies(): array
+    {
+        return [
+            'public/assets' => [FCPATH . 'assets/js/product-form.js'],
+            'assets'        => [ROOTPATH . 'assets/js/product-form.js'],
+        ];
+    }
 
     /**
      * The file with whole-line comments removed.
@@ -36,11 +50,11 @@ final class ProductFormXssTest extends CIUnitTestCase
      * carrying one of the needles also carries a trailing comment, so this is
      * sufficient without needing to tokenize JS strings and regex literals.
      */
-    private function code(): string
+    private function code(string $path): string
     {
         $out = [];
 
-        foreach (preg_split('/\R/', $this->raw()) as $line) {
+        foreach (preg_split('/\R/', $this->raw($path)) as $line) {
             if (preg_match('~^\s*(//|/\*|\*)~', $line) === 1) {
                 continue;
             }
@@ -50,17 +64,18 @@ final class ProductFormXssTest extends CIUnitTestCase
         return implode("\n", $out);
     }
 
-    private function raw(): string
+    private function raw(string $path): string
     {
-        $this->assertFileExists(self::JS);
+        $this->assertFileExists($path);
 
-        return (string) file_get_contents(self::JS);
+        return (string) file_get_contents($path);
     }
 
     /** The <option> builder must produce a node, never a markup string. */
-    public function testOptionBuilderUsesTextContent(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('copies')]
+    public function testOptionBuilderUsesTextContent(string $path): void
     {
-        $code = $this->code();
+        $code = $this->code($path);
 
         $this->assertMatchesRegularExpression(
             '/function optionEl\(value, label\)\s*\{.*?document\.createElement\(\'option\'\).*?o\.textContent\s*=/s',
@@ -75,9 +90,10 @@ final class ProductFormXssTest extends CIUnitTestCase
     }
 
     /** No <option> anywhere in the file may still be built by concatenation. */
-    public function testNoOptionIsBuiltByConcatenation(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('copies')]
+    public function testNoOptionIsBuiltByConcatenation(string $path): void
     {
-        $code = $this->code();
+        $code = $this->code($path);
 
         $this->assertStringNotContainsString(
             "'<option value=\"' +",
@@ -92,9 +108,10 @@ final class ProductFormXssTest extends CIUnitTestCase
     }
 
     /** Both vendor-scoped dropdowns must go through the safe builder. */
-    public function testVendorCategoryAndShopDropdownsUseOptionEl(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('copies')]
+    public function testVendorCategoryAndShopDropdownsUseOptionEl(string $path): void
     {
-        $code = $this->code();
+        $code = $this->code($path);
 
         $this->assertMatchesRegularExpression(
             '/cat\.appendChild\(optionEl\(c\.id, c\.name\)\)/',
@@ -113,9 +130,10 @@ final class ProductFormXssTest extends CIUnitTestCase
     }
 
     /** The media-library thumbnail URL must be set as a property, not built into an attribute. */
-    public function testLibraryThumbnailUrlIsNotInterpolatedIntoMarkup(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('copies')]
+    public function testLibraryThumbnailUrlIsNotInterpolatedIntoMarkup(string $path): void
     {
-        $code = $this->code();
+        $code = $this->code($path);
 
         $this->assertStringNotContainsString(
             "'<img src=\"' + im.url",
@@ -135,9 +153,10 @@ final class ProductFormXssTest extends CIUnitTestCase
     }
 
     /** No user-supplied value may be concatenated into any src attribute in this file. */
-    public function testNoSrcAttributeIsBuiltFromAVariable(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('copies')]
+    public function testNoSrcAttributeIsBuiltFromAVariable(string $path): void
     {
-        $code = $this->code();
+        $code = $this->code($path);
 
         preg_match_all('/\'<img src="\' \+ (\w+(?:\.\w+)*)/', $code, $m);
 
@@ -156,11 +175,12 @@ final class ProductFormXssTest extends CIUnitTestCase
      * line that also carries a trailing comment, so dropping whole-line comments is
      * enough to guarantee the assertions measure code and not prose.
      */
-    public function testFixCommentsAreWholeLineOnly(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('copies')]
+    public function testFixCommentsAreWholeLineOnly(string $path): void
     {
         $needles = ['optionEl(', 'thumb.src', 'insertBefore(thumb', "'<option value=\"'", "'<img src=\"'"];
 
-        foreach (preg_split('/\R/', $this->raw()) as $n => $line) {
+        foreach (preg_split('/\R/', $this->raw($path)) as $n => $line) {
             if (preg_match('~^\s*(//|/\*|\*)~', $line) === 1) {
                 continue;
             }
