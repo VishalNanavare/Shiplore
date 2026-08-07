@@ -115,11 +115,17 @@ final class StoreCatalogRepository
             ? 'p.category_id NOT IN (' . implode(',', array_map('intval', $hotelIds)) . ')'
             : '1=1';
 
-        // For the global/bucket count the covering index is fastest. For a single-shop
-        // scope, DON'T pin it — let the optimizer start from product_shops (idx_ps_shop)
-        // and join the shop's few hundred rows instead of scanning all ~960K products.
-        $singleShop = array_key_exists('shop_ids', $opts) && count((array) $opts['shop_ids']) <= 1;
-        $from       = $singleShop ? 'products p' : 'products p USE INDEX (idx_products_cat_status_del)';
+        // For the global/bucket count the covering index is fastest. For ANY shop scope,
+        // DON'T pin it — let the optimizer start from product_shops (idx_ps_shop) and
+        // join what those shops actually stock instead of scanning all ~1M products.
+        //
+        // This carve-out used to apply only when the scope was a single shop. The same
+        // reasoning holds for a multi-shop location scope, and that is the common case:
+        // on production a 200-shop scope covers 95,650 distinct products, so starting
+        // from product_shops reads ~9.5% of the catalogue instead of all of it. Keeping
+        // the pin for multi-shop is what made the location-scoped storefront ~22s.
+        $shopScoped = array_key_exists('shop_ids', $opts);
+        $from       = $shopScoped ? 'products p' : 'products p USE INDEX (idx_products_cat_status_del)';
         $cntQ       = Database::connect()->table($from)
             ->select('p.category_id AS cid, COUNT(*) AS cnt')
             ->where('p.status', 'published')
@@ -194,7 +200,7 @@ final class StoreCatalogRepository
     {
         // When a category filter is active, force the covering composite index so MySQL
         // doesn't prefer the PRIMARY key scan (which needs to scan ~480K rows to find 12).
-        $idxHint = ! empty($opts['category']) ? 'FORCE INDEX (idx_products_cat_status_del)' : '';
+        $idxHint = $this->categoryIndexHint($opts);
         $b       = $this->baseQuery($idxHint)
             ->select('p.id, p.title, p.slug, p.product_type, c.name AS category, c.slug AS category_slug, v.id AS vendor_id, v.display_name AS vendor, pv.base_price, pv.mrp, pv.id AS variant_id')
             ->select('(SELECT COUNT(*) FROM product_variants pvc WHERE pvc.product_id = p.id AND pvc.deleted_at IS NULL) AS variant_count', false)
@@ -245,7 +251,7 @@ final class StoreCatalogRepository
     /** Raw product count for the filters (UNCACHED). Worker + live filtered path. */
     public function computeCount(array $opts = []): int
     {
-        $idxHint = ! empty($opts['category']) ? 'FORCE INDEX (idx_products_cat_status_del)' : '';
+        $idxHint = $this->categoryIndexHint($opts);
         $b       = $this->baseQuery($idxHint);
         $this->applyFilters($b, $opts);
 
@@ -261,6 +267,42 @@ final class StoreCatalogRepository
      *                        category_id IN(...) is combined with ORDER BY / LIMIT —
      *                        use this to pin the covering index for category-filtered queries.
      */
+    /**
+     * Decide whether to pin `idx_products_cat_status_del` on the products table.
+     *
+     * The hint exists because MySQL otherwise prefers a PRIMARY-key scan for a
+     * category filter. That reasoning holds for an UNSCOPED browse — but it is
+     * actively harmful once a location scope is present, because pinning an index on
+     * `products` forces the optimizer to start there and walk the catalogue, testing
+     * the product_shops EXISTS on each row.
+     *
+     * Measured on production (1,000,531 published products, 5,393,036 product_shops
+     * rows, a 200-shop location scope covering 95,650 distinct products): the pinned
+     * plan runs the storefront product query in ~22s, and a page issues 7-8 of them.
+     * The operator's own EXPLAIN showed that WITHOUT the hint the optimizer picks
+     * materialize(product_shops) -> eq_ref(products) — the correct plan, bounded by
+     * what those shops actually stock rather than by the whole catalogue.
+     *
+     * rootCategoryFacets() already dropped the hint for a single-shop scope for
+     * exactly this reason (see the comment at its $singleShop line); this simply
+     * applies the same rule to any shop-scoped query, which is the common case.
+     *
+     * @param array<string,mixed> $opts
+     */
+    private function categoryIndexHint(array $opts): string
+    {
+        if (empty($opts['category'])) {
+            return '';
+        }
+
+        // Shop-scoped: let the optimizer start from product_shops.
+        if (array_key_exists('shop_ids', $opts)) {
+            return '';
+        }
+
+        return 'FORCE INDEX (idx_products_cat_status_del)';
+    }
+
     private function baseQuery(string $idxHint = ''): object
     {
         $from = $idxHint !== '' ? "products p $idxHint" : 'products p';
@@ -407,7 +449,7 @@ final class StoreCatalogRepository
     /** Raw category facets for the filters (UNCACHED). Worker + live filtered path. @return list<array<string,mixed>> */
     public function computeCategoryFacets(array $opts, int $limit = 60): array
     {
-        $hint = ! empty($opts['category']) ? 'FORCE INDEX (idx_products_cat_status_del)' : '';
+        $hint = $this->categoryIndexHint($opts);
         $b    = $this->facetBase($hint)->select('c.id, c.name, c.slug, c.level, COUNT(DISTINCT p.id) AS cnt');
         $this->applyFilters($b, $opts, ['category']);
 
@@ -451,7 +493,7 @@ final class StoreCatalogRepository
     /** Raw brand facets (UNCACHED). Worker + live filtered path. @return list<array<string,mixed>> */
     public function computeBrandFacets(array $opts, int $limit = 25): array
     {
-        $hint = ! empty($opts['category']) ? 'FORCE INDEX (idx_products_cat_status_del)' : '';
+        $hint = $this->categoryIndexHint($opts);
         $b    = $this->facetBase($hint)->select('b.id, b.name, COUNT(DISTINCT p.id) AS cnt')
             ->join('brands b', 'b.id = p.brand_id', 'inner');
         $this->applyFilters($b, $opts, ['brand']);
@@ -476,7 +518,7 @@ final class StoreCatalogRepository
     /** Raw type facets (UNCACHED). Worker + live filtered path. @return list<array<string,mixed>> */
     public function computeTypeFacets(array $opts): array
     {
-        $hint = ! empty($opts['category']) ? 'FORCE INDEX (idx_products_cat_status_del)' : '';
+        $hint = $this->categoryIndexHint($opts);
         $b    = $this->facetBase($hint)->select('p.product_type AS type, COUNT(DISTINCT p.id) AS cnt');
         $this->applyFilters($b, $opts, ['type']);
 
@@ -498,7 +540,7 @@ final class StoreCatalogRepository
     /** Raw price bounds (UNCACHED). Worker + live filtered path. @return array{lo:float,hi:float} */
     public function computePriceBounds(array $opts): array
     {
-        $hint = ! empty($opts['category']) ? 'FORCE INDEX (idx_products_cat_status_del)' : '';
+        $hint = $this->categoryIndexHint($opts);
         $b    = $this->facetBase($hint)->select('MIN(pv.base_price) AS lo, MAX(pv.base_price) AS hi');
         $this->applyFilters($b, $opts, ['price']);
         $row = $b->get()->getRowArray();
@@ -509,7 +551,7 @@ final class StoreCatalogRepository
     /** Discount % tier counts for admin banner filter builder. @return list<array{tier:int,label:string,count:int}> */
     public function computeDiscountTierFacets(array $opts): array
     {
-        $hint = ! empty($opts['category']) ? 'FORCE INDEX (idx_products_cat_status_del)' : '';
+        $hint = $this->categoryIndexHint($opts);
         $b    = $this->facetBase($hint)
             ->select('FLOOR((1 - pv.base_price / pv.mrp) * 100 / 10) * 10 AS tier_floor, COUNT(DISTINCT p.id) AS cnt', false)
             ->where('pv.mrp > pv.base_price');
