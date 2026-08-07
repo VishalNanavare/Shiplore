@@ -94,6 +94,12 @@ class S3Storage
                 continue;
             }
 
+            // Never advertise the framework's own runtime directories as buckets —
+            // the storage root is `writable`, so they are siblings of the real ones.
+            if (in_array(strtolower($item), self::RESERVED_BUCKETS, true)) {
+                continue;
+            }
+
             $path = $this->rootPath . DIRECTORY_SEPARATOR . $item;
             if (! is_dir($path)) {
                 continue;
@@ -829,6 +835,22 @@ class S3Storage
         return $this->metaPath . DIRECTORY_SEPARATOR . $bucket . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $safeKey) . '.json';
     }
 
+    /**
+     * Framework runtime directories that must never be addressable as buckets.
+     *
+     * A bucket is just a direct subdirectory of the storage root, and the deployed
+     * root is `writable` (s3.storagePath), which is also CodeIgniter's own writable
+     * directory — so `cache`, `logs`, `session` and `debugbar` sit alongside the real
+     * buckets and every one of them satisfies the name regex below. Without this
+     * deny-list they can be listed, read, written and deleted through the S3 API.
+     *
+     * Deliberately limited to the four names that are unambiguously framework
+     * internals. `data` and `uploads` are NOT listed: they follow the same CI4
+     * convention but could plausibly be real buckets here, and denying a live bucket
+     * would break media rather than protect it.
+     */
+    private const RESERVED_BUCKETS = ['cache', 'logs', 'session', 'debugbar'];
+
     private function validateBucketName(string $bucket): void
     {
         // Underscores are forbidden by the AWS S3 spec because bucket names
@@ -838,6 +860,10 @@ class S3Storage
         // and underscores are safe. MinIO and Ceph allow them for the same
         // reason.
         if (! preg_match('/^[a-z0-9_](?:[a-z0-9._-]{1,61})[a-z0-9_]$/', $bucket)) {
+            throw new InvalidArgumentException('Invalid bucket name.');
+        }
+
+        if (in_array(strtolower($bucket), self::RESERVED_BUCKETS, true)) {
             throw new InvalidArgumentException('Invalid bucket name.');
         }
     }

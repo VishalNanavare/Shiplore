@@ -263,6 +263,17 @@ class S3Controller extends BaseController
             return false;
         }
 
+        // $bucket was accepted but never consulted, so every prefix below was
+        // anonymously readable in EVERY bucket rather than only the media one —
+        // including `payments/invoice/`, `tickets/` and `reports/bulk/`. Scope the
+        // allow-list when a public bucket is configured. Empty (the default) keeps
+        // the previous behaviour, because narrowing to the wrong bucket name would
+        // 403 live public media; set `s3.publicReadBucket` to switch it on.
+        $publicBucket = trim((string) $this->config->publicReadBucket);
+        if ($publicBucket !== '' && $bucket !== $publicBucket) {
+            return false;
+        }
+
         // Limit anonymous access to your public media prefixes only.
         $publicPrefixes = [
             'metadata/temp_album_artwork/',
@@ -295,7 +306,10 @@ class S3Controller extends BaseController
             'client/sign/',
             'metadata/temp_artwork/',
             'metadata/temp_audio/',
-            'temp',
+            // Was 'temp' with no trailing slash, unlike all 30 siblings — a
+            // str_starts_with() prefix, so it also matched keys such as
+            // `tempsecrets.json` or `temp-db-backup.sql` at the bucket root.
+            'temp/',
             'metadata/canvas/',
             'metadata/playlist_screenshots/',
 

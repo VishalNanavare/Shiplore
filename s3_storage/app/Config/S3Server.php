@@ -29,6 +29,21 @@ class S3Server extends BaseConfig
     public bool $enforceSignatureV4 = true;
 
     /**
+     * Bucket that S3Controller::isPublicReadRequest()'s anonymous-read prefix
+     * allow-list applies to.
+     *
+     * That allow-list takes a $bucket argument but never consulted it, so the ~31
+     * "public media" prefixes (including `payments/invoice/`, `tickets/` and
+     * `reports/bulk/`) were anonymously readable in EVERY bucket, not just the
+     * media one. Set this to the media bucket to scope them.
+     *
+     * Left empty by default so behaviour is unchanged until it is configured —
+     * setting it is a narrowing, and narrowing the wrong name would 403 live
+     * public media. Configure via `s3.publicReadBucket` in .env.
+     */
+    public string $publicReadBucket = '';
+
+    /**
      * CORS policy.
      * Keep policy here so application logic does not duplicate values.
      */
@@ -92,6 +107,7 @@ class S3Server extends BaseConfig
         $this->accessKey = trim((string) env('s3.accessKey', (string) env('S3_ACCESS_KEY', $this->accessKey)), " \t\n\r\0\x0B\"'");
         $this->secretKey = trim((string) env('s3.secretKey', (string) env('S3_SECRET_KEY', $this->secretKey)), " \t\n\r\0\x0B\"'");
         $this->enforceSignatureV4 = filter_var(env('s3.enforceSignatureV4', $this->enforceSignatureV4), FILTER_VALIDATE_BOOLEAN);
+        $this->publicReadBucket = trim((string) env('s3.publicReadBucket', $this->publicReadBucket), " \t\n\r\0\x0B\"'");
         $this->enableCors = filter_var(env('s3.enableCors', $this->enableCors), FILTER_VALIDATE_BOOLEAN);
         $originsEnv = (string) env('s3.cors.origins', (string) env('s3.corsAllowOrigin', implode(',', $this->corsAllowedOrigins)));
         $this->corsAllowedOrigins = $this->parseCsv($originsEnv, $this->corsAllowedOrigins, false);
