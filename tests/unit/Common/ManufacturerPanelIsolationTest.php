@@ -112,9 +112,9 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
         $routes = $this->read('Config/Routes.php');
 
         $this->assertStringContainsString(
-            "\$routes->group('manufacturer', ['filter' => 'webAuth:manufacturer']",
+            "\$routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' => ['manufacturer', 'mshop']]",
             $routes,
-            'the manufacturer group must be pinned to the manufacturer principal',
+            'the manufacturer group must be pinned to the manufacturer principal AND its own subdomain',
         );
     }
 

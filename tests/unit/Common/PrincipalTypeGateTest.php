@@ -120,14 +120,14 @@ final class PrincipalTypeGateTest extends TestCase
         $routes = (string) file_get_contents(APPPATH . 'Config/Routes.php');
 
         $this->assertStringContainsString(
-            "\$routes->group('admin', ['filter' => 'webAuth:platform']",
+            "\$routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']",
             $routes,
-            'the admin group must be pinned to platform principals',
+            'the admin group must be pinned to platform principals AND its own subdomain',
         );
         $this->assertStringContainsString(
-            "\$routes->group('vendor', ['filter' => 'webAuth:vendor']",
+            "\$routes->group('vendor', ['filter' => 'webAuth:vendor', 'subdomain' => ['vendor', 'shop']]",
             $routes,
-            'the vendor group must be pinned to vendor principals',
+            'the vendor group must be pinned to vendor principals AND its own (+ shop.) subdomain',
         );
         $this->assertStringNotContainsString(
             "\$routes->group('admin', ['filter' => 'webAuth']",

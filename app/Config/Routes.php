@@ -137,7 +137,14 @@ $routes->group('store', static function (RouteCollection $routes): void {
 
 // ---- Rider web panel (standalone; own mobile-OTP session, not webAuth) ----
 // Rider public routes (login/logout — no auth required)
-$routes->group('rider', static function (RouteCollection $routes): void {
+//
+// 'subdomain' restricts this whole group to rider.shiplore.in — see
+// PanelSubdomainIsolationTest. Without it, rider/login (and everything else here)
+// resolved identically on the apex and every other panel's subdomain, the exact
+// leak reported for monline (https://shiplore.in/monline/browse serving the same
+// page as monline.shiplore.in). CI4 simply never registers the route when the
+// host doesn't match, so a wrong-host request gets the framework's normal 404.
+$routes->group('rider', ['subdomain' => 'rider'], static function (RouteCollection $routes): void {
     $routes->get('login', 'Rider\AuthController::loginForm');
     $routes->post('login', 'Rider\AuthController::sendCode', ['filter' => ['csrf', 'throttle:5,60']]);
     $routes->post('login/otp', 'Rider\AuthController::otpLogin', ['filter' => ['csrf', 'throttle:5,60']]);
@@ -146,7 +153,7 @@ $routes->group('rider', static function (RouteCollection $routes): void {
 });
 
 // Rider protected routes (session-guarded via riderAuth)
-$routes->group('rider', ['filter' => 'riderAuth'], static function (RouteCollection $routes): void {
+$routes->group('rider', ['filter' => 'riderAuth', 'subdomain' => 'rider'], static function (RouteCollection $routes): void {
     $routes->get('dashboard', 'Rider\DashboardController::index');
     $routes->get('poll', 'Rider\DashboardController::poll');               // live offers + stats (JSON)
     $routes->get('earnings', 'Rider\DashboardController::earnings');
@@ -182,7 +189,9 @@ $routes->post('admin/portal/leave', 'Admin\PortalController::leave', ['filter' =
 // `webAuth:platform` pins this group to platform principals. The session cookie is
 // domain-wide (.shiplore.in), so without the argument a vendor login is accepted
 // here too. Log-only until auth.enforcePrincipalType=true — see App\Filters\WebAuthFilter.
-$routes->group('admin', ['filter' => 'webAuth:platform'], static function (RouteCollection $routes): void {
+// 'subdomain' pins the whole group to admin.shiplore.in — see the comment on the
+// rider group above and PanelSubdomainIsolationTest.
+$routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin'], static function (RouteCollection $routes): void {
     $routes->get('dashboard', 'AdminController::dashboard');
 
     // "Go to Portal" — admin impersonation into vendor/shop/rider portals + return.
@@ -583,7 +592,10 @@ $routes->group('admin', ['filter' => 'webAuth:platform'], static function (Route
 // ---- Vendor panel (Phase 7) — session-guarded; tenant-isolated in controllers ----
 // Pinned to vendor principals. An admin reaches this group through
 // Admin\PortalController, which rewrites principal_type to 'vendor' on enter.
-$routes->group('vendor', ['filter' => 'webAuth:vendor'], static function (RouteCollection $routes): void {
+// 'subdomain' pins this group to vendor.shiplore.in AND shop.shiplore.in — shop
+// managers are vendor-panel staff (see the root-route comments at the top of this
+// file), so shop. must resolve the same panel. See PanelSubdomainIsolationTest.
+$routes->group('vendor', ['filter' => 'webAuth:vendor', 'subdomain' => ['vendor', 'shop']], static function (RouteCollection $routes): void {
     $routes->get('me',           'Vendor\MeController::index');
     $routes->post('me',          'Vendor\MeController::save',         ['filter' => 'csrf']);
     $routes->post('me/password', 'Vendor\MeController::savePassword', ['filter' => 'csrf']);
@@ -794,7 +806,9 @@ $routes->group('vendor', ['filter' => 'webAuth:vendor'], static function (RouteC
 // `webAuth:manufacturer` pins the principal, but that pin is LOG-ONLY until
 // auth.enforcePrincipalType is turned on — so the real gate is the party_type
 // constraint in ManufacturerAccountRepository, applied via requireManufacturer().
-$routes->group('manufacturer', ['filter' => 'webAuth:manufacturer'], static function (RouteCollection $routes): void {
+// 'subdomain' pins this group to manufacturer.shiplore.in AND mshop.shiplore.in,
+// mirroring the vendor/shop pair above. See PanelSubdomainIsolationTest.
+$routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' => ['manufacturer', 'mshop']], static function (RouteCollection $routes): void {
     $routes->get('dashboard', 'Manufacturer\ManufacturerDashboardController::index');
 
     // Units (factories). No delivery-range routes — mshops has no such columns.
@@ -822,10 +836,14 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer'], static func
 });
 
 // ---- monline.shiplore.in — the B2B marketplace ----
-// Path-based like every other panel, so it also resolves on the apex; the subdomain
-// simply lands visitors on '/'. Browsing is public but PRICE-FREE — pricing and every
-// ordering route require a resolved vendor buyer, enforced in the controllers.
-$routes->group('monline', static function (RouteCollection $routes): void {
+// 'subdomain' pins this group to monline.shiplore.in. This is the exact leak an
+// operator reported directly: https://shiplore.in/monline/browse served the same
+// page as https://monline.shiplore.in/browse, because this group used to be
+// path-based with no host restriction and so resolved on the apex (and on every
+// other panel's subdomain) too. Browsing is public but PRICE-FREE — pricing and
+// every ordering route require a resolved vendor buyer, enforced in the
+// controllers. See PanelSubdomainIsolationTest.
+$routes->group('monline', ['subdomain' => 'monline'], static function (RouteCollection $routes): void {
     $routes->get('/', 'Monline\CatalogController::home');
     $routes->get('browse', 'Monline\CatalogController::browse');
     $routes->get('product/(:segment)', 'Monline\CatalogController::product/$1');
