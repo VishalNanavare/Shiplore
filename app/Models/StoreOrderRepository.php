@@ -138,8 +138,19 @@ final class StoreOrderRepository
 
                     $lim = $cp['per_user_limit'] !== null ? (int) $cp['per_user_limit'] : 0;
                     if ($lim > 0) {
-                        $used = $db->table('coupon_redemptions')
-                            ->where('coupon_id', $couponId)->where('customer_id', $customerId)->countAllResults();
+                        // Audit B P1d: this count MUST be a locking read. The UPDATE above
+                        // X-locks the coupon row, so two checkouts of the same coupon do
+                        // serialize here — but under REPEATABLE READ a plain SELECT is a
+                        // consistent read served from the snapshot this transaction took at
+                        // its FIRST read, which happened before that UPDATE blocked. So the
+                        // second checkout would count redemptions as of before the first one
+                        // committed, see 0, and insert a second row past per_user_limit.
+                        // FOR UPDATE reads the latest committed version instead, and its gap
+                        // lock stops a concurrent insert from slipping in behind the count.
+                        $used = (int) ($db->query(
+                            'SELECT COUNT(*) AS c FROM coupon_redemptions WHERE coupon_id = ? AND customer_id = ? FOR UPDATE',
+                            [$couponId, $customerId],
+                        )->getRowArray()['c'] ?? 0);
                         if ($used >= $lim) {
                             $db->transRollback();
 

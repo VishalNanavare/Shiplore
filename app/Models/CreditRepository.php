@@ -43,18 +43,36 @@ final class CreditRepository
             return ['ok' => false, 'message' => 'Enter a repayment amount.'];
         }
         $db = Database::connect();
-        $credit = $db->table('customer_credits')->where('id', $creditId)->where('vendor_id', $vendorId)->get()->getRowArray();
-        if ($credit === null) {
-            return ['ok' => false, 'message' => 'Credit not found.'];
-        }
-        $balance = (float) $credit['balance'];
-        if ($balance <= 0) {
-            return ['ok' => false, 'message' => 'This credit is already cleared.'];
-        }
-        $pay = min($amount, $balance);
-        $newBalance = round($balance - $pay, 2);
         $db->transBegin();
+
         try {
+            // Audit B P1d: the balance used to be read OUTSIDE the transaction and an
+            // ABSOLUTE new value written back inside it — a textbook lost update. Two
+            // cashiers taking ₹400 each against the same ₹1000 udhaar both read 1000,
+            // both computed 600, and both wrote 600: two credit_repayments rows exist
+            // but the customer's balance only dropped by one of them, so the vendor
+            // silently loses ₹400. Same read-check-write shape M18 fixed in
+            // InventoryService::reserve(); the fix is the same — take the row lock
+            // inside the transaction so the second repayment reads the post-commit
+            // balance and pays against what is actually left.
+            $credit = $db->query(
+                'SELECT balance FROM customer_credits WHERE id = ? AND vendor_id = ? FOR UPDATE',
+                [$creditId, $vendorId],
+            )->getRowArray();
+            if ($credit === null) {
+                $db->transRollback();
+
+                return ['ok' => false, 'message' => 'Credit not found.'];
+            }
+            $balance = (float) $credit['balance'];
+            if ($balance <= 0) {
+                $db->transRollback();
+
+                return ['ok' => false, 'message' => 'This credit is already cleared.'];
+            }
+            $pay        = min($amount, $balance);
+            $newBalance = round($balance - $pay, 2);
+
             $db->table('credit_repayments')->insert([
                 'uuid' => bin2hex(random_bytes(18)), 'customer_credit_id' => $creditId, 'amount' => number_format($pay, 2, '.', ''),
                 'method' => in_array($method, ['cash', 'card', 'upi', 'wallet'], true) ? $method : 'cash',
