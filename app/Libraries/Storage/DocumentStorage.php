@@ -153,7 +153,20 @@ final class DocumentStorage
             }
         }
 
-        return site_url($dummyRoute . '?key=' . rawurlencode($key));
+        // $dummyRoute always lives in ITS OWN panel's route group (its first path
+        // segment names that panel), but the caller redirecting here does not
+        // necessarily run on that panel's host — Admin\MediaController::view() calls
+        // this with 'vendor/media/file' while serving admin.shiplore.in, and the
+        // shared App\Controllers\MediaController::serve() (reachable from any host)
+        // uses the 'vendor/kyc/file' default regardless of who is asking. Since panel
+        // route groups are host-restricted, a plain site_url() here would carry the
+        // CURRENT host with a DIFFERENT panel's path. panel_url() builds the link on
+        // $dummyRoute's own panel host instead; for a same-panel caller (the current
+        // host already IS that panel) it resolves to the identical URL site_url()
+        // would have produced, so this is safe for every existing caller.
+        [$dummySub] = explode('/', $dummyRoute, 2);
+
+        return panel_url($dummySub, $dummyRoute . '?key=' . rawurlencode($key));
     }
 
     /**

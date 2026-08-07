@@ -28,6 +28,17 @@ final class WebAuthFilter implements FilterInterface
         'manufacturer' => 'manufacturer/dashboard',
     ];
 
+    /**
+     * Same keys as LANDING, mapped to the SUBDOMAIN each principal's own panel is
+     * gated to (app/Config/Routes.php 'subdomain' route option) — 'platform' is the
+     * only one where the principal_type and the subdomain label differ.
+     */
+    private const LANDING_SUBDOMAIN = [
+        'platform'     => 'admin',
+        'vendor'       => 'vendor',
+        'manufacturer' => 'manufacturer',
+    ];
+
     public function before(RequestInterface $request, $arguments = null)
     {
         $session = session();
@@ -146,8 +157,19 @@ final class WebAuthFilter implements FilterInterface
             return null;
         }
 
+        // The route group currently being served is host-restricted to $expected's own
+        // subdomain (app/Config/Routes.php 'subdomain' option), so a mismatch means the
+        // CURRENT host belongs to $expected's panel, not $actual's. LANDING[$actual]
+        // names a path in a DIFFERENT panel's route group, which will not resolve on
+        // this host — panel_url() builds it on $actual's own subdomain instead of the
+        // current one.
+        $landing = self::LANDING[$actual] ?? null;
+        if ($landing === null) {
+            return redirect()->to('login')->with('error', 'That area is not available for this account.');
+        }
+
         return redirect()
-            ->to(self::LANDING[$actual] ?? 'login')
+            ->to(panel_url(self::LANDING_SUBDOMAIN[$actual], $landing))
             ->with('error', 'That area is not available for this account.');
     }
 

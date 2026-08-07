@@ -18,7 +18,22 @@
                 <span class="badge text-bg-primary"><i class="bi bi-shop me-1"></i><?= esc($activeShopName) ?></span>
             <?php endif; ?>
         <?php endif; ?>
-        <?php $notifAllUrl = str_starts_with(uri_string(), 'admin') ? site_url('admin/notifications') : site_url('vendor/notifications'); ?>
+        <?php
+        // This partial is shared by admin, vendor and manufacturer layouts. It used to
+        // be a 2-way ternary (admin vs "everything else -> vendor"), which silently
+        // sent a manufacturer session into the vendor panel's notifications page — a
+        // route that panel restriction now also 404s on the manufacturer host, since
+        // 'vendor/...' only resolves on vendor./shop. There is no manufacturer
+        // notifications page yet, so that branch lands on the manufacturer dashboard
+        // instead of a broken or wrong-panel destination.
+        if (str_starts_with(uri_string(), 'admin')) {
+            $notifAllUrl = site_url('admin/notifications');
+        } elseif (str_starts_with(uri_string(), 'manufacturer')) {
+            $notifAllUrl = site_url('manufacturer/dashboard');
+        } else {
+            $notifAllUrl = site_url('vendor/notifications');
+        }
+        ?>
         <div class="dropdown notif-dropdown">
             <button class="btn btn-light position-relative" type="button" id="notifBell" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Notifications">
                 <i class="bi bi-bell"></i>
@@ -45,7 +60,18 @@
                 <span class="d-none d-sm-inline"><?= esc($userName ?? 'Super Admin') ?></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="<?= site_url(str_starts_with(uri_string(), 'admin') ? 'admin/profile' : 'vendor/me') ?>"><i class="bi bi-person me-2"></i>Profile</a></li>
+                <?php
+                // Same panel-detection fix as the notifications link above: manufacturer
+                // has no profile page yet, so it must not fall through to vendor's.
+                if (str_starts_with(uri_string(), 'admin')) {
+                    $profileUrl = site_url('admin/profile');
+                } elseif (str_starts_with(uri_string(), 'manufacturer')) {
+                    $profileUrl = site_url('manufacturer/dashboard');
+                } else {
+                    $profileUrl = site_url('vendor/me');
+                }
+                ?>
+                <li><a class="dropdown-item" href="<?= esc($profileUrl, 'attr') ?>"><i class="bi bi-person me-2"></i>Profile</a></li>
                 <?php if (str_starts_with(uri_string(), 'admin') && service('policyEngine')->can(service('scopeContext')->all(), 'settings.view')): ?>
                 <li><a class="dropdown-item" href="<?= site_url('admin/settings') ?>"><i class="bi bi-gear me-2"></i>Settings</a></li>
                 <?php endif; ?>

@@ -80,7 +80,7 @@ $q         = (string) (service('request')->getGet('q') ?? '');
                         <li><h6 class="dropdown-header"><?= esc($buyerName ?? '') ?></h6></li>
                         <li><a class="dropdown-item" href="<?= site_url('monline/orders') ?>"><i class="bi bi-receipt me-2"></i>My purchase orders</a></li>
                         <li><a class="dropdown-item" href="<?= site_url('monline/cart') ?>"><i class="bi bi-cart me-2"></i>Current order</a></li>
-                        <li><a class="dropdown-item" href="<?= site_url('vendor/dashboard') ?>"><i class="bi bi-shop me-2"></i>Vendor panel</a></li>
+                        <li><a class="dropdown-item" href="<?= panel_url('vendor', 'vendor/dashboard') ?>"><i class="bi bi-shop me-2"></i>Vendor panel</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><form method="post" action="<?= site_url('logout') ?>" class="m-0"><?= csrf_field() ?><button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Sign out</button></form></li>
                     <?php else: ?>
@@ -131,7 +131,7 @@ $q         = (string) (service('request')->getGet('q') ?? '');
             <div class="col-6 col-md-2"><h6 class="text-white small text-uppercase">Shop retail</h6>
                 <ul class="list-unstyled small mb-0">
                     <li><a href="<?= site_url('/') ?>"><?= esc($brand) ?> storefront</a></li>
-                    <li><a href="<?= site_url('vendor/dashboard') ?>">Vendor panel</a></li>
+                    <li><a href="<?= panel_url('vendor', 'vendor/dashboard') ?>">Vendor panel</a></li>
                 </ul>
             </div>
             <div class="col-md-4"><h6 class="text-white small text-uppercase">Sell on monline</h6>

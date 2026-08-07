@@ -6,7 +6,16 @@
             Viewing as <strong><?= esc(session()->get('impersonation_label') ?: 'portal user') ?></strong>
             <span class="d-none d-sm-inline">— signed in by <?= esc(session()->get('impersonator_name') ?: 'Admin') ?></span>
         </span>
-        <form method="post" action="<?= site_url('admin/portal/leave') ?>" class="m-0">
+        <?php
+        // Shared by admin/vendor/manufacturer/rider layouts, so this renders while
+        // impersonating on ANY of those hosts, not just admin's own. 'admin/portal/leave'
+        // is a standalone route (Routes.php) outside the admin group precisely so an
+        // impersonated (non-platform) session can still reach it, but it still needs an
+        // explicit admin-host URL: PortalController::leave() itself already redirects
+        // back to admin.shiplore.in on success, so this keeps the exit link consistent
+        // with where the flow actually lands.
+        ?>
+        <form method="post" action="<?= panel_url('admin', 'admin/portal/leave') ?>" class="m-0">
             <?= csrf_field() ?>
             <button type="submit" class="btn btn-sm btn-light fw-semibold">
                 <i class="bi bi-box-arrow-left me-1"></i>Return to Admin

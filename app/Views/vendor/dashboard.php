@@ -25,9 +25,10 @@
  * card grid above renders every link through site_url(), which would be wrong for a
  * cross-subdomain destination.
  *
- * The link is relative on purpose. monline is path-routed as well as subdomain-routed,
- * so /monline resolves on whatever host the vendor is already signed in on — no
- * absolute URL to keep in step with the environment, and no re-login.
+ * monline is its own route group, gated to the monline. subdomain — it does NOT
+ * resolve on vendor./shop. (see PanelSubdomainIsolationTest), so a plain site_url()
+ * here would carry this panel's host with monline's path. panel_url() builds the
+ * link on monline's own subdomain explicitly instead.
  */
 ?>
 <div class="card mb-3 border-primary-subtle">
@@ -39,8 +40,8 @@
             <div class="fw-semibold">Buy stock on monline</div>
             <div class="text-secondary small">Order directly from manufacturers at wholesale prices.</div>
         </div>
-        <a class="btn btn-outline-primary" href="<?= site_url('monline/orders') ?>">My purchase orders</a>
-        <a class="btn btn-primary" href="<?= site_url('monline/browse') ?>">Browse catalogue</a>
+        <a class="btn btn-outline-primary" href="<?= panel_url('monline', 'monline/orders') ?>">My purchase orders</a>
+        <a class="btn btn-primary" href="<?= panel_url('monline', 'monline/browse') ?>">Browse catalogue</a>
     </div>
 </div>
 
