@@ -320,6 +320,39 @@ final class VendorApiController extends BaseApiController
         return $scope === null || $scope === $shopId;
     }
 
+    /**
+     * Does this variant AND this shop belong to the caller's vendor?
+     *
+     * inShopScope() alone is NOT an ownership check: shopScope() returns null for any
+     * vendor owner, so `$scope === null` makes it true for EVERY shop id, including
+     * another tenant's. Endpoints that take shop_id/variant_id from the request body
+     * and write must therefore verify tenancy separately — InventoryService takes
+     * (variantId, shopId) with no vendor predicate and its ensureRow() will INSERT a
+     * fresh inventory row, so an unchecked call writes into another vendor's stock.
+     *
+     * Mirrors Vendor\ProductInventoryController::ownVariantShop() on the web side and
+     * the `join shops ... where s.vendor_id = $vid` idiom already used by
+     * setReorderLevel() and inventoryMovements() in this class.
+     *
+     * Deliberately does NOT require an existing `inventory` row: receive() legitimately
+     * creates one for a vendor's own shop+variant.
+     */
+    private function ownsVariantAndShop(int $variantId, int $shopId, int $vid): bool
+    {
+        $db = \Config\Database::connect();
+
+        $shopOk = $db->table('shops')
+            ->where('id', $shopId)->where('vendor_id', $vid)->where('deleted_at', null)
+            ->countAllResults() > 0;
+        if (! $shopOk) {
+            return false;
+        }
+
+        return $db->table('product_variants')
+            ->where('id', $variantId)->where('vendor_id', $vid)->where('deleted_at', null)
+            ->countAllResults() > 0;
+    }
+
     private function vendorId(): ?int
     {
         $repo = service('vendorAccountRepository');
@@ -350,13 +383,22 @@ final class VendorApiController extends BaseApiController
             return $this->notVendor();
         }
 
-        $secret = env('JWT_SECRET', '');
-        $token  = service('tokenService')->issue(
-            ['sub' => (int) $user['id'], 'typ' => $user['principal_type'], 'name' => $user['name']],
-            2_592_000,
-            $secret,
-            time(),
-        );
+        // Was env('JWT_SECRET', '') — the ONLY mint site that did not fail closed. With
+        // the variable unset it signed with the empty string, so anyone able to guess
+        // that could forge a token for any user. TokenService::secret() throws instead,
+        // and also rejects the committed INSECURE_DEFAULT placeholder.
+        $secret = \App\Libraries\TokenService::secret();
+
+        // Carry the password-binding claim the other mint sites set, so a password
+        // change revokes tokens issued here too. Nullable-tolerant: an account with no
+        // password (OTP-only) simply gets no claim, exactly as elsewhere.
+        $claims = ['sub' => (int) $user['id'], 'typ' => $user['principal_type'], 'name' => $user['name']];
+        $pwd    = \App\Libraries\TokenService::pwdClaim($user['password_hash'] ?? null);
+        if ($pwd !== null) {
+            $claims['pwd'] = $pwd;
+        }
+
+        $token = service('tokenService')->issue($claims, 2_592_000, $secret, time());
 
         return $this->ok([
             'token'      => $token,
@@ -513,6 +555,12 @@ final class VendorApiController extends BaseApiController
             return $this->failWith('VALIDATION_ERROR', 'variant_id, shop_id and qty/delta are required.');
         }
         if (! $this->inShopScope($shopId)) {
+            return $this->failWith('FORBIDDEN', 'Not allowed to adjust stock for this shop.');
+        }
+        // inShopScope() is a BRANCH check, not a tenancy one — it passes for every shop
+        // id when the caller is a vendor owner. Without this, an owner could post
+        // another vendor's shop_id/variant_id and write into their stock.
+        if (! $this->ownsVariantAndShop($variantId, $shopId, $vid)) {
             return $this->failWith('FORBIDDEN', 'Not allowed to adjust stock for this shop.');
         }
 

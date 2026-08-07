@@ -24,6 +24,22 @@ final class AuthApiController extends BaseApiController
     private const WINDOW_MIN = 15;
 
     /**
+     * Principals that may obtain a mobile JWT from the password login.
+     *
+     * This is the class's own contract, stated in the docblock above: it serves the
+     * three mobile apps — customer, vendor and delivery (rider). login() had NO
+     * principal gate at all, while the OTP and Firebase paths beside it both pin
+     * 'customer' — so a platform-admin email plus password minted a 30-day
+     * (self::TTL) token carrying `typ = platform`, which CapabilityResolver then
+     * resolves to that admin's real permissions across api/v1. That is vertical
+     * privilege escalation from one un-gated endpoint.
+     *
+     * An allow-list rather than a deny-list, so a principal type added later is
+     * excluded until someone decides otherwise.
+     */
+    private const MOBILE_PRINCIPALS = ['customer', 'vendor', 'rider'];
+
+    /**
      * CORS preflight catch-all so OPTIONS requests resolve to a route; the `cors`
      * filter answers the actual preflight (adds the allow-* headers). Returns 204.
      */
@@ -182,6 +198,17 @@ final class AuthApiController extends BaseApiController
             $attempts->record($id, false, 'invalid_credentials', $user !== null ? (int) $user['id'] : null, $ip, $ua);
 
             return $this->failWith('UNAUTHENTICATED', 'Invalid credentials.');
+        }
+
+        // Gate the principal AFTER the credential check and BEFORE minting, so this
+        // cannot be used to probe which identifiers are staff accounts: a wrong
+        // password and a correct password on a non-mobile account are both a plain
+        // failure to the caller. Recorded as its own reason so the rejection is
+        // visible in login_attempts rather than silently looking like a bad password.
+        if (! in_array((string) ($user['principal_type'] ?? ''), self::MOBILE_PRINCIPALS, true)) {
+            $attempts->record($id, false, 'not_mobile_principal', (int) $user['id'], $ip, $ua);
+
+            return $this->failWith('FORBIDDEN', 'This account cannot sign in from the mobile app.');
         }
 
         $attempts->record($id, true, null, (int) $user['id'], $ip, $ua);

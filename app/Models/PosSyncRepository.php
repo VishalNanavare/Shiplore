@@ -19,13 +19,33 @@ use Throwable;
 final class PosSyncRepository
 {
     /** Bind a device to a terminal via its activation code. @return array<string,mixed>|null */
-    public function activate(string $code, string $fingerprint): ?array
+    /**
+     * Bind a device to a terminal by activation code.
+     *
+     * @param list<int>|null $allowedVendorIds Vendors the caller may activate for.
+     *        Null means no restriction (kept for CLI/administrative use). The API
+     *        caller MUST pass its own vendor ids: the lookup used to match on the
+     *        activation code alone, so any authenticated principal — including a
+     *        self-registered storefront customer — could bind their device to
+     *        another tenant's terminal. The predicate is applied in the SELECT
+     *        rather than checked afterwards because the UPDATE below fires as soon
+     *        as a row matches; a post-hoc check would reject the response after the
+     *        binding had already been written.
+     */
+    public function activate(string $code, string $fingerprint, ?array $allowedVendorIds = null): ?array
     {
-        $db  = Database::connect();
-        $row = $db->table('pos_terminals')
+        if ($allowedVendorIds !== null && $allowedVendorIds === []) {
+            return null;
+        }
+
+        $db = Database::connect();
+        $qb = $db->table('pos_terminals')
             ->select('id, shop_id, vendor_id, name, invoice_prefix, status')
-            ->where('activation_code', $code)->where('status', 'active')->where('deleted_at', null)
-            ->get()->getRowArray();
+            ->where('activation_code', $code)->where('status', 'active')->where('deleted_at', null);
+        if ($allowedVendorIds !== null) {
+            $qb->whereIn('vendor_id', array_map('intval', $allowedVendorIds));
+        }
+        $row = $qb->get()->getRowArray();
         if ($row === null) {
             return null;
         }

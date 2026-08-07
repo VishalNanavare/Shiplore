@@ -19,9 +19,21 @@ final class PosController extends BaseApiController
 {
     public function activate()
     {
-        $in   = $this->input();
-        $term = service('posSyncRepository')->activate((string) ($in['activation_code'] ?? ''), (string) ($in['device_fingerprint'] ?? ''));
+        $in = $this->input();
 
+        // Every other method in this class resolves the terminal through terminal(),
+        // which binds it to callerVendorIds(). activate() did not, and matched on the
+        // activation code alone — so any principal with a valid JWT, including a
+        // self-registered storefront customer, could bind their device fingerprint to
+        // another tenant's POS terminal. Scope the lookup to the caller's own vendors.
+        $term = service('posSyncRepository')->activate(
+            (string) ($in['activation_code'] ?? ''),
+            (string) ($in['device_fingerprint'] ?? ''),
+            $this->callerVendorIds(),
+        );
+
+        // Same message either way: a caller must not be able to tell "wrong code" from
+        // "not your terminal", which would turn this into an activation-code oracle.
         return $term === null ? $this->failWith('NOT_FOUND', 'Invalid or inactive activation code.') : $this->ok($term);
     }
 
