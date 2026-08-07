@@ -1,6 +1,8 @@
 <?php
+
+require __DIR__ . '/_db.php';
 /* Truncate all sales/order/product/shop/vendor data and reset auto_increment */
-$pdo = new PDO('mysql:host=127.0.0.1;dbname=test;charset=utf8mb4','root','root@123',[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+$pdo = shiplore_pdo();
 $pdo->exec('SET FOREIGN_KEY_CHECKS=0');
 $tables = [
     'pos_sale_items','pos_sale_taxes','pos_sale_payments','pos_sales',

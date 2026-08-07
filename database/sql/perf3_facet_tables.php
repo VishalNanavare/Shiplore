@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/_db.php';
+
 /**
  * perf3_facet_tables.php
  *
@@ -20,12 +22,7 @@
  *   php database/sql/perf3_facet_tables.php
  */
 
-$pdo = new PDO(
-    'mysql:host=127.0.0.1;dbname=test;charset=utf8mb4',
-    'root',
-    'root@123',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+$pdo = shiplore_pdo();
 
 $tables = [
     'category_facet_summary' => <<<'SQL'

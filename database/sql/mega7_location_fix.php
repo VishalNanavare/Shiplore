@@ -18,14 +18,12 @@
  *    Seed pincodes from the shop address_json so delivery-area checks pass.
  */
 declare(strict_types=1);
+
+require __DIR__ . '/_db.php';
 set_time_limit(0);
 ini_set('memory_limit','512M');
 
-$pdo = new PDO(
-    'mysql:host=127.0.0.1;dbname=test;charset=utf8mb4',
-    'root','root@123',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+$pdo = shiplore_pdo();
 $pdo->exec('SET FOREIGN_KEY_CHECKS=0; SET autocommit=0');
 $start = microtime(true);
 

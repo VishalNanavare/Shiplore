@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-$pdo = new PDO('mysql:host=127.0.0.1;dbname=test;charset=utf8mb4', 'root', 'root@123', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-]);
+
+require __DIR__ . '/_db.php';
+$pdo = shiplore_pdo();
 
 $vendorId = 1;
 $shopIds  = [1, 2, 3, 4, 5];

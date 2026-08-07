@@ -1,4 +1,6 @@
 <?php
+
+require __DIR__ . '/_db.php';
 /**
  * perf2_indexes.php
  *
@@ -11,12 +13,7 @@
  * Run once: php database/sql/perf2_indexes.php
  */
 
-$pdo = new PDO(
-    'mysql:host=127.0.0.1;dbname=test;charset=utf8mb4',
-    'root',
-    'root@123',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-);
+$pdo = shiplore_pdo();
 
 $indexes = [
     [

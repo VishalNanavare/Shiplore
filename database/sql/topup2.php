@@ -1,5 +1,7 @@
 <?php
-$pdo = new PDO('mysql:host=127.0.0.1;dbname=test;charset=utf8mb4', 'root', 'root@123', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+
+require __DIR__ . '/_db.php';
+$pdo = shiplore_pdo();
 $vendorId = 1; $shopIds = [1,2,3,4,5];
 $pS = $pdo->prepare("INSERT INTO products (uuid,vendor_id,category_id,tax_class_id,base_unit_id,title,slug,product_type,status,is_pos_enabled,is_online_enabled,origin) VALUES (UUID(),?,?,?,?,?,?,'simple','published',1,1,'server')");
 $vS = $pdo->prepare("INSERT INTO product_variants (uuid,product_id,vendor_id,sku,mrp,base_price,unit_id,is_default,status,origin) VALUES (UUID(),?,?,?,?,?,?,1,'active','server')");
