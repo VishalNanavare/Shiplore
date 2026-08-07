@@ -44,6 +44,39 @@ class S3Server extends BaseConfig
     public string $publicReadBucket = '';
 
     /**
+     * Whether an uploaded body is checked against the SHA-256 the client signed.
+     *
+     * SigV4 puts `x-amz-content-sha256` in the canonical request, so the signature
+     * covers the CLAIMED hash — but the body was never hashed and compared, so the
+     * claim was never tested. Anyone able to capture a signed PUT (the service does
+     * not force HTTPS) can swap the body for different bytes, leave the header
+     * alone, and the signature still verifies. The stored object is then whatever
+     * the attacker chose.
+     *
+     * 'off' | 'log' | 'enforce'. Defaults to 'log': the check runs and any mismatch
+     * is written to the log, but the upload still succeeds. Enforce only after a
+     * traffic day shows no mismatches from real clients — same staged convention
+     * MediaController::checkPrivateOwner() uses, and for the same reason. A client
+     * using aws-chunked transfer sends chunk-framed bytes that legitimately do not
+     * hash to the object content; those requests carry a STREAMING-* claim and are
+     * skipped, but an unknown client could still surprise us.
+     *
+     * Configure via `s3.verifyPayloadHash` in .env. Both flip and rollback are
+     * env-only, no deploy.
+     */
+    public string $verifyPayloadHash = 'log';
+
+    /**
+     * Objects larger than this are not hash-verified (0 disables the cap).
+     *
+     * Verification costs one extra pass over the written file. putObject() already
+     * runs md5_file() for the ETag, so this is the same order of cost, but on a
+     * media server handling large uploads it is worth bounding. A skipped object is
+     * logged, never silently passed.
+     */
+    public int $verifyPayloadMaxBytes = 268_435_456; // 256 MiB
+
+    /**
      * CORS policy.
      * Keep policy here so application logic does not duplicate values.
      */
@@ -108,6 +141,12 @@ class S3Server extends BaseConfig
         $this->secretKey = trim((string) env('s3.secretKey', (string) env('S3_SECRET_KEY', $this->secretKey)), " \t\n\r\0\x0B\"'");
         $this->enforceSignatureV4 = filter_var(env('s3.enforceSignatureV4', $this->enforceSignatureV4), FILTER_VALIDATE_BOOLEAN);
         $this->publicReadBucket = trim((string) env('s3.publicReadBucket', $this->publicReadBucket), " \t\n\r\0\x0B\"'");
+
+        // Anything unrecognised falls back to 'log' rather than 'off': a typo in .env
+        // must not silently disable the check.
+        $mode                    = strtolower(trim((string) env('s3.verifyPayloadHash', $this->verifyPayloadHash), " \t\n\r\0\x0B\"'"));
+        $this->verifyPayloadHash = in_array($mode, ['off', 'log', 'enforce'], true) ? $mode : 'log';
+        $this->verifyPayloadMaxBytes = max(0, (int) env('s3.verifyPayloadMaxBytes', $this->verifyPayloadMaxBytes));
         $this->enableCors = filter_var(env('s3.enableCors', $this->enableCors), FILTER_VALIDATE_BOOLEAN);
         $originsEnv = (string) env('s3.cors.origins', (string) env('s3.corsAllowOrigin', implode(',', $this->corsAllowedOrigins)));
         $this->corsAllowedOrigins = $this->parseCsv($originsEnv, $this->corsAllowedOrigins, false);

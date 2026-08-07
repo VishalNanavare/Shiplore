@@ -50,7 +50,8 @@ class S3Controller extends BaseController
                 $this->config->multipartAutoCleanup,
                 $this->config->multipartMaxAgeSeconds,
                 $this->config->multipartCleanupProbabilityPercent,
-                $this->config->multipartCleanupBatchSize
+                $this->config->multipartCleanupBatchSize,
+                $this->config->verifyPayloadMaxBytes
             );
         } catch (Throwable $e) {
             $this->bootError = 'Storage backend is not writable. Check s3.storagePath and filesystem permissions.';
@@ -72,6 +73,83 @@ class S3Controller extends BaseController
             $this->bootError = $this->bootError ?? ('Auth subsystem failed to initialize: ' . $e->getMessage());
             $this->safeLog('critical', 'S3 auth bootstrap failed: {message}', ['message' => $e->getMessage()]);
         }
+    }
+
+    /**
+     * The SHA-256 the client committed to for this body, or '' if it committed to none.
+     *
+     * Returns '' whenever verification is switched off, so putObject() does not pay
+     * for a hash nobody will look at.
+     */
+    private function signedPayloadHash(): string
+    {
+        if ($this->auth === null || $this->config->verifyPayloadHash === 'off') {
+            return '';
+        }
+
+        return $this->auth->signedPayloadHash($this->request);
+    }
+
+    /**
+     * Compare the bytes we stored against the hash the client signed for them.
+     *
+     * SigV4 signs the CLAIMED payload hash, never the payload. Nothing hashed the
+     * body, so the claim went untested: capture a signed PUT (this service does not
+     * force HTTPS), swap the body, leave x-amz-content-sha256 alone, and the
+     * signature still verifies against attacker-chosen content.
+     *
+     * ROLLOUT — 'log' by default, the same staged convention
+     * MediaController::checkPrivateOwner() follows. A mismatch is recorded but the
+     * upload still succeeds, because a client this server has never seen could be
+     * sending a body that legitimately does not hash to the stored bytes (a
+     * transfer encoding we do not decode, say). Watch the 'payload hash' notices
+     * for a traffic day, then set
+     *
+     *     s3.verifyPayloadHash = enforce
+     *
+     * in .env. Under 'enforce' the stored object is deleted before responding, so a
+     * rejected upload leaves nothing behind.
+     *
+     * @param array{sha256: string, size: int} $result
+     */
+    private function verifyUploadedPayload(string $bucket, string $key, string $expect, array $result): ?ResponseInterface
+    {
+        if ($expect === '') {
+            return null;
+        }
+
+        $actual    = (string) ($result['sha256'] ?? '');
+        $enforcing = $this->config->verifyPayloadHash === 'enforce';
+
+        // Skipped by the size cap — say so rather than letting silence read as a pass.
+        if ($actual === '') {
+            $this->safeLog('notice', 'payload hash NOT CHECKED (over verifyPayloadMaxBytes): {bucket}/{key} size {size}', [
+                'bucket' => $bucket, 'key' => $key, 'size' => (string) ($result['size'] ?? 0),
+            ]);
+
+            return null;
+        }
+
+        if (hash_equals($expect, $actual)) {
+            return null;
+        }
+
+        $this->safeLog($enforcing ? 'error' : 'notice', 'payload hash MISMATCH [{action}]: {bucket}/{key} signed {expect} stored {actual}', [
+            'action' => $enforcing ? 'REJECTED' : 'would reject',
+            'bucket' => $bucket, 'key' => $key, 'expect' => $expect, 'actual' => $actual,
+        ]);
+
+        if (! $enforcing) {
+            return null;
+        }
+
+        $this->storage->deleteObject($bucket, $key);
+
+        return $this->errorResponse(
+            400,
+            'XAmzContentSHA256Mismatch',
+            'The provided x-amz-content-sha256 header does not match what was computed.',
+        );
     }
 
     private function safeLog(string $level, string $message, array $context = []): void
@@ -487,10 +565,16 @@ class S3Controller extends BaseController
             );
         }
 
+        $expect = $this->signedPayloadHash();
         $input = fopen('php://input', 'rb');
-        $result = $this->storage->putObject($bucket, $key, $input, $this->collectObjectMetadata());
+        $result = $this->storage->putObject($bucket, $key, $input, $this->collectObjectMetadata(), $expect);
         if (is_resource($input)) {
             fclose($input);
+        }
+
+        $mismatch = $this->verifyUploadedPayload($bucket, $key, $expect, $result);
+        if ($mismatch !== null) {
+            return $mismatch;
         }
 
         return $this->withCommonHeaders(

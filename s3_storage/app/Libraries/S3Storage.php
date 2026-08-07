@@ -19,12 +19,16 @@ class S3Storage
     private int $multipartCleanupProbabilityPercent;
     private int $multipartCleanupBatchSize;
 
+    /** 0 disables the cap; see Config\S3Server::$verifyPayloadMaxBytes. */
+    private int $verifyPayloadMaxBytes;
+
     public function __construct(
         string $rootPath,
         bool $multipartAutoCleanup = true,
         int $multipartMaxAgeSeconds = 86_400,
         int $multipartCleanupProbabilityPercent = 5,
-        int $multipartCleanupBatchSize = 200
+        int $multipartCleanupBatchSize = 200,
+        int $verifyPayloadMaxBytes = 268_435_456
     )
     {
         $this->rootPath = rtrim($rootPath, "\\/");
@@ -34,6 +38,7 @@ class S3Storage
         $this->multipartMaxAgeSeconds = max(0, $multipartMaxAgeSeconds);
         $this->multipartCleanupProbabilityPercent = max(0, min(100, $multipartCleanupProbabilityPercent));
         $this->multipartCleanupBatchSize = max(1, $multipartCleanupBatchSize);
+        $this->verifyPayloadMaxBytes = max(0, $verifyPayloadMaxBytes);
 
         $this->ensureDirectory($this->rootPath);
         $this->ensureDirectory($this->metaPath);
@@ -117,9 +122,13 @@ class S3Storage
 
     /**
      * @param array<string, mixed> $meta
-     * @return array{etag: string, size: int, mtime: int}
+     * @param string $expectSha256 SHA-256 the client signed for this body, or '' to
+     *        skip verification. Purely additive: existing callers that omit it get
+     *        exactly the previous behaviour. The caller decides what a mismatch
+     *        means — see S3Controller::verifyUploadedPayload().
+     * @return array{etag: string, size: int, mtime: int, path: string, sha256: string}
      */
-    public function putObject(string $bucket, string $key, $inputStream, array $meta): array
+    public function putObject(string $bucket, string $key, $inputStream, array $meta, string $expectSha256 = ''): array
     {
         if (! $this->bucketExists($bucket)) {
             throw new InvalidArgumentException('Bucket does not exist.');
@@ -142,11 +151,24 @@ class S3Storage
 
         $this->saveObjectMetadata($bucket, $key, $meta);
 
+        $size  = filesize($objectPath) ?: 0;
         $mtime = filemtime($objectPath) ?: time();
+
+        // Hashed from the file rather than the stream: php://input is consumed by the
+        // copy above and cannot be rewound, and buffering the body to hash it first
+        // would pull a whole upload into memory. This is a second pass over the file,
+        // the same order of cost as the md5_file() the ETag already needs.
+        $sha256 = '';
+        if ($expectSha256 !== '' && ($this->verifyPayloadMaxBytes === 0 || $size <= $this->verifyPayloadMaxBytes)) {
+            $sha256 = hash_file('sha256', $objectPath) ?: '';
+        }
+
         return [
             'etag' => md5_file($objectPath) ?: '',
-            'size' => filesize($objectPath) ?: 0,
+            'size' => $size,
             'mtime' => $mtime,
+            'path' => $objectPath,
+            'sha256' => $sha256,
         ];
     }
 

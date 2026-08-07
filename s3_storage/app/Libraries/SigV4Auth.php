@@ -323,6 +323,28 @@ class SigV4Auth
         return $payloadHash !== '' ? $payloadHash : 'UNSIGNED-PAYLOAD';
     }
 
+    /**
+     * The SHA-256 the client signed for its body, or '' when it did not commit to one.
+     *
+     * resolvePayloadHash() feeds this value into the canonical request, so the
+     * signature covers the CLAIM. Nothing ever hashed the body to test the claim,
+     * which is what makes a captured signed PUT re-usable with different content.
+     * Returning it here lets the write path compare, without touching the signature
+     * maths above (that stays byte-for-byte what it was).
+     *
+     * '' means "no commitment, nothing to verify":
+     *   - UNSIGNED-PAYLOAD — the documented opt-out, used by presigned URLs
+     *   - STREAMING-*      — aws-chunked; the wire bytes are chunk-framed and
+     *                        legitimately do not hash to the object content
+     *   - anything not a bare 64-char hex digest
+     */
+    public function signedPayloadHash(IncomingRequest $request): string
+    {
+        $claim = strtolower(trim($this->resolvePayloadHash($request)));
+
+        return preg_match('/^[0-9a-f]{64}$/', $claim) === 1 ? $claim : '';
+    }
+
     private function buildCanonicalUri(): string
     {
         $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
