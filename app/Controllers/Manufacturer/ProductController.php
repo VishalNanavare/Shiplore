@@ -70,11 +70,16 @@ final class ProductController extends BaseManufacturerController
         if (($err = ManufacturerPricing::validate($in)) !== '') {
             return redirect()->back()->withInput()->with('error', $err);
         }
+        $mshopId = $this->resolveMshopId();
+        if ($mshopId === null) {
+            return redirect()->back()->withInput()->with('error', 'Select a manufacturing unit for this product.');
+        }
 
         $res = service('manufacturerProductRepository')->create(
             (int) $this->manufacturerId(),
             $in,
             (int) session()->get('user_id'),
+            $mshopId,
         );
 
         if (! $res['ok']) {
@@ -110,11 +115,17 @@ final class ProductController extends BaseManufacturerController
             return $denied;
         }
 
+        $mshopId = $this->resolveMshopId();
+        if ($mshopId === null) {
+            return redirect()->back()->withInput()->with('error', 'Select a manufacturing unit for this product.');
+        }
+
         $res = service('manufacturerProductRepository')->update(
             $id,
             (int) $this->manufacturerId(),
             (array) $this->request->getPost(),
             (int) session()->get('user_id'),
+            $mshopId,
         );
 
         if (! $res['ok']) {
@@ -181,9 +192,36 @@ final class ProductController extends BaseManufacturerController
         return redirect()->to('manufacturer/products')->with('success', 'Product submitted for approval.');
     }
 
+    /**
+     * The manufacturing unit this product is assigned to, resolved the same way
+     * `Vendor\ProductController::resolveShopIds()` resolves a shop: unit-scoped staff
+     * (store keeper / unit manager) are forced to their own effective unit rather than
+     * trusted to post one, an owner or manufacturer-wide manager may pick any unit they
+     * are allowed to act on. Returns null when nothing valid is available/selected —
+     * the caller must treat that as a hard stop, not "unassigned is fine".
+     */
+    private function resolveMshopId(): ?int
+    {
+        if (! $this->isOwner()) {
+            $effective = $this->effectiveMshopId();
+
+            return $effective !== null && $effective > 0 ? $effective : null;
+        }
+        $posted = (int) $this->request->getPost('mshop_id');
+
+        return $posted > 0 && in_array($posted, $this->allowedMshopIds(), true) ? $posted : null;
+    }
+
     /** @param array<string,mixed>|null $product */
     private function form(?array $product): string
     {
+        $isOwner = $this->isOwner();
+        $units   = $this->mshopOptions();
+        $current = $product !== null ? (int) ($product['mshop_id'] ?? 0) : 0;
+        $selectedMshop = $current > 0
+            ? $current
+            : (! $isOwner ? $this->effectiveMshopId() : (count($units) === 1 ? array_key_first($units) : null));
+
         return $this->render(
             'manufacturer/products/form',
             'products',
@@ -191,6 +229,10 @@ final class ProductController extends BaseManufacturerController
             [
                 'product'    => $product,
                 'categories' => service('adminProductRepository')->allowedCategories((int) $this->manufacturerId()),
+                'masters'    => service('adminProductRepository')->formMasters(),
+                'units'      => $units,
+                'lockUnit'   => ! $isOwner,
+                'selectedMshop' => $selectedMshop,
             ],
         );
     }

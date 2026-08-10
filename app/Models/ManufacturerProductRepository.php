@@ -59,8 +59,9 @@ final class ManufacturerProductRepository
         }
 
         return Database::connect()->table('products p')
-            ->select('p.*, pv.id AS variant_id, pv.sku, pv.making_price, pv.base_price')
+            ->select('p.*, pv.id AS variant_id, pv.sku, pv.making_price, pv.base_price, pm.mshop_id')
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
+            ->join('product_mshops pm', "pm.product_id = p.id AND pm.status = 'active'", 'left')
             ->where('p.id', $id)
             ->where('p.vendor_id', $manufacturerId)
             ->where('p.deleted_at', null)
@@ -71,9 +72,14 @@ final class ManufacturerProductRepository
      * Create a product plus its default variant.
      *
      * @param array<string,mixed> $d
+     * @param int|null $mshopId The manufacturing unit this product is made at. Required:
+     *        `product_mshops` is the join every reader uses to find a manufacturer's
+     *        products — the unit-scoped list (`list()` above) and the monline B2B
+     *        catalogue both go through it. A product created with no unit is silently
+     *        unreachable from either, which is exactly the bug this parameter closes.
      * @return array{ok:bool,id:?int,error:string}
      */
-    public function create(int $manufacturerId, array $d, ?int $actorId = null): array
+    public function create(int $manufacturerId, array $d, ?int $actorId = null, ?int $mshopId = null): array
     {
         $title = trim((string) ($d['title'] ?? ''));
         if ($manufacturerId <= 0 || $title === '') {
@@ -81,6 +87,9 @@ final class ManufacturerProductRepository
         }
         if (($categoryId = (int) ($d['category_id'] ?? 0)) <= 0) {
             return ['ok' => false, 'id' => null, 'error' => 'Category is required.'];
+        }
+        if ($mshopId === null || $mshopId <= 0) {
+            return ['ok' => false, 'id' => null, 'error' => 'Select a manufacturing unit for this product.'];
         }
         if (($err = ManufacturerPricing::validate($d)) !== '') {
             return ['ok' => false, 'id' => null, 'error' => $err];
@@ -125,6 +134,16 @@ final class ManufacturerProductRepository
             'updated_by'   => $actorId,
         ]);
 
+        $now = date('Y-m-d H:i:s');
+        $db->table('product_mshops')->insert([
+            'product_id' => $productId,
+            'mshop_id'   => $mshopId,
+            'status'     => 'active',
+            'listed_at'  => $now,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
         $db->transComplete();
 
         return $db->transStatus()
@@ -136,9 +155,13 @@ final class ManufacturerProductRepository
      * Update a product and/or its default variant's prices.
      *
      * @param array<string,mixed> $d
+     * @param int|null $mshopId Reassign the product to a different manufacturing unit.
+     *        Null means "leave the current assignment alone" — a section-only autosave
+     *        (e.g. pricing) must not have the side effect of clearing which unit the
+     *        product belongs to just because that call never mentioned one.
      * @return array{ok:bool,error:string}
      */
-    public function update(int $id, int $manufacturerId, array $d, ?int $actorId = null): array
+    public function update(int $id, int $manufacturerId, array $d, ?int $actorId = null, ?int $mshopId = null): array
     {
         $existing = $this->findById($id, $manufacturerId);
         if ($existing === null) {
@@ -176,6 +199,21 @@ final class ManufacturerProductRepository
                 'base_price'   => $merged['base_price'],
                 'updated_by'   => $actorId,
             ]);
+        if ($mshopId !== null && $mshopId > 0) {
+            // One unit per product on this flow, same simplification the vendor create/edit
+            // flow uses for shops — reassignment replaces the row rather than accumulating
+            // one per unit ever assigned.
+            $db->table('product_mshops')->where('product_id', $id)->delete();
+            $now = date('Y-m-d H:i:s');
+            $db->table('product_mshops')->insert([
+                'product_id' => $id,
+                'mshop_id'   => $mshopId,
+                'status'     => 'active',
+                'listed_at'  => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
         $db->transComplete();
 
         return $db->transStatus() ? ['ok' => true, 'error' => ''] : ['ok' => false, 'error' => 'Could not save the product.'];

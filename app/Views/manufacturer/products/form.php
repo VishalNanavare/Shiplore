@@ -32,6 +32,23 @@ $selling = old('base_price', $isEdit ? ($product['base_price'] ?? '') : '');
                 </select>
             </div>
 
+            <div class="col-md-4">
+                <label class="form-label">Manufacturing unit <span class="text-danger">*</span></label>
+                <select name="mshop_id" class="form-select" required <?= ($lockUnit ?? false) ? 'disabled' : '' ?>>
+                    <option value="">Choose unit…</option>
+                    <?php foreach (($units ?? []) as $uid => $uname): ?>
+                        <option value="<?= esc((string) $uid, 'attr') ?>"
+                            <?= (string) old('mshop_id', (string) ($selectedMshop ?? '')) === (string) $uid ? 'selected' : '' ?>>
+                            <?= esc($uname) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <?php if ($lockUnit ?? false): ?>
+                    <input type="hidden" name="mshop_id" value="<?= esc((string) ($selectedMshop ?? ''), 'attr') ?>">
+                <?php endif; ?>
+                <div class="form-text">Which of your units makes this product. Determines where it's listed on monline.</div>
+            </div>
+
             <div class="col-12">
                 <label class="form-label">Description</label>
                 <textarea name="description" class="form-control" rows="3"><?= esc(old('description', $isEdit ? ($product['description'] ?? '') : '')) ?></textarea>
