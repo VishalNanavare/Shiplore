@@ -49,6 +49,35 @@ $selling = old('base_price', $isEdit ? ($product['base_price'] ?? '') : '');
                 <div class="form-text">Which of your units makes this product. Determines where it's listed on monline.</div>
             </div>
 
+            <div class="col-md-4">
+                <label class="form-label">Tax class <span class="text-danger">*</span></label>
+                <select name="tax_class_id" class="form-select" required>
+                    <option value="">Choose tax class…</option>
+                    <?php foreach (($masters['tax'] ?? []) as $t): ?>
+                        <option value="<?= esc((string) $t['id'], 'attr') ?>"
+                            <?= (string) old('tax_class_id', $isEdit ? (string) ($product['tax_class_id'] ?? '') : '') === (string) $t['id'] ? 'selected' : '' ?>>
+                            <?= esc($t['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Unit of measure <span class="text-danger">*</span></label>
+                <select name="unit_id" class="form-select" required <?= $isEdit ? 'disabled' : '' ?>>
+                    <option value="">Choose unit…</option>
+                    <?php foreach (($masters['units'] ?? []) as $u): ?>
+                        <option value="<?= esc((string) $u['id'], 'attr') ?>"
+                            <?= (string) old('unit_id', $isEdit ? (string) ($product['base_unit_id'] ?? '') : '') === (string) $u['id'] ? 'selected' : '' ?>>
+                            <?= esc($u['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <?php if ($isEdit): ?>
+                    <input type="hidden" name="unit_id" value="<?= esc((string) ($product['base_unit_id'] ?? ''), 'attr') ?>">
+                <?php endif; ?>
+                <div class="form-text">How this product is measured (kg, pcs, ltr…). Locked after creation, same as the vendor product form.</div>
+            </div>
+
             <div class="col-12">
                 <label class="form-label">Description</label>
                 <textarea name="description" class="form-control" rows="3"><?= esc(old('description', $isEdit ? ($product['description'] ?? '') : '')) ?></textarea>

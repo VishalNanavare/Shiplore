@@ -97,6 +97,31 @@ final class ManufacturerProductMshopTest extends CIUnitTestCase
         $this->assertSame('active', $row['status']);
     }
 
+    /**
+     * tax_class_id and unit_id were always written as NULL, for a different reason than
+     * the mshop bug above: the repository read them from `$d` correctly, but the
+     * manufacturer form had no fields with those names at all, so the keys were simply
+     * never present in the posted array. This end-to-end round trip is what the new
+     * form fields make reachable — locking in that the repository side of that fix
+     * (which needed no code change) actually behaves the way the view now assumes.
+     */
+    public function testCreatePersistsTaxClassAndUnitOfMeasure(): void
+    {
+        $res = $this->repo()->create(1, [
+            'title' => 'Steel Rod', 'category_id' => 5,
+            'tax_class_id' => 3, 'unit_id' => 9,
+            'making_price' => '100', 'base_price' => '150',
+        ], 42, 7);
+
+        $this->assertTrue($res['ok'], $res['error'] ?? '');
+        $product = $this->conn->table('products')->where('id', (int) $res['id'])->get()->getRowArray();
+        $this->assertSame(3, (int) $product['tax_class_id']);
+        $this->assertSame(9, (int) $product['base_unit_id']);
+
+        $variant = $this->conn->table('product_variants')->where('product_id', (int) $res['id'])->get()->getRowArray();
+        $this->assertSame(9, (int) $variant['unit_id'], 'the default variant must carry the same unit of measure as the product header');
+    }
+
     /** listed_at should reflect when the product was actually put on a unit, not stay perpetually null. */
     public function testCreateStampsListedAt(): void
     {
