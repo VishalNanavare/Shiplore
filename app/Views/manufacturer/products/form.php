@@ -11,7 +11,7 @@ $selling = old('base_price', $isEdit ? ($product['base_price'] ?? '') : '');
 <div class="card">
     <div class="card-header"><?= $isEdit ? 'Edit Product' : 'New Product' ?></div>
     <div class="card-body">
-        <form method="post" action="<?= site_url($action) ?>" class="row g-3" id="mfgProductForm">
+        <form method="post" action="<?= site_url($action) ?>" class="row g-3" id="mfgProductForm" enctype="multipart/form-data">
             <?= csrf_field() ?>
 
             <div class="col-md-8">
@@ -81,6 +81,22 @@ $selling = old('base_price', $isEdit ? ($product['base_price'] ?? '') : '');
             <div class="col-12">
                 <label class="form-label">Description</label>
                 <textarea name="description" class="form-control" rows="3"><?= esc(old('description', $isEdit ? ($product['description'] ?? '') : '')) ?></textarea>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Photos</label>
+                <input type="file" name="image[]" class="form-control" accept="image/*" multiple>
+                <div class="form-text">A vendor buying on monline sees these — a product with no photo is much less likely to sell.</div>
+                <?php if (! empty($images)): ?>
+                    <div class="d-flex gap-2 mt-2 flex-wrap">
+                        <?php foreach ($images as $img): ?>
+                            <div style="border:1px solid #e7eaf3;border-radius:.4rem;overflow:hidden">
+                                <img src="<?= site_url('media/' . $img['uuid']) ?>" alt=""
+                                     style="height:72px;width:72px;object-fit:cover;display:block">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <?php

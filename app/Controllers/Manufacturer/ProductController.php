@@ -85,8 +85,9 @@ final class ProductController extends BaseManufacturerController
         if (! $res['ok']) {
             return redirect()->back()->withInput()->with('error', $res['error']);
         }
+        $imgWarn = $this->maybeImage((int) $res['id']);
 
-        return redirect()->to('manufacturer/products/' . $res['id'] . '/edit')->with('success', 'Product created.');
+        return redirect()->to('manufacturer/products/' . $res['id'] . '/edit')->with('success', 'Product created.' . ($imgWarn ? ' ⚠ ' . $imgWarn : ''));
     }
 
     public function edit(int $id)
@@ -131,8 +132,9 @@ final class ProductController extends BaseManufacturerController
         if (! $res['ok']) {
             return redirect()->back()->withInput()->with('error', $res['error']);
         }
+        $imgWarn = $this->maybeImage($id);
 
-        return redirect()->to('manufacturer/products/' . $id . '/edit')->with('success', 'Product saved.');
+        return redirect()->to('manufacturer/products/' . $id . '/edit')->with('success', 'Product saved.' . ($imgWarn ? ' ⚠ ' . $imgWarn : ''));
     }
 
     /**
@@ -221,6 +223,7 @@ final class ProductController extends BaseManufacturerController
         $selectedMshop = $current > 0
             ? $current
             : (! $isOwner ? $this->effectiveMshopId() : (count($units) === 1 ? array_key_first($units) : null));
+        $pid = $product !== null ? (int) $product['id'] : 0;
 
         return $this->render(
             'manufacturer/products/form',
@@ -233,7 +236,45 @@ final class ProductController extends BaseManufacturerController
                 'units'      => $units,
                 'lockUnit'   => ! $isOwner,
                 'selectedMshop' => $selectedMshop,
+                'images'     => $pid ? service('mediaRepository')->forProduct($pid) : [],
             ],
         );
+    }
+
+    /**
+     * Store any uploaded images; returns a human message for files that were rejected.
+     * Copied from Vendor\ProductController::maybeImage() — it is tenant-agnostic (works
+     * off $productId/$uid alone), so reuse rather than reinvent. Only a plain
+     * upload-and-attach is offered here; the vendor gallery's reorder/primary-toggle/
+     * remove/media-library-picker is a much larger subsystem this fix does not add.
+     */
+    private function maybeImage(int $productId): string
+    {
+        $files = $this->request->getFileMultiple('image');
+        if ($files === null) {
+            $one   = $this->request->getFile('image');
+            $files = $one !== null ? [$one] : [];
+        }
+        $uid    = (int) session()->get('user_id');
+        $failed = [];
+        foreach ((array) $files as $file) {
+            if ($file === null) {
+                continue;
+            }
+            if (! $file->isValid()) {
+                if ($file->getError() !== UPLOAD_ERR_NO_FILE) {
+                    $failed[] = ($file->getName() ?: 'image') . ' — ' . $file->getErrorString();
+                }
+                continue;
+            }
+            $res = service('mediaService')->store($file, 'product', $productId, $uid, 'public');
+            if (! empty($res['ok'])) {
+                service('mediaRepository')->attachToProduct($productId, (int) $res['id'], ! service('mediaRepository')->hasPrimary($productId), $uid);
+            } else {
+                $failed[] = ($file->getName() ?: 'image') . ' — ' . ($res['reason'] ?? 'rejected');
+            }
+        }
+
+        return $failed === [] ? '' : count($failed) . ' image(s) not uploaded: ' . implode('; ', array_slice($failed, 0, 3));
     }
 }
