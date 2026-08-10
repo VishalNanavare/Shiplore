@@ -45,6 +45,12 @@
     <php>
         <server name="app.baseURL" value="http://example.com/"/>
         <server name="CODEIGNITER_SCREAM_DEPRECATIONS" value="0"/>
+        <!-- Test-only signing key so TokenService::secret() doesn't throw under
+             CIUnitTestCase/FeatureTestTrait — every api/v1 JWT-gated endpoint test
+             (MobileApiTest, PosSyncTest, SyncEngineTest) was 500ing on this before
+             ever reaching its own logic. Never used outside this ephemeral test run;
+             has no relation to any real per-environment jwt.secret. -->
+        <env name="jwt.secret" value="phpunit-test-only-signing-key-3f9a7c1e5b8d2046-not-for-real-use"/>
         <!-- Directory containing phpunit.xml -->
         <const name="HOMEPATH" value="./"/>
         <!-- Directory containing the Paths config file -->
