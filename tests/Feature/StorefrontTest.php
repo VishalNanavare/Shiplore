@@ -33,6 +33,16 @@ final class StorefrontTest extends CIUnitTestCase
             public function faqs(int $id): array { return [['question' => 'Washable?', 'answer' => 'Yes']]; }
             public function purchaseRules(int $id): array { return ['min_purchase_qty' => null, 'max_purchase_qty' => null, 'qty_step' => 1]; }
             public function purchaseRulesForVariant(int $v): array { return ['payment_restriction' => 'both', 'qty_step' => 1]; }
+            public function rootCategoryFacets(array $opts, int $limit = 8): array { return [['id' => 1, 'name' => 'Footwear', 'slug' => 'footwear', 'cnt' => 1]]; }
+            public function countProducts(array $opts = []): int { return 1; }
+            public function content(int $productId): array { return []; }
+            public function categoryFacets(array $opts, int $limit = 60): array { return []; }
+            public function specifications(int $productId): array { return []; }
+            public function variantStock(int $variantId): array { return ['mode' => 'unlimited', 'available' => 999.0, 'backorder' => false, 'tracked' => false]; }
+            public function brandFacets(array $opts, int $limit = 25): array { return []; }
+            public function typeFacets(array $opts): array { return []; }
+            public function priceBounds(array $opts): array { return ['lo' => 0.0, 'hi' => 0.0]; }
+            public function variants(int $productId): array { return [['variant_id' => 3, 'sku' => 'SK1', 'base_price' => '2499', 'mrp' => '3999', 'is_default' => 1, 'label' => null]]; }
         });
     }
 
@@ -50,7 +60,7 @@ final class StorefrontTest extends CIUnitTestCase
         $this->shopMock();
         $r = $this->get('store');
         $r->assertStatus(200);
-        $this->assertStringContainsString('Shop your neighbourhood', (string) $r->getBody());
+        $this->assertStringContainsString('delivered from shops near you', (string) $r->getBody());
     }
 
     public function testRootServesStorefront(): void
@@ -59,7 +69,7 @@ final class StorefrontTest extends CIUnitTestCase
         $this->shopMock();
         $r = $this->get('/'); // root is now the ecommerce homepage, not the staff login
         $r->assertStatus(200);
-        $this->assertStringContainsString('Shop your neighbourhood', (string) $r->getBody());
+        $this->assertStringContainsString('delivered from shops near you', (string) $r->getBody());
     }
 
     public function testProductsBrowseRenders(): void
@@ -86,18 +96,54 @@ final class StorefrontTest extends CIUnitTestCase
 
     public function testNearbyShopsRender(): void
     {
+        // _store_header.php (rendered on every storefront page) calls
+        // storeCatalogRepository->rootCategoryFacets() directly — real, unmocked,
+        // would hit "no such table: category_facet_summary" via FacetCache.
+        $this->catalogMock();
         $this->shopMock();
         $r = $this->get('store/shops');
         $r->assertStatus(200);
         $this->assertStringContainsString('Sole Mate', (string) $r->getBody());
     }
 
-    public function testSetLocationRedirectsToShops(): void
+    /**
+     * The location picker is a modal available on every page, not just the shops
+     * page (StoreController::setLocation() comment: "Return to where the picker
+     * was opened, else home"). With no `return` posted, the redirect target is
+     * `store` — this test's previous name/assertion described an older behavior
+     * where setting a location always sent the customer to store/shops.
+     */
+    public function testSetLocationRedirectsHomeWithNoReturnPath(): void
     {
         $data = [csrf_token() => csrf_hash(), 'lat' => '19.11', 'lng' => '72.85', 'label' => 'Home', 'pincode' => '400058'];
         $r = $this->withSession(service('session')->get())->post('store/location', $data);
         $r->assertRedirect();
+        $this->assertStringContainsString('store', $r->getRedirectUrl());
+        $this->assertStringNotContainsString('store/shops', $r->getRedirectUrl());
+    }
+
+    /** A `return` path (where the picker modal was opened from) is honoured instead. */
+    public function testSetLocationRedirectsToTheGivenReturnPath(): void
+    {
+        $data = [
+            csrf_token() => csrf_hash(), 'lat' => '19.11', 'lng' => '72.85',
+            'label' => 'Home', 'pincode' => '400058', 'return' => '/store/shops',
+        ];
+        $r = $this->withSession(service('session')->get())->post('store/location', $data);
+        $r->assertRedirect();
         $this->assertStringContainsString('store/shops', $r->getRedirectUrl());
+    }
+
+    /** A protocol-relative `return` (`//evil.example`) must not be honoured — open-redirect guard. */
+    public function testSetLocationRejectsProtocolRelativeReturnPath(): void
+    {
+        $data = [
+            csrf_token() => csrf_hash(), 'lat' => '19.11', 'lng' => '72.85',
+            'label' => 'Home', 'pincode' => '400058', 'return' => '//evil.example/phish',
+        ];
+        $r = $this->withSession(service('session')->get())->post('store/location', $data);
+        $r->assertRedirect();
+        $this->assertStringNotContainsString('evil.example', $r->getRedirectUrl());
     }
 
     public function testCartAddRedirects(): void
@@ -105,9 +151,11 @@ final class StorefrontTest extends CIUnitTestCase
         // addToCart now checks the product's purchase rules before adding
         Services::injectMock('storeCatalogRepository', new class {
             public function purchaseRulesForVariant(int $v): array { return ['qty_step' => 1, 'payment_restriction' => 'both']; }
+            public function variantStock(int $variantId): array { return ['mode' => 'unlimited', 'available' => 999.0, 'backorder' => false, 'tracked' => false]; }
         });
         Services::injectMock('cartService', new class {
             public function add(int $v, int $q): void {}
+            public function raw(): array { return []; }
         });
         $data = [csrf_token() => csrf_hash(), 'variant_id' => '3', 'qty' => '2'];
         $r = $this->withSession(service('session')->get())->post('store/cart/add', $data);
@@ -117,6 +165,7 @@ final class StorefrontTest extends CIUnitTestCase
 
     public function testEmptyCartRenders(): void
     {
+        $this->catalogMock();
         Services::injectMock('cartService', new class {
             public function items(): array { return []; }
             public function count(): int { return 0; }
@@ -140,11 +189,13 @@ final class StorefrontTest extends CIUnitTestCase
 
     public function testTrackFormRenders(): void
     {
+        $this->catalogMock();
         $this->get('store/track')->assertStatus(200);
     }
 
     public function testLoginFormRenders(): void
     {
+        $this->catalogMock();
         $this->get('store/login')->assertStatus(200);
     }
 

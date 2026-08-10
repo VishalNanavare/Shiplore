@@ -24,13 +24,14 @@ final class AdminVendorTest extends CIUnitTestCase
         $this->grant(['vendor.view', 'vendor.approve', 'vendor.reject']);
 
         Services::injectMock('vendorRepository', new class {
-            public function list(?string $status = null): array
+            public function list(array $f = []): array
             {
                 return [
                     ['id' => 1, 'display_name' => 'Acme Foods', 'slug' => 'acme-foods', 'gstin' => '27AAAAA0000A1Z5', 'gstin_status' => 'verified', 'status' => 'submitted', 'created_at' => '2026-01-01 00:00:00'],
                     ['id' => 2, 'display_name' => 'Bright Retail', 'slug' => 'bright-retail', 'gstin' => '29BBBBB1111B2Z6', 'gstin_status' => 'pending', 'status' => 'active', 'created_at' => '2026-02-01 00:00:00'],
                 ];
             }
+            public function countList(array $f = []): int { return 2; }
             public function findById(int $id): ?array { return $id === 1 ? ['id' => 1, 'status' => 'submitted'] : null; }
             public function updateStatus(int $id, string $status, ?int $actorId = null): bool { return true; }
         });

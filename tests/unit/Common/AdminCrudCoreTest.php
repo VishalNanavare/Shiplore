@@ -27,7 +27,10 @@ final class AdminCrudCoreTest extends TestCase
     public function testMediaRejectsBadMimeAndSize(): void
     {
         $this->assertFalse(MediaService::isAllowed('application/x-php', 10)['ok']);
-        $this->assertFalse(MediaService::isAllowed('image/jpeg', 6_000_000)['ok']);
+        // MAX_BYTES was deliberately raised to 15 MB ("modern phone photos are 3-8 MB") —
+        // 6 MB no longer exceeds it, so this must test a value genuinely over the real limit.
+        $this->assertTrue(MediaService::isAllowed('image/jpeg', 6_000_000)['ok'], '6 MB is within the 15 MB limit');
+        $this->assertFalse(MediaService::isAllowed('image/jpeg', 16_000_000)['ok'], '16 MB exceeds the 15 MB limit');
         $this->assertFalse(MediaService::isAllowed('image/jpeg', 0)['ok']);
     }
 

@@ -62,10 +62,18 @@ final class ProductVariantTest extends CIUnitTestCase
         Services::injectMock('productVariantRepository', new class {
             public function definingAttributes(int $c): array { return [['id' => 1, 'code' => 'size', 'name' => 'Size', 'type' => 'select', 'values' => [['id' => 5, 'value' => 'S', 'sort_order' => 1]]]]; }
             public function listWithValues(int $p): array { return []; }
+            public function cleanupEmptyDefault(int $productId): void {}
+        });
+        // ProductVariantController::index() also calls productShopRepository->forProduct()
+        // directly — real, unmocked, would hit "no such table: product_shops".
+        Services::injectMock('productShopRepository', new class {
+            public function forProduct(int $productId): array { return []; }
         });
         $r = $this->withSession($this->sess())->get('admin/products/9/variants');
         $r->assertStatus(200);
-        $this->assertStringContainsString('Generate combinations', (string) $r->getBody());
+        // The button reads "Generate" with a dynamic combo-count span, not the older
+        // static "Generate combinations" copy this test named itself after.
+        $this->assertStringContainsString('id="genBtn"', (string) $r->getBody());
     }
 
     public function testGenerateParsesSelectionsAndForcesVendor(): void

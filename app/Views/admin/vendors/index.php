@@ -56,7 +56,7 @@ $mk       = static fn (int $n) => site_url('admin/vendors') . '?' . http_build_q
         </form>
     </div>
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+        <table id="vendorsTable" class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr><th>Vendor</th><th>Type</th><th>GSTIN</th><th>GST</th><th>Status</th><th class="text-end">Actions</th></tr>
             </thead>

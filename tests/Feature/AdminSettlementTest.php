@@ -38,6 +38,11 @@ final class AdminSettlementTest extends CIUnitTestCase
         Services::injectMock('shopRepository', new class {
             public function vendorsForSelect(): array { return [['id' => 1, 'display_name' => 'Fresh Foods']]; }
         });
+        // show() also calls settlementAdjustmentRepository->forSettlement() directly —
+        // real, unmocked, would hit "no such table: settlement_adjustments".
+        Services::injectMock('settlementAdjustmentRepository', new class {
+            public function forSettlement(int $settlementId): array { return []; }
+        });
     }
 
     protected function tearDown(): void

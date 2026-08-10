@@ -64,6 +64,13 @@ final class ShopProductApprovalTest extends CIUnitTestCase
         Services::injectMock('capabilityRepository', new class {
             public function loadAssignments(int $u): array { return [['permissions' => ['product.create', 'product.update'], 'scope_type' => 'shop', 'scope_id' => 1, 'attributes' => []]]; }
         });
+        // managerOwnsShopFor() (Vendor\ProductController::update()) calls this — a
+        // real, unmocked call to productShopRepository->forProduct() would hit
+        // "no such table: product_shops" in the SQLite test DB. Shop 1 matches
+        // shopIdsForStaff() below, so the manager's own-shop check passes.
+        Services::injectMock('productShopRepository', new class {
+            public function forProduct(int $productId): array { return [1]; }
+        });
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return null; }
             public function findStaffVendor(int $u): ?array { return ['id' => 1, 'display_name' => 'Sole Mate', 'vendor_staff_id' => 7, 'staff_type' => 'branch_manager']; }
@@ -125,7 +132,13 @@ final class ShopProductApprovalTest extends CIUnitTestCase
     public function testStaffEditingLiveProductBecomesChangeRequest(): void
     {
         $this->asManager();
-        $this->products->st = 'published';
+        // 'published' hits a SEPARATE, earlier guard in update() ("unpublish this
+        // product before editing it") that blocks the request outright — neither the
+        // direct-write nor the change-request branch is ever reached for it. This
+        // test needs a status that is non-draft (so it must route through the
+        // change-request engine) but not 'published' specifically; 'unpublished' is
+        // exactly "was live, now taken down" without tripping that other guard.
+        $this->products->st = 'unpublished';
 
         $r = $this->withSession($this->sess())->post('vendor/products/5/update', $this->productPost());
 

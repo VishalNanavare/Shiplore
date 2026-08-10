@@ -67,7 +67,7 @@ $mk    = static fn (int $n) => site_url('admin/product-approvals') . '?' . http_
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+        <table id="approvalsTable" class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr><th style="width:28px"><input type="checkbox" id="apprSelAll" class="form-check-input"></th><th>Product</th><th>Vendor</th><th>Category</th><th>Status</th><th>Submitted</th><th class="text-end">Actions</th></tr>
             </thead>

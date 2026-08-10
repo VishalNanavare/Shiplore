@@ -45,7 +45,7 @@ $mk          = static fn (int $n) => site_url('admin/shops') . '?' . http_build_
         </form>
     </div>
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+        <table id="shopsTable" class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr><th>Shop</th><th>Vendor</th><th>Pincode</th><th>GST</th><th>Status</th><th class="text-end">Actions</th></tr>
             </thead>

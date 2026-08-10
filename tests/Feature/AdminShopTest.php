@@ -24,13 +24,14 @@ final class AdminShopTest extends CIUnitTestCase
         $this->grant(['shop.view', 'shop.update']);
 
         Services::injectMock('shopRepository', new class {
-            public function list(?string $status = null): array
+            public function list(array|string|null $f = null): array
             {
                 return [
                     ['id' => 1, 'name' => 'Andheri Outlet', 'code' => 'AND-1', 'pincode' => '400058', 'state_code' => '27', 'gstin_status' => 'verified', 'status' => 'inactive', 'vendor' => 'Acme Foods'],
                     ['id' => 2, 'name' => 'Bandra Outlet', 'code' => 'BAN-1', 'pincode' => '400050', 'state_code' => '27', 'gstin_status' => 'pending', 'status' => 'active', 'vendor' => 'Acme Foods'],
                 ];
             }
+            public function countList(array $f = []): int { return 2; }
             public function findById(int $id): ?array { return $id === 1 ? ['id' => 1, 'status' => 'inactive'] : null; }
             public function updateStatus(int $id, string $status, ?int $actorId = null): bool { return true; }
         });

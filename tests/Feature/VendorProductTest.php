@@ -78,14 +78,14 @@ final class VendorProductTest extends CIUnitTestCase
     public function testStoreRejectsForeignCategory(): void
     {
         $data = service('session')->get() + $this->sess();
-        $r = $this->withSession($data)->post('vendor/products/store', [csrf_token() => csrf_hash(), 'title' => 'X', 'category_id' => '999', 'tax_class_id' => '4', 'unit_id' => '1', 'sku' => 'S1', 'mrp' => '100', 'base_price' => '90']);
+        $r = $this->withSession($data)->post('vendor/products/store', [csrf_token() => csrf_hash(), 'title' => 'X', 'category_id' => '999', 'tax_class_id' => '4', 'unit_id' => '1', 'shop_id' => '1', 'sku' => 'S1', 'mrp' => '100', 'base_price' => '90']);
         $r->assertRedirect();
         $this->assertStringContainsString('not allowed', (string) (session('error') ?? ''));
     }
 
     public function testStoreSucceeds(): void
     {
-        $r = $this->withSession($this->postSess())->post('vendor/products/store', [csrf_token() => csrf_hash(), 'title' => 'Loafers', 'category_id' => '10', 'tax_class_id' => '4', 'unit_id' => '1', 'sku' => 'LF-1', 'mrp' => '2999', 'base_price' => '2499']);
+        $r = $this->withSession($this->postSess())->post('vendor/products/store', [csrf_token() => csrf_hash(), 'title' => 'Loafers', 'category_id' => '10', 'tax_class_id' => '4', 'unit_id' => '1', 'shop_id' => '1', 'sku' => 'LF-1', 'mrp' => '2999', 'base_price' => '2499']);
         $r->assertRedirect();
         $this->assertStringContainsString('vendor/products', $r->getRedirectUrl());
     }
