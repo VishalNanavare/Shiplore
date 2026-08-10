@@ -6,17 +6,30 @@ use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
 
+require_once __DIR__ . '/../_support/MinimalSchema.php';
+
 /**
  * Phase 11 — sync engine: admin health dashboard + manual trigger, and the
  * generic JWT sync API (pull deltas, idempotent push, entity validation).
- * Repos mocked.
+ * Repos mocked. apiAuthRepository is NOT mocked for the api/v1/sync/* tests —
+ * JwtAuthFilter re-checks isActive() against a real (SQLite) users row on every
+ * request, so bearer()'s user (id 1) must exist there.
  */
 final class SyncEngineTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
+    use MinimalSchema;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->ensureUsersTable();
+        $this->seedActiveUser(1, 'platform', 'T');
+    }
 
     protected function tearDown(): void
     {
+        $this->dropUsersTable();
         service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
@@ -59,6 +72,12 @@ final class SyncEngineTest extends CIUnitTestCase
         Services::injectMock('jobQueueRepository', new class {
             public function stats(): array { return ['queued' => 2, 'reserved' => 0, 'processing' => 1, 'done' => 40, 'failed' => 1, 'dead_letter' => 1]; }
             public function enqueue(string $q, string $t, array $p, ?string $k = null, ?string $a = null): int { return 99; }
+        });
+        // SyncController::terminal() resolves via a real (unmocked otherwise) call —
+        // both pull() and push() need it bound to an active terminal before they ever
+        // reach syncEngineRepository.
+        Services::injectMock('posSyncRepository', new class {
+            public function terminal(int $id): ?array { return $id === 1 ? ['id' => 1, 'shop_id' => 1, 'vendor_id' => 1, 'status' => 'active'] : null; }
         });
         Services::injectMock('syncEngineRepository', new class {
             public function health(): array { return ['counts' => [], 'conflicts_open' => 1, 'dead_letter' => 1, 'cursors' => [['terminal_id' => 1, 'entity_type' => 'stock', 'last_anchor' => '2026-06-10 10:00', 'last_pulled_at' => '2026-06-10 10:00']]]; }
@@ -117,7 +136,7 @@ final class SyncEngineTest extends CIUnitTestCase
     {
         $this->engineMock();
         $h = $this->bearer();
-        $r = $this->withHeaders($h)->get('api/v1/sync/pull?entity=stock&since=2026-06-01');
+        $r = $this->withHeaders($h)->get('api/v1/sync/pull?terminal_id=1&entity=stock&since=2026-06-01');
         $r->assertStatus(200);
         $this->assertStringContainsString('next_anchor', (string) $r->getJSON());
     }

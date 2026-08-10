@@ -6,14 +6,20 @@ use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
 
+require_once __DIR__ . '/../_support/MinimalSchema.php';
+
 /**
  * Phase 9 — mobile API: OTP/password login -> JWT, and the JWT-scoped Customer /
  * Vendor / Delivery-Boy endpoints. The real JwtAuthFilter runs; tokens are
- * minted with TokenService and capability loading is mocked (no DB).
+ * minted with TokenService and capability loading is mocked. Note this file's
+ * OWN original comment ("no DB") is stale: JwtAuthFilter also re-checks
+ * apiAuthRepository->isActive() on every request, unmocked here on purpose — a
+ * real (SQLite, MinimalSchema) users row, not a mock, backs that check.
  */
 final class MobileApiTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
+    use MinimalSchema;
 
     protected function setUp(): void
     {
@@ -24,10 +30,14 @@ final class MobileApiTest extends CIUnitTestCase
                 return [['permissions' => [], 'scope_type' => 'platform', 'scope_id' => null, 'attributes' => []]];
             }
         });
+        $this->ensureUsersTable();
+        $this->seedActiveUser(2, 'customer');
+        $this->seedActiveUser(5, 'rider');
     }
 
     protected function tearDown(): void
     {
+        $this->dropUsersTable();
         Services::reset();
         parent::tearDown();
     }
@@ -180,6 +190,8 @@ final class MobileApiTest extends CIUnitTestCase
             public function recordPod(int $id, int $u, string $t, string $r): bool { return $id === 1; }
             public function recordCod(int $id, int $u): bool { return $id === 1; }
             public function earnings(int $u): array { return ['enabled' => true, 'total' => '120.00', 'deliveries' => 3]; }
+            public function earningsDetail(int $u): array { return ['today' => '40.00', 'week' => '80.00', 'total' => '120.00', 'cash_in_hand' => '0.00', 'entries' => []]; }
+            public function ownsAcceptedDelivery(int $deliveryId, int $u): bool { return $deliveryId === 1; }
         };
         Services::injectMock('riderRepository', $m);
 
@@ -266,7 +278,7 @@ final class MobileApiTest extends CIUnitTestCase
             public function findByOwnerUserId(int $u): ?array { return ['id' => 1]; }
         });
         Services::injectMock('vendorOrderRepository', new class {
-            public function findSubOrder(int $id, int $v): ?array { return ['id' => $id, 'status' => 'delivered']; }
+            public function findSubOrder(int $id, int $v): ?array { return ['id' => $id, 'status' => 'delivered', 'shop_id' => 1]; }
             public function updateSubOrderStatus(int $id, int $v, string $s): bool { return true; }
         });
         // delivered -> accepted is illegal
@@ -277,6 +289,7 @@ final class MobileApiTest extends CIUnitTestCase
     {
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return null; }
+            public function findStaffVendor(int $u): ?array { return null; }
         });
         $this->withHeaders($this->bearer(2, 'customer'))->get('api/v1/vendor/dashboard')->assertStatus(403);
     }
@@ -287,9 +300,14 @@ final class MobileApiTest extends CIUnitTestCase
         Services::injectMock('storeCatalogRepository', new class {
             public function categories(int $l = 8): array { return []; }
             public function products(array $o = []): array { return []; }
+            public function categoryTreeWithCounts(array $opts = []): array { return []; }
         });
         Services::injectMock('storeShopRepository', new class {
             public function nearby(?float $a, ?float $b, int $l = 6): array { return []; }
+            public function nearbyShopIds(?float $lat, ?float $lng, int $limit = 200): array { return []; }
+        });
+        Services::injectMock('bannerRepository', new class {
+            public function activeForHome(int $limit = 6): array { return []; }
         });
         $this->get('api/v1/customer/home?lat=19.1&lng=72.8')->assertStatus(200);
     }

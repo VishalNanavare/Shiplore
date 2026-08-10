@@ -6,6 +6,8 @@ use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
 
+require_once __DIR__ . '/../_support/MinimalSchema.php';
+
 /**
  * Phase 7 — Vendor panel. Verifies session auth, the not-a-vendor guard, that
  * pages render, and — critically — TENANT ISOLATION: the controller resolves
@@ -15,6 +17,7 @@ use Config\Services;
 final class VendorPanelTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
+    use MinimalSchema;
 
     protected function setUp(): void
     {
@@ -23,6 +26,13 @@ final class VendorPanelTest extends CIUnitTestCase
         Services::resetSingle('request');
         Services::resetSingle('routes');
         Services::resetSingle('router');
+        // WebAuthFilter re-checks apiAuthRepository->isActive() on every request and is
+        // fail-open only when the query throws; once db_users exists it must contain
+        // every session user_id this file uses, or previously-passing tests start
+        // redirecting to login instead of exercising what they actually test.
+        $this->ensureUsersTable();
+        $this->seedActiveUser(101, 'vendor', 'Rahul Mehta');
+        $this->seedActiveUser(202, 'vendor', 'Cashier');
 
         // webAuth filter resolves capabilities from the DB — mock it (the vendor
         // panel itself enforces isolation by vendorId, not by permissions).
@@ -52,6 +62,7 @@ final class VendorPanelTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        $this->dropUsersTable();
         service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
@@ -271,10 +282,19 @@ final class VendorPanelTest extends CIUnitTestCase
             public function list(int $vendorId, ?string $s = null): array { return []; }
             public function findSubOrder(int $id, int $vendorId): ?array { return ($id === 1 && $vendorId === 1) ? ['id' => 1, 'sub_order_no' => 'SO-1', 'order_no' => 'ORD-1', 'shop' => 'A', 'customer' => 'Aarav', 'taxable_value' => '100', 'cgst' => '0', 'sgst' => '0', 'igst' => '0', 'commission_amount' => '10', 'grand_total' => '110', 'status' => 'confirmed'] : null; }
             public function items(int $subOrderId): array { return []; }
+            public function delivery(int $subOrderId): ?array { return null; }
         });
         Services::injectMock('invoiceRepository', new class {
             public function invoiceIdForSubOrder(int $subOrderId): ?int { return null; }
         });
+        // owner()'s real query uses TIMESTAMPDIFF, a MySQL-only function the SQLite
+        // test DB cannot execute at all — this must be mocked, not backed by a table.
+        Services::injectMock('orderClaimService', new class {
+            public function owner(int $subOrderId): ?array { return null; }
+        });
+        // show()'s two remaining raw queries (available riders, whether a pool rider
+        // has accepted) are real Database::connect() calls bypassing every repository.
+        $this->ensureDeliveryTables();
         $this->withSession($this->vendorSession())->get('vendor/orders/1')->assertStatus(200);
         $foreign = $this->withSession($this->vendorSession())->get('vendor/orders/2');
         $foreign->assertRedirect();

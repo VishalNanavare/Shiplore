@@ -6,6 +6,8 @@ use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
 
+require_once __DIR__ . '/../_support/MinimalSchema.php';
+
 /**
  * Batch 1 — admin CRUD HTTP flows: vendor/shop/product create, category-gating
  * rejection, bulk import upload, media serve guard, RBAC denial. Repos/services
@@ -14,6 +16,7 @@ use Config\Services;
 final class AdminCrudTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
+    use MinimalSchema;
 
     protected function setUp(): void
     {
@@ -22,10 +25,24 @@ final class AdminCrudTest extends CIUnitTestCase
         Services::resetSingle('request');
         Services::resetSingle('routes');
         Services::resetSingle('router');
+        $this->ensureUsersTable();
+        $this->seedActiveUser(1, 'platform', 'Admin');
+        // Admin\ProductController::form()/store() reach shopRepository->vendorsForSelect()
+        // and productShopRepository->shopsForVendor() directly (real, unmocked) whenever
+        // a vendor_id is present — real tables, not mocks, since this shop id also has to
+        // survive resolveShopIds()'s allow-list check.
+        $this->ensureVendorsTable();
+        $this->ensureShopsTable();
+        $this->schemaConn()->table('shops')->where('id', 1)->delete();
+        $this->schemaConn()->query(
+            'INSERT INTO db_shops (id, vendor_id, name, status) VALUES (1, 1, ?, ?)',
+            ['Andheri Outlet', 'active'],
+        );
     }
 
     protected function tearDown(): void
     {
+        $this->dropUsersTable();
         service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
@@ -136,9 +153,9 @@ final class AdminCrudTest extends CIUnitTestCase
         $this->assertStringContainsString('pf-acc', $body);
         $this->assertStringContainsString('Completeness', $body);
         $this->assertStringContainsString('data-autosave-base', $body);
-        // multi-barcode block (RB5)
-        $this->assertStringContainsString('barcode_value[]', $body);
-        $this->assertStringContainsString('barcode_primary', $body);
+        // Barcodes (RB5) live on the Variants page now, not the product create form —
+        // a brand-new product has no variants yet to attach a barcode to. The old
+        // assertion here checked for that markup on the wrong page.
     }
 
     public function testDuplicateClonesAndRedirectsToEdit(): void
@@ -184,7 +201,7 @@ final class AdminCrudTest extends CIUnitTestCase
     {
         $this->grant(['product.create']);
         $this->productRepoMock([10, 11]); // allowed
-        $data = $this->csrf() + ['vendor_id' => '1', 'title' => 'X', 'category_id' => '99', 'tax_class_id' => '4', 'unit_id' => '1', 'sku' => 'S1', 'mrp' => '100', 'base_price' => '90'];
+        $data = $this->csrf() + ['vendor_id' => '1', 'shop_id' => '1', 'title' => 'X', 'category_id' => '99', 'tax_class_id' => '4', 'unit_id' => '1', 'sku' => 'S1', 'mrp' => '100', 'base_price' => '90'];
         $r = $this->withSession($this->postSess())->post('admin/products/store', $data);
         $r->assertRedirect();
         // not created — redirect back (to the form), not to the list
@@ -199,7 +216,7 @@ final class AdminCrudTest extends CIUnitTestCase
             public function hasPrimary(int $p): bool { return true; }
             public function forProduct(int $p): array { return []; }
         });
-        $data = $this->csrf() + ['vendor_id' => '1', 'title' => 'Loafers', 'category_id' => '10', 'tax_class_id' => '4', 'unit_id' => '1', 'sku' => 'LF-1', 'mrp' => '2999', 'base_price' => '2499'];
+        $data = $this->csrf() + ['vendor_id' => '1', 'shop_id' => '1', 'title' => 'Loafers', 'category_id' => '10', 'tax_class_id' => '4', 'unit_id' => '1', 'sku' => 'LF-1', 'mrp' => '2999', 'base_price' => '2499'];
         $r = $this->withSession($this->postSess())->post('admin/products/store', $data);
         $r->assertRedirect();
         $this->assertStringContainsString('admin/products', $r->getRedirectUrl());

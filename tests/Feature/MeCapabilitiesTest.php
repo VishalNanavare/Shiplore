@@ -7,16 +7,22 @@ use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
 
+require_once __DIR__ . '/../_support/MinimalSchema.php';
+
 /**
  * Phase 6 — end-to-end spine test: HTTP route → JwtAuthFilter → controller →
- * ApiResponse envelope. The DB-backed capability loader is mocked so this
- * verifies the wiring (filter + service DI + controller), not the DB query.
+ * ApiResponse envelope. The DB-backed capability loader is mocked, but
+ * JwtAuthFilter ALSO re-checks apiAuthRepository->isActive() against a real
+ * users row on every request — this file's own original comment ("without a
+ * database") predates that check and is no longer accurate; a MinimalSchema
+ * users row is what makes this spine test reach its controller at all now.
  *
  * @see docs/architecture/23-AUTH-ACCESS-CONTROL.md §6, app/Filters/JwtAuthFilter.php
  */
 final class MeCapabilitiesTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
+    use MinimalSchema;
 
     private string $secret = 'feature-test-secret';
 
@@ -37,10 +43,13 @@ final class MeCapabilitiesTest extends CIUnitTestCase
                 ]];
             }
         });
+        $this->ensureUsersTable();
+        $this->seedActiveUser(3, 'vendor', 'T');
     }
 
     protected function tearDown(): void
     {
+        $this->dropUsersTable();
         putenv('JWT_SECRET'); // unset
         Services::reset();
         parent::tearDown();

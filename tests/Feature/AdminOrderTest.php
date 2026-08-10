@@ -6,13 +6,21 @@ use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
 
+require_once __DIR__ . '/../_support/MinimalSchema.php';
+
 /**
  * Phase 6 — Admin Order management: list + detail (RBAC-guarded), cancel
  * (CSRF), permission-denied. Repository mocked; webAuth session simulated.
+ *
+ * show() also runs a raw $db->table('sub_orders')... query directly (not
+ * through orderRepository, so it can't be mocked away) and instantiates
+ * AdminOrderRepository with `new`, bypassing service() DI entirely — both
+ * need MinimalSchema's real (SQLite) tables rather than a mock.
  */
 final class AdminOrderTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
+    use MinimalSchema;
 
     protected function setUp(): void
     {
@@ -22,9 +30,34 @@ final class AdminOrderTest extends CIUnitTestCase
         Services::resetSingle('routes');
         Services::resetSingle('router');
         $this->grant(['order.view', 'order.cancel']);
+        $this->ensureSubOrdersTable();
+        $this->ensureSubOrderClaimLogsTable();
+        $this->ensureUsersTable();
+        // WebAuthFilter re-checks apiAuthRepository->isActive() on every request and is
+        // fail-OPEN only when the query THROWS (e.g. the table doesn't exist at all) —
+        // once db_users exists but has no matching row, isActive() cleanly returns
+        // false, which is fail-CLOSED (a definite "not active" logs the session out).
+        // Every session used in this file must have a real active row, or adding the
+        // table here would make previously-passing tests start redirecting to login.
+        $this->seedActiveUser(1, 'platform', 'Super Admin');
+        // show()'s raw claim-info query looks up sub_orders by id directly (not through
+        // the mocked orderRepository), and the view reads sub_order_no unconditionally
+        // from that row — an empty/no-match result (a missing row is NOT an error here,
+        // the query just returns []) leaves the view with no key to read at all.
+        $this->schemaConn()->table('sub_orders')->where('id', 5)->delete();
+        $this->schemaConn()->query(
+            'INSERT INTO db_sub_orders (id, order_id, vendor_id, shop_id, sub_order_no, status) VALUES (5, 1, 1, 1, ?, ?)',
+            ['SO-1', 'confirmed'],
+        );
+        Services::injectMock('returnRepository', new class {
+            public function forOrder(int $orderId): array { return []; }
+        });
+        Services::injectMock('refundRepository', new class {
+            public function forOrder(int $orderId): array { return []; }
+        });
 
         Services::injectMock('orderRepository', new class {
-            public function list(?string $status = null): array
+            public function search(array $opts = []): array
             {
                 return [
                     ['id' => 1, 'order_no' => 'ORD-1001', 'channel' => 'online', 'grand_total' => '2450.0000', 'payment_status' => 'paid', 'status' => 'confirmed', 'placed_at' => '2026-06-08 10:00:00', 'created_at' => '2026-06-08 10:00:00', 'customer' => 'Aarav Sharma'],
@@ -49,6 +82,7 @@ final class AdminOrderTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        $this->dropUsersTable();
         service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
