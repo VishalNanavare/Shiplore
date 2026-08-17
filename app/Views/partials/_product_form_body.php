@@ -17,8 +17,14 @@ $sel = static fn ($a, $b): string => (string) $a === (string) $b ? 'selected' : 
 $chk = static fn ($cond): string => $cond ? 'checked' : '';
 $enum = static fn (string $cur, string $v): string => $cur === $v ? 'selected' : '';
 $relNow = $relations ?? [];
-$aiUrl = strpos((string) $actionUrl, '/vendor/') !== false ? site_url('vendor/products/ai-suggest') : site_url('admin/products/ai-suggest');
-$asBase = strpos((string) $actionUrl, '/vendor/') !== false ? site_url('vendor/products/') : site_url('admin/products/');
+// Sibling URLs (ai-suggest, autosave, variants) derived from $actionUrl so callers
+// need not pass them. Manufacturer joined vendor and admin here; the order matters
+// only in that each panel's own segment appears in its own action URL.
+$panelBase = str_contains((string) $actionUrl, '/manufacturer/')
+    ? 'manufacturer/products/'
+    : (str_contains((string) $actionUrl, '/vendor/') ? 'vendor/products/' : 'admin/products/');
+$aiUrl  = site_url($panelBase . 'ai-suggest');
+$asBase = site_url($panelBase);
 // S2 shop-assignment context (defaulted so the partial stays safe if a caller omits them).
 // One shop per product (owner's confirmed add flow): vendor -> shop -> type -> info.
 $ctx           = $ctx ?? 'admin';
@@ -28,6 +34,16 @@ $shops         = $shops ?? [];
 $selectedShops = array_map('intval', $selectedShops ?? []);
 $lockShops     = $lockShops ?? false;
 $shopId        = $selectedShops[0] ?? 0;
+// The "where is this sold/made" picker. Vendors and admins pick a shop; manufacturers
+// pick a manufacturing unit, which is an `mshops` row and posts as mshop_id. Only the
+// field name and the words differ — the control is identical — so it is parameterised
+// rather than duplicated, with defaults that leave vendor/admin output unchanged.
+$locField = $locField ?? 'shop_id';
+$locLabel = $locLabel ?? 'Shop';
+$locPick  = $locPick ?? 'Choose a shop…';
+$locHelp  = $locHelp ?? ($lockShops
+    ? 'This product will be added to your shop.'
+    : 'The shop whose catalogue &amp; POS will carry this product.');
 $variantsUrl   = $pid ? $asBase . $pid . '/variants' : '';
 // accordion section meta: id => [title, icon, section-key for autosave].
 // SKU / price / MRP / barcode / stock live on the Variants page, not here.
@@ -119,15 +135,16 @@ $sections = [
             </div></div>
             <?php endif; ?>
 
-            <!-- Shop: the single shop whose catalog / POS will carry this product. -->
+            <!-- The single location whose catalogue this product belongs to: a shop for
+                 vendors/admins, a manufacturing unit for manufacturers. -->
             <div class="card mb-3"><div class="card-body py-2">
-                <label class="form-label fw-semibold mb-1" for="fShop"><i class="bi bi-shop-window me-1"></i>Shop <span class="text-danger">*</span></label>
-                <select name="shop_id" id="fShop" class="form-select js-select" required <?= $lockShops ? 'disabled' : '' ?>>
-                    <option value=""><?= $ctx === 'admin' && ! $isEdit ? 'Pick a vendor first…' : 'Choose a shop…' ?></option>
+                <label class="form-label fw-semibold mb-1" for="fShop"><i class="bi bi-shop-window me-1"></i><?= esc($locLabel) ?> <span class="text-danger">*</span></label>
+                <select name="<?= esc($locField, 'attr') ?>" id="fShop" class="form-select js-select" required <?= $lockShops ? 'disabled' : '' ?>>
+                    <option value=""><?= $ctx === 'admin' && ! $isEdit ? 'Pick a vendor first…' : esc($locPick) ?></option>
                     <?php foreach ($shops as $s): ?><option value="<?= esc($s['id'], 'attr') ?>" <?= (int) $shopId === (int) $s['id'] ? 'selected' : '' ?>><?= esc($s['name']) ?></option><?php endforeach; ?>
                 </select>
-                <?php if ($lockShops): ?><input type="hidden" name="shop_id" value="<?= esc($shopId, 'attr') ?>"><?php endif; ?>
-                <div class="form-text"><?= $lockShops ? 'This product will be added to your shop.' : 'The shop whose catalogue &amp; POS will carry this product.' ?></div>
+                <?php if ($lockShops): ?><input type="hidden" name="<?= esc($locField, 'attr') ?>" value="<?= esc($shopId, 'attr') ?>"><?php endif; ?>
+                <div class="form-text"><?= $locHelp ?></div>
             </div></div>
 
             <!-- Product type — compact: Simple/Variant toggle (or another type). -->

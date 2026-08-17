@@ -11,7 +11,15 @@
  * "add one manually" form post the same sel[attrId][] to $genUrl; omitting an
  * attribute simply leaves it out of that combination (irregular variants).
  */
-$lookupBase = strpos((string) $genUrl, '/vendor/') !== false ? site_url('vendor/lookup/') : site_url('admin/lookup/');
+$lookupBase = str_contains((string) $genUrl, '/manufacturer/')
+    ? site_url('manufacturer/lookup/')
+    : (str_contains((string) $genUrl, '/vendor/') ? site_url('vendor/lookup/') : site_url('admin/lookup/'));
+// The two price columns. Vendors and admins price against MRP; a manufacturer prices
+// against its own making (production) cost, and leaves mrp unused at 0. Only the field
+// name and the label differ, so they are parameterised rather than the whole grid
+// duplicated. Defaults keep vendor/admin output byte-identical.
+$priceA = $priceA ?? ['mrp', 'MRP'];
+$priceB = $priceB ?? ['base_price', 'Selling price'];
 ?>
 <link rel="stylesheet" href="<?= asset('plugins/select2/select2.min.css') ?>">
 <link rel="stylesheet" href="<?= asset('plugins/select2/select2-bootstrap-5-theme.min.css') ?>">
@@ -66,8 +74,8 @@ $lookupBase = strpos((string) $genUrl, '/vendor/') !== false ? site_url('vendor/
 
         <div class="row g-3 align-items-end">
             <div class="col-md-3"><label class="form-label"><span class="badge text-bg-primary me-1">3</span>SKU prefix</label><input name="sku_prefix" class="form-control" value="<?= esc(($variants[0]['sku'] ?? 'SKU'), 'attr') ?>" placeholder="e.g. SHOE"></div>
-            <div class="col-md-3"><label class="form-label">MRP (₹)</label><input name="mrp" type="number" step="0.01" class="form-control" value="<?= esc(($product['mrp'] ?? ''), 'attr') ?>"></div>
-            <div class="col-md-3"><label class="form-label">Selling price (₹)</label><input name="base_price" type="number" step="0.01" class="form-control" value="<?= esc(($product['base_price'] ?? ''), 'attr') ?>"></div>
+            <div class="col-md-3"><label class="form-label"><?= esc($priceA[1]) ?> (₹)</label><input name="<?= esc($priceA[0], 'attr') ?>" type="number" step="0.01" class="form-control" value="<?= esc(($product[$priceA[0]] ?? ''), 'attr') ?>"></div>
+            <div class="col-md-3"><label class="form-label"><?= esc($priceB[1]) ?> (₹)</label><input name="<?= esc($priceB[0], 'attr') ?>" type="number" step="0.01" class="form-control" value="<?= esc(($product[$priceB[0]] ?? ''), 'attr') ?>"></div>
             <div class="col-md-3"><button class="btn btn-primary w-100" id="genBtn" disabled><i class="bi bi-grid-3x3-gap me-1"></i>Generate <span id="comboCount"></span></button></div>
         </div>
         <div class="form-text mt-1">Existing combinations are skipped; nothing is overwritten.</div>
@@ -85,8 +93,8 @@ $lookupBase = strpos((string) $genUrl, '/vendor/') !== false ? site_url('vendor/
                     <select class="form-select js-attr-values-single" name="sel[<?= (int) $a['id'] ?>][]" data-attr="<?= (int) $a['id'] ?>"><option value="">—</option></select>
                 </div>
             <?php endforeach; ?>
-            <div class="col-md-2"><label class="form-label">MRP</label><input name="mrp" type="number" step="0.01" class="form-control" value="<?= esc(($product['mrp'] ?? ''), 'attr') ?>"></div>
-            <div class="col-md-2"><label class="form-label">Price</label><input name="base_price" type="number" step="0.01" class="form-control" value="<?= esc(($product['base_price'] ?? ''), 'attr') ?>"></div>
+            <div class="col-md-2"><label class="form-label"><?= esc($priceA[1]) ?></label><input name="<?= esc($priceA[0], 'attr') ?>" type="number" step="0.01" class="form-control" value="<?= esc(($product[$priceA[0]] ?? ''), 'attr') ?>"></div>
+            <div class="col-md-2"><label class="form-label"><?= esc($priceB[1]) ?></label><input name="<?= esc($priceB[0], 'attr') ?>" type="number" step="0.01" class="form-control" value="<?= esc(($product[$priceB[0]] ?? ''), 'attr') ?>"></div>
             <input type="hidden" name="sku_prefix" value="<?= esc(($variants[0]['sku'] ?? 'SKU'), 'attr') ?>">
             <div class="col-md-2"><button class="btn btn-primary w-100">Add variant</button></div>
         </form>
@@ -98,7 +106,7 @@ $lookupBase = strpos((string) $genUrl, '/vendor/') !== false ? site_url('vendor/
 <form id="bulkForm" method="post" action="<?= $bulkUrl ?>" class="d-flex gap-2 align-items-center flex-wrap mb-2">
     <?= csrf_field() ?>
     <span class="text-secondary small fw-semibold"><i class="bi bi-lightning-charge me-1"></i>Bulk edit selected:</span>
-    <select name="field" class="form-select form-select-sm w-auto"><option value="base_price">Selling price</option><option value="mrp">MRP</option><option value="cost_price">Cost price</option><option value="status">Status</option></select>
+    <select name="field" class="form-select form-select-sm w-auto"><option value="<?= esc($priceB[0], 'attr') ?>"><?= esc($priceB[1]) ?></option><option value="<?= esc($priceA[0], 'attr') ?>"><?= esc($priceA[1]) ?></option><option value="cost_price">Cost price</option><option value="status">Status</option></select>
     <input name="value" class="form-control form-control-sm w-auto" placeholder="value" style="max-width:140px">
     <button class="btn btn-sm btn-primary" id="bulkApply" disabled>Apply to <span id="bulkCount">0</span></button>
 </form>
@@ -120,7 +128,7 @@ $lookupBase = strpos((string) $genUrl, '/vendor/') !== false ? site_url('vendor/
     <div class="vscroll"><div class="vwrap">
         <div class="vgrid vhead">
             <div><input type="checkbox" id="bcAll" class="form-check-input"></div>
-            <div>Variant</div><div>SKU</div><div>MRP</div><div>Price</div><div>Cost</div>
+            <div>Variant</div><div>SKU</div><div><?= esc($priceA[1]) ?></div><div><?= esc($priceB[1]) ?></div><div>Cost</div>
             <?php if ($showStock): ?><div>Stock</div><?php endif; ?>
             <div>Status</div><div></div>
         </div>
@@ -139,8 +147,8 @@ $lookupBase = strpos((string) $genUrl, '/vendor/') !== false ? site_url('vendor/
             <form method="post" action="<?= $variantUpdateBase . $vid ?>/update" class="vform">
                 <?= csrf_field() ?>
                 <input name="sku" class="form-control form-control-sm" value="<?= esc($v['sku'], 'attr') ?>" title="SKU">
-                <input name="mrp" type="number" step="0.01" min="0" class="form-control form-control-sm" value="<?= esc($v['mrp'], 'attr') ?>" title="MRP">
-                <input name="base_price" type="number" step="0.01" min="0" class="form-control form-control-sm" value="<?= esc($v['base_price'], 'attr') ?>" title="Selling price">
+                <input name="<?= esc($priceA[0], 'attr') ?>" type="number" step="0.01" min="0" class="form-control form-control-sm" value="<?= esc($v[$priceA[0]] ?? '', 'attr') ?>" title="<?= esc($priceA[1], 'attr') ?>">
+                <input name="<?= esc($priceB[0], 'attr') ?>" type="number" step="0.01" min="0" class="form-control form-control-sm" value="<?= esc($v[$priceB[0]] ?? '', 'attr') ?>" title="<?= esc($priceB[1], 'attr') ?>">
                 <input name="cost_price" type="number" step="0.01" min="0" class="form-control form-control-sm" value="<?= esc($v['cost_price'] ?? '', 'attr') ?>" placeholder="—" title="Cost price">
                 <?php if ($showStock): ?><input name="stock" type="number" step="1" min="0" class="form-control form-control-sm" value="<?= esc(rtrim(rtrim(number_format((float) ($stockLevels[$vid] ?? 0), 3), '0'), '.') ?: '0', 'attr') ?>" title="On-hand stock in this shop"><?php endif; ?>
                 <select name="status" class="form-select form-select-sm"><?php foreach (['active', 'inactive', 'discontinued'] as $s): ?><option value="<?= $s ?>" <?= $v['status'] === $s ? 'selected' : '' ?>><?= ucfirst($s) ?></option><?php endforeach; ?></select>

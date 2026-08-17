@@ -132,7 +132,12 @@ final class ProductVariantRepository
     {
         $db = Database::connect();
         $variants = $db->table('product_variants')
-            ->select('id, sku, barcode, mrp, base_price, cost_price, purchase_price, weight_grams, length_mm, width_mm, height_mm, reorder_level, safety_stock, is_default, status, visibility')
+            // making_price is selected for every panel, not just the manufacturer one:
+            // the column lives on the shared product_variants table (70_manufacturer.sql)
+            // and the variant grid renders whichever price pair its panel asks for.
+            // Vendors simply have NULL here, which renders as an empty input exactly as
+            // an unset price always did.
+            ->select('id, sku, barcode, mrp, making_price, base_price, cost_price, purchase_price, weight_grams, length_mm, width_mm, height_mm, reorder_level, safety_stock, is_default, status, visibility')
             ->where('product_id', $productId)->where('deleted_at', null)->orderBy('is_default', 'DESC')->orderBy('id')
             ->get()->getResultArray();
         if ($variants === []) {

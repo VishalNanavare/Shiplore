@@ -10,15 +10,23 @@ use CodeIgniter\Test\CIUnitTestCase;
  * matching form field the key was simply never present, so every manufacturer
  * product was created with a NULL tax class and NULL unit of measure.
  *
- * Source assertions against the raw view template: no request/session harness
- * exists for this view yet, and the field-presence/naming/lock behaviour is
- * fully verifiable from the template text.
+ * Source assertions against the view template. The fields these check now live in
+ * partials/_product_form_body — the manufacturer form was rebuilt to render that
+ * shared shell (the same one vendor and admin use) instead of its own bespoke
+ * markup, which is what made this screen a thinner lookalike rather than the vendor
+ * screen. The assertions follow the markup; the rules they protect are unchanged,
+ * and every one of them applies to the vendor form too.
+ *
+ * Rendered-output coverage of the same screen now also exists in
+ * ManufacturerPanelTest, which did not when this file was written.
  */
 final class ManufacturerProductFormFieldsTest extends CIUnitTestCase
 {
+    /** The shell plus the partial it includes — the markup is in one or the other. */
     private function view(): string
     {
-        return (string) file_get_contents(APPPATH . 'Views/manufacturer/products/form.php');
+        return (string) file_get_contents(APPPATH . 'Views/manufacturer/products/form.php')
+            . (string) file_get_contents(APPPATH . 'Views/partials/_product_form_body.php');
     }
 
     public function testTaxClassFieldExistsAndIteratesTheTaxMaster(): void

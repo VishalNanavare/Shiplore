@@ -361,6 +361,246 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         });
     }
 
+    // ------------------------------------------------------------ product & variants
+
+    /** Everything the shared product shell reaches for, so the form can render. */
+    private function mockProductForm(?array $product = null): void
+    {
+        Services::injectMock('manufacturerProductRepository', new class ($product) {
+            public function __construct(private ?array $product) {}
+
+            public function findById(int $id, int $manufacturerId): ?array
+            {
+                return $this->product !== null && $id === (int) $this->product['id'] ? $this->product : null;
+            }
+
+            public function list(int $m, ?string $s = null, $unit = null): array { return []; }
+        });
+
+        Services::injectMock('adminProductRepository', new class {
+            public function allowedCategories(int $v): array { return [['id' => 10, 'name' => 'Fasteners', 'slug' => 'fasteners']]; }
+            public function formMasters(): array { return ['tax' => [['id' => 4, 'name' => 'GST 18%']], 'units' => [['id' => 1, 'name' => 'Piece']], 'brands' => []]; }
+            public function content(int $p): array { return []; }
+            public function seo(int $p): array { return []; }
+            public function tagsCsv(int $p): string { return ''; }
+            public function labelIds(int $p): array { return []; }
+            public function faqs(int $p): array { return []; }
+            public function customAttributes(int $p): array { return []; }
+            public function videos(int $p): array { return []; }
+            public function relations(int $p): array { return []; }
+        });
+        Services::injectMock('mediaRepository', new class {
+            public function forProduct(int $p): array { return []; }
+            public function documents(int $p): array { return []; }
+        });
+        Services::injectMock('productBarcodeRepository', new class {
+            public function forProduct(int $p): array { return []; }
+            public function forVariant(int $v): array { return []; }
+        });
+    }
+
+    /**
+     * The whole point of this screen's rework: it must render the SAME shell the
+     * vendor panel renders, not a thinner lookalike. These markers come from
+     * partials/_product_form_body — the accordion, the completeness meter and the
+     * autosave hook — and none of them existed on the old bespoke 6-field form.
+     */
+    public function testProductFormRendersTheSharedVendorShell(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.create']);
+        $this->mockProductForm();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/products/new');
+
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('pf-acc', $body, 'the shared accordion shell must render');
+        $this->assertStringContainsString('Completeness', $body);
+        $this->assertStringContainsString('data-autosave-base', $body);
+    }
+
+    /** All eleven sections, matching vendor — the old form had four fields total. */
+    public function testProductFormHasEveryVendorSection(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.create']);
+        $this->mockProductForm();
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products/new')->getBody();
+
+        foreach (['Basics', 'Tax &amp; Units', 'Content', 'Media', 'Purchase Policy',
+            'Shipping', 'SEO', 'Visibility &amp; Tags', 'FAQ', 'Specs', 'Relations'] as $section) {
+            $this->assertStringContainsString($section, $body, "the '{$section}' section is missing from the manufacturer form");
+        }
+    }
+
+    /** The location picker is a manufacturing unit and must post mshop_id, not shop_id. */
+    public function testProductFormPostsTheUnitAsMshopId(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.create']);
+        $this->mockProductForm();
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products/new')->getBody();
+
+        $this->assertStringContainsString('name="mshop_id"', $body);
+        $this->assertStringNotContainsString('name="shop_id"', $body, 'a manufacturer has units, not shops');
+        $this->assertStringContainsString('Manufacturing unit', $body);
+        $this->assertStringContainsString('Bhiwandi Plant', $body);
+    }
+
+    /** Sibling URLs must resolve inside this panel, not the vendor one. */
+    public function testProductFormSiblingUrlsStayInThisPanel(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.create']);
+        $this->mockProductForm();
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products/new')->getBody();
+
+        $this->assertStringContainsString('manufacturer/products/ai-suggest', $body);
+        $this->assertStringNotContainsString('vendor/products/ai-suggest', $body);
+        $this->assertStringNotContainsString('admin/products/ai-suggest', $body);
+    }
+
+    private function mockVariants(array $variants = []): object
+    {
+        $spy = new class ($variants) {
+            public array $variants;
+            public array $generated = [];
+            public array $bulk      = [];
+
+            public function __construct(array $v) { $this->variants = $v; }
+
+            public function cleanupEmptyDefault(int $p): void {}
+            public function definingAttributes(int $c): array
+            {
+                return [['id' => 1, 'code' => 'size', 'name' => 'Size', 'type' => 'select', 'values' => [['id' => 5, 'value' => 'M8', 'sort_order' => 1]]]];
+            }
+            public function listWithValues(int $p): array { return $this->variants; }
+            public function findVariant(int $id): ?array
+            {
+                return ['id' => $id, 'product_id' => 77, 'vendor_id' => 1, 'making_price' => '40.00', 'base_price' => '60.00'];
+            }
+            public function generate(int $pid, int $vendorId, array $sel, array $base, ?int $a = null): int
+            {
+                $this->generated[] = ['pid' => $pid, 'vendor' => $vendorId, 'sel' => $sel, 'base' => $base];
+
+                return 2;
+            }
+            public function updateVariant(int $id, int $v, array $d, ?int $a = null): bool { return true; }
+            public function bulkUpdate(array $ids, int $v, string $f, string $val, ?int $a = null): int
+            {
+                $this->bulk[] = [$ids, $f, $val];
+
+                return count($ids);
+            }
+        };
+        Services::injectMock('productVariantRepository', $spy);
+
+        return $spy;
+    }
+
+    public function testVariantsPageRendersMakingAndSellingPrice(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        // Column list copied from ProductVariantRepository::listWithValues()'s select()
+        // plus the derived `attributes` string it appends — a mock shaped from memory
+        // lets the view read keys the real query never returns.
+        $this->mockVariants([[
+            'id' => 5, 'sku' => 'B-1', 'barcode' => null,
+            'mrp' => null, 'making_price' => '40.00', 'base_price' => '60.00',
+            'cost_price' => null, 'purchase_price' => null,
+            'weight_grams' => null, 'length_mm' => null, 'width_mm' => null, 'height_mm' => null,
+            'reorder_level' => null, 'safety_stock' => null,
+            'is_default' => 0, 'status' => 'active', 'visibility' => 'vendor',
+            'attributes' => 'Size: M8',
+        ]]);
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/products/77/variants');
+
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('Making price', $body);
+        $this->assertStringContainsString('name="making_price"', $body);
+        $this->assertStringContainsString('Selling price', $body);
+        // MRP is meaningless for a manufacturer — mrp stays 0 on these products.
+        $this->assertStringNotContainsString('name="mrp"', $body);
+    }
+
+    public function testVariantsPageIsTenantScoped(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockProductForm(); // findById returns null for every id
+        $this->mockVariants();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/products/77/variants');
+
+        $r->assertRedirect();
+        $this->assertStringContainsString('manufacturer/products', (string) $r->getRedirectUrl());
+    }
+
+    public function testVariantGenerateForcesTheTenantAndKeepsThePriceRule(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $spy = $this->mockVariants();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/variants/generate', $this->csrf() + [
+                'sku_prefix' => 'BOLT', 'making_price' => '40', 'base_price' => '60',
+                'sel' => [1 => [5, 6]],
+            ])->assertRedirect();
+
+        $this->assertCount(1, $spy->generated);
+        $this->assertSame(1, $spy->generated[0]['vendor'], 'the tenant must come from the session, never the post');
+        $this->assertSame([1 => [5, 6]], $spy->generated[0]['sel']);
+    }
+
+    /** The invariant must hold on the variant grid too, or it is an open side door. */
+    public function testVariantGenerateRejectsASellingPriceBelowMaking(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $spy = $this->mockVariants();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/variants/generate', $this->csrf() + [
+                'sku_prefix' => 'BOLT', 'making_price' => '90', 'base_price' => '60',
+                'sel' => [1 => [5]],
+            ])->assertRedirect();
+
+        $this->assertSame([], $spy->generated, 'selling below making must never reach the repository');
+    }
+
+    public function testVariantBulkPriceUpdateIsAlsoValidated(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $spy = $this->mockVariants();
+
+        // findVariant() reports making 40 / selling 60; bulk-setting selling to 10
+        // would invert the rule.
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/variants/bulk', $this->csrf() + [
+                'ids' => [5], 'field' => 'base_price', 'value' => '10',
+            ])->assertRedirect();
+
+        $this->assertSame([], $spy->bulk, 'a bulk price set must be validated like any other');
+    }
+
+    public function testVariantBulkUpdateAppliesWhenValid(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $spy = $this->mockVariants();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/variants/bulk', $this->csrf() + [
+                'ids' => [5], 'field' => 'base_price', 'value' => '99',
+            ])->assertRedirect();
+
+        $this->assertSame([[[5], 'base_price', '99']], $spy->bulk);
+    }
+
     // ------------------------------------------------------------ media & documents
 
     public function testMediaLibraryRendersForPermittedUser(): void

@@ -103,9 +103,17 @@ final class ManufacturerProductImageTest extends CIUnitTestCase
         );
     }
 
+    /**
+     * The shell plus the partial it includes. The upload control moved into
+     * partials/_product_form_body when the manufacturer form was rebuilt to render
+     * the same shared shell as vendor and admin; the markup asserted below is
+     * unchanged, and now also gets the gallery (reorder / primary / remove) that the
+     * bespoke form never had.
+     */
     private function view(): string
     {
-        return (string) file_get_contents(APPPATH . 'Views/manufacturer/products/form.php');
+        return (string) file_get_contents(APPPATH . 'Views/manufacturer/products/form.php')
+            . (string) file_get_contents(APPPATH . 'Views/partials/_product_form_body.php');
     }
 
     public function testFormHasAMultipartFileInputNamedForServerSideMultiUpload(): void

@@ -871,6 +871,23 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->post('products/(:num)/autosave/(:segment)', 'Manufacturer\ProductController::autosave/$1/$2', ['filter' => 'csrf']);
     $routes->post('products/(:num)/submit', 'Manufacturer\ProductController::submit/$1', ['filter' => 'csrf']);
 
+    // Variants — the same builder the vendor panel uses. Price/SKU/stock live here,
+    // not on the product form, for every panel.
+    $routes->get('products/(:num)/variants', 'Manufacturer\ProductVariantController::index/$1');
+    $routes->post('products/(:num)/variants/generate', 'Manufacturer\ProductVariantController::generate/$1', ['filter' => 'csrf']);
+    $routes->post('products/(:num)/variants/bulk', 'Manufacturer\ProductVariantController::bulkUpdate/$1', ['filter' => 'csrf']);
+    $routes->post('variants/(:num)/update', 'Manufacturer\ProductVariantController::update/$1', ['filter' => 'csrf']);
+    $routes->post('variants/(:num)/delete', 'Manufacturer\ProductVariantController::delete/$1', ['filter' => 'csrf']);
+    $routes->post('variants/(:num)/barcodes', 'Manufacturer\ProductVariantController::saveBarcodes/$1', ['filter' => 'csrf']);
+
+    // Cascading lookups the product form and variant builder call over AJAX,
+    // constrained to this manufacturer's own categories/attributes.
+    $routes->get('lookup/categories', 'Manufacturer\ProductLookupController::categories');
+    $routes->get('lookup/categories/(:num)/attributes', 'Manufacturer\ProductLookupController::attributes/$1');
+    $routes->get('lookup/categories/(:num)/defaults', 'Manufacturer\ProductLookupController::defaults/$1');
+    $routes->get('lookup/categories/(:num)/brands', 'Manufacturer\ProductLookupController::brands/$1');
+    $routes->get('lookup/attributes/(:num)/values', 'Manufacturer\ProductLookupController::attributeValues/$1');
+
     // Incoming monline purchase orders (seller side). The buyer confirms receipt on
     // their side — a manufacturer cannot mark its own delivery received.
     $routes->get('purchase-orders', 'Manufacturer\PurchaseOrderController::index');

@@ -123,7 +123,17 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
         foreach ($this->panelControllers() as [$ctrl, $src]) {
             preg_match_all('/public function (\w+)\s*\(/', $src, $m);
 
-            $this->assertNotEmpty($m[1], "no public methods found in {$ctrl}");
+            // A controller whose endpoints come from a shared trait (ProductLookups)
+            // declares no public methods of its own. That is legitimate, but it must
+            // still establish the tenant somewhere in this file — otherwise "no public
+            // methods" would be an easy way to opt out of every check below.
+            $this->assertStringContainsString(
+                'requireManufacturer',
+                $src,
+                "Manufacturer\\{$ctrl} never mentions requireManufacturer(); if its endpoints "
+                . 'come from a trait, the guard hook in this file must call it',
+            );
+
             foreach ($m[1] as $method) {
                 if ($method === '__construct' || $method === 'initController') {
                     continue;

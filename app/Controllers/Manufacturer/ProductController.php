@@ -214,29 +214,80 @@ final class ProductController extends BaseManufacturerController
         return $posted > 0 && in_array($posted, $this->allowedMshopIds(), true) ? $posted : null;
     }
 
-    /** @param array<string,mixed>|null $product */
+    /**
+     * Render the shared product shell (partials/_product_form_body) — the same one the
+     * vendor and admin panels use, so this screen is the vendor screen rather than a
+     * thinner lookalike. It was previously a bespoke 6-field form, which is why it did
+     * not match.
+     *
+     * Two things the partial is told rather than left to assume:
+     *  - the location picker is a manufacturing unit and posts mshop_id, not shop_id;
+     *  - price/SKU/stock are NOT on this page for any panel — they live on Variants.
+     *
+     * adminProductRepository is party-agnostic (it reads the shared products tables by
+     * id), so all the rich sections — content, SEO, FAQ, specs, relations, videos — are
+     * reused rather than reimplemented.
+     *
+     * @param array<string,mixed>|null $product
+     */
     private function form(?array $product): string
     {
+        $repo    = service('adminProductRepository');
         $isOwner = $this->isOwner();
-        $units   = $this->mshopOptions();
-        $current = $product !== null ? (int) ($product['mshop_id'] ?? 0) : 0;
-        $selectedMshop = $current > 0
+        $pid     = $product !== null ? (int) $product['id'] : 0;
+
+        // Unit rows in the shape the partial's picker expects ([id, name]).
+        $units = [];
+        foreach ($this->mshopOptions() as $id => $name) {
+            $units[] = ['id' => (int) $id, 'name' => $name];
+        }
+
+        $current  = $product !== null ? (int) ($product['mshop_id'] ?? 0) : 0;
+        $selected = $current > 0
             ? $current
-            : (! $isOwner ? $this->effectiveMshopId() : (count($units) === 1 ? array_key_first($units) : null));
-        $pid = $product !== null ? (int) $product['id'] : 0;
+            : (! $isOwner ? $this->effectiveMshopId() : (count($units) === 1 ? (int) $units[0]['id'] : null));
 
         return $this->render(
             'manufacturer/products/form',
             'products',
             $product === null ? 'New Product' : 'Edit Product',
             [
-                'product'    => $product,
-                'categories' => service('adminProductRepository')->allowedCategories((int) $this->manufacturerId()),
-                'masters'    => service('adminProductRepository')->formMasters(),
-                'units'      => $units,
-                'lockUnit'   => ! $isOwner,
-                'selectedMshop' => $selectedMshop,
+                'product'  => $product,
+                'vendorId' => $this->manufacturerId(),
+                'ctx'      => $isOwner ? 'manufacturer_owner' : 'manufacturer_unit_manager',
+                'vendors'  => [],
+
+                // The location picker, relabelled for manufacturing units.
+                'shops'         => $units,
+                'selectedShops' => $selected ? [(int) $selected] : [],
+                'lockShops'     => ! $isOwner,
+                'locField'      => 'mshop_id',
+                'locLabel'      => 'Manufacturing unit',
+                'locPick'       => 'Choose a unit…',
+                'locHelp'       => $isOwner
+                    ? 'The unit that manufactures this product. It decides which catalogue the item appears in on monline.'
+                    : 'This product will be added to your unit.',
+
+                'categories' => $repo->allowedCategories((int) $this->manufacturerId()),
+                'masters'    => $repo->formMasters(),
                 'images'     => $pid ? service('mediaRepository')->forProduct($pid) : [],
+                'content'    => $pid ? $repo->content($pid) : [],
+                'seo'        => $pid ? $repo->seo($pid) : [],
+                'tagsCsv'    => $pid ? $repo->tagsCsv($pid) : '',
+                'labelIds'   => $pid ? $repo->labelIds($pid) : [],
+                'faqs'       => $pid ? $repo->faqs($pid) : [],
+                'cattr'      => $pid ? $repo->customAttributes($pid) : [],
+                'videos'     => $pid ? $repo->videos($pid) : [],
+                'relations'  => $pid ? $repo->relations($pid) : [],
+                'barcodes'   => $pid ? service('productBarcodeRepository')->forProduct($pid) : [],
+                'documents'  => $pid ? service('mediaRepository')->documents($pid) : [],
+                'shopLevels' => [],
+                'mediaBase'  => '',
+
+                'actionUrl' => $pid
+                    ? site_url('manufacturer/products/' . $pid . '/update')
+                    : site_url('manufacturer/products/store'),
+                'backUrl'   => site_url('manufacturer/products'),
             ],
         );
     }
