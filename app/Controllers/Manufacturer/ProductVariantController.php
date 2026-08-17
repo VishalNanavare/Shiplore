@@ -48,9 +48,16 @@ final class ProductVariantController extends BaseManufacturerController
         $vr->cleanupEmptyDefault($productId);
         $variants = $vr->listWithValues($productId);
 
-        $bcByVariant = [];
+        // -1 means "staff with no unit"; treat it as unscoped rather than querying it.
+        $unit   = $this->effectiveMshopId();
+        $unitId = $unit !== null && $unit > 0 ? $unit : 0;
+        $inv    = service('manufacturerInventoryService');
+
+        $bcByVariant = $stockLevels = [];
         foreach ($variants as $v) {
-            $bcByVariant[(int) $v['id']] = service('productBarcodeRepository')->forVariant((int) $v['id']);
+            $vid               = (int) $v['id'];
+            $bcByVariant[$vid] = service('productBarcodeRepository')->forVariant($vid);
+            $stockLevels[$vid] = $unitId > 0 ? (float) ($inv->levels($vid, $unitId)['on_hand'] ?? 0) : 0.0;
         }
 
         return $this->render('manufacturer/products/variants', 'products', 'Variants', [
@@ -58,10 +65,13 @@ final class ProductVariantController extends BaseManufacturerController
             'attributes'        => $vr->definingAttributes((int) $product['category_id']),
             'variants'          => $variants,
             'barcodesByVariant' => $bcByVariant,
-            // Manufacturer stock lives in mfg_inventory, which has no reader yet, so the
-            // stock column is hidden rather than shown as a misleading zero.
-            'stockLevels'       => [],
-            'inventoryMode'     => 'none',
+            // Stock is shown ONLY when the view is scoped to a single unit. An owner
+            // spanning several units has no single on-hand number, and summing them
+            // would be a lie — a variant with 10 at one plant and 0 at another is not
+            // "10 available" to either. Those users see no column, and use the Stock
+            // page (which is per-unit) instead.
+            'stockLevels'       => $stockLevels,
+            'inventoryMode'     => $unitId > 0 ? 'managed' : 'none',
             // Stock only: the manufacturer panel has no /pricing screen (tiered and
             // customer-group pricing are consumer-segment concepts — B2B price is
             // negotiated per purchase order), and its stock page is /stock.
@@ -141,6 +151,26 @@ final class ProductVariantController extends BaseManufacturerController
         }
 
         $vr->updateVariant($variantId, (int) $this->manufacturerId(), $post, (int) session()->get('user_id'));
+
+        // The grid renders an editable stock box whenever the view is unit-scoped, so
+        // it has to be handled here or the number is silently discarded.
+        //
+        // NOT the vendor path: Vendor\ProductVariantController calls
+        // productVariantRepository->setStock(), which writes the shop `inventory`
+        // tables. Passing an mshop id to that would corrupt a real shop's live stock,
+        // since the two id spaces overlap. Manufacturer stock moves only through
+        // ManufacturerInventoryService, and only as a delta, so the mfg ledger keeps a
+        // complete history instead of an unexplained jump.
+        $unit = $this->effectiveMshopId();
+        if ($unit !== null && $unit > 0 && array_key_exists('stock', $post) && $post['stock'] !== '') {
+            $svc     = service('manufacturerInventoryService');
+            $current = (float) ($svc->levels($variantId, $unit)['on_hand'] ?? 0);
+            $delta   = (float) $post['stock'] - $current;
+
+            if ($delta !== 0.0) {
+                $svc->adjust($variantId, $unit, $delta, 'correction', 'set from the variants grid', (int) session()->get('user_id'));
+            }
+        }
 
         return redirect()->to('manufacturer/products/' . (int) $variant['product_id'] . '/variants')
             ->with('success', 'Variant updated.');

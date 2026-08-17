@@ -24,6 +24,12 @@ $panelBase = str_contains((string) $actionUrl, '/manufacturer/')
     ? 'manufacturer/products/'
     : (str_contains((string) $actionUrl, '/vendor/') ? 'vendor/products/' : 'admin/products/');
 $aiUrl  = site_url($panelBase . 'ai-suggest');
+// Two controls are panel-dependent and were rendering unconditionally, so on the
+// manufacturer panel three "AI generate" buttons POSTed to a route that does not
+// exist and the media-library picker opened against an empty base URL. Both are now
+// gated: a panel gets the control only if it actually routes the thing behind it.
+$hasAi      = $panelBase !== 'manufacturer/products/';
+$hasLibrary = ($mediaBase ?? '') !== '';
 $asBase = site_url($panelBase);
 // S2 shop-assignment context (defaulted so the partial stays safe if a caller omits them).
 // One shop per product (owner's confirmed add flow): vendor -> shop -> type -> info.
@@ -200,7 +206,7 @@ $sections = [
                         <?php elseif ($key === 'content'): ?>
                             <div class="row g-3">
                                 <div class="col-12"><label class="form-label">Short Description</label><input name="short_description" maxlength="500" class="form-control" value="<?= esc($gc('short_description'), 'attr') ?>"></div>
-                                <div class="col-12"><label class="form-label d-flex justify-content-between">Full Description <button type="button" class="btn btn-sm btn-outline-primary js-ai" data-ai="description" data-fill="full_description"><i class="bi bi-stars me-1"></i>AI generate</button></label>
+                                <div class="col-12"><label class="form-label d-flex justify-content-between">Full Description <?php if ($hasAi): ?><button type="button" class="btn btn-sm btn-outline-primary js-ai" data-ai="description" data-fill="full_description"><i class="bi bi-stars me-1"></i>AI generate</button><?php endif; ?></label>
                                     <div class="js-quill mb-3" data-target="full_description"><?= $gc('full_description') ?: ($g('description') ?: '') ?></div>
                                     <textarea name="full_description" class="d-none"><?= esc($gc('full_description') ?: $g('description')) ?></textarea>
                                 </div>
@@ -222,7 +228,7 @@ $sections = [
                             </div>
                             <div id="pfPreviewStrip" class="d-flex gap-2 flex-wrap mb-2"></div>
                             <?php if ($pid): ?>
-                                <button type="button" id="pfLibOpen" class="btn btn-outline-primary btn-sm mb-2"><i class="bi bi-images me-1"></i>Choose from media library</button>
+                                <?php if ($hasLibrary): ?><button type="button" id="pfLibOpen" class="btn btn-outline-primary btn-sm mb-2"><i class="bi bi-images me-1"></i>Choose from media library</button><?php endif; ?>
                                 <span class="text-secondary small ms-1">Reuse images you already uploaded — no need to upload again.</span>
                             <?php endif; ?>
                             <?php if ($pid && ! empty($images)): ?>
@@ -312,7 +318,7 @@ $sections = [
                             </div>
                         <?php elseif ($key === 'seo'): ?>
                             <div class="row g-3">
-                                <div class="col-12"><button type="button" class="btn btn-sm btn-outline-primary js-ai" data-ai="seo"><i class="bi bi-stars me-1"></i>AI auto-SEO</button></div>
+                                <?php if ($hasAi): ?><div class="col-12"><button type="button" class="btn btn-sm btn-outline-primary js-ai" data-ai="seo"><i class="bi bi-stars me-1"></i>AI auto-SEO</button></div><?php endif; ?>
                                 <div class="col-md-6"><label class="form-label">Meta Title</label><input name="meta_title" class="form-control" value="<?= esc($gs('meta_title'), 'attr') ?>"></div>
                                 <div class="col-md-6"><label class="form-label">Canonical URL</label><input name="canonical_url" class="form-control" value="<?= esc($gs('canonical_url'), 'attr') ?>"></div>
                                 <div class="col-12"><label class="form-label">Meta Description</label><textarea name="meta_description" class="form-control" rows="2" maxlength="300"><?= esc($gs('meta_description')) ?></textarea></div>
@@ -323,7 +329,7 @@ $sections = [
                                 <div class="col-md-4"><label class="form-label">Visibility</label><select name="visibility" class="form-select"><?php foreach (['public' => 'Public', 'logged_in' => 'Logged-in', 'group' => 'Customer group', 'vendor' => 'Vendor only', 'hidden' => 'Hidden'] as $v => $l): ?><option value="<?= $v ?>" <?= $enum((string) $g('visibility', 'public'), $v) ?>><?= $l ?></option><?php endforeach; ?></select></div>
                                 <div class="col-md-4"><label class="form-label">Search Boost</label><select name="search_boost" class="form-select"><?php foreach (['normal' => 'Normal', 'high' => 'High', 'featured' => 'Featured'] as $v => $l): ?><option value="<?= $v ?>" <?= $enum((string) $g('search_boost', 'normal'), $v) ?>><?= $l ?></option><?php endforeach; ?></select></div>
                                 <div class="col-md-4"><label class="form-label">Channels</label><div class="d-flex gap-2 flex-wrap pt-1"><div class="form-check"><input class="form-check-input" type="checkbox" name="is_online_enabled" id="ce1" value="1" <?= $chk($g('is_online_enabled', 1)) ?>><label class="form-check-label small" for="ce1">Web</label></div><div class="form-check"><input class="form-check-input" type="checkbox" name="is_app_enabled" id="ce2" value="1" <?= $chk($g('is_app_enabled', 1)) ?>><label class="form-check-label small" for="ce2">App</label></div><div class="form-check"><input class="form-check-input" type="checkbox" name="is_pos_enabled" id="ce3" value="1" <?= $chk($g('is_pos_enabled', 1)) ?>><label class="form-check-label small" for="ce3">POS</label></div><div class="form-check"><input class="form-check-input" type="checkbox" name="is_marketplace_enabled" id="ce4" value="1" <?= $chk($g('is_marketplace_enabled')) ?>><label class="form-check-label small" for="ce4">Market</label></div></div></div>
-                                <div class="col-md-6"><label class="form-label d-flex justify-content-between">Tags <button type="button" class="btn btn-sm btn-outline-primary js-ai" data-ai="tags"><i class="bi bi-stars me-1"></i>Suggest</button></label><select name="tags[]" class="form-select js-tags" multiple><?php foreach (array_filter(array_map('trim', explode(',', (string) ($tagsCsv ?? '')))) as $t): ?><option value="<?= esc($t, 'attr') ?>" selected><?= esc($t) ?></option><?php endforeach; ?></select></div>
+                                <div class="col-md-6"><label class="form-label d-flex justify-content-between">Tags <?php if ($hasAi): ?><button type="button" class="btn btn-sm btn-outline-primary js-ai" data-ai="tags"><i class="bi bi-stars me-1"></i>Suggest</button><?php endif; ?></label><select name="tags[]" class="form-select js-tags" multiple><?php foreach (array_filter(array_map('trim', explode(',', (string) ($tagsCsv ?? '')))) as $t): ?><option value="<?= esc($t, 'attr') ?>" selected><?= esc($t) ?></option><?php endforeach; ?></select></div>
                                 <div class="col-md-6"><label class="form-label">Labels</label><select name="labels[]" class="form-select js-select" multiple><?php foreach (($masters['labels'] ?? []) as $lab): ?><option value="<?= esc($lab['id'], 'attr') ?>" <?= in_array((int) $lab['id'], $labelIds ?? [], true) ? 'selected' : '' ?>><?= esc($lab['name']) ?></option><?php endforeach; ?></select></div>
                             </div>
                         <?php elseif ($key === 'faq'): ?>

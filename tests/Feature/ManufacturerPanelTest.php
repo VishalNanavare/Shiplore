@@ -447,6 +447,52 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertStringContainsString('Bhiwandi Plant', $body);
     }
 
+    /**
+     * The form must not render controls this panel cannot serve. Three "AI generate"
+     * buttons POSTed to manufacturer/products/ai-suggest, which has no route, and the
+     * media-library picker opened against an empty base URL.
+     */
+    public function testTheFormHidesControlsThisPanelCannotServe(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.create', 'mfg.product.update']);
+        // MUST be the EDIT form: the media-library button is inside `if ($pid)`, so on
+        // a new-product form it is absent whatever the flag says — asserting there
+        // would pass vacuously, which a mutation run caught it doing.
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products/77/edit')->getBody();
+
+        $this->assertStringContainsString('pf-acc', $body, 'sanity: the shared shell must have rendered');
+        $this->assertStringNotContainsString('js-ai', $body, 'AI-suggest has no route on this panel');
+        $this->assertStringNotContainsString('pfLibOpen', $body, 'the media library picker has no base URL here');
+    }
+
+    /**
+     * An owner spanning several units has no single on-hand number, so the stock column
+     * must be hidden rather than showing a figure that is true for neither unit.
+     */
+    public function testTheVariantGridHidesStockForAnOwnerSpanningUnits(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $this->mockVariants([[
+            'id' => 5, 'sku' => 'B-1', 'barcode' => null, 'mrp' => null,
+            'making_price' => '40.00', 'base_price' => '60.00', 'cost_price' => null, 'purchase_price' => null,
+            'weight_grams' => null, 'length_mm' => null, 'width_mm' => null, 'height_mm' => null,
+            'reorder_level' => null, 'safety_stock' => null,
+            'is_default' => 0, 'status' => 'active', 'visibility' => 'vendor', 'attributes' => 'Size: M8',
+        ]]);
+        $this->mockInventoryService();
+
+        // The owner is allowed units 11 AND 12, so effectiveMshopId() is null.
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products/77/variants')->getBody();
+        $this->assertStringNotContainsString('name="stock"', $body, 'no single unit is in scope, so no single stock figure exists');
+
+        // Unit staff are pinned to one unit, so the column is meaningful for them.
+        $staffBody = (string) $this->withSession($this->staffSession())->get('manufacturer/products/77/variants')->getBody();
+        $this->assertStringContainsString('name="stock"', $staffBody);
+    }
+
     /** Sibling URLs must resolve inside this panel, not the vendor one. */
     public function testProductFormSiblingUrlsStayInThisPanel(): void
     {
@@ -715,6 +761,39 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertStringContainsString('Selling price', $body);
         // MRP is meaningless for a manufacturer — mrp stays 0 on these products.
         $this->assertStringNotContainsString('name="mrp"', $body);
+    }
+
+    /** The grid's stock box must move stock through the MANUFACTURER service. */
+    public function testVariantGridStockEditGoesThroughTheManufacturerService(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $this->mockVariants();
+        $svc = $this->mockInventoryService();   // levels() reports 120 on hand
+
+        $this->withSession($this->postSession($this->staffSession()))
+            ->post('manufacturer/variants/5/update', $this->csrf() + [
+                'sku' => 'B-1', 'making_price' => '40', 'base_price' => '60', 'stock' => '150',
+            ])->assertRedirect();
+
+        // A DELTA, not an absolute set: the mfg ledger must explain the movement.
+        $this->assertSame([[5, 11, 30.0, 'correction']], $svc->adjusted);
+    }
+
+    /** An unchanged stock box must not write a zero-delta movement. */
+    public function testVariantGridStockEditIsANoOpWhenUnchanged(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $this->mockVariants();
+        $svc = $this->mockInventoryService();
+
+        $this->withSession($this->postSession($this->staffSession()))
+            ->post('manufacturer/variants/5/update', $this->csrf() + [
+                'sku' => 'B-1', 'making_price' => '40', 'base_price' => '60', 'stock' => '120',
+            ])->assertRedirect();
+
+        $this->assertSame([], $svc->adjusted, 'no change means no ledger entry');
     }
 
     public function testVariantsPageIsTenantScoped(): void
