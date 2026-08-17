@@ -230,7 +230,7 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
         // Off by default: enabling delivery is a per-unit decision, not something a
         // migration switches on for every existing manufacturer.
         $this->assertStringContainsString(
-            "'delivery_enabled', \"TINYINT(1) NOT NULL DEFAULT 0",
+            '`delivery_enabled` TINYINT(1) NOT NULL DEFAULT 0',
             $sql75,
             'delivery must default to OFF for existing units',
         );

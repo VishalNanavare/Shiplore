@@ -25,31 +25,52 @@
 -- A. Delivery columns on mshops, mirroring `shops` (01_master.sql:380 and
 --    44_shop_delivery_rules.sql). Same names and types, so any future shared
 --    serviceability code reads both tables identically.
+--
+-- Written WITHOUT `DELIMITER` and without a stored procedure, unlike 70. Both
+-- `DELIMITER` and `SOURCE` are mysql/mariadb CLIENT commands: the server has never
+-- heard of either, so a file using them cannot be applied through
+-- database/apply_sql.php (which drives mysqli_multi_query) or pasted into
+-- phpMyAdmin — both send statements straight to the server. The PREPARE-guarded
+-- form below is idempotent in exactly the same way and works everywhere, which is
+-- why apply_sql.php's own docblock asks for it.
+--
+-- delivery_enabled defaults to 0: turning delivery on is a per-unit decision the
+-- manufacturer makes, not something a migration switches on for everyone.
 -- ---------------------------------------------------------------------
-DROP PROCEDURE IF EXISTS `_mfg_add_delivery_col`;
-DELIMITER $$
-CREATE PROCEDURE `_mfg_add_delivery_col`(IN col VARCHAR(64), IN def TEXT)
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.COLUMNS
-                   WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'mshops' AND COLUMN_NAME = col) THEN
-        SET @ddl = CONCAT('ALTER TABLE `mshops` ADD COLUMN `', col, '` ', def);
-        PREPARE s FROM @ddl; EXECUTE s; DEALLOCATE PREPARE s;
-    END IF;
-END$$
-DELIMITER ;
+SET @has := (SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'mshops' AND COLUMN_NAME = 'delivery_enabled');
+SET @ddl := IF(@has = 0, "ALTER TABLE `mshops` ADD COLUMN `delivery_enabled` TINYINT(1) NOT NULL DEFAULT 0 AFTER `longitude`", 'SELECT 1');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
-CALL `_mfg_add_delivery_col`('delivery_enabled', "TINYINT(1) NOT NULL DEFAULT 0 AFTER `longitude`");
-CALL `_mfg_add_delivery_col`('delivery_radius_km', "DECIMAL(6,2) NULL DEFAULT NULL AFTER `delivery_enabled`");
-CALL `_mfg_add_delivery_col`('pickup_enabled', "TINYINT(1) NOT NULL DEFAULT 1 AFTER `delivery_radius_km`");
-CALL `_mfg_add_delivery_col`('prep_time_min', "SMALLINT UNSIGNED NULL DEFAULT NULL AFTER `pickup_enabled`");
-CALL `_mfg_add_delivery_col`('min_order_value', "DECIMAL(15,4) NULL DEFAULT NULL AFTER `prep_time_min`");
-CALL `_mfg_add_delivery_col`('delivery_fee', "DECIMAL(15,4) NULL DEFAULT NULL AFTER `min_order_value`");
-CALL `_mfg_add_delivery_col`('free_delivery_above', "DECIMAL(15,4) NULL DEFAULT NULL AFTER `delivery_fee`");
+SET @has := (SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'mshops' AND COLUMN_NAME = 'delivery_radius_km');
+SET @ddl := IF(@has = 0, "ALTER TABLE `mshops` ADD COLUMN `delivery_radius_km` DECIMAL(6,2) NULL DEFAULT NULL AFTER `delivery_enabled`", 'SELECT 1');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
-DROP PROCEDURE IF EXISTS `_mfg_add_delivery_col`;
+SET @has := (SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'mshops' AND COLUMN_NAME = 'pickup_enabled');
+SET @ddl := IF(@has = 0, "ALTER TABLE `mshops` ADD COLUMN `pickup_enabled` TINYINT(1) NOT NULL DEFAULT 1 AFTER `delivery_radius_km`", 'SELECT 1');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
--- delivery_enabled defaults to 0: turning this on is a per-unit decision the
--- manufacturer makes, not something a migration should switch on for everyone.
+SET @has := (SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'mshops' AND COLUMN_NAME = 'prep_time_min');
+SET @ddl := IF(@has = 0, "ALTER TABLE `mshops` ADD COLUMN `prep_time_min` SMALLINT UNSIGNED NULL DEFAULT NULL AFTER `pickup_enabled`", 'SELECT 1');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @has := (SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'mshops' AND COLUMN_NAME = 'min_order_value');
+SET @ddl := IF(@has = 0, "ALTER TABLE `mshops` ADD COLUMN `min_order_value` DECIMAL(15,4) NULL DEFAULT NULL AFTER `prep_time_min`", 'SELECT 1');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @has := (SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'mshops' AND COLUMN_NAME = 'delivery_fee');
+SET @ddl := IF(@has = 0, "ALTER TABLE `mshops` ADD COLUMN `delivery_fee` DECIMAL(15,4) NULL DEFAULT NULL AFTER `min_order_value`", 'SELECT 1');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @has := (SELECT COUNT(*) FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'mshops' AND COLUMN_NAME = 'free_delivery_above');
+SET @ddl := IF(@has = 0, "ALTER TABLE `mshops` ADD COLUMN `free_delivery_above` DECIMAL(15,4) NULL DEFAULT NULL AFTER `delivery_fee`", 'SELECT 1');
+PREPARE stmt FROM @ddl; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- ---------------------------------------------------------------------
 -- B. Opening hours and holidays, mirroring shop_hours (01_master.sql:414).

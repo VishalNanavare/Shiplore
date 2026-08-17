@@ -106,6 +106,61 @@ final class ManufacturerPermissionScopeTest extends CIUnitTestCase
     }
 
     /**
+     * Migrations from 74 onward must contain no CLIENT-only commands.
+     *
+     * `SOURCE` and `DELIMITER` are commands of the mysql/mariadb command-line client,
+     * not SQL — the server has never heard of either. That matters because
+     * database/apply_sql.php, the documented way to apply a migration here (dev
+     * machines have no mariadb CLI), drives mysqli_multi_query and sends statements
+     * straight to the server: it fails on both. phpMyAdmin parses DELIMITER itself but
+     * likewise fails on SOURCE, which is what an operator hit importing run_all.sql —
+     * "Unrecognized statement type ... near SOURCE".
+     *
+     * EIGHT EARLIER MIGRATIONS USE DELIMITER (16, 17, 18, 22, 23, 25, 29, 70) and are
+     * deliberately not failed here: they have already shipped and been applied, and
+     * retroactively breaking the build over them helps nobody. The rule is
+     * forward-looking, which is also why the boundary is a number rather than an
+     * allow-list — a new file cannot quietly join the legacy set.
+     *
+     * Idempotence without a stored procedure is the PREPARE-guarded form 70 already
+     * uses for users.principal_type; 75 shows it applied to ADD COLUMN.
+     *
+     * run_all.sql is exempt entirely: it is legitimately a CLI script and says so in
+     * its own header.
+     */
+    public function testNewMigrationsUseNoClientOnlyCommands(): void
+    {
+        $files = glob(ROOTPATH . 'database/sql/*.sql') ?: [];
+        $this->assertNotEmpty($files);
+
+        $checked = 0;
+        foreach ($files as $path) {
+            $name = basename($path);
+            if (! preg_match('/^(\d+)_/', $name, $m) || (int) $m[1] < 74) {
+                continue;
+            }
+
+            // Strip -- line comments: these files DISCUSS DELIMITER while explaining
+            // why they avoid it, and a comment must not fail an assertion about code.
+            $sql = preg_replace('/^\s*--.*$/m', '', (string) file_get_contents($path)) ?? '';
+
+            $this->assertDoesNotMatchRegularExpression(
+                '/^\s*DELIMITER\b/mi',
+                $sql,
+                "{$name} uses DELIMITER, a client-only command — database/apply_sql.php cannot apply it",
+            );
+            $this->assertDoesNotMatchRegularExpression(
+                '/^\s*SOURCE\s+\S+\.sql/mi',
+                $sql,
+                "{$name} uses SOURCE, a client-only command",
+            );
+            $checked++;
+        }
+
+        $this->assertGreaterThan(0, $checked, 'no migrations at or above 74 were scanned — has the naming changed?');
+    }
+
+    /**
      * Manufacturer staff are `vendor_staff` rows, so the staff types this panel
      * assigns must exist in that shared enum — otherwise every create fails at the
      * database with a truncation error rather than anything the UI can explain.
