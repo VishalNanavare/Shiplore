@@ -877,6 +877,16 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->post('products/(:num)/publish', 'Manufacturer\ProductController::publish/$1', ['filter' => 'csrf']);
     $routes->post('products/(:num)/unpublish', 'Manufacturer\ProductController::unpublish/$1', ['filter' => 'csrf']);
 
+    // Housekeeping. Only drafts are ever deletable, and delete is a soft delete —
+    // trash is unit-scoped so a store keeper sees only their own unit's.
+    // NOTE: 'products/trash' must be declared BEFORE 'products/(:num)/...' would
+    // otherwise be reached, but CI4 matches (:num) numerically so 'trash' cannot
+    // collide with it. Kept adjacent for readability.
+    $routes->get('products/trash', 'Manufacturer\ProductController::trash');
+    $routes->post('products/(:num)/delete', 'Manufacturer\ProductController::delete/$1', ['filter' => 'csrf']);
+    $routes->post('products/(:num)/restore', 'Manufacturer\ProductController::restore/$1', ['filter' => 'csrf']);
+    $routes->post('products/bulk', 'Manufacturer\ProductController::bulk', ['filter' => 'csrf']);
+
     // Variants — the same builder the vendor panel uses. Price/SKU/stock live here,
     // not on the product form, for every panel.
     $routes->get('products/(:num)/variants', 'Manufacturer\ProductVariantController::index/$1');

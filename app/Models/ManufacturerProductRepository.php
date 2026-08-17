@@ -33,8 +33,28 @@ final class ManufacturerProductRepository
             return [];
         }
 
-        $b = Database::connect()->table('products p')
-            ->select('p.id, p.title, p.slug, p.status, p.created_at, c.name AS category, pv.id AS variant_id, pv.sku, pv.making_price, pv.base_price')
+        // variant_count and image_uuid are correlated subqueries modelled on
+        // VendorProductRepository::list() — both are party-agnostic (they key on
+        // product_id alone), so the manufacturer list shows the same thumbnail and
+        // variant count the vendor list does. `false` on select() keeps them from being
+        // escaped as identifiers.
+        //
+        // Table names go through prefixTable(): raw SQL inside select() is NOT prefixed
+        // by the query builder, unlike table()/join(). Production runs with an empty
+        // DBPrefix so a bare name happens to work there, but it breaks anywhere one is
+        // set — including the test database, which uses `db_`.
+        $db = Database::connect();
+        $b  = $db->table('products p')
+            ->select(
+                'p.id, p.title, p.slug, p.status, p.created_at, c.name AS category,
+                 pv.id AS variant_id, pv.sku, pv.making_price, pv.base_price,
+                 (SELECT COUNT(*) FROM ' . $db->prefixTable('product_variants') . ' pv2
+                    WHERE pv2.product_id = p.id AND pv2.deleted_at IS NULL) AS variant_count,
+                 (SELECT m.uuid FROM ' . $db->prefixTable('media_assets') . ' m
+                    INNER JOIN ' . $db->prefixTable('product_media') . ' pm ON pm.media_id = m.id
+                    WHERE pm.product_id = p.id ORDER BY pm.sort_order, pm.id LIMIT 1) AS image_uuid',
+                false,
+            )
             ->join('categories c', 'c.id = p.category_id', 'left')
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
             ->where('p.vendor_id', $manufacturerId)
@@ -45,10 +65,72 @@ final class ManufacturerProductRepository
         }
         // Unit scope: a store keeper assigned to one unit sees only what that unit lists.
         if ($mshopId !== null) {
-            $b->where("EXISTS (SELECT 1 FROM product_mshops pm WHERE pm.product_id = p.id AND pm.status = 'active' AND pm.mshop_id = " . (int) $mshopId . ')', null, false);
+            $b->where("EXISTS (SELECT 1 FROM " . Database::connect()->prefixTable('product_mshops') . " pm WHERE pm.product_id = p.id AND pm.status = 'active' AND pm.mshop_id = " . (int) $mshopId . ')', null, false);
         }
 
         return $b->orderBy('p.id', 'DESC')->limit(200)->get()->getResultArray();
+    }
+
+    /**
+     * Soft-deleted drafts, tenant- AND unit-scoped.
+     *
+     * AdminProductRepository::listDeleted() scopes by vendor only, so a store keeper
+     * would see every unit's trash rather than their own. Rather than widen that shared
+     * method — three panels call it — the manufacturer gets its own, applying the same
+     * product_mshops EXISTS predicate list() uses.
+     *
+     * @return list<array<string,mixed>>
+     */
+    public function listTrashed(int $manufacturerId, ?int $mshopId = null, int $limit = 200): array
+    {
+        if ($manufacturerId <= 0) {
+            return [];
+        }
+
+        $b = Database::connect()->table('products p')
+            ->select('p.id, p.title, p.slug, p.deleted_at, c.name AS category, pv.sku')
+            ->join('categories c', 'c.id = p.category_id', 'left')
+            ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
+            ->where('p.vendor_id', $manufacturerId)
+            ->where('p.deleted_at IS NOT NULL', null, false)
+            // Only drafts are ever deletable, so the trash only ever holds drafts.
+            ->where('p.status', 'draft');
+
+        if ($mshopId !== null) {
+            $b->where("EXISTS (SELECT 1 FROM " . Database::connect()->prefixTable('product_mshops') . " pm WHERE pm.product_id = p.id AND pm.status = 'active' AND pm.mshop_id = " . (int) $mshopId . ')', null, false);
+        }
+
+        return $b->orderBy('p.deleted_at', 'DESC')->limit($limit)->get()->getResultArray();
+    }
+
+    /**
+     * Soft-delete one of THIS manufacturer's drafts.
+     *
+     * The tenant predicate is in the UPDATE itself rather than in a prior lookup, so
+     * there is no window between checking ownership and acting on it — and a product
+     * belonging to someone else simply matches zero rows.
+     */
+    public function softDeleteDraft(int $id, int $manufacturerId, ?int $actorId = null): bool
+    {
+        $db = Database::connect();
+        $db->table('products')
+            ->where('id', $id)->where('vendor_id', $manufacturerId)
+            ->where('status', 'draft')->where('deleted_at', null)
+            ->update(['deleted_at' => date('Y-m-d H:i:s'), 'updated_by' => $actorId]);
+
+        return $db->affectedRows() > 0;
+    }
+
+    /** Restore one of THIS manufacturer's trashed drafts. Same reasoning as above. */
+    public function restoreDraft(int $id, int $manufacturerId, ?int $actorId = null): bool
+    {
+        $db = Database::connect();
+        $db->table('products')
+            ->where('id', $id)->where('vendor_id', $manufacturerId)
+            ->where('status', 'draft')->where('deleted_at IS NOT NULL', null, false)
+            ->update(['deleted_at' => null, 'updated_by' => $actorId]);
+
+        return $db->affectedRows() > 0;
     }
 
     /** @return array<string,mixed>|null Null when the product is not this manufacturer's. */

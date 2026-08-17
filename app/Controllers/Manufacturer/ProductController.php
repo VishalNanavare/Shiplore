@@ -203,6 +203,117 @@ final class ProductController extends BaseManufacturerController
         return redirect()->to('manufacturer/products')->with('success', 'Product submitted for approval.');
     }
 
+    /** Soft-delete a draft. Only drafts are ever deletable. */
+    public function delete(int $id): RedirectResponse
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+        if ($denied = $this->guard('mfg.product.update')) {
+            return $denied;
+        }
+
+        $ok = service('manufacturerProductRepository')
+            ->softDeleteDraft($id, (int) $this->manufacturerId(), (int) session()->get('user_id'));
+
+        return redirect()->to('manufacturer/products')
+            ->with($ok ? 'success' : 'error', $ok ? 'Draft moved to trash.' : 'Only a draft can be deleted.');
+    }
+
+    /** Soft-deleted drafts, scoped to the units this user may see. */
+    public function trash()
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+        if ($denied = $this->guard('mfg.product.view')) {
+            return $denied;
+        }
+
+        $unit = $this->effectiveMshopId();
+
+        return $this->render('manufacturer/products/trash', 'products', 'Trash', [
+            'products' => service('manufacturerProductRepository')->listTrashed(
+                (int) $this->manufacturerId(),
+                $unit === -1 ? -1 : $unit,
+            ),
+            'canUpdate' => $this->can('mfg.product.update'),
+        ]);
+    }
+
+    public function restore(int $id): RedirectResponse
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+        if ($denied = $this->guard('mfg.product.update')) {
+            return $denied;
+        }
+
+        $ok = service('manufacturerProductRepository')
+            ->restoreDraft($id, (int) $this->manufacturerId(), (int) session()->get('user_id'));
+
+        return redirect()->to('manufacturer/products/trash')
+            ->with($ok ? 'success' : 'error', $ok ? 'Draft restored.' : 'Could not restore that draft.');
+    }
+
+    /**
+     * Bulk submit / delete over selected drafts.
+     *
+     * Every id is put through the tenant-scoped repository call rather than trusted, so
+     * a hand-crafted post containing another manufacturer's product ids simply affects
+     * nothing — the WHERE clause matches no rows.
+     */
+    public function bulk(): RedirectResponse
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+        if ($denied = $this->guard('mfg.product.update')) {
+            return $denied;
+        }
+
+        $action = (string) $this->request->getPost('bulk_action');
+        $ids    = array_values(array_filter(array_map('intval', (array) $this->request->getPost('ids'))));
+
+        if ($ids === [] || ! in_array($action, ['submit', 'delete'], true)) {
+            return redirect()->to('manufacturer/products')->with('error', 'Pick an action and at least one product.');
+        }
+
+        $repo  = service('manufacturerProductRepository');
+        $mid   = (int) $this->manufacturerId();
+        $actor = (int) session()->get('user_id');
+        $done  = 0;
+
+        foreach ($ids as $id) {
+            if ($action === 'delete') {
+                $done += $repo->softDeleteDraft($id, $mid, $actor) ? 1 : 0;
+
+                continue;
+            }
+
+            // Submit: same price re-check the single-product path makes, so a bulk
+            // submit cannot push an unpriced product into the approval queue.
+            $product = $repo->findById($id, $mid);
+            if ($product === null || ($product['status'] ?? '') !== 'draft') {
+                continue;
+            }
+            if (ManufacturerPricing::validate([
+                'making_price' => $product['making_price'],
+                'base_price'   => $product['base_price'],
+            ]) !== '') {
+                continue;
+            }
+            $repo->setStatus($id, $mid, 'submitted', $actor);
+            $done++;
+        }
+
+        return redirect()->to('manufacturer/products')
+            ->with($done > 0 ? 'success' : 'error', $done > 0
+                ? $done . ' of ' . count($ids) . ' product(s) updated.'
+                : 'Nothing was updated — check the products are drafts and priced.');
+    }
+
     /**
      * Make an approved product visible to monline buyers, or hide it again.
      *

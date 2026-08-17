@@ -529,6 +529,50 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertStringContainsString('manufacturer/products/77/edit', $body);
     }
 
+    /**
+     * The list must be usable past a handful of rows: search, sort and paging, plus a
+     * visible count so the repository's silent 200-row cap cannot hide anything.
+     */
+    public function testProductListHasSearchSortAndPaging(): void
+    {
+        $this->grant(['mfg.product.view']);
+        Services::injectMock('manufacturerProductRepository', new class {
+            public function list(int $m, ?string $s = null, $u = null): array
+            {
+                return [['id' => 77, 'title' => 'M8 Bolt', 'sku' => 'B-1', 'category' => 'Fasteners',
+                    'making_price' => '40.00', 'base_price' => '60.00', 'status' => 'draft',
+                    'variant_count' => 3, 'image_uuid' => 'abc-uuid']];
+            }
+        });
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products')->getBody();
+
+        $this->assertStringContainsString('dataTables.bootstrap5.min.css', $body, 'the table styling must load');
+        $this->assertStringContainsString('jquery.dataTables.min.js', $body);
+        $this->assertStringContainsString("DataTable(", $body, 'search/sort/paging must be initialised');
+        // Thumbnail and variant count, both from subqueries lifted from the vendor repo.
+        $this->assertStringContainsString('media/abc-uuid', $body);
+        $this->assertStringContainsString('3 variants', $body);
+    }
+
+    /** A single-variant product must not be labelled with a variant badge. */
+    public function testASingleVariantProductShowsNoVariantBadge(): void
+    {
+        $this->grant(['mfg.product.view']);
+        Services::injectMock('manufacturerProductRepository', new class {
+            public function list(int $m, ?string $s = null, $u = null): array
+            {
+                return [['id' => 77, 'title' => 'M8 Bolt', 'sku' => 'B-1', 'category' => 'Fasteners',
+                    'making_price' => '40.00', 'base_price' => '60.00', 'status' => 'draft',
+                    'variant_count' => 1, 'image_uuid' => null]];
+            }
+        });
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products')->getBody();
+
+        $this->assertStringNotContainsString('1 variants', $body);
+    }
+
     /** A rejected product must be re-submittable, not a permanent dead end. */
     public function testARejectedProductCanBeResubmitted(): void
     {
@@ -562,6 +606,191 @@ final class ManufacturerPanelTest extends CIUnitTestCase
 
         $this->assertStringNotContainsString('₹0.00', $body, 'an unpriced draft must not read as free');
         $this->assertStringNotContainsString('0.0%', $body, 'margin is meaningless without both prices');
+    }
+
+    /** @return object spy covering the trash + bulk surface */
+    private function mockTrashRepo(string $status = 'draft'): object
+    {
+        $repo = new class ($status) {
+            public array $deleted   = [];
+            public array $restored  = [];
+            public array $statusSet = [];
+            public bool $deleteOk   = true;
+
+            public function __construct(private string $status) {}
+
+            public function list(int $m, ?string $s = null, $u = null): array
+            {
+                return [['id' => 77, 'title' => 'M8 Bolt', 'sku' => 'B-1', 'category' => 'Fasteners',
+                    'making_price' => '40.00', 'base_price' => '60.00', 'status' => $this->status,
+                    'variant_count' => 1, 'image_uuid' => null]];
+            }
+
+            public function listTrashed(int $m, $unit = null, int $limit = 200): array
+            {
+                return [['id' => 77, 'title' => 'M8 Bolt', 'sku' => 'B-1', 'category' => 'Fasteners',
+                    'deleted_at' => '2026-08-17 12:00:00']];
+            }
+
+            public function findById(int $id, int $m): ?array
+            {
+                return $id === 77
+                    ? ['id' => 77, 'status' => $this->status, 'making_price' => '40.00', 'base_price' => '60.00']
+                    : null;
+            }
+
+            public function softDeleteDraft(int $id, int $m, ?int $a = null): bool
+            {
+                $this->deleted[] = [$id, $m];
+
+                return $this->deleteOk;
+            }
+
+            public function restoreDraft(int $id, int $m, ?int $a = null): bool
+            {
+                $this->restored[] = [$id, $m];
+
+                return true;
+            }
+
+            public function setStatus(int $id, int $m, string $to, ?int $a = null): bool
+            {
+                $this->statusSet[] = [$id, $to];
+
+                return true;
+            }
+        };
+        Services::injectMock('manufacturerProductRepository', $repo);
+
+        return $repo;
+    }
+
+    public function testTrashListsDeletedDraftsAndOffersRestore(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $this->mockTrashRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/products/trash');
+
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('M8 Bolt', $body);
+        $this->assertStringContainsString('manufacturer/products/77/restore', $body);
+    }
+
+    /** Delete and restore must always carry this tenant's id into the repository. */
+    public function testDeleteAndRestoreAreTenantScoped(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockTrashRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/delete', $this->csrf())->assertRedirect();
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/restore', $this->csrf())->assertRedirect();
+
+        $this->assertSame([[77, 1]], $repo->deleted);
+        $this->assertSame([[77, 1]], $repo->restored);
+    }
+
+    public function testDeleteRequiresTheUpdatePermission(): void
+    {
+        $this->grant(['mfg.product.view']);
+        $repo = $this->mockTrashRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/delete', $this->csrf())->assertRedirect();
+
+        $this->assertSame([], $repo->deleted);
+    }
+
+    public function testBulkSubmitMovesEveryPricedDraft(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockTrashRepo('draft');
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/bulk', $this->csrf() + ['bulk_action' => 'submit', 'ids' => [77]])
+            ->assertRedirect();
+
+        $this->assertSame([[77, 'submitted']], $repo->statusSet);
+    }
+
+    /** A bulk submit must not push an already-submitted product through again. */
+    public function testBulkSubmitSkipsNonDrafts(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockTrashRepo('published');
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/bulk', $this->csrf() + ['bulk_action' => 'submit', 'ids' => [77]])
+            ->assertRedirect();
+
+        $this->assertSame([], $repo->statusSet);
+    }
+
+    /**
+     * The tenant boundary for bulk. A hand-crafted post naming another manufacturer's
+     * product must affect nothing — findById() returns null for an id this tenant does
+     * not own, so the loop skips it.
+     */
+    public function testBulkIgnoresProductsThisTenantDoesNotOwn(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockTrashRepo('draft');
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/bulk', $this->csrf() + ['bulk_action' => 'submit', 'ids' => [999]])
+            ->assertRedirect();
+
+        $this->assertSame([], $repo->statusSet);
+    }
+
+    /**
+     * A bulk submit must re-check prices, exactly as the single-product path does.
+     * Otherwise it becomes the way to push an unpriced product into the approval queue.
+     */
+    public function testBulkSubmitSkipsAProductThatFailsThePriceRule(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = new class {
+            public array $statusSet = [];
+
+            public function list(int $m, ?string $s = null, $u = null): array { return []; }
+
+            public function findById(int $id, int $m): ?array
+            {
+                // selling BELOW making — the invariant ManufacturerPricing enforces.
+                return ['id' => 77, 'status' => 'draft', 'making_price' => '90.00', 'base_price' => '60.00'];
+            }
+
+            public function setStatus(int $id, int $m, string $to, ?int $a = null): bool
+            {
+                $this->statusSet[] = [$id, $to];
+
+                return true;
+            }
+        };
+        Services::injectMock('manufacturerProductRepository', $repo);
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/bulk', $this->csrf() + ['bulk_action' => 'submit', 'ids' => [77]])
+            ->assertRedirect();
+
+        $this->assertSame([], $repo->statusSet, 'selling below making must never reach approval');
+    }
+
+    public function testBulkRejectsAnUnknownAction(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockTrashRepo('draft');
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/bulk', $this->csrf() + ['bulk_action' => 'publish_everything', 'ids' => [77]])
+            ->assertRedirect();
+
+        $this->assertSame([], $repo->statusSet);
+        $this->assertSame([], $repo->deleted);
     }
 
     /** @return object the product repository spy, for asserting setStatus() calls */
