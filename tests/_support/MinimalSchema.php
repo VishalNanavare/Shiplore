@@ -173,7 +173,7 @@ trait MinimalSchema
     }
 
     /**
-     * database/sql/75_manufacturer_delivery.sql section C, plus the two tables it
+     * database/sql/77_manufacturer_delivery.sql section C, plus the two tables it
      * joins against. `delivery_boys` is the VENDOR table, unchanged: a manufacturer is
      * a `vendors` row, so its riders are ordinary delivery_boys rows — that reuse is
      * the point, so the test exercises the real table rather than a manufacturer-shaped
@@ -215,7 +215,7 @@ trait MinimalSchema
 
     /**
      * database/sql/70_manufacturer.sql section E, plus the serviceability columns
-     * 75_manufacturer_delivery.sql adds. Deliberately NO delivery_polygon — `shops`
+     * 77_manufacturer_delivery.sql adds. Deliberately NO delivery_polygon — `shops`
      * has one and `mshops` does not; a unit's range is a radius here.
      */
     protected function ensureMshopsTable(): void

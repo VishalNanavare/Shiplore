@@ -14,7 +14,7 @@ $visible = static fn (string $perm): bool => $perm === 'OWNER' ? $navIsOwner : (
 //
 // Delivery and rider entries were deliberately absent here for a long time, on the
 // grounds that manufacturers do not deliver; that decision was reversed when full
-// parity with the vendor panel was asked for (75_manufacturer_delivery.sql). Both are
+// parity with the vendor panel was asked for (77_manufacturer_delivery.sql). Both are
 // permission-gated, so a manufacturer that does not deliver simply never grants them.
 $groups = [
     ['Catalog', 'bi-grid', [

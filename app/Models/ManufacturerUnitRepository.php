@@ -116,7 +116,7 @@ final class ManufacturerUnitRepository
             ], JSON_UNESCAPED_UNICODE);
         }
 
-        // Serviceability (75_manufacturer_delivery.sql). Written only when the caller
+        // Serviceability (77_manufacturer_delivery.sql). Written only when the caller
         // passes `serviceability` — the plain unit form does not, so an edit that never
         // touched these fields cannot blank them. The controller sets that flag only
         // for a request that actually carries the serviceability section AND holds

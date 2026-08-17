@@ -38,7 +38,7 @@ final class ManufacturerStaffRepository
     /**
      * staff_type -> the role granted on login, and the scope that role is granted at.
      *
-     * The staff_type values are enum members added by 74_manufacturer_parity.sql;
+     * The staff_type values are enum members added by 76_manufacturer_parity.sql;
      * `vendor_staff.staff_type` previously held only vendor shop roles, so a factory
      * store keeper had no honest value to store.
      *

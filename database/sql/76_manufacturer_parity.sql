@@ -1,5 +1,5 @@
 -- =====================================================================
--- 74_manufacturer_parity.sql
+-- 76_manufacturer_parity.sql
 --
 -- Brings the manufacturer panel up to vendor-panel parity. 70_manufacturer.sql
 -- seeded 21 mfg.* permissions and created mfg_inventory / mfg_inventory_ledger /

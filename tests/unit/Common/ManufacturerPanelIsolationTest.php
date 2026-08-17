@@ -198,12 +198,12 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
      * REVERSED, deliberately. This asserted that `mshops` carried no delivery columns,
      * so that "a manufacturer cannot set a delivery range" was enforced by schema
      * rather than by a rule someone could forget. The operator subsequently asked for
-     * full parity with the vendor panel INCLUDING delivery, so 75_manufacturer_delivery
+     * full parity with the vendor panel INCLUDING delivery, so 77_manufacturer_delivery
      * .sql adds them.
      *
      * The test is rewritten rather than deleted so the reversal is explicit in the
      * history, and it still holds the shape of the change: 70 must remain untouched
-     * (a rebuilt database replays it), and the columns must arrive in 75 under the
+     * (a rebuilt database replays it), and the columns must arrive in 77 under the
      * same names `shops` uses, so any shared serviceability code reads both alike.
      */
     public function testDeliveryColumnsArriveIn75AndNotByEditing70(): void
@@ -217,11 +217,11 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
             $this->assertStringNotContainsString(
                 $col,
                 $table,
-                "70_manufacturer.sql's mshops definition must stay as it shipped — {$col} belongs in 75",
+                "70_manufacturer.sql's mshops definition must stay as it shipped — {$col} belongs in 77",
             );
         }
 
-        $sql75 = (string) file_get_contents(ROOTPATH . 'database/sql/75_manufacturer_delivery.sql');
+        $sql75 = (string) file_get_contents(ROOTPATH . 'database/sql/77_manufacturer_delivery.sql');
         foreach (['delivery_enabled', 'delivery_radius_km', 'pickup_enabled', 'prep_time_min',
             'min_order_value', 'delivery_fee', 'free_delivery_above'] as $col) {
             $this->assertStringContainsString("'{$col}'", $sql75, "75 must add the {$col} column to mshops");
@@ -246,7 +246,7 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
      */
     public function testManufacturerDeliveriesUseTheirOwnTable(): void
     {
-        $sql75 = (string) file_get_contents(ROOTPATH . 'database/sql/75_manufacturer_delivery.sql');
+        $sql75 = (string) file_get_contents(ROOTPATH . 'database/sql/77_manufacturer_delivery.sql');
 
         $this->assertStringContainsString('CREATE TABLE IF NOT EXISTS `mfg_deliveries`', $sql75);
         $this->assertStringContainsString('REFERENCES `mfg_purchase_orders`', $sql75, 'a manufacturer delivery hangs off a PO, not a sub-order');

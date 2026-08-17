@@ -24,7 +24,7 @@ final class ManufacturerPermissionScopeTest extends CIUnitTestCase
         '70_manufacturer.sql',
         '71_monline_b2b.sql',
         '73_admin_manufacturer_oversight.sql',
-        '74_manufacturer_parity.sql',
+        '76_manufacturer_parity.sql',
     ];
 
     /** @return list<array{0:string,1:string,2:string}> [file, code, scope_class] */
@@ -100,7 +100,7 @@ final class ManufacturerPermissionScopeTest extends CIUnitTestCase
     {
         $runAll = (string) file_get_contents(ROOTPATH . 'database/sql/run_all.sql');
 
-        foreach (['74_manufacturer_parity.sql', '75_manufacturer_delivery.sql'] as $file) {
+        foreach (['76_manufacturer_parity.sql', '77_manufacturer_delivery.sql'] as $file) {
             $this->assertStringContainsString("SOURCE {$file};", $runAll, "{$file} is not sourced by run_all.sql");
         }
     }
@@ -123,7 +123,7 @@ final class ManufacturerPermissionScopeTest extends CIUnitTestCase
      * allow-list — a new file cannot quietly join the legacy set.
      *
      * Idempotence without a stored procedure is the PREPARE-guarded form 70 already
-     * uses for users.principal_type; 75 shows it applied to ADD COLUMN.
+     * uses for users.principal_type; 77 shows it applied to ADD COLUMN.
      *
      * run_all.sql is exempt entirely: it is legitimately a CLI script and says so in
      * its own header.
@@ -167,7 +167,7 @@ final class ManufacturerPermissionScopeTest extends CIUnitTestCase
      */
     public function testStaffTypeEnumCoversTheManufacturerRoles(): void
     {
-        $sql = (string) file_get_contents(ROOTPATH . 'database/sql/74_manufacturer_parity.sql');
+        $sql = (string) file_get_contents(ROOTPATH . 'database/sql/76_manufacturer_parity.sql');
 
         foreach (App\Models\ManufacturerStaffRepository::types() as $type) {
             // 'manager' predates this migration and is already in 10_staff.sql's enum.

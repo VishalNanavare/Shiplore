@@ -11,7 +11,7 @@ use Throwable;
  * ManufacturerDeliveryRepository — getting a dispatched purchase order to its buyer,
  * and the manufacturer's own riders.
  *
- * Deliveries live in `mfg_deliveries` (75_manufacturer_delivery.sql), not the
+ * Deliveries live in `mfg_deliveries` (77_manufacturer_delivery.sql), not the
  * consumer `deliveries` table: that one's sub_order_id is NOT NULL with an FK to
  * `sub_orders`, and a manufacturer's orders are mfg_purchase_orders rows.
  *

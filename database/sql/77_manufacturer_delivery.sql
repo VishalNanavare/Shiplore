@@ -1,5 +1,5 @@
 -- =====================================================================
--- 75_manufacturer_delivery.sql
+-- 77_manufacturer_delivery.sql
 --
 -- Gives manufacturing units delivery capability, and manufacturers their own
 -- delivery flow for dispatched purchase orders.
@@ -18,7 +18,7 @@
 -- of this parity work that changes a previously-considered answer, and an operator
 -- may want to apply the rest without it.
 --
--- Idempotent throughout. Apply after 74_manufacturer_parity.sql.
+-- Idempotent throughout. Apply after 76_manufacturer_parity.sql.
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `mfg_deliveries` (
 
 -- ---------------------------------------------------------------------
 -- D. Permission for unit serviceability. mfg.delivery.assign and mfg.rider.manage
---    were already seeded by 74.
+--    were already seeded by 76.
 -- ---------------------------------------------------------------------
 INSERT IGNORE INTO `permissions` (`code`,`module`,`action`,`scope_class`,`description`) VALUES
  ('mfg.unit.serviceability','mfg_unit','serviceability','mshop','Set a unit''s delivery range and opening hours');

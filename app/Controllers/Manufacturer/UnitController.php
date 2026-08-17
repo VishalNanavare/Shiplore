@@ -13,7 +13,7 @@ use CodeIgniter\HTTP\RedirectResponse;
  * no delivery columns at all, so "a manufacturer cannot set a delivery range" was
  * enforced by the schema rather than by a check someone could later bypass. The
  * operator asked for full parity with the vendor panel including delivery, so
- * 75_manufacturer_delivery.sql adds those columns and this screen exposes them.
+ * 77_manufacturer_delivery.sql adds those columns and this screen exposes them.
  *
  * Serviceability is gated on its own permission (mfg.unit.serviceability), separate
  * from mfg.unit.update: correcting a factory's address and changing what that factory
