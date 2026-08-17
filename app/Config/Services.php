@@ -1099,6 +1099,49 @@ class Services extends BaseService
             }
         });
 
+        // ---- manufacturer staff ------------------------------------------------
+        // Distinct keys from staff.* above, pointing at manufacturerStaffRepository.
+        // Reusing staff.* would approve a manufacturer's request straight into the
+        // VENDOR staff tables — the repositories are forked precisely because
+        // mfg_staff_assignments/mshops are not staff_shop_assignments/shops.
+        $registry->register('mfg_staff.create', static function (array $req): void {
+            $id = static::manufacturerStaffRepository()->createStaff(
+                (int) $req['vendor_id'], (array) ($req['payload_new']['data'] ?? []), (int) $req['requested_by'],
+            );
+            if ($id === null) {
+                throw new \RuntimeException('createStaff failed');
+            }
+        });
+
+        $registry->register('mfg_staff.role_change', static function (array $req): void {
+            $ok = static::manufacturerStaffRepository()->updateStaff(
+                (int) $req['entity_id'], (int) $req['vendor_id'],
+                (array) ($req['payload_new']['data'] ?? []), (int) $req['requested_by'],
+            );
+            if (! $ok) {
+                throw new \RuntimeException('updateStaff failed');
+            }
+        });
+
+        $registry->register('mfg_staff.terminate', static function (array $req): void {
+            $to = (string) ($req['payload_new']['status'] ?? 'suspended');
+            $ok = static::manufacturerStaffRepository()->setStatus(
+                (int) $req['entity_id'], (int) $req['vendor_id'], $to, (int) $req['requested_by'],
+            );
+            if (! $ok) {
+                throw new \RuntimeException('setStatus failed');
+            }
+            if ($to === 'suspended') {
+                // Same reasoning as staff.terminate: revoke JWTs now, and let
+                // WebAuthFilter's per-request users.status check end the browser session.
+                $staff = static::manufacturerStaffRepository()->findStaff((int) $req['entity_id'], (int) $req['vendor_id']);
+                if ($staff !== null && (int) ($staff['user_id'] ?? 0) > 0) {
+                    \Config\Database::connect()->table('auth_tokens')
+                        ->where('user_id', (int) $staff['user_id'])->update(['status' => 'revoked']);
+                }
+            }
+        });
+
         $registry->register('staff.terminate', static function (array $req): void {
             $to = (string) ($req['payload_new']['status'] ?? 'suspended');
             $ok = static::vendorStaffRepository()->setStatus(

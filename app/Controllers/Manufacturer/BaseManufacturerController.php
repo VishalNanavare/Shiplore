@@ -148,11 +148,21 @@ abstract class BaseManufacturerController extends BaseController
         return $this->allowedMshopIds()[0] ?? -1;
     }
 
-    /** Governance role of the acting user: manufacturer (owner) · manager · staff. */
+    /**
+     * Governance role of the acting user, in the CHANGE-REQUEST ENGINE's vocabulary.
+     *
+     * The owner is 'vendor', not 'manufacturer'. 'vendor' is the engine's name for the
+     * tenant-owner level, and returning anything else deadlocks the flow completely:
+     * ChangeRequestEngine::selfSkips('vendor', $role) only returns true for the literal
+     * string 'vendor', so an owner's own request would NOT skip its own approval level;
+     * it would sit at pending_l1, G1 would forbid the owner deciding their own request,
+     * and a manager would fail ROLE_FOR_LEVEL with wrong_approver_role. Nobody could
+     * ever approve it. ApprovalController::decide() passes 'vendor' for the same reason.
+     */
     protected function actorRole(): string
     {
         if ($this->isOwner()) {
-            return 'manufacturer';
+            return 'vendor';
         }
 
         return in_array($this->manufacturer()['staff_type'] ?? '', ['branch_manager', 'unit_manager', 'manager'], true)
@@ -186,10 +196,13 @@ abstract class BaseManufacturerController extends BaseController
             'payload_new' => $new,
             'reason'      => $reason,
             'vendor_id'   => $this->manufacturerId(),
-            // The unit a request belongs to, for the inbox. `shop_id` is the engine's
-            // column name; the value is an mshop id, which is consistent because a
-            // manufacturer's requests are only ever decided within its own tenant.
-            'shop_id'     => $new['mshop_id'] ?? null,
+            // ALWAYS null. change_requests.shop_id carries an FK to `shops(id)`
+            // (30_governance.sql:49) and an mshop is not a shop. Writing an mshop id
+            // there either violates the constraint or — worse, because the two tables
+            // share a numeric id space — silently succeeds and tags the request with
+            // some unrelated vendor's shop. The unit travels inside payload_new
+            // instead, where the inbox can read it without lying to a foreign key.
+            'shop_id'     => null,
         ], [
             'user_id'   => (int) session()->get('user_id'),
             'role'      => $this->actorRole(),

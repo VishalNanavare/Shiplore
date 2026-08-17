@@ -742,9 +742,14 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertSame([], $repo->created, 'a proposer must not write staff directly');
         $this->assertCount(1, $engine->submitted);
         [$in, $actor] = $engine->submitted[0];
-        $this->assertSame('staff', $in['entity_type']);
+        // 'mfg_staff', NOT 'staff': the bare staff.* chain keys are registered against
+        // vendorStaffRepository, so approving under them would write this manufacturer's
+        // hire into the VENDOR staff tables.
+        $this->assertSame('mfg_staff', $in['entity_type']);
         $this->assertSame('create', $in['action']);
         $this->assertSame(1, $in['vendor_id'], 'the request belongs to this manufacturer');
+        // shop_id must be null — it is a foreign key to `shops`, and an mshop is not one.
+        $this->assertNull($in['shop_id']);
         $this->assertSame('manager', $actor['role']);
     }
 

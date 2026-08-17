@@ -79,7 +79,7 @@ final class StaffController extends BaseManufacturerController
         // same hire twice (the engine rejects a duplicate open request).
         if (! $this->canManage()) {
             [$type, $msg] = $this->requestFlash($this->submitChangeRequest(
-                'staff',
+                'mfg_staff',
                 'create',
                 null,
                 null,
@@ -133,7 +133,7 @@ final class StaffController extends BaseManufacturerController
         }
 
         if (! $this->canManage()) {
-            [$type, $msg] = $this->requestFlash($this->submitChangeRequest('staff', 'role_change', $id, null, ['data' => $data]));
+            [$type, $msg] = $this->requestFlash($this->submitChangeRequest('mfg_staff', 'role_change', $id, null, ['data' => $data]));
 
             return redirect()->to('manufacturer/staff')->with($type, $msg);
         }
@@ -156,7 +156,7 @@ final class StaffController extends BaseManufacturerController
         $to = $this->request->getPost('status') === 'active' ? 'active' : 'suspended';
 
         if (! $this->canManage()) {
-            [$type, $msg] = $this->requestFlash($this->submitChangeRequest('staff', 'terminate', $id, null, ['status' => $to]));
+            [$type, $msg] = $this->requestFlash($this->submitChangeRequest('mfg_staff', 'terminate', $id, null, ['status' => $to]));
 
             return redirect()->to('manufacturer/staff')->with($type, $msg);
         }

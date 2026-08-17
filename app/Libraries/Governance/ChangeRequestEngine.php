@@ -52,6 +52,14 @@ final class ChangeRequestEngine
         'staff.transfer'          => ['vendor'],
         'staff.terminate'         => ['vendor'],
         'rider.create'            => ['vendor'],
+        // Manufacturer staff get their OWN keys rather than reusing staff.* above.
+        // Those three are registered in Config\Services::governanceAppliers() against
+        // vendorStaffRepository, so a manufacturer request approved under them would
+        // write to the VENDOR staff tables — a silent cross-panel write, not a no-op.
+        // Same single tenant-owner level; different applier.
+        'mfg_staff.create'        => ['vendor'],
+        'mfg_staff.role_change'   => ['vendor'],
+        'mfg_staff.terminate'     => ['vendor'],
         // A branch manager pulling stock from a sibling store needs the vendor's
         // sign-off (the vendor owns all the stock). A dedicated source-shop
         // manager level is a future refinement.
