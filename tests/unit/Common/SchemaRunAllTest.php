@@ -148,4 +148,45 @@ final class SchemaRunAllTest extends CIUnitTestCase
             'no file uses MariaDB-only ADD INDEX IF NOT EXISTS any more — the warning in run_all.sql is now stale, remove it',
         );
     }
+
+    /**
+     * ...and nothing may require MySQL, because the schema already requires MariaDB.
+     *
+     * A FUNCTIONAL INDEX — an expression used directly as a key part, written as a
+     * doubled paren, `ADD UNIQUE KEY x ((CASE WHEN ...))` — is a MySQL 8.0.13+ feature.
+     * MariaDB does not support functional indexes at ANY version; it indexes generated
+     * columns instead, and answers with a 1064 syntax error at the opening double
+     * paren.
+     *
+     * 50_rider_assign_unique.sql used to do exactly that, which made the schema
+     * unbuildable end-to-end on EITHER engine: MySQL rejected the three
+     * ADD INDEX IF NOT EXISTS files above, MariaDB rejected this one. An operator hit
+     * it importing the full schema against MariaDB. It now uses a virtual generated
+     * column with an ordinary UNIQUE index, which both engines accept and which
+     * enforces the identical constraint.
+     *
+     * The two requirements are mutually exclusive, so this asserts the second half of
+     * the pair the test above asserts the first half of.
+     */
+    public function testNoFileRequiresMySqlOnlySyntax(): void
+    {
+        $offenders = [];
+
+        foreach ((array) glob(self::DIR . '*.sql') as $path) {
+            // Strip -- comments: 50's docblock quotes the old form while explaining why
+            // it no longer uses it, and a comment must not fail an assertion about code.
+            $sql = preg_replace('/^\s*--.*$/m', '', (string) file_get_contents($path)) ?? '';
+
+            if (preg_match('/ADD\s+(?:UNIQUE\s+)?(?:INDEX|KEY)\s+`?\w+`?\s*\(\s*\(/i', $sql) === 1) {
+                $offenders[] = basename($path);
+            }
+        }
+
+        $this->assertSame(
+            [],
+            $offenders,
+            'these use a MySQL-only functional index, which MariaDB cannot parse — index a '
+            . 'generated column instead (see 50_rider_assign_unique.sql): ' . implode(', ', $offenders),
+        );
+    }
 }
