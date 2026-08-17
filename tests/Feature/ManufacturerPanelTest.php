@@ -601,6 +601,185 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertSame([[[5], 'base_price', '99']], $spy->bulk);
     }
 
+    // ------------------------------------------------------------------ governance
+
+    /** @return array{0:object,1:object} [engine spy, repository spy] */
+    private function mockGovernance(): array
+    {
+        $engine = new class {
+            public array $submitted = [];
+            public array $decided   = [];
+            public array $submitReturns = ['ok' => true, 'id' => 1, 'status' => 'pending_l1'];
+            public array $decideReturns = ['ok' => true, 'status' => 'approved'];
+
+            public function submit(array $in, array $actor, $now = null): array
+            {
+                $this->submitted[] = [$in, $actor];
+
+                return $this->submitReturns;
+            }
+
+            public function decide(int $id, array $actor, string $decision, ?string $reason = null, $now = null): array
+            {
+                $this->decided[] = [$id, $actor, $decision, $reason];
+
+                return $this->decideReturns;
+            }
+        };
+        Services::injectMock('changeRequestEngine', $engine);
+
+        $repo = new class {
+            public array $seenVendorIds = [];
+
+            public function pendingForVendor(int $vendorId, ?string $status = null): array
+            {
+                $this->seenVendorIds[] = $vendorId;
+
+                return [[
+                    'id' => 4, 'entity_type' => 'staff', 'action' => 'create', 'entity_id' => null,
+                    'status' => 'pending_l1', 'requester_name' => 'Unit Staff', 'requester_role' => 'manager',
+                    'created_at' => '2026-08-17 11:00:00', 'sla_due_at' => '2026-08-19 11:00:00',
+                    'payload_new' => ['data' => ['name' => 'Proposed Hire']], 'reason' => null,
+                ]];
+            }
+
+            public function listForRequester(int $userId): array
+            {
+                return [[
+                    'id' => 4, 'entity_type' => 'staff', 'action' => 'create', 'entity_id' => null,
+                    'status' => 'pending_l1', 'reason' => null, 'created_at' => '2026-08-17 11:00:00',
+                ]];
+            }
+        };
+        Services::injectMock('changeRequestRepository', $repo);
+
+        return [$engine, $repo];
+    }
+
+    public function testApprovalsInboxRendersForOwner(): void
+    {
+        $this->grant(['mfg.request.approve']);
+        [, $repo] = $this->mockGovernance();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/approvals');
+
+        $r->assertStatus(200);
+        $this->assertStringContainsString('Proposed Hire', (string) $r->getBody());
+        // Scoped to THIS manufacturer's id, not to some other tenant's.
+        $this->assertSame([1], $repo->seenVendorIds);
+    }
+
+    public function testApprovalsInboxIsDeniedWithoutAuthority(): void
+    {
+        $this->grant(['mfg.staff.view']); // no mfg.request.approve, and not the owner
+        $this->mockGovernance();
+
+        $r = $this->withSession($this->staffSession())->get('manufacturer/approvals');
+
+        $r->assertRedirect();
+        $this->assertStringContainsString('manufacturer/dashboard', (string) $r->getRedirectUrl());
+    }
+
+    /**
+     * The engine's tenant-owner level is named 'vendor'. Passing 'manufacturer' would
+     * match no level and every decision would fail with wrong_approver_role, so this
+     * pins the mapping rather than leaving it to a comment.
+     */
+    public function testDecisionsUseTheEnginesTenantOwnerRole(): void
+    {
+        $this->grant(['mfg.request.approve']);
+        [$engine] = $this->mockGovernance();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/approvals/4/decide', $this->csrf() + ['decision' => 'approved'])
+            ->assertRedirect();
+
+        $this->assertCount(1, $engine->decided);
+        [$id, $actor, $decision] = $engine->decided[0];
+        $this->assertSame(4, $id);
+        $this->assertSame('approved', $decision);
+        $this->assertSame('vendor', $actor['role'], "the engine's tenant-owner level is 'vendor'");
+        $this->assertSame(1, $actor['vendor_id'], 'the request must be scoped to this manufacturer');
+    }
+
+    public function testAFailedDecisionSurfacesTheEnginesReason(): void
+    {
+        $this->grant(['mfg.request.approve']);
+        [$engine] = $this->mockGovernance();
+        $engine->decideReturns = ['ok' => false, 'error' => 'self_approval_forbidden'];
+
+        $r = $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/approvals/4/decide', $this->csrf() + ['decision' => 'approved']);
+
+        $r->assertRedirect();
+        $r->assertSessionHas('error', 'You cannot decide your own request.');
+    }
+
+    public function testMyRequestsRenders(): void
+    {
+        $this->grant([]);
+        $this->mockGovernance();
+
+        $r = $this->withSession($this->staffSession())->get('manufacturer/requests');
+
+        $r->assertStatus(200);
+        $this->assertStringContainsString('My Requests', (string) $r->getBody());
+        $this->assertStringContainsString('pending l1', (string) $r->getBody());
+    }
+
+    /** A manager who may only propose must not write to the database. */
+    public function testAManagerStaffCreateBecomesAChangeRequest(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.request']);
+        [$engine] = $this->mockGovernance();
+        $repo     = $this->mockStaffRepo();
+
+        $this->withSession($this->postSession($this->staffSession()))->post('manufacturer/staff', $this->csrf() + [
+            'name' => 'Proposed Hire', 'email' => 'hire@precision.example',
+            'staff_type' => 'store_keeper', 'mshop_ids' => [11],
+        ])->assertRedirect();
+
+        $this->assertSame([], $repo->created, 'a proposer must not write staff directly');
+        $this->assertCount(1, $engine->submitted);
+        [$in, $actor] = $engine->submitted[0];
+        $this->assertSame('staff', $in['entity_type']);
+        $this->assertSame('create', $in['action']);
+        $this->assertSame(1, $in['vendor_id'], 'the request belongs to this manufacturer');
+        $this->assertSame('manager', $actor['role']);
+    }
+
+    /** ...while the owner still writes directly, with no request raised. */
+    public function testTheOwnerStillCreatesStaffDirectly(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        [$engine] = $this->mockGovernance();
+        $repo     = $this->mockStaffRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))->post('manufacturer/staff', $this->csrf() + [
+            'name' => 'Direct Hire', 'email' => 'direct@precision.example',
+            'staff_type' => 'store_keeper', 'mshop_ids' => [11],
+        ])->assertRedirect();
+
+        $this->assertCount(1, $repo->created);
+        $this->assertSame([], $engine->submitted, 'the owner does not go through approval');
+    }
+
+    /** Someone with neither authority is refused outright. */
+    public function testStaffWritesAreRefusedWithoutEitherAuthority(): void
+    {
+        $this->grant(['mfg.staff.view']); // view only
+        [$engine] = $this->mockGovernance();
+        $repo     = $this->mockStaffRepo();
+
+        $this->withSession($this->postSession($this->staffSession()))->post('manufacturer/staff', $this->csrf() + [
+            'name' => 'Nope', 'email' => 'nope@precision.example',
+            'staff_type' => 'store_keeper', 'mshop_ids' => [11],
+        ])->assertRedirect();
+
+        $this->assertSame([], $repo->created);
+        $this->assertSame([], $engine->submitted);
+    }
+
     // ------------------------------------------------------- deliveries & riders
 
     private function mockDeliveryRepo(): object
@@ -1178,8 +1357,12 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertStringContainsString('manufacturer/dashboard', (string) $r->getRedirectUrl());
     }
 
-    /** Managing staff is the owner's job — holding the permission is not enough. */
-    public function testStaffCreateIsOwnerOnlyEvenWithThePermission(): void
+    /**
+     * Writing staff is the owner's job. Holding mfg.staff.manage without being the
+     * owner is not enough, and without mfg.staff.request there is no propose path
+     * either, so the write is refused outright rather than queued.
+     */
+    public function testStaffCreateIsRefusedForANonOwnerWithoutARequestPath(): void
     {
         $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
         $repo = $this->mockStaffRepo();
@@ -1189,7 +1372,7 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         ]);
 
         $r->assertRedirect();
-        $r->assertSessionHas('error', 'Only the owner can manage staff.');
+        $r->assertSessionHas('error', "You don't have permission to manage staff.");
         $this->assertSame([], $repo->created, 'unit staff must not be able to hire');
     }
 

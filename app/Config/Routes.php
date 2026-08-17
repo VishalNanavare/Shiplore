@@ -880,6 +880,12 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->post('variants/(:num)/delete', 'Manufacturer\ProductVariantController::delete/$1', ['filter' => 'csrf']);
     $routes->post('variants/(:num)/barcodes', 'Manufacturer\ProductVariantController::saveBarcodes/$1', ['filter' => 'csrf']);
 
+    // Governance. Staff changes proposed by a manager land here for the owner's
+    // decision; the engine and its tables are reused unchanged (tenant-agnostic).
+    $routes->get('approvals', 'Manufacturer\ApprovalController::index');
+    $routes->post('approvals/(:num)/decide', 'Manufacturer\ApprovalController::decide/$1', ['filter' => 'csrf']);
+    $routes->get('requests', 'Manufacturer\ApprovalController::mine');
+
     // Getting dispatched purchase orders to their buyers, plus the manufacturer's own
     // riders. Deliveries are opened by the PO flow, so there is no create action here.
     $routes->get('deliveries', 'Manufacturer\DeliveryController::index');

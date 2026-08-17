@@ -29,6 +29,10 @@ $groups = [
     ]],
     // Business identity and the per-user feed. Mirrors the vendor panel's Team group;
     // staff, media and documents join it as those screens land.
+    ['Governance', 'bi-check2-square', [
+        ['approvals', 'Approvals Inbox', 'bi-check2-square', 'manufacturer/approvals', 'mfg.request.approve'],
+        ['requests', 'My Requests', 'bi-send', 'manufacturer/requests', ''],
+    ]],
     ['Team', 'bi-people', [
         ['staff', 'Staff', 'bi-people', 'manufacturer/staff', 'mfg.staff.view'],
         ['media', 'Media Library', 'bi-folder2-open', 'manufacturer/media', 'mfg.media.view'],

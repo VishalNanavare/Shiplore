@@ -155,7 +155,67 @@ abstract class BaseManufacturerController extends BaseController
             return 'manufacturer';
         }
 
-        return (($this->manufacturer()['staff_type'] ?? '') === 'branch_manager') ? 'manager' : 'staff';
+        return in_array($this->manufacturer()['staff_type'] ?? '', ['branch_manager', 'unit_manager', 'manager'], true)
+            ? 'manager'
+            : 'staff';
+    }
+
+    /**
+     * Convert a denied direct write into a governance change request.
+     *
+     * The change-request engine is genuinely tenant-agnostic: it stores whatever
+     * vendor_id it is given and, at the vendor decision level, only checks that the
+     * decider's vendor_id matches the request's. A manufacturer IS a `vendors` row, so
+     * passing the manufacturer id here scopes the request correctly and an owner of a
+     * different tenant cannot decide it. That is why this reuses the engine rather than
+     * forking it — unlike the repositories, there is no party_type gate inside it to
+     * lose.
+     *
+     * @param array<string,mixed>|null $old
+     * @param array<string,mixed>      $new
+     * @return array<string,mixed> {ok, id?, status?, error?}
+     */
+    protected function submitChangeRequest(string $entityType, string $action, ?int $entityId, ?array $old, array $new, string $fieldGroup = 'default', ?string $reason = null): array
+    {
+        return service('changeRequestEngine')->submit([
+            'entity_type' => $entityType,
+            'action'      => $action,
+            'entity_id'   => $entityId,
+            'field_group' => $fieldGroup,
+            'payload_old' => $old,
+            'payload_new' => $new,
+            'reason'      => $reason,
+            'vendor_id'   => $this->manufacturerId(),
+            // The unit a request belongs to, for the inbox. `shop_id` is the engine's
+            // column name; the value is an mshop id, which is consistent because a
+            // manufacturer's requests are only ever decided within its own tenant.
+            'shop_id'     => $new['mshop_id'] ?? null,
+        ], [
+            'user_id'   => (int) session()->get('user_id'),
+            'role'      => $this->actorRole(),
+            'vendor_id' => $this->manufacturerId(),
+            'ip'        => $this->request->getIPAddress(),
+        ]);
+    }
+
+    /**
+     * Flash tuple for a submitChangeRequest() result.
+     *
+     * @param array<string,mixed> $r
+     * @return array{0:string,1:string}
+     */
+    protected function requestFlash(array $r): array
+    {
+        if ($r['ok'] ?? false) {
+            return ['success', 'Your change was submitted for approval.'];
+        }
+
+        return ['error', match ($r['error'] ?? '') {
+            'duplicate_open' => 'A request for this change is already awaiting approval.',
+            'unknown_action' => 'This change cannot be requested.',
+            'reason_required' => 'A reason is required for this request.',
+            default          => 'Could not submit the request.',
+        }];
     }
 
     /** Guard: logged in AND linked to a manufacturer (owner or active staff). */

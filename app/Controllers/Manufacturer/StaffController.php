@@ -16,11 +16,13 @@ use CodeIgniter\HTTP\RedirectResponse;
  * wrote to it, so unit staff could not exist, so BaseManufacturerController's whole
  * unit-isolation model had nothing to isolate.
  *
- * Owner-only. The vendor panel additionally lets a branch manager REQUEST staff
- * changes through the governance engine (X3/AR-09); that path is deliberately not
- * mirrored here yet, because the manufacturer panel has no approvals inbox to
- * receive such a request — building the request half without the approve half would
- * strand it. Kept as a single ownership gate until that inbox exists.
+ * Two levels of authority, mirroring the vendor panel's AR-09. The OWNER writes
+ * directly. A manager holding mfg.staff.request may reach the same screens, but every
+ * write becomes a change request for the owner's approvals inbox instead of touching
+ * the database. Anyone else is turned away.
+ *
+ * That request path was deliberately absent until Manufacturer\ApprovalController
+ * existed: a request with nowhere to be decided is a write that silently disappears.
  *
  * @see \App\Controllers\Vendor\StaffController — the vendor counterpart
  */
@@ -37,7 +39,8 @@ final class StaffController extends BaseManufacturerController
 
         return $this->render('manufacturer/staff/index', 'staff', 'Staff', [
             'staff'     => service('manufacturerStaffRepository')->staffWithUnits((int) $this->manufacturerId()),
-            'canManage' => $this->isOwner(),
+            'canManage' => $this->canManage() || $this->canRequest(),
+            'asRequest' => ! $this->canManage() && $this->canRequest(),
         ]);
     }
 
@@ -69,6 +72,22 @@ final class StaffController extends BaseManufacturerController
         [$data, $err] = $this->validated();
         if ($err !== null) {
             return redirect()->to('manufacturer/staff/new')->withInput()->with('error', $err);
+        }
+
+        // A manager without direct authority proposes the hire; the owner decides it
+        // in the approvals inbox. Keyed on the email so two people cannot queue the
+        // same hire twice (the engine rejects a duplicate open request).
+        if (! $this->canManage()) {
+            [$type, $msg] = $this->requestFlash($this->submitChangeRequest(
+                'staff',
+                'create',
+                null,
+                null,
+                ['data' => $data],
+                'staff-' . md5(strtolower((string) ($data['email'] ?? ''))),
+            ));
+
+            return redirect()->to('manufacturer/staff')->with($type, $msg);
         }
 
         $id = service('manufacturerStaffRepository')
@@ -113,6 +132,12 @@ final class StaffController extends BaseManufacturerController
             return redirect()->to('manufacturer/staff/' . $id . '/edit')->withInput()->with('error', $err);
         }
 
+        if (! $this->canManage()) {
+            [$type, $msg] = $this->requestFlash($this->submitChangeRequest('staff', 'role_change', $id, null, ['data' => $data]));
+
+            return redirect()->to('manufacturer/staff')->with($type, $msg);
+        }
+
         $ok = service('manufacturerStaffRepository')
             ->updateStaff($id, (int) $this->manufacturerId(), $data, (int) session()->get('user_id'));
 
@@ -129,6 +154,13 @@ final class StaffController extends BaseManufacturerController
             return $denied;
         }
         $to = $this->request->getPost('status') === 'active' ? 'active' : 'suspended';
+
+        if (! $this->canManage()) {
+            [$type, $msg] = $this->requestFlash($this->submitChangeRequest('staff', 'terminate', $id, null, ['status' => $to]));
+
+            return redirect()->to('manufacturer/staff')->with($type, $msg);
+        }
+
         $ok = service('manufacturerStaffRepository')
             ->setStatus($id, (int) $this->manufacturerId(), $to, (int) session()->get('user_id'));
 
@@ -162,7 +194,10 @@ final class StaffController extends BaseManufacturerController
     }
 
     /**
-     * Permission + ownership for every write on this screen.
+     * Access to the staff section: those who may act directly, and those who may only
+     * REQUEST. A manager holding mfg.staff.request gets in and their writes become
+     * change requests for the owner's inbox (mirroring the vendor panel's AR-09);
+     * everyone else is turned away.
      *
      * Deliberately does NOT call requireManufacturer(): each public method calls that
      * itself, first and by name. Hiding it behind a helper would satisfy the code but
@@ -173,11 +208,23 @@ final class StaffController extends BaseManufacturerController
      */
     private function guardManage(): ?RedirectResponse
     {
-        if ($denied = $this->guard('mfg.staff.manage')) {
-            return $denied;
+        if ($this->canManage() || $this->canRequest()) {
+            return null;
         }
 
-        return $this->requireOwner('manufacturer/staff', 'Only the owner can manage staff.');
+        return redirect()->to('manufacturer/staff')->with('error', "You don't have permission to manage staff.");
+    }
+
+    /** Direct writes: the owner, holding the manage permission. */
+    private function canManage(): bool
+    {
+        return $this->isOwner() && $this->can('mfg.staff.manage');
+    }
+
+    /** Request-only: a manager who may propose staff changes for approval. */
+    private function canRequest(): bool
+    {
+        return ! $this->isOwner() && $this->can('mfg.staff.request');
     }
 
     /** @return list<array<string,mixed>> the manufacturer's own units, for the assignment picker */
