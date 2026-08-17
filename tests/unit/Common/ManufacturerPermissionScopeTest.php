@@ -92,12 +92,17 @@ final class ManufacturerPermissionScopeTest extends CIUnitTestCase
         }
     }
 
-    /** 74 must be wired into run_all.sql, or a rebuilt database silently lacks it. */
-    public function testParityMigrationIsSourcedByRunAll(): void
+    /**
+     * Every parity migration must be wired into run_all.sql, or a database rebuilt
+     * from it silently lacks them — which is exactly the drift 71-73 already suffered.
+     */
+    public function testParityMigrationsAreSourcedByRunAll(): void
     {
         $runAll = (string) file_get_contents(ROOTPATH . 'database/sql/run_all.sql');
 
-        $this->assertStringContainsString('SOURCE 74_manufacturer_parity.sql;', $runAll);
+        foreach (['74_manufacturer_parity.sql', '75_manufacturer_delivery.sql'] as $file) {
+            $this->assertStringContainsString("SOURCE {$file};", $runAll, "{$file} is not sourced by run_all.sql");
+        }
     }
 
     /**

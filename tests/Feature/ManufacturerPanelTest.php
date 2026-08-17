@@ -601,6 +601,104 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertSame([[[5], 'base_price', '99']], $spy->bulk);
     }
 
+    // --------------------------------------------------------- unit serviceability
+
+    private function mockUnitRepo(): object
+    {
+        $repo = new class {
+            public array $updated = [];
+
+            public function list(int $m): array
+            {
+                return [['id' => 11, 'name' => 'Bhiwandi Plant'], ['id' => 12, 'name' => 'Taloja Plant']];
+            }
+
+            public function findById(int $id, int $m): ?array
+            {
+                return in_array($id, [11, 12], true)
+                    ? ['id' => $id, 'name' => 'Bhiwandi Plant', 'gstin' => null, 'address_json' => '{}',
+                        'pincode' => '421302', 'state_code' => 'MH', 'latitude' => null, 'longitude' => null,
+                        'delivery_enabled' => 0, 'pickup_enabled' => 1, 'delivery_radius_km' => null,
+                        'prep_time_min' => null, 'min_order_value' => null, 'delivery_fee' => null,
+                        'free_delivery_above' => null, 'status' => 'active']
+                    : null;
+            }
+
+            public function update(int $id, int $m, array $d, ?int $a = null): bool
+            {
+                $this->updated[] = $d;
+
+                return true;
+            }
+        };
+        Services::injectMock('manufacturerUnitRepository', $repo);
+
+        return $repo;
+    }
+
+    public function testUnitEditShowsDeliverySettingsWithThePermission(): void
+    {
+        $this->grant(['mfg.unit.view', 'mfg.unit.update', 'mfg.unit.serviceability']);
+        $this->mockUnitRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/units/11/edit');
+
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('name="delivery_enabled"', $body);
+        $this->assertStringContainsString('name="delivery_radius_km"', $body);
+    }
+
+    /** Correcting an address is a smaller decision than changing delivery promises. */
+    public function testUnitEditHidesDeliverySettingsWithoutThePermission(): void
+    {
+        $this->grant(['mfg.unit.view', 'mfg.unit.update']); // no serviceability
+        $this->mockUnitRepo();
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/units/11/edit')->getBody();
+
+        $this->assertStringNotContainsString('name="delivery_enabled"', $body);
+        $this->assertStringNotContainsString('name="delivery_radius_km"', $body);
+    }
+
+    public function testUnitUpdateWritesServiceabilityWhenPermitted(): void
+    {
+        $this->grant(['mfg.unit.view', 'mfg.unit.update', 'mfg.unit.serviceability']);
+        $repo = $this->mockUnitRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/units/11/update', $this->csrf() + [
+                'name' => 'Bhiwandi Plant', 'delivery_enabled' => '1', 'delivery_radius_km' => '25',
+            ])->assertRedirect();
+
+        $this->assertCount(1, $repo->updated);
+        $this->assertTrue($repo->updated[0]['serviceability'] ?? false);
+    }
+
+    /**
+     * Without the permission the flag must be absent, so the repository leaves those
+     * columns alone — an address edit cannot silently blank a unit's delivery setup.
+     */
+    public function testUnitUpdateWithoutPermissionCannotTouchServiceability(): void
+    {
+        $this->grant(['mfg.unit.view', 'mfg.unit.update']);
+        $repo = $this->mockUnitRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/units/11/update', $this->csrf() + [
+                'name' => 'Bhiwandi Plant',
+                // Hand-crafted: both the payload AND the flag itself are posted.
+                'delivery_enabled' => '1', 'delivery_radius_km' => '25', 'serviceability' => '1',
+            ])->assertRedirect();
+
+        $this->assertCount(1, $repo->updated);
+        $this->assertArrayNotHasKey(
+            'serviceability',
+            $repo->updated[0],
+            'the flag must be decided by the controller, never accepted from input',
+        );
+    }
+
     // ---------------------------------------------------------------------- stock
 
     private function mockInventoryService(): object

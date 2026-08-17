@@ -165,6 +165,33 @@ trait MinimalSchema
     }
 
     /**
+     * database/sql/70_manufacturer.sql section E, plus the serviceability columns
+     * 75_manufacturer_delivery.sql adds. Deliberately NO delivery_polygon — `shops`
+     * has one and `mshops` does not; a unit's range is a radius here.
+     */
+    protected function ensureMshopsTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_mshops (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, vendor_id INTEGER NOT NULL, name TEXT NOT NULL, code TEXT,
+            gstin TEXT, gstin_verified_at TEXT, gstin_status TEXT NOT NULL DEFAULT "unverified",
+            address_json TEXT, pincode TEXT, state_code TEXT, latitude REAL, longitude REAL,
+            delivery_enabled INTEGER NOT NULL DEFAULT 0, delivery_radius_km REAL,
+            pickup_enabled INTEGER NOT NULL DEFAULT 1, prep_time_min INTEGER,
+            min_order_value REAL, delivery_fee REAL, free_delivery_above REAL,
+            status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /** Drop mshops — see dropUsersTable() for why leaked tables matter here. */
+    protected function dropMshopsTable(): void
+    {
+        $this->schemaConn()->query('DROP TABLE IF EXISTS db_mshops');
+    }
+
+    /**
      * database/sql/70_manufacturer.sql sections E–F — manufacturer stock.
      *
      * `available` is a STORED GENERATED column in MariaDB; SQLite cannot express that,

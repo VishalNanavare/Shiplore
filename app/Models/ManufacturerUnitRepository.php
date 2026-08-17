@@ -116,6 +116,23 @@ final class ManufacturerUnitRepository
             ], JSON_UNESCAPED_UNICODE);
         }
 
+        // Serviceability (75_manufacturer_delivery.sql). Written only when the caller
+        // passes `serviceability` — the plain unit form does not, so an edit that never
+        // touched these fields cannot blank them. The controller sets that flag only
+        // for a request that actually carries the serviceability section AND holds
+        // mfg.unit.serviceability.
+        if (! empty($d['serviceability'])) {
+            $set['delivery_enabled'] = ! empty($d['delivery_enabled']) ? 1 : 0;
+            $set['pickup_enabled']   = ! empty($d['pickup_enabled']) ? 1 : 0;
+
+            foreach (['delivery_radius_km', 'min_order_value', 'delivery_fee', 'free_delivery_above'] as $k) {
+                $set[$k] = isset($d[$k]) && $d[$k] !== '' ? (float) $d[$k] : null;
+            }
+            $set['prep_time_min'] = isset($d['prep_time_min']) && $d['prep_time_min'] !== ''
+                ? max(0, (int) $d['prep_time_min'])
+                : null;
+        }
+
         Database::connect()->table('mshops')
             ->where('id', $id)->where('vendor_id', $manufacturerId)
             ->update($set);

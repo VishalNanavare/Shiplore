@@ -9,10 +9,17 @@ use CodeIgniter\HTTP\RedirectResponse;
 /**
  * Manufacturer\UnitController — the manufacturer's units (factories), stored in `mshops`.
  *
- * The vendor counterpart (Vendor\ShopController) also manages delivery radius, opening
- * hours and holidays. None of that exists here: `mshops` has no delivery columns at all,
- * so requirement 2 ("manufacturer cannot set a range of delivery") is enforced by the
- * schema rather than by a check that could later be bypassed.
+ * Units DO now carry delivery settings. They originally did not: `mshops` shipped with
+ * no delivery columns at all, so "a manufacturer cannot set a delivery range" was
+ * enforced by the schema rather than by a check someone could later bypass. The
+ * operator asked for full parity with the vendor panel including delivery, so
+ * 75_manufacturer_delivery.sql adds those columns and this screen exposes them.
+ *
+ * Serviceability is gated on its own permission (mfg.unit.serviceability), separate
+ * from mfg.unit.update: correcting a factory's address and changing what that factory
+ * promises buyers are different-sized decisions. The repository only writes those
+ * columns when the controller says so, so a user without the permission cannot blank
+ * them by omission or set them by hand-crafting a post.
  *
  * Every method taking a unit id calls requireMshopAccess() right after requireManufacturer():
  * owning the manufacturer is not enough, because staff are scoped to assigned units.
@@ -94,6 +101,9 @@ final class UnitController extends BaseManufacturerController
         return $this->render('manufacturer/units/form', 'units', 'Edit Unit', [
             'unit'   => $unit,
             'states' => \App\Libraries\Geo\IndiaStates::list(),
+            // Serviceability is its own permission: a unit manager may correct an
+            // address without being able to change what the unit promises buyers.
+            'canServiceability' => $this->can('mfg.unit.serviceability'),
         ]);
     }
 
@@ -109,10 +119,22 @@ final class UnitController extends BaseManufacturerController
             return $denied;
         }
 
+        $data = (array) $this->request->getPost();
+
+        // Serviceability is a separate, separately-permissioned section of the same
+        // form. The repository only writes those columns when this flag is set, so a
+        // user without mfg.unit.serviceability editing the unit's address cannot blank
+        // its delivery settings by omission — and cannot set them by hand-crafting a
+        // post either, since the flag is decided here rather than taken from input.
+        unset($data['serviceability']);
+        if ($this->can('mfg.unit.serviceability')) {
+            $data['serviceability'] = true;
+        }
+
         $ok = service('manufacturerUnitRepository')->update(
             $mshopId,
             (int) $this->manufacturerId(),
-            (array) $this->request->getPost(),
+            $data,
             (int) session()->get('user_id'),
         );
 

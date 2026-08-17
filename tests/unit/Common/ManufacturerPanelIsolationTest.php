@@ -195,34 +195,82 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
     }
 
     /**
-     * Requirement 2, enforced by schema. `mshops` must carry no delivery columns, so a
-     * manufacturer cannot express a delivery range even if a form field were added.
+     * REVERSED, deliberately. This asserted that `mshops` carried no delivery columns,
+     * so that "a manufacturer cannot set a delivery range" was enforced by schema
+     * rather than by a rule someone could forget. The operator subsequently asked for
+     * full parity with the vendor panel INCLUDING delivery, so 75_manufacturer_delivery
+     * .sql adds them.
+     *
+     * The test is rewritten rather than deleted so the reversal is explicit in the
+     * history, and it still holds the shape of the change: 70 must remain untouched
+     * (a rebuilt database replays it), and the columns must arrive in 75 under the
+     * same names `shops` uses, so any shared serviceability code reads both alike.
      */
-    public function testMshopsHasNoDeliveryColumns(): void
+    public function testDeliveryColumnsArriveIn75AndNotByEditing70(): void
     {
-        $sql = (string) file_get_contents(ROOTPATH . 'database/sql/70_manufacturer.sql');
-
-        $start = strpos($sql, 'CREATE TABLE IF NOT EXISTS `mshops`');
+        $sql70 = (string) file_get_contents(ROOTPATH . 'database/sql/70_manufacturer.sql');
+        $start = strpos($sql70, 'CREATE TABLE IF NOT EXISTS `mshops`');
         $this->assertNotFalse($start, 'the mshops table definition is missing');
-        $end   = strpos($sql, 'ENGINE=InnoDB', $start);
-        $table = substr($sql, $start, $end - $start);
+        $table = substr($sql70, $start, (int) strpos($sql70, 'ENGINE=InnoDB', $start) - $start);
 
-        foreach (['delivery_radius_km', 'delivery_polygon', 'pickup_enabled', 'prep_time_min', 'delivery_fee'] as $col) {
+        foreach (['delivery_radius_km', 'pickup_enabled', 'prep_time_min', 'delivery_fee'] as $col) {
             $this->assertStringNotContainsString(
                 $col,
                 $table,
-                "mshops must not have a {$col} column — manufacturers do not deliver",
+                "70_manufacturer.sql's mshops definition must stay as it shipped — {$col} belongs in 75",
             );
         }
+
+        $sql75 = (string) file_get_contents(ROOTPATH . 'database/sql/75_manufacturer_delivery.sql');
+        foreach (['delivery_enabled', 'delivery_radius_km', 'pickup_enabled', 'prep_time_min',
+            'min_order_value', 'delivery_fee', 'free_delivery_above'] as $col) {
+            $this->assertStringContainsString("'{$col}'", $sql75, "75 must add the {$col} column to mshops");
+        }
+
+        // Off by default: enabling delivery is a per-unit decision, not something a
+        // migration switches on for every existing manufacturer.
+        $this->assertStringContainsString(
+            "'delivery_enabled', \"TINYINT(1) NOT NULL DEFAULT 0",
+            $sql75,
+            'delivery must default to OFF for existing units',
+        );
     }
 
-    /** The manufacturer registration/unit form must not offer a delivery-range field. */
-    public function testFactoryLocationPartialHasNoDeliveryFields(): void
+    /**
+     * Manufacturer deliveries must NOT reuse the consumer `deliveries` table.
+     *
+     * deliveries.sub_order_id is NOT NULL with an FK to `sub_orders`, and a
+     * manufacturer's orders live in mfg_purchase_orders — relaxing that FK would put a
+     * B2B flow inside the live consumer checkout path, which is the same reasoning
+     * 71_monline_b2b.sql gives for not reusing `orders`.
+     */
+    public function testManufacturerDeliveriesUseTheirOwnTable(): void
+    {
+        $sql75 = (string) file_get_contents(ROOTPATH . 'database/sql/75_manufacturer_delivery.sql');
+
+        $this->assertStringContainsString('CREATE TABLE IF NOT EXISTS `mfg_deliveries`', $sql75);
+        $this->assertStringContainsString('REFERENCES `mfg_purchase_orders`', $sql75, 'a manufacturer delivery hangs off a PO, not a sub-order');
+        $this->assertStringNotContainsString('ALTER TABLE `deliveries`', $sql75, 'the consumer delivery table must not be touched');
+        $this->assertStringNotContainsString('REFERENCES `sub_orders`', $sql75);
+    }
+
+    /**
+     * The SIGNUP form still collects no delivery range.
+     *
+     * This previously asserted that no manufacturer screen anywhere offered delivery
+     * fields. Units can now be made deliverable (see above), but registration is not
+     * where that belongs: a manufacturer signing up has no units yet, and asking for a
+     * delivery radius before the factory exists is a question about nothing. The
+     * serviceability fields live on the unit edit screen, which is per-unit and
+     * permission-gated.
+     *
+     * Assertions are on the posted FIELD, not the bare word — the file's docblock names
+     * both while explaining the split, and that is worth keeping.
+     */
+    public function testFactoryLocationPartialStillHasNoDeliveryFields(): void
     {
         $partial = $this->read('Views/partials/_factory_location.php');
 
-        // Assert on the posted FIELD, not the bare word — the file's docblock names both
-        // while explaining what was deliberately left out, and that is worth keeping.
         $this->assertStringNotContainsString('name="delivery_radius"', $partial);
         $this->assertStringNotContainsString('name="delivery_enabled"', $partial);
         $this->assertStringNotContainsString('<input', substr($partial, 0, (int) strpos($partial, '?>')), 'no inputs in the docblock');
