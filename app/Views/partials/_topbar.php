@@ -22,14 +22,15 @@
         // This partial is shared by admin, vendor and manufacturer layouts. It used to
         // be a 2-way ternary (admin vs "everything else -> vendor"), which silently
         // sent a manufacturer session into the vendor panel's notifications page — a
-        // route that panel restriction now also 404s on the manufacturer host, since
-        // 'vendor/...' only resolves on vendor./shop. There is no manufacturer
-        // notifications page yet, so that branch lands on the manufacturer dashboard
-        // instead of a broken or wrong-panel destination.
+        // route that panel restriction also 404s on the manufacturer host, since
+        // 'vendor/...' only resolves on vendor./shop. The manufacturer branch pointed
+        // at the dashboard purely as a placeholder while that panel had no
+        // notifications page; it has one now, so the link finally goes where the
+        // label says.
         if (str_starts_with(uri_string(), 'admin')) {
             $notifAllUrl = site_url('admin/notifications');
         } elseif (str_starts_with(uri_string(), 'manufacturer')) {
-            $notifAllUrl = site_url('manufacturer/dashboard');
+            $notifAllUrl = site_url('manufacturer/notifications');
         } else {
             $notifAllUrl = site_url('vendor/notifications');
         }
@@ -61,12 +62,13 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
                 <?php
-                // Same panel-detection fix as the notifications link above: manufacturer
-                // has no profile page yet, so it must not fall through to vendor's.
+                // Same panel detection as the notifications link above. This dropdown is
+                // the personal account, so manufacturer resolves to manufacturer/me (the
+                // counterpart of vendor/me), not to the business profile.
                 if (str_starts_with(uri_string(), 'admin')) {
                     $profileUrl = site_url('admin/profile');
                 } elseif (str_starts_with(uri_string(), 'manufacturer')) {
-                    $profileUrl = site_url('manufacturer/dashboard');
+                    $profileUrl = site_url('manufacturer/me');
                 } else {
                     $profileUrl = site_url('vendor/me');
                 }

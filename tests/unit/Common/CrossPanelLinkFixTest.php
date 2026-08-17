@@ -108,8 +108,12 @@ final class CrossPanelLinkFixTest extends CIUnitTestCase
             "/str_starts_with\(uri_string\(\), 'admin'\)\s*\)\s*\{\s*\\\$notifAllUrl = site_url\('admin\/notifications'\);/s",
             $code,
         );
+        // UPDATED: this asserted 'manufacturer/dashboard', which was the correct
+        // destination only while the manufacturer panel had no notifications page —
+        // a placeholder that kept the link off a wrong-panel 404. That page now
+        // exists, so the link goes where its label says.
         $this->assertMatchesRegularExpression(
-            "/str_starts_with\(uri_string\(\), 'manufacturer'\)\s*\)\s*\{\s*\\\$notifAllUrl = site_url\('manufacturer\/dashboard'\);/s",
+            "/str_starts_with\(uri_string\(\), 'manufacturer'\)\s*\)\s*\{\s*\\\$notifAllUrl = site_url\('manufacturer\/notifications'\);/s",
             $code,
             'manufacturer must not fall through to a vendor-panel route that does not exist for it',
         );
@@ -124,8 +128,12 @@ final class CrossPanelLinkFixTest extends CIUnitTestCase
             "/str_starts_with\(uri_string\(\), 'admin'\)\s*\)\s*\{\s*\\\$profileUrl = site_url\('admin\/profile'\);/s",
             $code,
         );
+        // UPDATED, same reason as the notifications link above: manufacturer/me is the
+        // counterpart of vendor/me and now exists, so this dropdown no longer has to
+        // settle for the dashboard. Note it resolves to the PERSONAL account, not the
+        // business profile — manufacturer/profile is a different, owner-only screen.
         $this->assertMatchesRegularExpression(
-            "/str_starts_with\(uri_string\(\), 'manufacturer'\)\s*\)\s*\{\s*\\\$profileUrl = site_url\('manufacturer\/dashboard'\);/s",
+            "/str_starts_with\(uri_string\(\), 'manufacturer'\)\s*\)\s*\{\s*\\\$profileUrl = site_url\('manufacturer\/me'\);/s",
             $code,
         );
         $this->assertStringContainsString("\$profileUrl = site_url('vendor/me');", $code);

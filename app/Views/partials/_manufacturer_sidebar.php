@@ -18,6 +18,12 @@ $groups = [
     ['Sales', 'bi-bag', [
         ['orders', 'Purchase Orders', 'bi-receipt', 'manufacturer/purchase-orders', 'mfg.po.view'],
     ]],
+    // Business identity and the per-user feed. Mirrors the vendor panel's Team group;
+    // staff, media and documents join it as those screens land.
+    ['Team', 'bi-people', [
+        ['profile', 'Business Profile', 'bi-building', 'manufacturer/profile', 'OWNER'],
+        ['notifications', 'Notifications', 'bi-bell', 'manufacturer/notifications', ''],
+    ]],
 ];
 
 // Fall back to the current URL when a controller didn't set $active.

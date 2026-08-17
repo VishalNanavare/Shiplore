@@ -811,6 +811,20 @@ $routes->group('vendor', ['filter' => 'webAuth:vendor', 'subdomain' => ['vendor'
 $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' => ['manufacturer', 'mshop']], static function (RouteCollection $routes): void {
     $routes->get('dashboard', 'Manufacturer\ManufacturerDashboardController::index');
 
+    // The acting user's own login (owner or unit staff). Not permission-gated: this is
+    // the person, not the tenant — gating it would lock a store keeper out of changing
+    // their own password.
+    $routes->get('me', 'Manufacturer\MeController::index');
+    $routes->post('me', 'Manufacturer\MeController::save', ['filter' => 'csrf']);
+    $routes->post('me/password', 'Manufacturer\MeController::savePassword', ['filter' => 'csrf']);
+
+    // The tenant's own identity/branding. Owner-only, enforced in the controller.
+    $routes->get('profile', 'Manufacturer\ProfileController::index');
+    $routes->post('profile/logo', 'Manufacturer\ProfileController::uploadLogo', ['filter' => 'csrf']);
+
+    // Per-user feed. The po.* events raised by PurchaseOrderRepository land here.
+    $routes->get('notifications', 'Manufacturer\NotificationController::index');
+
     // Units (factories). No delivery-range routes — mshops has no such columns.
     $routes->get('units', 'Manufacturer\UnitController::index');
     $routes->get('units/new', 'Manufacturer\UnitController::new');

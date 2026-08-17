@@ -172,6 +172,24 @@ abstract class BaseManufacturerController extends BaseController
     }
 
     /**
+     * Ownership gate, for screens that manage the tenant's own identity rather than
+     * its operations — business profile, branding, and anything else where holding a
+     * permission is not sufficient because the actor must BE the manufacturer.
+     *
+     * Kept separate from guard() because the two answer different questions and the
+     * order matters: a unit manager may legitimately hold mfg.profile.view to read a
+     * screen while still being barred from changing what it shows.
+     */
+    protected function requireOwner(string $redirectTo, string $message): ?RedirectResponse
+    {
+        if (! $this->isOwner()) {
+            return redirect()->to($redirectTo)->with('error', $message);
+        }
+
+        return null;
+    }
+
+    /**
      * Permission gate. Returns a redirect when the actor lacks the permission, so
      * callers keep the `if ($denied = $this->guard('x')) { return $denied; }` shape used
      * across the admin panel.
