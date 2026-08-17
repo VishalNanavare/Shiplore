@@ -21,6 +21,7 @@ $groups = [
     // Business identity and the per-user feed. Mirrors the vendor panel's Team group;
     // staff, media and documents join it as those screens land.
     ['Team', 'bi-people', [
+        ['staff', 'Staff', 'bi-people', 'manufacturer/staff', 'mfg.staff.view'],
         ['profile', 'Business Profile', 'bi-building', 'manufacturer/profile', 'OWNER'],
         ['notifications', 'Notifications', 'bi-bell', 'manufacturer/notifications', ''],
     ]],

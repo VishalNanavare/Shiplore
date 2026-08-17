@@ -337,6 +337,207 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         });
     }
 
+    // ------------------------------------------------------------------------ staff
+
+    /** @return object the injected staff-repository spy */
+    private function mockStaffRepo(): object
+    {
+        $repo = new class {
+            public array $created   = [];
+            public array $updated   = [];
+            public array $statusSet = [];
+            public ?int $createReturns = 91;
+
+            public function staffWithUnits(int $manufacturerId): array
+            {
+                return [[
+                    'id' => 31, 'user_id' => 601, 'staff_type' => 'unit_manager',
+                    'employee_code' => 'EMP-31', 'designation' => 'Shift lead', 'status' => 'active',
+                    'name' => 'Ravi Kumar', 'email' => 'ravi@precision.example', 'phone' => '9800000001',
+                    'units' => 'Bhiwandi Plant',
+                ]];
+            }
+
+            public function findStaff(int $staffId, int $manufacturerId): ?array
+            {
+                return $staffId === 31
+                    ? ['id' => 31, 'user_id' => 601, 'staff_type' => 'unit_manager', 'employee_code' => 'EMP-31', 'designation' => 'Shift lead', 'status' => 'active', 'name' => 'Ravi Kumar', 'email' => 'ravi@precision.example', 'phone' => '9800000001']
+                    : null;
+            }
+
+            public function staffUnits(int $staffId): array { return [11]; }
+
+            public function emailExists(string $email, ?int $exceptUserId = null): bool
+            {
+                return $email === 'taken@precision.example';
+            }
+
+            public function createStaff(int $manufacturerId, array $d, ?int $actorId = null): ?int
+            {
+                $this->created[] = $d;
+
+                return $this->createReturns;
+            }
+
+            public function updateStaff(int $staffId, int $manufacturerId, array $d, ?int $actorId = null): bool
+            {
+                $this->updated[] = [$staffId, $d];
+
+                return true;
+            }
+
+            public function setStatus(int $staffId, int $manufacturerId, string $status, ?int $actorId = null): bool
+            {
+                $this->statusSet[] = [$staffId, $status];
+
+                return true;
+            }
+        };
+        Services::injectMock('manufacturerStaffRepository', $repo);
+
+        return $repo;
+    }
+
+    public function testStaffListRendersForOwner(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        $this->mockStaffRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/staff');
+
+        $r->assertStatus(200);
+        $this->assertStringContainsString('Ravi Kumar', (string) $r->getBody());
+        $this->assertStringContainsString('Bhiwandi Plant', (string) $r->getBody());
+    }
+
+    public function testStaffListIsDeniedWithoutThePermission(): void
+    {
+        $this->grant(['mfg.product.view']); // no mfg.staff.view
+        $this->mockStaffRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/staff');
+
+        $r->assertRedirect();
+        $this->assertStringContainsString('manufacturer/dashboard', (string) $r->getRedirectUrl());
+    }
+
+    /** Managing staff is the owner's job — holding the permission is not enough. */
+    public function testStaffCreateIsOwnerOnlyEvenWithThePermission(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        $repo = $this->mockStaffRepo();
+
+        $r = $this->withSession($this->postSession($this->staffSession()))->post('manufacturer/staff', $this->csrf() + [
+            'name' => 'New Hire', 'email' => 'new@precision.example', 'staff_type' => 'store_keeper', 'mshop_ids' => [11],
+        ]);
+
+        $r->assertRedirect();
+        $r->assertSessionHas('error', 'Only the owner can manage staff.');
+        $this->assertSame([], $repo->created, 'unit staff must not be able to hire');
+    }
+
+    public function testStaffCreateStoresTheAssignment(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        $repo = $this->mockStaffRepo();
+
+        $r = $this->withSession($this->postSession($this->ownerSession()))->post('manufacturer/staff', $this->csrf() + [
+            'name' => 'New Hire', 'email' => 'new@precision.example', 'staff_type' => 'store_keeper',
+            'mshop_ids' => [11, 12], 'primary_unit' => 12,
+        ]);
+
+        $r->assertRedirect();
+        $this->assertCount(1, $repo->created);
+        $this->assertSame([11, 12], $repo->created[0]['mshop_ids']);
+        $this->assertSame(12, $repo->created[0]['primary_unit']);
+        $this->assertSame('store_keeper', $repo->created[0]['staff_type']);
+    }
+
+    /**
+     * The tenant boundary. Unit 99 belongs to somebody else, so it must be dropped
+     * before the repository ever sees it — otherwise an owner could assign their own
+     * staff into another manufacturer's factory by editing the form post.
+     */
+    public function testStaffCreateDiscardsUnitsBelongingToAnotherManufacturer(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        $repo = $this->mockStaffRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))->post('manufacturer/staff', $this->csrf() + [
+            'name' => 'New Hire', 'email' => 'new@precision.example', 'staff_type' => 'store_keeper',
+            'mshop_ids' => [11, 99], 'primary_unit' => 99,
+        ])->assertRedirect();
+
+        $this->assertCount(1, $repo->created);
+        $this->assertSame([11], $repo->created[0]['mshop_ids'], 'a foreign unit id must never reach the repository');
+        // ...and the rejected id must not survive as the primary either.
+        $this->assertSame(11, $repo->created[0]['primary_unit']);
+    }
+
+    /** With every posted unit foreign, there is nothing left to assign — reject outright. */
+    public function testStaffCreateRejectsWhenEveryUnitIsForeign(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        $repo = $this->mockStaffRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))->post('manufacturer/staff', $this->csrf() + [
+            'name' => 'New Hire', 'email' => 'new@precision.example', 'staff_type' => 'store_keeper',
+            'mshop_ids' => [99],
+        ])->assertRedirect();
+
+        $this->assertSame([], $repo->created);
+    }
+
+    public function testStaffCreateRejectsAnUnknownRole(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        $repo = $this->mockStaffRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))->post('manufacturer/staff', $this->csrf() + [
+            'name' => 'New Hire', 'email' => 'new@precision.example',
+            'staff_type' => 'vendor_owner', 'mshop_ids' => [11],
+        ])->assertRedirect();
+
+        $this->assertSame([], $repo->created, 'a role outside the manufacturer set must not be assignable');
+    }
+
+    public function testStaffCreateRejectsADuplicateEmail(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        $repo = $this->mockStaffRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))->post('manufacturer/staff', $this->csrf() + [
+            'name' => 'New Hire', 'email' => 'taken@precision.example',
+            'staff_type' => 'store_keeper', 'mshop_ids' => [11],
+        ])->assertRedirect();
+
+        $this->assertSame([], $repo->created);
+    }
+
+    public function testStaffSuspendWritesTheNewStatus(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        $repo = $this->mockStaffRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/staff/31/suspend', $this->csrf() + ['status' => 'suspended'])
+            ->assertRedirect();
+
+        $this->assertSame([[31, 'suspended']], $repo->statusSet);
+    }
+
+    public function testStaffEditFormRendersTheCurrentAssignment(): void
+    {
+        $this->grant(['mfg.staff.view', 'mfg.staff.manage']);
+        $this->mockStaffRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/staff/31/edit');
+
+        $r->assertStatus(200);
+        $this->assertStringContainsString('Ravi Kumar', (string) $r->getBody());
+        $this->assertStringContainsString('Bhiwandi Plant', (string) $r->getBody());
+    }
+
     // ------------------------------------------------------------------ navigation
 
     /**
@@ -374,8 +575,23 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $body = (string) $this->withSession($this->staffSession())->get('manufacturer/me')->getBody();
 
         $this->assertStringNotContainsString('manufacturer/profile', $body);
+        // Staff is permission-gated rather than owner-gated, and setUp()'s grant does
+        // not include mfg.staff.view — so it must be hidden here too. Owners bypass the
+        // check entirely ($navIsOwner), which is exactly why this has to be asserted
+        // from a STAFF session or the gate is untested.
+        $this->assertStringNotContainsString('manufacturer/staff', $body);
         // ...while the per-user feed stays available to them.
         $this->assertStringContainsString('manufacturer/notifications', $body);
+    }
+
+    /** ...and appears once that permission is granted. */
+    public function testUnitStaffSidebarShowsStaffWhenPermitted(): void
+    {
+        $this->grant(['mfg.notification.view', 'mfg.staff.view']);
+        $this->mockUserRepo();
+        $body = (string) $this->withSession($this->staffSession())->get('manufacturer/me')->getBody();
+
+        $this->assertStringContainsString('manufacturer/staff', $body);
     }
 
     // --------------------------------------------------------------- notifications

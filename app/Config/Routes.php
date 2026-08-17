@@ -833,6 +833,15 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->post('units/(:num)/update', 'Manufacturer\UnitController::update/$1', ['filter' => 'csrf']);
     $routes->post('units/(:num)/toggle', 'Manufacturer\UnitController::toggle/$1', ['filter' => 'csrf']);
 
+    // Staff and their unit assignments. This is the only writer of
+    // mfg_staff_assignments, so it is what makes unit-scoped staff exist at all.
+    $routes->get('staff', 'Manufacturer\StaffController::index');
+    $routes->get('staff/new', 'Manufacturer\StaffController::new');
+    $routes->post('staff', 'Manufacturer\StaffController::create', ['filter' => 'csrf']);
+    $routes->get('staff/(:num)/edit', 'Manufacturer\StaffController::edit/$1');
+    $routes->post('staff/(:num)/update', 'Manufacturer\StaffController::update/$1', ['filter' => 'csrf']);
+    $routes->post('staff/(:num)/suspend', 'Manufacturer\StaffController::suspend/$1', ['filter' => 'csrf']);
+
     // Products — making price + selling price.
     $routes->get('products', 'Manufacturer\ProductController::index');
     $routes->get('products/new', 'Manufacturer\ProductController::new');

@@ -95,6 +95,7 @@ SOURCE 70_manufacturer.sql;
 SOURCE 71_monline_b2b.sql;
 SOURCE 72_monline_permission_rename.sql;
 SOURCE 73_admin_manufacturer_oversight.sql;
+SOURCE 74_manufacturer_parity.sql;
 
 -- Files 44-55 and 62-73 are SOURCEd above, in numeric order at the points where
 -- their dependencies exist. They were missing until audit 2026-08-B: a database
