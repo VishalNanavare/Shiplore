@@ -106,6 +106,12 @@ abstract class BaseManufacturerController extends BaseController
      * The single guard for every unit-id action. Ownership of the manufacturer is not
      * enough — a store keeper assigned to unit A must be blocked from unit B. Call it
      * immediately after requireManufacturer() in any method taking a unit id.
+     *
+     * CONVENTION: name the controller parameter `$mshopId`, never a generic `$id`.
+     * ManufacturerPanelIsolationTest::testEveryMshopIdActionChecksUnitAccess() finds
+     * unit-scoped actions by that parameter name and asserts each one calls this
+     * method — an action that takes a unit id under another name is invisible to that
+     * sweep and ships unguarded.
      */
     protected function requireMshopAccess(int $mshopId): ?RedirectResponse
     {

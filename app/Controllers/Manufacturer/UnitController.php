@@ -74,7 +74,7 @@ final class UnitController extends BaseManufacturerController
         return redirect()->to('manufacturer/units')->with('success', 'Unit created.');
     }
 
-    public function edit(int $id)
+    public function edit(int $mshopId)
     {
         if ($denied = $this->requireManufacturer()) {
             return $denied;
@@ -82,11 +82,11 @@ final class UnitController extends BaseManufacturerController
         if ($denied = $this->guard('mfg.unit.update')) {
             return $denied;
         }
-        if ($denied = $this->requireMshopAccess($id)) {
+        if ($denied = $this->requireMshopAccess($mshopId)) {
             return $denied;
         }
 
-        $unit = service('manufacturerUnitRepository')->findById($id, (int) $this->manufacturerId());
+        $unit = service('manufacturerUnitRepository')->findById($mshopId, (int) $this->manufacturerId());
         if ($unit === null) {
             return redirect()->to('manufacturer/units')->with('error', 'Unit not found.');
         }
@@ -97,7 +97,7 @@ final class UnitController extends BaseManufacturerController
         ]);
     }
 
-    public function update(int $id): RedirectResponse
+    public function update(int $mshopId): RedirectResponse
     {
         if ($denied = $this->requireManufacturer()) {
             return $denied;
@@ -105,12 +105,12 @@ final class UnitController extends BaseManufacturerController
         if ($denied = $this->guard('mfg.unit.update')) {
             return $denied;
         }
-        if ($denied = $this->requireMshopAccess($id)) {
+        if ($denied = $this->requireMshopAccess($mshopId)) {
             return $denied;
         }
 
         $ok = service('manufacturerUnitRepository')->update(
-            $id,
+            $mshopId,
             (int) $this->manufacturerId(),
             (array) $this->request->getPost(),
             (int) session()->get('user_id'),
@@ -121,7 +121,7 @@ final class UnitController extends BaseManufacturerController
             : redirect()->back()->withInput()->with('error', 'Could not update the unit.');
     }
 
-    public function toggle(int $id): RedirectResponse
+    public function toggle(int $mshopId): RedirectResponse
     {
         if ($denied = $this->requireManufacturer()) {
             return $denied;
@@ -129,18 +129,18 @@ final class UnitController extends BaseManufacturerController
         if ($denied = $this->guard('mfg.unit.update')) {
             return $denied;
         }
-        if ($denied = $this->requireMshopAccess($id)) {
+        if ($denied = $this->requireMshopAccess($mshopId)) {
             return $denied;
         }
 
         $repo = service('manufacturerUnitRepository');
-        $unit = $repo->findById($id, (int) $this->manufacturerId());
+        $unit = $repo->findById($mshopId, (int) $this->manufacturerId());
         if ($unit === null) {
             return redirect()->to('manufacturer/units')->with('error', 'Unit not found.');
         }
 
         $next = ($unit['status'] ?? '') === 'active' ? 'inactive' : 'active';
-        $repo->setStatus($id, (int) $this->manufacturerId(), $next, (int) session()->get('user_id'));
+        $repo->setStatus($mshopId, (int) $this->manufacturerId(), $next, (int) session()->get('user_id'));
 
         return redirect()->to('manufacturer/units')->with('success', 'Unit is now ' . $next . '.');
     }

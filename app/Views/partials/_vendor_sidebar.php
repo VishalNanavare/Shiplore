@@ -34,6 +34,11 @@ $groups = [
     // Procurement — buying stock IN, as opposed to selling it. The purchase-intake
     // screens below were routed and built but had no nav entry at all, so they were
     // reachable only by typing the URL; monline gives them a natural home.
+    //
+    // The two monline entries leave this panel: monline is pinned to its own
+    // subdomain, so their hrefs go through panel_url() at render time (see the loop
+    // below) — site_url() would build vendor.shiplore.in/monline/..., which the
+    // monline group never registers on that host.
     ['Procurement', 'bi-cart-plus', [
         ['monline', 'Buy on monline', 'bi-shop-window', 'monline/browse', 'monline.browse'],
         ['po', 'Purchase Orders', 'bi-receipt', 'monline/orders', 'monline.po.view'],
@@ -100,7 +105,7 @@ if ($active === '') {
             </a>
             <div class="collapse <?= $hasActive ? 'show' : '' ?> nav-sub" id="ven-g<?= $gi ?>">
                 <?php foreach ($items as [$slug, $label, $icon, $url]): ?>
-                    <a class="<?= $active === $slug ? 'active' : '' ?>" href="<?= site_url($url) ?>"><i class="bi <?= esc($icon, 'attr') ?>"></i> <?= esc($label) ?></a>
+                    <a class="<?= $active === $slug ? 'active' : '' ?>" href="<?= str_starts_with($url, 'monline/') ? panel_url('monline', $url) : site_url($url) ?>"><i class="bi <?= esc($icon, 'attr') ?>"></i> <?= esc($label) ?></a>
                 <?php endforeach; ?>
             </div>
         <?php endforeach; ?>

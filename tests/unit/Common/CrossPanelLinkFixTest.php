@@ -56,6 +56,48 @@ final class CrossPanelLinkFixTest extends CIUnitTestCase
         );
     }
 
+    // -------------------------------------------------------- partials/_vendor_sidebar.php
+
+    /**
+     * The sidebar was MISSED by the original sweep, which only covered
+     * vendor/dashboard.php. The two Procurement entries name monline routes, and the
+     * sidebar renders every item's URL through site_url() — so on vendor.shiplore.in
+     * they resolved to vendor.shiplore.in/monline/browse, a path the monline group
+     * (subdomain-pinned to `monline`) never registers there. Result: the primary
+     * navigation a vendor uses to reach monline 404'd, while the dashboard's two links
+     * to the same places worked.
+     *
+     * Asserting on the rendered href rather than the item definition, because the bug
+     * was in the rendering, not the route strings.
+     */
+    public function testVendorSidebarMonlineLinksUsePanelUrl(): void
+    {
+        $code = $this->code(APPPATH . 'Views/partials/_vendor_sidebar.php');
+
+        $this->assertStringContainsString(
+            "panel_url('monline', \$url)",
+            $code,
+            'monline sidebar items must resolve against the monline host, not the vendor host',
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            "/site_url\(\s*'monline/",
+            $code,
+            'no monline path may be built with site_url() from the vendor panel',
+        );
+    }
+
+    /** The other 25-odd sidebar items are same-panel and must KEEP using site_url(). */
+    public function testVendorSidebarStillUsesSiteUrlForItsOwnPanel(): void
+    {
+        $code = $this->code(APPPATH . 'Views/partials/_vendor_sidebar.php');
+
+        $this->assertStringContainsString(
+            "site_url('vendor/dashboard')",
+            $code,
+            'vendor-panel links must not be pushed through panel_url() — they are already on the right host',
+        );
+    }
+
     // ---------------------------------------------------------------- partials/_topbar.php
 
     public function testTopbarNotificationsLinkHandlesAllThreePanels(): void

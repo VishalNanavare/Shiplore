@@ -87,15 +87,47 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
         }
     }
 
+    /**
+     * Every controller in the panel directory, discovered by enumeration.
+     *
+     * This used to be a hand-written list of four class names, and that is precisely
+     * how PurchaseOrderController once shipped with no coverage at all: it was added to
+     * the panel and simply never added to the list, so the sweep silently skipped it.
+     * Enumerating the directory means a controller cannot opt out of these checks by
+     * being forgotten — a new file is covered the moment it exists.
+     *
+     * @return list<array{0:string,1:string}> [class name, source]
+     */
+    private function panelControllers(): array
+    {
+        $files = glob(APPPATH . 'Controllers/Manufacturer/*.php') ?: [];
+        $this->assertNotEmpty($files, 'no manufacturer controllers found — is the path right?');
+
+        $out = [];
+        foreach ($files as $path) {
+            $name = basename($path, '.php');
+            if ($name === 'BaseManufacturerController') {
+                continue; // abstract base: it DEFINES the guards rather than calling them
+            }
+            $out[] = [$name, (string) file_get_contents($path)];
+        }
+
+        $this->assertNotEmpty($out, 'only the base controller was found');
+
+        return $out;
+    }
+
     /** Nothing in the panel may be reachable without resolving a manufacturer first. */
     public function testEveryPublicControllerMethodRequiresAManufacturer(): void
     {
-        foreach (['ManufacturerDashboardController', 'UnitController', 'ProductController', 'PurchaseOrderController'] as $ctrl) {
-            $src = $this->read("Controllers/Manufacturer/{$ctrl}.php");
+        foreach ($this->panelControllers() as [$ctrl, $src]) {
             preg_match_all('/public function (\w+)\s*\(/', $src, $m);
 
             $this->assertNotEmpty($m[1], "no public methods found in {$ctrl}");
             foreach ($m[1] as $method) {
+                if ($method === '__construct' || $method === 'initController') {
+                    continue;
+                }
                 $body = $this->methodBody($src, $method);
                 $this->assertStringContainsString(
                     'requireManufacturer',
@@ -104,6 +136,40 @@ final class ManufacturerPanelIsolationTest extends CIUnitTestCase
                 );
             }
         }
+    }
+
+    /**
+     * Any action taking a unit id must additionally check unit access — owning the
+     * manufacturer is not enough, a store keeper assigned to unit A must be blocked
+     * from unit B. Enumerated for the same reason as the sweep above.
+     *
+     * Detection is deliberately narrow: a parameter literally named $mshopId. A method
+     * that takes a unit id under some other name will not be caught here, so the
+     * convention is the safeguard and is worth keeping uniform.
+     */
+    public function testEveryMshopIdActionChecksUnitAccess(): void
+    {
+        $checked = 0;
+
+        foreach ($this->panelControllers() as [$ctrl, $src]) {
+            preg_match_all('/public function (\w+)\s*\(([^)]*)\)/', $src, $m, PREG_SET_ORDER);
+
+            foreach ($m as [$whole, $method, $params]) {
+                if (! str_contains($params, '$mshopId')) {
+                    continue;
+                }
+                $body = $this->methodBody($src, $method);
+                $this->assertStringContainsString(
+                    'requireMshopAccess',
+                    $body,
+                    "Manufacturer\\{$ctrl}::{$method}() takes a \$mshopId but never calls requireMshopAccess()",
+                );
+                $checked++;
+            }
+        }
+
+        // Guard against the sweep silently matching nothing if the convention changes.
+        $this->assertGreaterThan(0, $checked, 'no $mshopId actions found — has the parameter naming convention changed?');
     }
 
     /** The route group must be pinned, and must not accidentally reuse the vendor pin. */

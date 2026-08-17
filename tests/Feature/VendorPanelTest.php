@@ -103,6 +103,42 @@ final class VendorPanelTest extends CIUnitTestCase
         $this->assertStringContainsString('SO-1001-1', (string) $result->getBody());
     }
 
+    /**
+     * Runtime counterpart to CrossPanelLinkFixTest's source assertion: the sidebar's
+     * monline entries must be emitted as absolute URLs on the monline host. Rendered
+     * on vendor.shiplore.in (see setUp), a relative /monline/browse would hit a path
+     * the monline route group never registers on this host — a 404 on the main
+     * navigation vendors use to buy from manufacturers.
+     */
+    public function testSidebarMonlineLinksPointAtTheMonlineHost(): void
+    {
+        Services::injectMock('vendorDashboardRepository', new class {
+            public function metrics(int $vendorId): array { return ['shops' => 0, 'products' => 0, 'open_orders' => 0, 'sales' => 0.0]; }
+            public function recentOrders(int $vendorId, int $limit = 8): array { return []; }
+            public function perShop(int $v, array $s): array { return []; }
+        });
+        $body = (string) $this->withSession($this->vendorSession())->get('vendor/dashboard')->getBody();
+
+        $this->assertStringContainsString('//monline.shiplore.in/monline/browse', $body);
+        $this->assertStringContainsString('//monline.shiplore.in/monline/orders', $body);
+        // The bug being locked out: the same paths resolved against the vendor host.
+        $this->assertStringNotContainsString('//vendor.shiplore.in/monline/', $body);
+    }
+
+    /** ...while every same-panel link stays on the vendor host. */
+    public function testSidebarKeepsVendorLinksOnTheVendorHost(): void
+    {
+        Services::injectMock('vendorDashboardRepository', new class {
+            public function metrics(int $vendorId): array { return ['shops' => 0, 'products' => 0, 'open_orders' => 0, 'sales' => 0.0]; }
+            public function recentOrders(int $vendorId, int $limit = 8): array { return []; }
+            public function perShop(int $v, array $s): array { return []; }
+        });
+        $body = (string) $this->withSession($this->vendorSession())->get('vendor/dashboard')->getBody();
+
+        $this->assertStringContainsString('vendor/products', $body);
+        $this->assertStringNotContainsString('monline.shiplore.in/vendor/', $body);
+    }
+
     public function testStaffMemberSeesShopScopedSidebar(): void
     {
         // A cashier-style staff member (not the owner) with limited shop-scoped perms.
