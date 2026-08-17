@@ -601,6 +601,168 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertSame([[[5], 'base_price', '99']], $spy->bulk);
     }
 
+    // ------------------------------------------------------- deliveries & riders
+
+    private function mockDeliveryRepo(): object
+    {
+        $repo = new class {
+            public array $assigned    = [];
+            public array $transitions = [];
+            public array $ridersAdded = [];
+
+            public function list(int $m, array $units, ?string $status = null, int $limit = 200): array
+            {
+                return [[
+                    'id' => 3, 'po_id' => 90, 'mshop_id' => 11, 'rider_user_id' => null,
+                    'mode' => 'self', 'status' => 'pending', 'eta_at' => null, 'assigned_at' => null,
+                    'delivered_at' => null, 'failure_reason' => null,
+                    'po_no' => 'PO-2026-0090', 'grand_total' => '11800.0000', 'buyer_vendor_id' => 2,
+                    'unit_name' => 'Bhiwandi Plant', 'rider_name' => null, 'rider_phone' => null,
+                    'buyer_name' => 'Sole Mate Footwear',
+                ]];
+            }
+
+            public function riders(int $m): array
+            {
+                return [['id' => 1, 'user_id' => 700, 'vehicle_type' => 'van', 'vehicle_no' => 'MH04 AB 1234', 'availability' => 'offline', 'status' => 'active', 'name' => 'Suresh', 'phone' => '9800000009']];
+            }
+
+            public function assignRider(int $d, int $m, int $rider, ?int $a = null): array
+            {
+                $this->assigned[] = [$d, $rider];
+
+                return ['ok' => true, 'error' => ''];
+            }
+
+            public function transition(int $d, int $m, string $to, ?string $reason, ?int $a = null): array
+            {
+                $this->transitions[] = [$d, $to, $reason];
+
+                return ['ok' => true, 'error' => ''];
+            }
+
+            public function phoneExists(string $p): bool { return $p === '9999999999'; }
+
+            public function addRider(int $m, array $d, ?int $a = null): ?int
+            {
+                $this->ridersAdded[] = $d;
+
+                return 12;
+            }
+        };
+        Services::injectMock('manufacturerDeliveryRepository', $repo);
+
+        return $repo;
+    }
+
+    public function testDeliveriesScreenRenders(): void
+    {
+        $this->grant(['mfg.delivery.assign']);
+        $this->mockDeliveryRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/deliveries');
+
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('PO-2026-0090', $body);
+        $this->assertStringContainsString('Sole Mate Footwear', $body);
+    }
+
+    public function testDeliveriesAreDeniedWithoutThePermission(): void
+    {
+        $this->grant(['mfg.product.view']);
+        $this->mockDeliveryRepo();
+
+        $this->withSession($this->ownerSession())->get('manufacturer/deliveries')->assertRedirect();
+    }
+
+    public function testAssigningARiderPassesThroughToTheRepository(): void
+    {
+        $this->grant(['mfg.delivery.assign']);
+        $repo = $this->mockDeliveryRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/deliveries/3/assign', $this->csrf() + ['rider_user_id' => '700'])
+            ->assertRedirect();
+
+        $this->assertSame([[3, 700]], $repo->assigned);
+    }
+
+    public function testDeliveryTransitionPassesTheTargetState(): void
+    {
+        $this->grant(['mfg.delivery.assign']);
+        $repo = $this->mockDeliveryRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/deliveries/3/delivered', $this->csrf())
+            ->assertRedirect();
+
+        $this->assertSame(3, $repo->transitions[0][0]);
+        $this->assertSame('delivered', $repo->transitions[0][1]);
+    }
+
+    public function testRiderRosterRenders(): void
+    {
+        $this->grant(['mfg.rider.manage']);
+        $this->mockDeliveryRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/riders');
+
+        $r->assertStatus(200);
+        $this->assertStringContainsString('Suresh', (string) $r->getBody());
+    }
+
+    /** Minting a rider login is owner-only, like hiring staff. */
+    public function testAddRiderIsOwnerOnly(): void
+    {
+        $this->grant(['mfg.rider.manage']);
+        $repo = $this->mockDeliveryRepo();
+
+        $r = $this->withSession($this->postSession($this->staffSession()))
+            ->post('manufacturer/riders', $this->csrf() + ['name' => 'New Rider', 'phone' => '9812345678']);
+
+        $r->assertRedirect();
+        $this->assertSame([], $repo->ridersAdded);
+    }
+
+    public function testAddRiderRejectsAMalformedPhone(): void
+    {
+        $this->grant(['mfg.rider.manage']);
+        $repo = $this->mockDeliveryRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/riders', $this->csrf() + ['name' => 'New Rider', 'phone' => '123'])
+            ->assertRedirect();
+
+        $this->assertSame([], $repo->ridersAdded);
+    }
+
+    public function testAddRiderRejectsAnAlreadyRegisteredPhone(): void
+    {
+        $this->grant(['mfg.rider.manage']);
+        $repo = $this->mockDeliveryRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/riders', $this->csrf() + ['name' => 'New Rider', 'phone' => '9999999999'])
+            ->assertRedirect();
+
+        $this->assertSame([], $repo->ridersAdded);
+    }
+
+    public function testAddRiderCreatesTheRider(): void
+    {
+        $this->grant(['mfg.rider.manage']);
+        $repo = $this->mockDeliveryRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/riders', $this->csrf() + ['name' => 'New Rider', 'phone' => '9812345678', 'vehicle_type' => 'van'])
+            ->assertRedirect();
+
+        $this->assertCount(1, $repo->ridersAdded);
+        $this->assertSame('New Rider', $repo->ridersAdded[0]['name']);
+        $this->assertSame('van', $repo->ridersAdded[0]['vehicle_type']);
+    }
+
     // --------------------------------------------------------- unit serviceability
 
     private function mockUnitRepo(): object

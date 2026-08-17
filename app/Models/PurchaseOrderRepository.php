@@ -528,7 +528,14 @@ final class PurchaseOrderRepository
         // the dispatch — the goods are gone either way, and a stock row that lags is a
         // smaller problem than a PO whose status disagrees with reality.
         if ($to === 'dispatched') {
-            $this->shipStockForPo($poId, (int) ($found['po']['seller_mshop_id'] ?? 0), $actorId);
+            $sellerMshopId = (int) ($found['po']['seller_mshop_id'] ?? 0);
+            $this->shipStockForPo($poId, $sellerMshopId, $actorId);
+            // Open the delivery record the manufacturer's Deliveries screen works from.
+            // Best-effort and idempotent (mfg_deliveries has a UNIQUE key on po_id), so a
+            // re-dispatch cannot double it and a failure here does not undo the dispatch.
+            if ($sellerMshopId > 0) {
+                service('manufacturerDeliveryRepository')->ensureForPo($poId, $sellerMshopId, $actorId);
+            }
         }
 
         // Only the seller ever drives these three; the buyer's only transition is

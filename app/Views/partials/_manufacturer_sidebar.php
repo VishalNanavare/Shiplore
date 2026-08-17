@@ -8,8 +8,14 @@ $navPerms   = $navPerms ?? [];
 // perm 'OWNER' = owner-only; '' = everyone.
 $visible = static fn (string $perm): bool => $perm === 'OWNER' ? $navIsOwner : ($navIsOwner || $perm === '' || isset($navPerms[$perm]));
 
-// Deliberately NO delivery, rider, POS or serviceability entries — manufacturers
-// do none of those. Orders arrive as monline purchase orders (phase B).
+// Orders arrive as monline purchase orders, never as consumer orders — manufacturers
+// sell B2B only, which is enforced upstream by is_online_enabled=0 / visibility='vendor'
+// on their products and by the party_type exclusion in StoreCatalogRepository.
+//
+// Delivery and rider entries were deliberately absent here for a long time, on the
+// grounds that manufacturers do not deliver; that decision was reversed when full
+// parity with the vendor panel was asked for (75_manufacturer_delivery.sql). Both are
+// permission-gated, so a manufacturer that does not deliver simply never grants them.
 $groups = [
     ['Catalog', 'bi-grid', [
         ['units', 'Units', 'bi-buildings', 'manufacturer/units', 'mfg.unit.view'],
@@ -18,6 +24,8 @@ $groups = [
     ]],
     ['Sales', 'bi-bag', [
         ['orders', 'Purchase Orders', 'bi-receipt', 'manufacturer/purchase-orders', 'mfg.po.view'],
+        ['deliveries', 'Deliveries', 'bi-truck', 'manufacturer/deliveries', 'mfg.delivery.assign'],
+        ['riders', 'Riders', 'bi-person-badge', 'manufacturer/riders', 'mfg.rider.manage'],
     ]],
     // Business identity and the per-user feed. Mirrors the vendor panel's Team group;
     // staff, media and documents join it as those screens land.

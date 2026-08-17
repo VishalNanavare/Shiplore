@@ -133,11 +133,19 @@ trait MinimalSchema
     protected function ensureDeliveryTables(): void
     {
         $db = $this->schemaConn();
+        // The ONE definition of db_delivery_boys. It must carry every column any test
+        // uses, because these helpers are CREATE TABLE IF NOT EXISTS against a database
+        // shared by the whole PHPUnit process: a second, narrower definition elsewhere
+        // would be silently skipped whenever this one ran first, and the failure would
+        // surface as "no such column" in an unrelated file depending on test order.
         $db->query('CREATE TABLE IF NOT EXISTS db_delivery_boys (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             uuid TEXT, user_id INTEGER, vendor_id INTEGER,
+            vehicle_type TEXT, vehicle_no TEXT,
             availability TEXT NOT NULL DEFAULT "offline", current_lat REAL, current_lng REAL,
-            status TEXT NOT NULL DEFAULT "active"
+            max_active_orders INTEGER NOT NULL DEFAULT 5,
+            status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, created_at TEXT, deleted_at TEXT
         )');
         $db->query('CREATE TABLE IF NOT EXISTS db_deliveries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -162,6 +170,47 @@ trait MinimalSchema
             reason TEXT, status TEXT NOT NULL DEFAULT "applied",
             created_at TEXT, updated_at TEXT
         )');
+    }
+
+    /**
+     * database/sql/75_manufacturer_delivery.sql section C, plus the two tables it
+     * joins against. `delivery_boys` is the VENDOR table, unchanged: a manufacturer is
+     * a `vendors` row, so its riders are ordinary delivery_boys rows — that reuse is
+     * the point, so the test exercises the real table rather than a manufacturer-shaped
+     * stand-in.
+     */
+    protected function ensureMfgDeliveryTables(): void
+    {
+        $db = $this->schemaConn();
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_deliveries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, po_id INTEGER NOT NULL, mshop_id INTEGER NOT NULL, rider_user_id INTEGER,
+            mode TEXT NOT NULL DEFAULT "self", delivery_fee REAL NOT NULL DEFAULT 0,
+            eta_at TEXT, assigned_at TEXT, picked_up_at TEXT, delivered_at TEXT,
+            failure_reason TEXT, status TEXT NOT NULL DEFAULT "pending",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT,
+            UNIQUE(po_id)
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_purchase_orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, po_no TEXT, buyer_vendor_id INTEGER, buyer_shop_id INTEGER,
+            seller_vendor_id INTEGER, seller_mshop_id INTEGER,
+            grand_total REAL NOT NULL DEFAULT 0, status TEXT NOT NULL DEFAULT "placed",
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+        // delivery_boys comes from ensureDeliveryTables(), which owns the single
+        // definition — see the note there about why there must only be one.
+        $this->ensureDeliveryTables();
+    }
+
+    /** Drop the delivery tables — see dropUsersTable() for why leaks matter here. */
+    protected function dropMfgDeliveryTables(): void
+    {
+        $db = $this->schemaConn();
+        foreach (['db_mfg_deliveries', 'db_mfg_purchase_orders', 'db_delivery_boys'] as $t) {
+            $db->query('DROP TABLE IF EXISTS ' . $t);
+        }
     }
 
     /**

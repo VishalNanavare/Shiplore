@@ -880,6 +880,14 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->post('variants/(:num)/delete', 'Manufacturer\ProductVariantController::delete/$1', ['filter' => 'csrf']);
     $routes->post('variants/(:num)/barcodes', 'Manufacturer\ProductVariantController::saveBarcodes/$1', ['filter' => 'csrf']);
 
+    // Getting dispatched purchase orders to their buyers, plus the manufacturer's own
+    // riders. Deliveries are opened by the PO flow, so there is no create action here.
+    $routes->get('deliveries', 'Manufacturer\DeliveryController::index');
+    $routes->post('deliveries/(:num)/assign', 'Manufacturer\DeliveryController::assign/$1', ['filter' => 'csrf']);
+    $routes->post('deliveries/(:num)/(:alpha)', 'Manufacturer\DeliveryController::transition/$1/$2', ['filter' => 'csrf']);
+    $routes->get('riders', 'Manufacturer\DeliveryController::riders');
+    $routes->post('riders', 'Manufacturer\DeliveryController::addRider', ['filter' => 'csrf']);
+
     // Stock at manufacturing units. The write action is "record production", not
     // "receive" — a manufacturer makes its stock rather than buying it in.
     $routes->get('inventory', 'Manufacturer\InventoryController::index');
