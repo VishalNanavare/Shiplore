@@ -42,6 +42,11 @@ final class ProductVariantController extends BaseController
             'attributes' => $vr->definingAttributes((int) $product['category_id']),
             'variants' => $variants, 'barcodesByVariant' => $bcByVariant,
             'stockLevels' => $stockLevels, 'inventoryMode' => $product['inventory_mode'] ?? 'managed',
+            // Sibling pages the partial links top-right; previously hardcoded there.
+            'siblingLinks' => [
+                ['Pricing', 'bi-tag', site_url('admin/products/' . $productId . '/pricing')],
+                ['Stock', 'bi-boxes', site_url('admin/products/' . $productId . '/inventory')],
+            ],
             'genUrl' => site_url('admin/products/' . $productId . '/variants/generate'),
             'variantUpdateBase' => site_url('admin/variants/'),
             'variantDeleteBase' => site_url('admin/variants/'),

@@ -14,6 +14,12 @@
 $lookupBase = str_contains((string) $genUrl, '/manufacturer/')
     ? site_url('manufacturer/lookup/')
     : (str_contains((string) $genUrl, '/vendor/') ? site_url('vendor/lookup/') : site_url('admin/lookup/'));
+// Sibling pages linked top-right. Hardcoding them broke the manufacturer panel: it
+// has no /pricing route at all, and its stock page is /stock rather than /inventory,
+// so both buttons 404'd and the prose below advertised pages that did not exist.
+// Each entry is [label, bootstrap icon, url]. Empty => no button group, no prose.
+$siblingLinks = $siblingLinks ?? [];
+
 // The two price columns. Vendors and admins price against MRP; a manufacturer prices
 // against its own making (production) cost, and leaves mrp unused at 0. Only the field
 // name and the label differ, so they are parameterised rather than the whole grid
@@ -30,14 +36,17 @@ $priceB = $priceB ?? ['base_price', 'Selling price'];
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h1 class="h5 mb-0">Variants — <?= esc($product['title']) ?></h1>
     <div class="d-flex gap-2">
-        <div class="btn-group btn-group-sm">
-            <a href="<?= $backUrl ?>/<?= (int) $product['id'] ?>/pricing" class="btn btn-outline-secondary"><i class="bi bi-tag me-1"></i>Pricing</a>
-            <a href="<?= $backUrl ?>/<?= (int) $product['id'] ?>/inventory" class="btn btn-outline-secondary"><i class="bi bi-boxes me-1"></i>Stock</a>
-        </div>
+        <?php if ($siblingLinks !== []): ?>
+            <div class="btn-group btn-group-sm">
+                <?php foreach ($siblingLinks as [$sibLabel, $sibIcon, $sibUrl]): ?>
+                    <a href="<?= esc($sibUrl, 'attr') ?>" class="btn btn-outline-secondary"><i class="bi <?= esc($sibIcon, 'attr') ?> me-1"></i><?= esc($sibLabel) ?></a>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
         <a href="<?= $backUrl ?>" class="btn btn-light btn-sm"><i class="bi bi-arrow-left me-1"></i>Back to products</a>
     </div>
 </div>
-<div class="alert alert-light border small text-secondary py-2 mb-3"><i class="bi bi-info-circle me-1"></i>Set price &amp; stock per item in the grid below. The standalone <strong>Pricing</strong> and <strong>Stock</strong> pages (top-right) offer the same fields in a focused view — either works.</div>
+<div class="alert alert-light border small text-secondary py-2 mb-3"><i class="bi bi-info-circle me-1"></i>Set price &amp; stock per item in the grid below.<?php if ($siblingLinks !== []): ?> The <?= esc(implode(' and ', array_column($siblingLinks, 0))) ?> page<?= count($siblingLinks) > 1 ? 's' : '' ?> (top-right) offer the same fields in a focused view — either works.<?php endif; ?></div>
 
 <?php if (empty($attributes)): ?>
     <div class="card mb-3"><div class="card-body text-secondary">

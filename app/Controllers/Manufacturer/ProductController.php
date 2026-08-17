@@ -42,6 +42,11 @@ final class ProductController extends BaseManufacturerController
                 $unit === -1 ? -1 : $unit,
             ),
             'filters' => ['status' => $status],
+            // The controller already honoured ?mshop_id= through effectiveMshopId();
+            // the list simply had no control to set it.
+            'unitOptions' => $this->mshopOptions(),
+            'activeUnit'  => $unit !== null && $unit > 0 ? $unit : null,
+            'canUpdate'   => $this->can('mfg.product.update'),
         ]);
     }
 
@@ -87,7 +92,11 @@ final class ProductController extends BaseManufacturerController
         }
         $imgWarn = $this->maybeImage((int) $res['id']);
 
-        return redirect()->to('manufacturer/products/' . $res['id'] . '/edit')->with('success', 'Product created.' . ($imgWarn ? ' ⚠ ' . $imgWarn : ''));
+        // Straight to Variants, not back to the form: SKU, price and stock live there
+        // for every panel, so landing on /edit strands the user with an unpriced product
+        // and no visible way to price it.
+        return redirect()->to('manufacturer/products/' . $res['id'] . '/variants')
+            ->with('success', 'Product created — set its SKU and price below.' . ($imgWarn ? ' ⚠ ' . $imgWarn : ''));
     }
 
     public function edit(int $id)
@@ -192,6 +201,62 @@ final class ProductController extends BaseManufacturerController
         $repo->setStatus($id, (int) $this->manufacturerId(), 'submitted', (int) session()->get('user_id'));
 
         return redirect()->to('manufacturer/products')->with('success', 'Product submitted for approval.');
+    }
+
+    /**
+     * Make an approved product visible to monline buyers, or hide it again.
+     *
+     * "Published" here means listed on the B2B marketplace — it must NOT touch
+     * is_online_enabled or visibility, which are invariants keeping manufacturer goods
+     * off the consumer storefront (ManufacturerProductRepository forces both on write).
+     *
+     * Without these two the status filter offered Published/Unpublished as values that
+     * nothing in the panel could ever produce, so an approved product could never go
+     * live at all.
+     */
+    public function publish(int $id): RedirectResponse
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+
+        return $this->setLive($id, 'published', 'Product is now live on monline.');
+    }
+
+    public function unpublish(int $id): RedirectResponse
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+
+        return $this->setLive($id, 'unpublished', 'Product hidden from monline.');
+    }
+
+    /** Shared body for publish/unpublish. */
+    private function setLive(int $id, string $status, string $okMessage): RedirectResponse
+    {
+        if ($denied = $this->guard('mfg.product.update')) {
+            return $denied;
+        }
+
+        $repo    = service('manufacturerProductRepository');
+        $product = $repo->findById($id, (int) $this->manufacturerId());
+        if ($product === null) {
+            return redirect()->to('manufacturer/products')->with('error', 'Product not found.');
+        }
+
+        // Only an approved product may go live, and only a live one may be hidden —
+        // otherwise this becomes a way to skip the approval gate entirely.
+        $from    = (string) ($product['status'] ?? '');
+        $allowed = $status === 'published' ? ['approved', 'unpublished'] : ['published'];
+        if (! in_array($from, $allowed, true)) {
+            return redirect()->to('manufacturer/products')
+                ->with('error', 'A ' . str_replace('_', ' ', $from) . ' product cannot be ' . $status . '.');
+        }
+
+        $repo->setStatus($id, (int) $this->manufacturerId(), $status, (int) session()->get('user_id'));
+
+        return redirect()->to('manufacturer/products')->with('success', $okMessage);
     }
 
     /**

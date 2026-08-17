@@ -39,6 +39,12 @@ final class ProductVariantController extends BaseVendorController
             'attributes' => $vr->definingAttributes((int) $product['category_id']),
             'variants' => $variants, 'barcodesByVariant' => $bcByVariant,
             'stockLevels' => $stockLevels, 'inventoryMode' => $product['inventory_mode'] ?? 'managed',
+            // Sibling pages the partial links top-right. Passed explicitly now — it
+            // used to hardcode these two paths, which 404'd on any panel without them.
+            'siblingLinks' => [
+                ['Pricing', 'bi-tag', site_url('vendor/products/' . $productId . '/pricing')],
+                ['Stock', 'bi-boxes', site_url('vendor/products/' . $productId . '/inventory')],
+            ],
             'genUrl' => site_url('vendor/products/' . $productId . '/variants/generate'),
             'variantUpdateBase' => site_url('vendor/variants/'),
             'variantDeleteBase' => site_url('vendor/variants/'),

@@ -39,6 +39,10 @@ final class ManufacturerInventoryServiceTest extends CIUnitTestCase
     protected function tearDown(): void
     {
         $this->dropMfgInventoryTables();
+        $this->dropMshopsTable();
+        foreach (['db_products', 'db_product_variants', 'db_product_mshops'] as $t) {
+            $this->schemaConn()->query('DROP TABLE IF EXISTS ' . $t);
+        }
         parent::tearDown();
     }
 
@@ -187,5 +191,92 @@ final class ManufacturerInventoryServiceTest extends CIUnitTestCase
         $this->assertStringContainsString('shipForPurchaseOrder(', $src);
         // Every line on the order, not just the first.
         $this->assertStringContainsString("table('mfg_purchase_order_items')", $src);
+    }
+    /**
+     * THE BOOTSTRAP DEADLOCK. levelsForUnits() used to start at mfg_inventory and INNER
+     * JOIN outward, so a manufacturer with no stock rows got an empty grid — and the
+     * only link to the screen that RECORDS stock lived inside that grid. Stock could
+     * never be recorded from the menu at all.
+     *
+     * A listed variant with no balance row must appear, at zero.
+     */
+    public function testAListedVariantWithNoStockRowStillAppears(): void
+    {
+        $this->seedCatalogue();
+
+        $rows = $this->svc->levelsForUnits(1, [11]);
+
+        $this->assertCount(1, $rows, 'a variant listed to the unit must appear before any stock exists');
+        $this->assertSame(0.0, (float) $rows[0]['on_hand']);
+        $this->assertSame('out_of_stock', $rows[0]['status']);
+        $this->assertSame(77, (int) $rows[0]['product_id'], 'the row must carry the product id the Manage link needs');
+    }
+
+    /** ...and once stock exists, the real balance shows rather than the zero default. */
+    public function testARealBalanceOverridesTheZeroDefault(): void
+    {
+        $this->seedCatalogue();
+        $this->svc->produce(5, 11, 60.0, 40.0, [], 1);
+
+        $rows = $this->svc->levelsForUnits(1, [11]);
+
+        $this->assertCount(1, $rows);
+        $this->assertSame(60.0, (float) $rows[0]['on_hand']);
+        $this->assertSame('in_stock', $rows[0]['status']);
+    }
+
+    /** Another manufacturer's catalogue must not leak in, even for a shared unit id. */
+    public function testTheGridIsScopedToTheOwningManufacturer(): void
+    {
+        $this->seedCatalogue();
+
+        $this->assertCount(1, $this->svc->levelsForUnits(1, [11]));
+        $this->assertSame([], $this->svc->levelsForUnits(999, [11]), 'another tenant must see nothing');
+    }
+
+    /** A variant listed to a DIFFERENT unit must not show under this one. */
+    public function testTheGridIsScopedToTheRequestedUnits(): void
+    {
+        $this->seedCatalogue();
+
+        $this->assertSame([], $this->svc->levelsForUnits(1, [12]));
+    }
+
+    /** An unlisted (product_mshops-less) product must not appear — it is not made here. */
+    public function testAnUnlistedProductDoesNotAppear(): void
+    {
+        $this->seedCatalogue();
+        $this->schemaConn()->table('product_mshops')->truncate();
+
+        $this->assertSame([], $this->svc->levelsForUnits(1, [11]));
+    }
+
+    /** products + product_variants + product_mshops for one variant of one product. */
+    private function seedCatalogue(): void
+    {
+        $db = $this->schemaConn();
+        $db->query('CREATE TABLE IF NOT EXISTS db_products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, vendor_id INTEGER NOT NULL, title TEXT,
+            status TEXT NOT NULL DEFAULT "draft", deleted_at TEXT
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_product_variants (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER NOT NULL, sku TEXT,
+            making_price REAL, base_price REAL, deleted_at TEXT
+        )');
+        $this->ensureProductShopsTable();
+        $db->query('CREATE TABLE IF NOT EXISTS db_product_mshops (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER NOT NULL, mshop_id INTEGER NOT NULL,
+            status TEXT NOT NULL DEFAULT "active", listed_at TEXT, created_at TEXT, updated_at TEXT,
+            UNIQUE(product_id, mshop_id)
+        )');
+        $this->ensureMshopsTable();
+
+        foreach (['products', 'product_variants', 'product_mshops', 'mshops'] as $t) {
+            $db->table($t)->truncate();
+        }
+        $db->query('INSERT INTO db_products (id, vendor_id, title, status) VALUES (77, 1, ?, ?)', ['M8 Bolt', 'draft']);
+        $db->query('INSERT INTO db_product_variants (id, product_id, sku, making_price, base_price) VALUES (5, 77, ?, 40.0, 60.0)', ['B-1']);
+        $db->query('INSERT INTO db_product_mshops (product_id, mshop_id, status) VALUES (77, 11, ?)', ['active']);
+        $db->query('INSERT INTO db_mshops (id, vendor_id, name, status) VALUES (11, 1, ?, ?)', ['Bhiwandi Plant', 'active']);
     }
 }

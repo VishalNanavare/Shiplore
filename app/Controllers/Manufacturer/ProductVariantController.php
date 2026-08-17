@@ -62,6 +62,12 @@ final class ProductVariantController extends BaseManufacturerController
             // stock column is hidden rather than shown as a misleading zero.
             'stockLevels'       => [],
             'inventoryMode'     => 'none',
+            // Stock only: the manufacturer panel has no /pricing screen (tiered and
+            // customer-group pricing are consumer-segment concepts — B2B price is
+            // negotiated per purchase order), and its stock page is /stock.
+            'siblingLinks'      => [
+                ['Stock', 'bi-boxes', site_url('manufacturer/products/' . $productId . '/stock')],
+            ],
             'priceA'            => ['making_price', 'Making price'],
             'priceB'            => ['base_price', 'Selling price'],
             'genUrl'            => site_url('manufacturer/products/' . $productId . '/variants/generate'),

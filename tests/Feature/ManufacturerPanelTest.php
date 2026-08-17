@@ -460,6 +460,197 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertStringNotContainsString('admin/products/ai-suggest', $body);
     }
 
+    /**
+     * The operator's actual complaint: Variants and Stock exist and work, but nothing
+     * on the product list linked to them. Since SKU and price live ONLY on the variants
+     * page, a manufacturer could not price a product without typing the URL by hand.
+     */
+    public function testProductListLinksToVariantsAndStock(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        Services::injectMock('manufacturerProductRepository', new class {
+            public function list(int $m, ?string $s = null, $u = null): array
+            {
+                return [['id' => 77, 'title' => 'M8 Bolt', 'sku' => 'B-1', 'category' => 'Fasteners',
+                    'making_price' => '40.00', 'base_price' => '60.00', 'status' => 'draft']];
+            }
+        });
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products')->getBody();
+
+        $this->assertStringContainsString('manufacturer/products/77/variants', $body);
+        $this->assertStringContainsString('manufacturer/products/77/stock', $body);
+        $this->assertStringContainsString('manufacturer/products/77/edit', $body);
+    }
+
+    /** A rejected product must be re-submittable, not a permanent dead end. */
+    public function testARejectedProductCanBeResubmitted(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        Services::injectMock('manufacturerProductRepository', new class {
+            public function list(int $m, ?string $s = null, $u = null): array
+            {
+                return [['id' => 77, 'title' => 'M8 Bolt', 'sku' => 'B-1', 'category' => 'Fasteners',
+                    'making_price' => '40.00', 'base_price' => '60.00', 'status' => 'rejected']];
+            }
+        });
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products')->getBody();
+
+        $this->assertStringContainsString('manufacturer/products/77/submit', $body);
+    }
+
+    /** An unpriced draft must not read as free. */
+    public function testUnsetPricesRenderAsDashesNotZero(): void
+    {
+        $this->grant(['mfg.product.view']);
+        Services::injectMock('manufacturerProductRepository', new class {
+            public function list(int $m, ?string $s = null, $u = null): array
+            {
+                return [['id' => 77, 'title' => 'M8 Bolt', 'sku' => null, 'category' => null,
+                    'making_price' => null, 'base_price' => null, 'status' => 'draft']];
+            }
+        });
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products')->getBody();
+
+        $this->assertStringNotContainsString('₹0.00', $body, 'an unpriced draft must not read as free');
+        $this->assertStringNotContainsString('0.0%', $body, 'margin is meaningless without both prices');
+    }
+
+    /** @return object the product repository spy, for asserting setStatus() calls */
+    private function mockProductStatus(string $status): object
+    {
+        $repo = new class ($status) {
+            public array $statusSet = [];
+
+            public function __construct(private string $status) {}
+
+            public function findById(int $id, int $m): ?array
+            {
+                return $id === 77
+                    ? ['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'status' => $this->status,
+                        'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]
+                    : null;
+            }
+
+            public function list(int $m, ?string $s = null, $unit = null): array { return []; }
+
+            public function setStatus(int $id, int $m, string $to, ?int $a = null): bool
+            {
+                $this->statusSet[] = [$id, $to];
+
+                return true;
+            }
+        };
+        Services::injectMock('manufacturerProductRepository', $repo);
+
+        return $repo;
+    }
+
+    public function testAnApprovedProductCanBePublished(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockProductStatus('approved');
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/publish', $this->csrf())
+            ->assertRedirect();
+
+        $this->assertSame([[77, 'published']], $repo->statusSet);
+    }
+
+    public function testAPublishedProductCanBeUnpublished(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockProductStatus('published');
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/unpublish', $this->csrf())
+            ->assertRedirect();
+
+        $this->assertSame([[77, 'unpublished']], $repo->statusSet);
+    }
+
+    /**
+     * The approval gate. Publishing a draft directly would let a manufacturer put
+     * unreviewed goods in front of B2B buyers, skipping the admin approval this
+     * platform is built around.
+     */
+    public function testADraftCannotBePublishedDirectly(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockProductStatus('draft');
+
+        $r = $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/publish', $this->csrf());
+
+        $r->assertRedirect();
+        $this->assertSame([], $repo->statusSet, 'an unapproved product must never go live');
+    }
+
+    /** ...and an already-live product cannot be "published" again into a new state. */
+    public function testAnUnapprovedStatusCannotBeUnpublished(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockProductStatus('draft');
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/unpublish', $this->csrf())
+            ->assertRedirect();
+
+        $this->assertSame([], $repo->statusSet);
+    }
+
+    public function testPublishRequiresTheUpdatePermission(): void
+    {
+        $this->grant(['mfg.product.view']); // view only
+        $repo = $this->mockProductStatus('approved');
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/publish', $this->csrf())
+            ->assertRedirect();
+
+        $this->assertSame([], $repo->statusSet);
+    }
+
+    /** Another tenant's product id must not be publishable. */
+    public function testPublishRejectsAProductThisTenantDoesNotOwn(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.update']);
+        $repo = $this->mockProductStatus('approved'); // findById returns null for id 99
+
+        $r = $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/99/publish', $this->csrf());
+
+        $r->assertRedirect();
+        $this->assertSame([], $repo->statusSet);
+    }
+
+    /** New products must land on Variants, where SKU and price actually live. */
+    public function testCreatingAProductLandsOnTheVariantsPage(): void
+    {
+        $this->grant(['mfg.product.view', 'mfg.product.create']);
+        $this->mockProductForm();
+        Services::injectMock('manufacturerProductRepository', new class {
+            public function create(int $m, array $d, ?int $a, ?int $mshopId): array { return ['ok' => true, 'id' => 77, 'error' => '']; }
+            public function findById(int $id, int $m): ?array { return null; }
+            public function list(int $m, ?string $s = null, $u = null): array { return []; }
+        });
+
+        $r = $this->withSession($this->postSession($this->ownerSession()))->post('manufacturer/products/store', $this->csrf() + [
+            'title' => 'M8 Bolt', 'category_id' => '10', 'mshop_id' => '11',
+            'making_price' => '40', 'base_price' => '60',
+        ]);
+
+        $r->assertRedirect();
+        $this->assertStringContainsString(
+            'manufacturer/products/77/variants',
+            (string) $r->getRedirectUrl(),
+            'landing on /edit strands the user with an unpriced product and no visible way to price it',
+        );
+    }
+
     private function mockVariants(array $variants = []): object
     {
         $spy = new class ($variants) {

@@ -871,6 +871,12 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->post('products/(:num)/autosave/(:segment)', 'Manufacturer\ProductController::autosave/$1/$2', ['filter' => 'csrf']);
     $routes->post('products/(:num)/submit', 'Manufacturer\ProductController::submit/$1', ['filter' => 'csrf']);
 
+    // Go live on monline / come back off it. "Published" here means listed to B2B
+    // buyers; it must never touch is_online_enabled or visibility, which keep
+    // manufacturer goods off the consumer storefront.
+    $routes->post('products/(:num)/publish', 'Manufacturer\ProductController::publish/$1', ['filter' => 'csrf']);
+    $routes->post('products/(:num)/unpublish', 'Manufacturer\ProductController::unpublish/$1', ['filter' => 'csrf']);
+
     // Variants — the same builder the vendor panel uses. Price/SKU/stock live here,
     // not on the product form, for every panel.
     $routes->get('products/(:num)/variants', 'Manufacturer\ProductVariantController::index/$1');

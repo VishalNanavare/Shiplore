@@ -164,6 +164,16 @@ final class ManufacturerInventoryService
     /**
      * Stock across a manufacturer's units, for the grid.
      *
+     * DRIVEN FROM THE CATALOGUE, NOT FROM mfg_inventory. This query used to start at
+     * `mfg_inventory` and INNER JOIN outward, which produced a bootstrap deadlock: a
+     * manufacturer with no stock rows saw an empty grid, and the only route to the
+     * screen that records stock was a "Manage" link inside that empty grid. Stock could
+     * therefore never be recorded from the menu at all.
+     *
+     * Starting from the variants a unit is listed to sell, and LEFT JOINing the
+     * balances, means every produceable variant appears immediately with a zero
+     * balance and a working link.
+     *
      * @param list<int> $mshopIds
      * @return list<array<string,mixed>>
      */
@@ -173,20 +183,34 @@ final class ManufacturerInventoryService
             return [];
         }
 
-        return Database::connect()->table('mfg_inventory mi')
-            ->select('mi.variant_id, mi.mshop_id, mi.on_hand, mi.reserved, mi.available, mi.reorder_level, mi.status,
-                      pv.sku, p.id AS product_id, p.title, m.name AS unit_name')
-            ->join('product_variants pv', 'pv.id = mi.variant_id', 'inner')
-            ->join('products p', 'p.id = pv.product_id', 'inner')
-            ->join('mshops m', 'm.id = mi.mshop_id', 'left')
-            // The tenant predicate. mfg_inventory itself is keyed only on mshop_id, so
-            // without this a caller could read another manufacturer's stock by passing
-            // its unit ids; the controller filters those to allowedMshopIds() as well.
+        $rows = Database::connect()->table('product_mshops pms')
+            ->select('pv.id AS variant_id, pms.mshop_id, pv.sku, p.id AS product_id, p.title,
+                      m.name AS unit_name,
+                      COALESCE(mi.on_hand, 0) AS on_hand,
+                      COALESCE(mi.reserved, 0) AS reserved,
+                      COALESCE(mi.available, 0) AS available,
+                      mi.reorder_level,
+                      COALESCE(mi.status, "out_of_stock") AS status', false)
+            ->join('products p', 'p.id = pms.product_id', 'inner')
+            ->join('product_variants pv', 'pv.product_id = p.id AND pv.deleted_at IS NULL', 'inner')
+            ->join('mshops m', 'm.id = pms.mshop_id', 'left')
+            // Balances are optional: a variant with no row yet reads as zero rather than
+            // vanishing. The mshop predicate must sit in the JOIN, not the WHERE, or the
+            // LEFT JOIN collapses back to an INNER one and the deadlock returns.
+            ->join('mfg_inventory mi', 'mi.variant_id = pv.id AND mi.mshop_id = pms.mshop_id', 'left')
+            // The tenant predicate. product_mshops is keyed only on mshop_id, so without
+            // this a caller could read another manufacturer's catalogue by passing its
+            // unit ids; the controller filters those to allowedMshopIds() as well.
             ->where('p.vendor_id', $manufacturerId)
-            ->whereIn('mi.mshop_id', $mshopIds)
+            ->where('pms.status', 'active')
+            ->where('p.deleted_at', null)
+            ->whereIn('pms.mshop_id', $mshopIds)
             ->orderBy('p.title', 'ASC')->orderBy('pv.sku', 'ASC')
             ->limit($limit)
             ->get()->getResultArray();
+
+
+        return $rows;
     }
 
     // ---- internals ---------------------------------------------------------
