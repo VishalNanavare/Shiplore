@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers\Vendor;
 
+use App\Controllers\Concerns\ServesStoredFiles;
 use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -18,6 +19,8 @@ use CodeIgniter\HTTP\ResponseInterface;
  */
 final class MediaController extends BaseVendorController
 {
+    use ServesStoredFiles;
+
     public function index()
     {
         if ($denied = $this->requireVendor()) {
@@ -147,38 +150,8 @@ final class MediaController extends BaseVendorController
         if (! $this->ownsKey($key)) {
             return $this->response->setStatusCode(403)->setBody('');
         }
-        // ownsKey() is a prefix check, so a key like "vendors/7/../../.." still
-        // passes it. dummyPath() rejects traversal; treat that as a 403.
-        try {
-            $path = service('documentStorage')->dummyPath($key);
-        } catch (\InvalidArgumentException $e) {
-            return $this->response->setStatusCode(403)->setBody('');
-        }
-        if (! is_file($path)) {
-            return $this->response->setStatusCode(404)->setBody('Not found');
-        }
 
-        // The bytes were never inspected on the way in: presign and confirm only ever
-        // checked the CLIENT-declared content type, and put() streams php://input
-        // straight to disk. So a key ending ".jpg" can hold HTML, and
-        // mime_content_type() reports that truthfully — serving it inline would run it
-        // in OUR origin. Constrain what may render; everything else downloads.
-        $mime   = (string) (mime_content_type($path) ?: 'application/octet-stream');
-        $inline = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf',
-            'video/mp4', 'video/webm', 'video/quicktime', 'audio/mpeg', 'audio/wav'];
-
-        $res = $this->response
-            ->setHeader('Content-Type', $mime)
-            ->setHeader('X-Content-Type-Options', 'nosniff');
-
-        if ($mime === 'image/svg+xml') {
-            // SVG is XML and can carry <script>; keep it viewable but inert.
-            $res->setHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; sandbox");
-        } elseif (! in_array($mime, $inline, true)) {
-            $res->setHeader('Content-Disposition', 'attachment; filename="' . basename($path) . '"');
-        }
-
-        return $res->setBody((string) file_get_contents($path));
+        return $this->serveStoredFile($key);
     }
 
     public function delete(int $id): RedirectResponse

@@ -101,20 +101,41 @@ final class MediaAccessHardeningTest extends CIUnitTestCase
 
     // ------------------------------------------------------------------ M3
 
-    /** Bytes were never inspected on the way in, so anything executable in our origin
-     *  must not render inline. */
-    public function testVendorMediaConstrainsWhatRendersInline(): void
+    /**
+     * Bytes were never inspected on the way in, so anything executable in our origin
+     * must not render inline.
+     *
+     * UPDATED: this used to assert the handling sat inside each vendor controller,
+     * because that is where it was — copy-pasted into both, and into no test. It now
+     * lives once in App\Controllers\Concerns\ServesStoredFiles, which all four
+     * file-serving controllers (vendor + manufacturer) delegate to, and is covered by
+     * ServesStoredFilesTest against real bytes on disk rather than by grepping source.
+     * The assertion follows the code; the property it protects is unchanged.
+     */
+    public function testUploadedBytesCannotRenderInlineUnlessAllowListed(): void
     {
-        foreach (['Controllers/Vendor/MediaController.php', 'Controllers/Vendor/DocumentUploadController.php'] as $rel) {
-            $src = $this->read($rel);
+        $src = $this->read('Controllers/Concerns/ServesStoredFiles.php');
 
+        $this->assertStringContainsString(
+            'Content-Disposition',
+            $src,
+            'sniffed user-uploaded bytes must not be served inline with no disposition',
+        );
+        $this->assertStringContainsString('nosniff', $src);
+        $this->assertStringContainsString('sandbox', $src, 'SVG must be served with a sandboxing CSP');
+
+        // ...and every controller that serves stored bytes must actually route through it.
+        foreach ([
+            'Controllers/Vendor/MediaController.php',
+            'Controllers/Vendor/DocumentUploadController.php',
+            'Controllers/Manufacturer/MediaController.php',
+            'Controllers/Manufacturer/DocumentUploadController.php',
+        ] as $rel) {
             $this->assertStringContainsString(
-                'Content-Disposition',
-                $src,
-                $rel . ' serves sniffed vendor-uploaded bytes inline with no disposition',
+                'serveStoredFile(',
+                $this->read($rel),
+                $rel . ' must serve stored bytes through the shared, tested implementation',
             );
-            $this->assertStringContainsString('nosniff', $src);
-            $this->assertStringContainsString('sandbox', $src, 'SVG must be served with a sandboxing CSP');
         }
     }
 

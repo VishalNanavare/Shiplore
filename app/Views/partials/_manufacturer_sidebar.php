@@ -22,7 +22,9 @@ $groups = [
     // staff, media and documents join it as those screens land.
     ['Team', 'bi-people', [
         ['staff', 'Staff', 'bi-people', 'manufacturer/staff', 'mfg.staff.view'],
+        ['media', 'Media Library', 'bi-folder2-open', 'manufacturer/media', 'mfg.media.view'],
         ['profile', 'Business Profile', 'bi-building', 'manufacturer/profile', 'OWNER'],
+        ['documents', 'Documents', 'bi-folder', 'manufacturer/documents', 'mfg.document.view'],
         ['notifications', 'Notifications', 'bi-bell', 'manufacturer/notifications', ''],
     ]],
 ];

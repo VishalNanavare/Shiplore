@@ -833,6 +833,26 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->post('units/(:num)/update', 'Manufacturer\UnitController::update/$1', ['filter' => 'csrf']);
     $routes->post('units/(:num)/toggle', 'Manufacturer\UnitController::toggle/$1', ['filter' => 'csrf']);
 
+    // KYC documents. Same bucket, key scheme and vendor_documents table the vendor
+    // panel uses — a manufacturer IS a `vendors` row, so only the tenant id differs.
+    $routes->get('documents', 'Manufacturer\DocumentUploadController::index');
+    $routes->post('documents/presign', 'Manufacturer\DocumentUploadController::presign', ['filter' => 'csrf']);
+    $routes->put('documents/put', 'Manufacturer\DocumentUploadController::put');
+    $routes->get('documents/file', 'Manufacturer\DocumentUploadController::file');
+    $routes->get('documents/(:num)/view', 'Manufacturer\DocumentUploadController::view/$1');
+    $routes->post('documents/confirm', 'Manufacturer\DocumentUploadController::confirm', ['filter' => 'csrf']);
+    $routes->post('documents/(:num)/delete', 'Manufacturer\DocumentUploadController::delete/$1', ['filter' => 'csrf']);
+
+    // Media library — flat and tenant-owned; see the controller for why there are no
+    // per-unit folders.
+    $routes->get('media', 'Manufacturer\MediaController::index');
+    $routes->post('media/presign', 'Manufacturer\MediaController::presign', ['filter' => 'csrf']);
+    $routes->put('media/put', 'Manufacturer\MediaController::put');
+    $routes->get('media/file', 'Manufacturer\MediaController::file');
+    $routes->get('media/(:num)/view', 'Manufacturer\MediaController::view/$1');
+    $routes->post('media/confirm', 'Manufacturer\MediaController::confirm', ['filter' => 'csrf']);
+    $routes->post('media/(:num)/delete', 'Manufacturer\MediaController::delete/$1', ['filter' => 'csrf']);
+
     // Staff and their unit assignments. This is the only writer of
     // mfg_staff_assignments, so it is what makes unit-scoped staff exist at all.
     $routes->get('staff', 'Manufacturer\StaffController::index');

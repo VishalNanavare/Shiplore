@@ -329,12 +329,141 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $r->assertSessionHas('error', 'Please choose an image (JPG, PNG, WEBP or GIF).');
     }
 
+    /**
+     * The documents screen reads vendor_documents/media_assets through raw queries
+     * rather than a mockable repository, so those two tables have to exist for real.
+     */
+    private function ensureVendorDocumentTables(): void
+    {
+        $db = $this->schemaConn();
+        $db->query('CREATE TABLE IF NOT EXISTS db_vendor_documents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            vendor_id INTEGER NOT NULL, doc_type TEXT, media_id INTEGER,
+            status TEXT NOT NULL DEFAULT "uploaded",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_media_assets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, bucket TEXT, object_key TEXT, owner_type TEXT, owner_id INTEGER,
+            mime TEXT, original_name TEXT, size_bytes INTEGER,
+            visibility TEXT NOT NULL DEFAULT "private",
+            status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, created_at TEXT, deleted_at TEXT
+        )');
+    }
+
     /** `notifications` is not in MinimalSchema, so any page reaching it needs this. */
     private function mockEmptyNotifications(): void
     {
         Services::injectMock('vendorNotificationRepository', new class {
             public function list(int $userId, int $limit = 50, int $offset = 0): array { return []; }
         });
+    }
+
+    // ------------------------------------------------------------ media & documents
+
+    public function testMediaLibraryRendersForPermittedUser(): void
+    {
+        $this->grant(['mfg.media.view', 'mfg.media.upload']);
+        Services::injectMock('mediaLibraryRepository', new class {
+            public function listForOwner(string $t, int $id, int $limit = 500): array
+            {
+                return [['id' => 8, 'object_key' => 'vendors/1/media/2026/08/abc.png', 'original_name' => 'spec-sheet.png', 'mime' => 'image/png', 'size_bytes' => 20480, 'created_at' => '2026-08-17 10:00:00']];
+            }
+            public function countForOwner(string $t, int $id): int { return 1; }
+        });
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/media');
+
+        $r->assertStatus(200);
+        $this->assertStringContainsString('spec-sheet.png', (string) $r->getBody());
+    }
+
+    public function testMediaLibraryIsDeniedWithoutThePermission(): void
+    {
+        $this->grant(['mfg.product.view']);
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/media');
+
+        $r->assertRedirect();
+        $this->assertStringContainsString('manufacturer/dashboard', (string) $r->getRedirectUrl());
+    }
+
+    /**
+     * mediaLibraryRepository::findById() is NOT tenant-scoped — it looks an asset up by
+     * primary key alone. Without the ownership re-check in the controller, one
+     * manufacturer could open another's private files by guessing an id.
+     */
+    public function testMediaViewRejectsAnAssetOwnedByAnotherTenant(): void
+    {
+        $this->grant(['mfg.media.view']);
+        Services::injectMock('mediaLibraryRepository', new class {
+            public function findById(int $id): ?array
+            {
+                // owner_id 999 — a different manufacturer entirely.
+                return ['id' => $id, 'owner_type' => 'vendor', 'owner_id' => 999, 'object_key' => 'vendors/999/media/secret.pdf'];
+            }
+        });
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/media/8/view');
+
+        $r->assertRedirect();
+        $this->assertStringContainsString('manufacturer/media', (string) $r->getRedirectUrl());
+        $this->assertStringNotContainsString('secret.pdf', (string) $r->getRedirectUrl());
+    }
+
+    public function testMediaUploadPresignIsDeniedWithoutUploadPermission(): void
+    {
+        $this->grant(['mfg.media.view']); // view but not upload
+
+        $r = $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/media/presign', $this->csrf() + ['filename' => 'x.png', 'content_type' => 'image/png', 'size' => '10']);
+
+        $r->assertStatus(403);
+    }
+
+    public function testDocumentsRenderForPermittedUser(): void
+    {
+        $this->grant(['mfg.document.view', 'mfg.document.upload']);
+        $this->ensureVendorDocumentTables();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/documents');
+
+        $r->assertStatus(200);
+        // The factory-licence type is manufacturer-specific; fssai (a food licence) is not offered.
+        $this->assertStringContainsString('Factory Licence', (string) $r->getBody());
+        $this->assertStringNotContainsString('Fssai', (string) $r->getBody());
+    }
+
+    public function testDocumentsAreDeniedWithoutThePermission(): void
+    {
+        $this->grant(['mfg.product.view']);
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/documents');
+
+        $r->assertRedirect();
+        $this->assertStringContainsString('manufacturer/dashboard', (string) $r->getRedirectUrl());
+    }
+
+    public function testDocumentPresignIsDeniedWithoutUploadPermission(): void
+    {
+        $this->grant(['mfg.document.view']);
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/documents/presign', $this->csrf() + ['filename' => 'gst.pdf', 'content_type' => 'application/pdf', 'size' => '100'])
+            ->assertStatus(403);
+    }
+
+    /** The dummy file serve must refuse a key outside this tenant's own prefix. */
+    public function testDocumentFileServeRejectsAForeignKey(): void
+    {
+        $this->grant(['mfg.document.view']);
+
+        $r = $this->withSession($this->ownerSession())
+            ->get('manufacturer/documents/file?key=' . rawurlencode('vendors/999/documents/other.pdf'));
+
+        $r->assertStatus(403);
     }
 
     // ------------------------------------------------------------------------ staff
