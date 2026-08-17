@@ -829,6 +829,7 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->get('units', 'Manufacturer\UnitController::index');
     $routes->get('units/new', 'Manufacturer\UnitController::new');
     $routes->post('units/store', 'Manufacturer\UnitController::store', ['filter' => 'csrf']);
+    $routes->get('units/(:num)', 'Manufacturer\UnitController::show/$1');
     $routes->get('units/(:num)/edit', 'Manufacturer\UnitController::edit/$1');
     $routes->post('units/(:num)/update', 'Manufacturer\UnitController::update/$1', ['filter' => 'csrf']);
     $routes->post('units/(:num)/toggle', 'Manufacturer\UnitController::toggle/$1', ['filter' => 'csrf']);

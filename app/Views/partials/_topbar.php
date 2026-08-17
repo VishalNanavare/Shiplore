@@ -4,18 +4,34 @@
     </button>
     <h1 class="h6 mb-0 fw-semibold"><?= esc($pageTitle ?? 'Dashboard') ?></h1>
     <div class="ms-auto d-flex align-items-center gap-2">
-        <?php /* S1 — active-shop context for branch staff (vendor panel only). */ ?>
-        <?php if (! empty($activeShopName)): ?>
-            <?php if (! empty($shopSwitch) && count($shopSwitch) > 1): ?>
+        <?php
+        /*
+         * S1 — active-LOCATION context for location-scoped staff.
+         *
+         * Generalised from "shop" so the manufacturer panel can use it too: its staff
+         * are scoped to manufacturing units (mshops), and BaseManufacturerController
+         * exported activeMshopName/unitSwitch/activeMshopId all along — the topbar just
+         * read three different names, so unit staff never got a chip or a switcher.
+         *
+         * The shop names are the fallback, so the vendor and admin panels are unchanged.
+         */
+        $locName   = $activeLocationName ?? ($activeShopName ?? null);
+        $locSwitch = $locationSwitch ?? ($shopSwitch ?? []);
+        $locId     = $activeLocationId ?? ($activeShopId ?? 0);
+        $locField  = $locationField ?? 'shop_id';
+        $locIcon   = $locationIcon ?? 'bi-shop';
+        ?>
+        <?php if (! empty($locName)): ?>
+            <?php if (! empty($locSwitch) && count($locSwitch) > 1): ?>
                 <form method="get" class="d-none d-sm-block mb-0">
-                    <select name="shop_id" class="form-select form-select-sm" onchange="this.form.submit()" title="Active store" aria-label="Active store">
-                        <?php foreach ($shopSwitch as $sid => $sname): ?>
-                            <option value="<?= esc($sid, 'attr') ?>" <?= (int) ($activeShopId ?? 0) === (int) $sid ? 'selected' : '' ?>><?= esc($sname) ?></option>
+                    <select name="<?= esc($locField, 'attr') ?>" class="form-select form-select-sm" onchange="this.form.submit()" title="Active location" aria-label="Active location">
+                        <?php foreach ($locSwitch as $sid => $sname): ?>
+                            <option value="<?= esc($sid, 'attr') ?>" <?= (int) $locId === (int) $sid ? 'selected' : '' ?>><?= esc($sname) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </form>
             <?php else: ?>
-                <span class="badge text-bg-primary"><i class="bi bi-shop me-1"></i><?= esc($activeShopName) ?></span>
+                <span class="badge text-bg-primary"><i class="bi <?= esc($locIcon, 'attr') ?> me-1"></i><?= esc($locName) ?></span>
             <?php endif; ?>
         <?php endif; ?>
         <?php

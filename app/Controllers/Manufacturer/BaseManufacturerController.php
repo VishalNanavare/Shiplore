@@ -314,6 +314,17 @@ abstract class BaseManufacturerController extends BaseController
             'activeMshopId'    => $unit !== null && $unit > 0 ? $unit : null,
             'activeMshopName'  => $unit !== null && $unit > 0 ? ($opts[$unit] ?? null) : null,
             'unitSwitch'       => $this->isOwner() ? [] : $opts,
+
+            // The names partials/_topbar reads. It was written for the vendor panel and
+            // looked for activeShopName/shopSwitch/activeShopId, so the three exports
+            // above — which have existed since this class was written — never reached it
+            // and unit staff got no active-unit chip or switcher anywhere in the panel.
+            // The topbar now reads a generic location trio, falling back to the shop one.
+            'activeLocationId'   => $unit !== null && $unit > 0 ? $unit : null,
+            'activeLocationName' => $unit !== null && $unit > 0 ? ($opts[$unit] ?? null) : null,
+            'locationSwitch'     => $this->isOwner() ? [] : $opts,
+            'locationField'      => 'mshop_id',
+            'locationIcon'       => 'bi-buildings',
         ], $data));
     }
 }

@@ -81,6 +81,69 @@ final class UnitController extends BaseManufacturerController
         return redirect()->to('manufacturer/units')->with('success', 'Unit created.');
     }
 
+    /**
+     * One unit's console: what it makes, who works there, what it holds, what it owes.
+     *
+     * The vendor panel has vendor/shops/{id} for exactly this; the manufacturer had
+     * only a list and an edit form, so there was nowhere to see a single factory whole.
+     * Everything here is a read of data that already existed — no new tables.
+     */
+    public function show(int $mshopId)
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+        if ($denied = $this->guard('mfg.unit.view')) {
+            return $denied;
+        }
+        if ($denied = $this->requireMshopAccess($mshopId)) {
+            return $denied;
+        }
+
+        $mid  = (int) $this->manufacturerId();
+        $unit = service('manufacturerUnitRepository')->findById($mshopId, $mid);
+        if ($unit === null) {
+            return redirect()->to('manufacturer/units')->with('error', 'Unit not found.');
+        }
+
+        return $this->render('manufacturer/units/show', 'units', $unit['name'] ?? 'Unit', [
+            'unit'     => $unit,
+            'products' => service('manufacturerProductRepository')->list($mid, null, $mshopId),
+            'stock'    => service('manufacturerInventoryService')->levelsForUnits($mid, [$mshopId], 50),
+            'staff'    => $this->unitStaff($mshopId),
+            'canManage' => $this->can('mfg.unit.update'),
+        ]);
+    }
+
+    /**
+     * Staff assigned to this unit.
+     *
+     * Filtered in PHP rather than by a new repository query: staffWithUnits() already
+     * returns the assignment names, and a manufacturer's staff list is small enough
+     * that a second tenant-scoped query would cost more than it saves.
+     *
+     * @return list<array<string,mixed>>
+     */
+    private function unitStaff(int $mshopId): array
+    {
+        $repo = service('manufacturerStaffRepository');
+        $name = null;
+        foreach (service('manufacturerUnitRepository')->list((int) $this->manufacturerId()) as $u) {
+            if ((int) $u['id'] === $mshopId) {
+                $name = (string) $u['name'];
+                break;
+            }
+        }
+        if ($name === null) {
+            return [];
+        }
+
+        return array_values(array_filter(
+            $repo->staffWithUnits((int) $this->manufacturerId()),
+            static fn (array $s): bool => str_contains((string) ($s['units'] ?? ''), $name),
+        ));
+    }
+
     public function edit(int $mshopId)
     {
         if ($denied = $this->requireManufacturer()) {

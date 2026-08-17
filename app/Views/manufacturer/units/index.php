@@ -24,7 +24,7 @@
                 <?php else: ?>
                     <?php foreach ($units as $u): ?>
                         <tr>
-                            <td><?= esc($u['name'] ?? '') ?></td>
+                            <td><a href="<?= site_url('manufacturer/units/' . (int) $u['id']) ?>"><?= esc($u['name'] ?? '') ?></a></td>
                             <td class="small text-secondary"><?= esc($u['code'] ?? '') ?></td>
                             <td class="small"><?= esc((string) ($u['pincode'] ?? '')) ?></td>
                             <td class="small"><?= esc((string) ($u['state_code'] ?? '')) ?></td>
@@ -35,6 +35,7 @@
                                 </span>
                             </td>
                             <td class="text-end">
+                                <a class="btn btn-sm btn-outline-secondary" href="<?= site_url('manufacturer/units/' . (int) $u['id']) ?>">Open</a>
                                 <a class="btn btn-sm btn-outline-secondary" href="<?= site_url('manufacturer/units/' . (int) $u['id'] . '/edit') ?>">Edit</a>
                                 <form method="post" action="<?= site_url('manufacturer/units/' . (int) $u['id'] . '/toggle') ?>" class="d-inline">
                                     <?= csrf_field() ?>

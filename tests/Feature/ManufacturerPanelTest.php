@@ -1481,6 +1481,80 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         return $repo;
     }
 
+    /** One unit, whole: what it makes, who works there, what it holds. */
+    public function testUnitConsoleRenders(): void
+    {
+        $this->grant(['mfg.unit.view', 'mfg.unit.update']);
+        $this->mockUnitRepo();
+        $seenUnit = null;
+        Services::injectMock('manufacturerProductRepository', new class ($seenUnit) {
+            public $seenUnit;
+            public function __construct(&$seen) { $this->seenUnit = &$seen; }
+
+            public function list(int $m, ?string $s = null, $unit = null): array
+            {
+                $this->seenUnit = $unit;
+
+                return [['id' => 77, 'title' => 'M8 Bolt', 'sku' => 'B-1', 'status' => 'published']];
+            }
+        });
+        Services::injectMock('manufacturerInventoryService', new class {
+            public function levelsForUnits(int $m, array $u, int $l = 500): array
+            {
+                return [['variant_id' => 5, 'title' => 'M8 Bolt', 'sku' => 'B-1', 'on_hand' => '120.000', 'status' => 'in_stock']];
+            }
+        });
+        Services::injectMock('manufacturerStaffRepository', new class {
+            public function staffWithUnits(int $m): array
+            {
+                return [
+                    ['id' => 31, 'name' => 'Ravi Kumar', 'staff_type' => 'unit_manager', 'units' => 'Bhiwandi Plant'],
+                    ['id' => 32, 'name' => 'Other Person', 'staff_type' => 'store_keeper', 'units' => 'Taloja Plant'],
+                ];
+            }
+        });
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/units/11');
+
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('M8 Bolt', $body, 'products made here');
+        $this->assertStringContainsString('120', $body, 'stock held here');
+        $this->assertStringContainsString('Ravi Kumar', $body, 'staff assigned here');
+        $this->assertStringNotContainsString('Other Person', $body, "another unit's staff must not appear");
+        // The catalogue must be scoped to THIS unit, not the whole manufacturer's.
+        $this->assertSame(11, $seenUnit, 'the console must ask for this unit only');
+    }
+
+    /** A unit belonging to someone else must not be openable. */
+    public function testUnitConsoleRejectsAForeignUnit(): void
+    {
+        $this->grant(['mfg.unit.view']);
+        $this->mockUnitRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/units/99');
+
+        $r->assertRedirect();
+        $this->assertStringContainsString('manufacturer/units', (string) $r->getRedirectUrl());
+    }
+
+    /**
+     * ...and a unit that DOES belong to the manufacturer but is not assigned to this
+     * staff member must also be refused. Unit 12 exists and findById() returns it, so
+     * only requireMshopAccess() stands between a store keeper and another plant —
+     * which is why the foreign-unit test above cannot cover this on its own.
+     */
+    public function testUnitConsoleRejectsAUnitThisStaffIsNotAssignedTo(): void
+    {
+        $this->grant(['mfg.unit.view']);
+        $this->mockUnitRepo();   // staff 502 is assigned to unit 11 only
+
+        $r = $this->withSession($this->staffSession())->get('manufacturer/units/12');
+
+        $r->assertRedirect();
+        $r->assertSessionHas('error', 'Unit not found.');
+    }
+
     public function testUnitEditShowsDeliverySettingsWithThePermission(): void
     {
         $this->grant(['mfg.unit.view', 'mfg.unit.update', 'mfg.unit.serviceability']);
@@ -1996,6 +2070,30 @@ final class ManufacturerPanelTest extends CIUnitTestCase
 
         $this->assertStringContainsString('manufacturer/profile', $body);
         $this->assertStringContainsString('manufacturer/notifications', $body);
+    }
+
+    /**
+     * Unit staff must see which unit they are acting in. BaseManufacturerController had
+     * exported activeMshopName/unitSwitch/activeMshopId since it was written, but the
+     * topbar looked for the vendor panel's activeShopName/shopSwitch/activeShopId, so
+     * nothing ever rendered.
+     */
+    public function testUnitStaffSeeTheirActiveUnitInTheTopbar(): void
+    {
+        $this->mockUserRepo();
+        $body = (string) $this->withSession($this->staffSession())->get('manufacturer/me')->getBody();
+
+        // Staff 502 is assigned to unit 11 only, so a chip rather than a switcher.
+        $this->assertStringContainsString('Bhiwandi Plant', $body);
+    }
+
+    /** An owner is not pinned to one unit, so no chip. */
+    public function testTheOwnerGetsNoActiveUnitChip(): void
+    {
+        $this->mockUserRepo();
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/me')->getBody();
+
+        $this->assertStringNotContainsString('text-bg-primary', $body, 'the owner works across all units');
     }
 
     /** The topbar's own two links resolve within this panel, never into the vendor one. */

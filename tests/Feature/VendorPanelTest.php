@@ -162,6 +162,10 @@ final class VendorPanelTest extends CIUnitTestCase
         $this->assertStringContainsString('Orders', $body);
         // owner-only items hidden for staff
         $this->assertStringNotContainsString('Settlements', $body);
+        // The topbar's active-location chip. It was generalised from "shop" so the
+        // manufacturer panel could use it; the vendor path relies on the shop-name
+        // FALLBACK, so this asserts that fallback still works.
+        $this->assertStringContainsString('Andheri', $body, 'shop-scoped staff must still see their active shop');
         $this->assertStringNotContainsString('Staff &amp; Riders', $body);
     }
 
