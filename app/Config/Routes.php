@@ -880,6 +880,13 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->post('variants/(:num)/delete', 'Manufacturer\ProductVariantController::delete/$1', ['filter' => 'csrf']);
     $routes->post('variants/(:num)/barcodes', 'Manufacturer\ProductVariantController::saveBarcodes/$1', ['filter' => 'csrf']);
 
+    // Stock at manufacturing units. The write action is "record production", not
+    // "receive" — a manufacturer makes its stock rather than buying it in.
+    $routes->get('inventory', 'Manufacturer\InventoryController::index');
+    $routes->get('products/(:num)/stock', 'Manufacturer\InventoryController::product/$1');
+    $routes->post('products/(:num)/stock/produce', 'Manufacturer\InventoryController::produce/$1', ['filter' => 'csrf']);
+    $routes->post('products/(:num)/stock/adjust', 'Manufacturer\InventoryController::adjust/$1', ['filter' => 'csrf']);
+
     // Cascading lookups the product form and variant builder call over AJAX,
     // constrained to this manufacturer's own categories/attributes.
     $routes->get('lookup/categories', 'Manufacturer\ProductLookupController::categories');

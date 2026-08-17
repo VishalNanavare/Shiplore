@@ -736,6 +736,11 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('manufacturerStaffRepository') : new \App\Models\ManufacturerStaffRepository();
     }
 
+    public static function manufacturerInventoryService($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('manufacturerInventoryService') : new \App\Libraries\Inventory\ManufacturerInventoryService();
+    }
+
     public static function manufacturerDashboardRepository($getShared = true)
     {
         return $getShared ? static::getSharedInstance('manufacturerDashboardRepository') : new \App\Models\ManufacturerDashboardRepository();

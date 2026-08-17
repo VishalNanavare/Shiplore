@@ -517,6 +517,20 @@ final class PurchaseOrderRepository
             return ['ok' => false, 'error' => 'Could not update the purchase order.'];
         }
 
+        // Goods have physically left the unit, so the seller's own stock must fall.
+        // Until this existed, dispatching a PO raised the BUYER's stock on receipt and
+        // decremented nobody's — mfg_inventory had no writer at all, so a manufacturer
+        // could ship indefinitely without its balances ever moving.
+        //
+        // Deliberately after transComplete()/transStatus(), like the notification below:
+        // a rolled-back transition must not move stock. The stock write is itself
+        // transactional per line, and a failure there is logged rather than reversing
+        // the dispatch — the goods are gone either way, and a stock row that lags is a
+        // smaller problem than a PO whose status disagrees with reality.
+        if ($to === 'dispatched') {
+            $this->shipStockForPo($poId, (int) ($found['po']['seller_mshop_id'] ?? 0), $actorId);
+        }
+
         // Only the seller ever drives these three; the buyer's only transition is
         // 'cancelled'. So branching on $to alone is enough — no $side check needed.
         if (in_array($to, ['accepted', 'rejected', 'dispatched'], true)) {
@@ -524,6 +538,37 @@ final class PurchaseOrderRepository
         }
 
         return ['ok' => true, 'error' => ''];
+    }
+
+    /**
+     * Decrement the seller's unit stock for every line on a dispatched PO.
+     *
+     * Skipped when the PO has no seller_mshop_id: that column is only set on accept,
+     * and an order dispatched without one has no unit to draw from. Logged rather than
+     * guessed at, because silently picking a unit would put the shortfall in the wrong
+     * place.
+     */
+    private function shipStockForPo(int $poId, int $sellerMshopId, ?int $actorId): void
+    {
+        if ($sellerMshopId <= 0) {
+            log_message('warning', 'monline PO ' . $poId . ' dispatched with no seller_mshop_id; unit stock not decremented.');
+
+            return;
+        }
+
+        $lines = Database::connect()->table('mfg_purchase_order_items')
+            ->select('variant_id, qty')->where('po_id', $poId)->get()->getResultArray();
+
+        $svc = service('manufacturerInventoryService');
+        foreach ($lines as $line) {
+            $svc->shipForPurchaseOrder(
+                (int) $line['variant_id'],
+                $sellerMshopId,
+                (float) $line['qty'],
+                $poId,
+                $actorId,
+            );
+        }
     }
 
     /**

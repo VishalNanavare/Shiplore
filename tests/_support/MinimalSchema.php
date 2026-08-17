@@ -164,6 +164,54 @@ trait MinimalSchema
         )');
     }
 
+    /**
+     * database/sql/70_manufacturer.sql sections E–F — manufacturer stock.
+     *
+     * `available` is a STORED GENERATED column in MariaDB; SQLite cannot express that,
+     * so it is a plain column here and the service's own writes are what the tests
+     * assert on. The two column names that differ from the vendor tables are kept
+     * exactly as production has them, because getting them wrong is the specific bug
+     * these tables invite: the ledger quantity is `qty` (not `qty_delta`) and the batch
+     * cost is `making_cost` (not `cost_price`).
+     */
+    protected function ensureMfgInventoryTables(): void
+    {
+        $db = $this->schemaConn();
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_inventory (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, variant_id INTEGER NOT NULL, mshop_id INTEGER NOT NULL,
+            on_hand REAL NOT NULL DEFAULT 0, reserved REAL NOT NULL DEFAULT 0,
+            available REAL NOT NULL DEFAULT 0, reorder_level REAL,
+            status TEXT NOT NULL DEFAULT "out_of_stock",
+            created_at TEXT, updated_at TEXT,
+            UNIQUE(variant_id, mshop_id)
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_inventory_ledger (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, variant_id INTEGER NOT NULL, mshop_id INTEGER NOT NULL,
+            movement_type TEXT NOT NULL, qty REAL NOT NULL, balance_after REAL NOT NULL DEFAULT 0,
+            ref_type TEXT, ref_id INTEGER, note TEXT,
+            created_by INTEGER, created_at TEXT
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_stock_batches (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, variant_id INTEGER NOT NULL, mshop_id INTEGER NOT NULL,
+            batch_no TEXT, mfg_date TEXT, exp_date TEXT,
+            qty REAL NOT NULL DEFAULT 0, making_cost REAL,
+            status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, created_at TEXT, updated_at TEXT
+        )');
+    }
+
+    /** Drop the manufacturer stock tables — see dropUsersTable() for why this matters. */
+    protected function dropMfgInventoryTables(): void
+    {
+        $db = $this->schemaConn();
+        foreach (['db_mfg_inventory', 'db_mfg_inventory_ledger', 'db_mfg_stock_batches'] as $t) {
+            $db->query('DROP TABLE IF EXISTS ' . $t);
+        }
+    }
+
     /** database/sql/01_master.sql:522 */
     protected function ensureCategoriesTable(): void
     {

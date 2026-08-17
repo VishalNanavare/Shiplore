@@ -601,6 +601,134 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->assertSame([[[5], 'base_price', '99']], $spy->bulk);
     }
 
+    // ---------------------------------------------------------------------- stock
+
+    private function mockInventoryService(): object
+    {
+        $svc = new class {
+            public array $produced = [];
+            public array $adjusted = [];
+            public array $shipped  = [];
+
+            public function levelsForUnits(int $m, array $units, int $limit = 500): array
+            {
+                return [[
+                    'variant_id' => 5, 'mshop_id' => 11, 'on_hand' => '120.000', 'reserved' => '0.000',
+                    'available' => '120.000', 'reorder_level' => null, 'status' => 'in_stock',
+                    'sku' => 'B-1', 'product_id' => 77, 'title' => 'M8 Bolt', 'unit_name' => 'Bhiwandi Plant',
+                ]];
+            }
+
+            public function levels(int $v, int $u): array
+            {
+                return ['id' => 1, 'on_hand' => '120.000', 'reserved' => '0.000', 'available' => '120.000', 'reorder_level' => null, 'status' => 'in_stock'];
+            }
+
+            public function ledger(int $v, int $u, int $limit = 50): array
+            {
+                return [['id' => 1, 'movement_type' => 'production', 'qty' => '120.000', 'balance_after' => '120.000', 'ref_type' => 'batch', 'ref_id' => 1, 'note' => 'produced', 'created_at' => '2026-08-17 08:00:00']];
+            }
+
+            public function produce(int $v, int $u, float $q, float $c, array $o = [], ?int $a = null): bool
+            {
+                $this->produced[] = [$v, $u, $q];
+
+                return true;
+            }
+
+            public function adjust(int $v, int $u, float $d, string $r, string $n = '', ?int $a = null): bool
+            {
+                $this->adjusted[] = [$v, $u, $d, $r];
+
+                return true;
+            }
+
+            public function shipForPurchaseOrder(int $v, int $u, float $q, int $po, ?int $a = null): bool
+            {
+                $this->shipped[] = [$v, $u, $q, $po];
+
+                return true;
+            }
+        };
+        Services::injectMock('manufacturerInventoryService', $svc);
+
+        return $svc;
+    }
+
+    public function testStockGridRenders(): void
+    {
+        $this->grant(['mfg.inventory.view']);
+        $this->mockInventoryService();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/inventory');
+
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('M8 Bolt', $body);
+        $this->assertStringContainsString('Bhiwandi Plant', $body);
+    }
+
+    public function testStockGridIsDeniedWithoutThePermission(): void
+    {
+        $this->grant(['mfg.product.view']);
+        $this->mockInventoryService();
+
+        $this->withSession($this->ownerSession())->get('manufacturer/inventory')->assertRedirect();
+    }
+
+    public function testProduceRecordsStockAgainstTheChosenUnit(): void
+    {
+        $this->grant(['mfg.inventory.view', 'mfg.inventory.adjust']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $svc = $this->mockInventoryService();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/stock/produce', $this->csrf() + ['variant_id' => 5, 'mshop_id' => 11, 'qty' => '50', 'making_cost' => '40'])
+            ->assertRedirect();
+
+        $this->assertSame([[5, 11, 50.0]], $svc->produced);
+    }
+
+    /** A unit belonging to someone else must be refused, not written. */
+    public function testProduceRejectsAForeignUnit(): void
+    {
+        $this->grant(['mfg.inventory.view', 'mfg.inventory.adjust']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $svc = $this->mockInventoryService();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/stock/produce', $this->csrf() + ['variant_id' => 5, 'mshop_id' => 99, 'qty' => '50'])
+            ->assertRedirect();
+
+        $this->assertSame([], $svc->produced, 'unit 99 is not this manufacturer\'s');
+    }
+
+    public function testStockWritesAreDeniedWithoutTheAdjustPermission(): void
+    {
+        $this->grant(['mfg.inventory.view']); // view only
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $svc = $this->mockInventoryService();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/stock/adjust', $this->csrf() + ['variant_id' => 5, 'mshop_id' => 11, 'qty_delta' => '-5', 'reason' => 'damage'])
+            ->assertRedirect();
+
+        $this->assertSame([], $svc->adjusted);
+    }
+
+    public function testAdjustAppliesASignedDelta(): void
+    {
+        $this->grant(['mfg.inventory.view', 'mfg.inventory.adjust']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $svc = $this->mockInventoryService();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/products/77/stock/adjust', $this->csrf() + ['variant_id' => 5, 'mshop_id' => 11, 'qty_delta' => '-5', 'reason' => 'damage'])
+            ->assertRedirect();
+
+        $this->assertSame([[5, 11, -5.0, 'damage']], $svc->adjusted);
+    }
+
     // ------------------------------------------------------------ media & documents
 
     public function testMediaLibraryRendersForPermittedUser(): void
