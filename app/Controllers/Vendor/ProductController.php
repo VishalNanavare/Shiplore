@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers\Vendor;
 
+use App\Libraries\Catalog\VendorPricing;
 use App\Models\AdminProductRepository;
 use CodeIgniter\HTTP\RedirectResponse;
 
@@ -407,6 +408,24 @@ final class ProductController extends BaseVendorController
     private function productInput(): array
     {
         $p = fn (string $k): string => trim((string) $this->request->getPost($k));
+
+        // MRP / selling-price invariant — LOG-ONLY for now, deliberately.
+        //
+        // The rule (0 < base_price <= mrp) is not currently enforced anywhere on the
+        // vendor side, so an unknown number of existing listings already violate it.
+        // Blocking straight away would reject saves that have always been accepted, on
+        // a live panel. Per the project's rollout convention this ships log-only first:
+        // one traffic day tells us how many real vendors trip it, and whether a data
+        // cleanup is needed before it can bite. Promote to a hard failure — the same
+        // `if ($err) return redirect()->back()->with('error', $err)` the manufacturer
+        // controller uses — only after that review.
+        if (($pricingErr = VendorPricing::validate((array) $this->request->getPost(), false)) !== '') {
+            log_message('warning', 'vendor pricing invariant [log-only] vendor={vendor} product={product}: {err}', [
+                'vendor'  => (string) $this->vendorId(),
+                'product' => (string) ($this->request->getPost('id') ?? 'new'),
+                'err'     => $pricingErr,
+            ]);
+        }
 
         return array_merge((array) $this->request->getPost(), [
             'vendor_id' => $this->vendorId(),
