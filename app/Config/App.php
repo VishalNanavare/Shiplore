@@ -3,6 +3,7 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
+use CodeIgniter\Exceptions\ConfigException;
 
 class App extends BaseConfig
 {
@@ -36,11 +37,13 @@ class App extends BaseConfig
      *
      * SET `app.baseDomain` IN .env — IT IS REQUIRED IN EVERY DEPLOYED ENVIRONMENT.
      * The `localhost` placeholder is not a working default and is not this platform's
-     * address; tracked code deliberately names no real domain. Deploy without .env and
-     * every panel hostname resolves to *.localhost, so CI4 rejects the real Host header
-     * and site_url() emits links to localhost. That failure is loud and immediate by
-     * design — the alternative, defaulting to a real domain, silently points a
-     * misconfigured environment at production.
+     * address; tracked code deliberately names no real domain.
+     *
+     * Left unguarded this fails SILENTLY, not loudly — measured, not assumed. With no
+     * .env the site still answers 200 while every link, asset, form action and redirect
+     * points at localhost, and `Set-Cookie; Domain=.localhost` is rejected by the
+     * browser so nobody can log in: a total outage that looks healthy to monitoring.
+     * assertConfigured() below is what turns that into an immediate, explicit failure.
      *
      * Deliberately separate from $baseURL rather than parsed out of it: the suite pins
      * app.baseURL to http://example.com/ while driving requests at *.shiplore.test
@@ -82,18 +85,57 @@ class App extends BaseConfig
     {
         parent::__construct(); // binds app.baseURL / app.baseDomain from .env first
 
+        self::assertConfigured($this->baseDomain, ENVIRONMENT);
+
         // $baseDomain is the single source of truth; both values below follow it unless
         // something explicit was supplied. env() reads $_ENV/$_SERVER/getenv, so this
         // sees .env AND phpunit.dist.xml's <server name="app.baseURL"> — which is why
         // the suite keeps its http://example.com/ while production derives from the
         // domain.
-        if (env('app.baseURL') === null) {
+        //
+        // Compared as a STRING, not against null: the tracked `env` template ships
+        // `# app.baseURL = ''`, and uncommenting it makes env() return '' — not null —
+        // so a null check would skip this and leave baseURL empty. CI4 then throws from
+        // SiteURI on every request, and since the exception handler resolves the request
+        // service itself, it cannot even render the error page.
+        if ((string) env('app.baseURL') === '') {
             $this->baseURL = 'https://' . trim($this->baseDomain, " \t.") . '/';
         }
 
         if ($this->allowedHostnames === []) {
             $this->allowedHostnames = self::hostnamesFor($this->baseDomain);
         }
+    }
+
+    /** The placeholder shipped in tracked code. Never a real deployment. */
+    public const PLACEHOLDER_DOMAIN = 'localhost';
+
+    /**
+     * Refuse to serve a deployed environment that never set its own domain.
+     *
+     * Static and pure so it can be tested without constructing a config or faking a
+     * whole environment. Called from the constructor, AFTER the .env binding, so any
+     * real value — from .env now, or from a generated file later — satisfies it.
+     *
+     * Only 'production' is blocked: ENVIRONMENT is 'production' whenever .env is absent
+     * (Boot::defineEnvironment), which is precisely the misconfiguration being caught,
+     * while a developer running on localhost is doing something legitimate.
+     *
+     * @throws ConfigException
+     */
+    public static function assertConfigured(string $baseDomain, string $environment): void
+    {
+        if (trim($baseDomain, " \t.") !== self::PLACEHOLDER_DOMAIN || $environment !== 'production') {
+            return;
+        }
+
+        throw new ConfigException(
+            'app.baseDomain is not set. app/Config/App.php deliberately names no real domain, '
+            . 'so this environment would serve every link, asset and redirect for *.localhost '
+            . 'while answering on its real hostname, and issue a Domain=.localhost session '
+            . 'cookie the browser discards — nobody could log in. '
+            . "Set app.baseDomain in .env — e.g. app.baseDomain = 'example.com'.",
+        );
     }
 
     /**

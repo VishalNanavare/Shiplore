@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use CodeIgniter\Config\Factories;
+use CodeIgniter\Exceptions\ConfigException;
 use CodeIgniter\Test\CIUnitTestCase;
 use Config\App;
 use Config\Cookie;
@@ -240,6 +241,76 @@ final class AllowedHostnamesTest extends CIUnitTestCase
                 'the cookie domain is hardcoded again — a session would be scoped to the wrong domain',
             );
         } finally {
+            Factories::reset('config');
+        }
+    }
+
+    // --------------------------------------------------- misconfiguration guards
+
+    /**
+     * A deployed environment that never set app.baseDomain must REFUSE TO BOOT.
+     *
+     * This corrects a wrong claim previously written into this file's own comments:
+     * that the placeholder fails "loud and immediate by design". Probed against the
+     * framework with no .env and a request at a real host, it does the opposite —
+     * nothing throws, nothing logs, the site answers 200, and every link, asset, form
+     * action and redirect points at localhost while `Set-Cookie; Domain=.localhost` is
+     * rejected outright by the browser, so nobody can log in anywhere. A total outage
+     * that looks perfectly healthy to monitoring. ENVIRONMENT defaults to 'production'
+     * when .env is absent (Boot::defineEnvironment), which is exactly this case.
+     */
+    public function testAnUnconfiguredProductionEnvironmentRefusesToBoot(): void
+    {
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageMatches('/app\.baseDomain/');
+
+        App::assertConfigured(App::PLACEHOLDER_DOMAIN, 'production');
+    }
+
+    /** Local development on the placeholder is legitimate and must keep working. */
+    public function testDevelopmentOnThePlaceholderIsAllowed(): void
+    {
+        App::assertConfigured(App::PLACEHOLDER_DOMAIN, 'development');
+        $this->addToAssertionCount(1); // no throw is the assertion
+    }
+
+    /** A configured production environment passes. */
+    public function testAConfiguredProductionEnvironmentBoots(): void
+    {
+        App::assertConfigured('example.co.uk', 'production');
+        $this->addToAssertionCount(1);
+    }
+
+    /**
+     * `app.baseURL = ''` must fall back to the derived URL, not stick as an empty string.
+     *
+     * The tracked `env` template ships `# app.baseURL = ''` (line 23). Uncomment it —
+     * the natural thing to do while moving domains — and env() returns '', which is not
+     * null, so a `=== null` guard skips the derivation and leaves baseURL empty. CI4
+     * then throws ConfigException from SiteURI on EVERY request, and because the
+     * exception handler itself resolves the request service, the error page cannot
+     * render either. Verified against the real Config\App, not a subclass: an anonymous
+     * subclass has a different short prefix and receives no `app.` env binding at all,
+     * so it cannot reproduce this.
+     */
+    public function testAnEmptyBaseUrlEnvFallsBackToTheDerivedUrl(): void
+    {
+        $saved                  = $_SERVER['app.baseURL'] ?? null;
+        $_SERVER['app.baseURL'] = '';
+        Factories::reset('config');
+
+        try {
+            $this->assertSame(
+                'https://' . config('App')->baseDomain . '/',
+                (new App())->baseURL,
+                "an empty app.baseURL must not survive — CI4 rejects '' and cannot render its own error page",
+            );
+        } finally {
+            if ($saved === null) {
+                unset($_SERVER['app.baseURL']);
+            } else {
+                $_SERVER['app.baseURL'] = $saved;
+            }
             Factories::reset('config');
         }
     }

@@ -20,9 +20,27 @@
 # APP
 #--------------------------------------------------------------------
 
+# THIS FILE IS A TEMPLATE AND IS TRACKED IN GIT. CodeIgniter reads `.env`, NOT `env`.
+# Copy it (`cp env .env`) and edit the COPY — `.env` is gitignored, this file is not,
+# so anything you set here would be published.
+
+# The root domain every panel hangs off. REQUIRED in every deployed environment:
+# app.baseURL, app.allowedHostnames and cookie.domain are ALL derived from it, and
+# app/Config/App.php deliberately names no real domain. Leave it unset in production
+# and the app refuses to boot rather than silently serving *.localhost links.
+# app.baseDomain = 'example.com'
+
+# Leave commented unless the scheme is not https or the app is not at the domain root;
+# it overrides the value derived from app.baseDomain. NOTE an empty string is not
+# "unset" — write the line only if you mean it.
 # app.baseURL = ''
 # If you have trouble with `.`, you could also use `_`.
 # app_baseURL = ''
+
+# 'panels' expands to one allowed origin per panel host, so the domain is written once.
+# Unset means no cross-origin browser access at all, which is the safe default.
+# app.corsAllowedOrigins = 'panels'
+
 # app.forceGlobalSecureRequests = false
 # app.CSPEnabled = false
 
