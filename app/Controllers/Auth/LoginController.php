@@ -63,11 +63,30 @@ final class LoginController extends BaseController
      */
     private function landingFor(?string $principalType): string
     {
-        return match ($principalType) {
-            'vendor'       => 'vendor/dashboard',
-            'manufacturer' => 'manufacturer/dashboard',
-            default        => 'admin/dashboard',
+        // ABSOLUTE, on the panel's own host — this used to return a bare relative path.
+        //
+        // Each of these paths belongs to a subdomain-pinned route group, but both
+        // redirect()->to() and site_url() resolve a relative path against the CURRENT
+        // host, and SiteURIFactory substitutes the real Host whenever it appears in
+        // allowedHostnames. So signing in at manufacturer.<domain> handed a platform
+        // admin manufacturer.<domain>/admin/dashboard — a path that host never
+        // registers. Our own login response emitted the 404 the operator reported.
+        //
+        // panel_url() builds <sub>.<base-domain> from the current host and validates it
+        // against allowedHostnames, falling back to base_url() — the previous behaviour
+        // exactly — when it cannot. All three call sites accept an absolute URL
+        // unchanged: two pass it to redirect()->to(), one to site_url().
+        //
+        // The default arm is untouched: routing a null/customer/rider principal to admin
+        // is a separate question that belongs with enforcing auth.enforcePrincipalType,
+        // and changing it here would be an unrelated behaviour change on a login path.
+        [$sub, $path] = match ($principalType) {
+            'vendor'       => ['vendor', 'vendor/dashboard'],
+            'manufacturer' => ['manufacturer', 'manufacturer/dashboard'],
+            default        => ['admin', 'admin/dashboard'],
         };
+
+        return panel_url($sub, $path);
     }
 
     public function attempt()

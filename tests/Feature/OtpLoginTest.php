@@ -73,6 +73,79 @@ final class OtpLoginTest extends CIUnitTestCase
         $this->assertStringContainsString('vendor/dashboard', $this->body($this->otpPost())['redirect']);
     }
 
+    /**
+     * The landing URL must name the panel's OWN host, not whichever host you signed in on.
+     *
+     * This is the reported bug at its source. landingFor() returned a relative path and
+     * otpLogin() wrapped it in site_url(), which resolves against the CURRENT host —
+     * and SiteURIFactory substitutes the real Host whenever it is in allowedHostnames.
+     * So an admin signing in by OTP at manufacturer.<domain> was handed
+     * manufacturer.<domain>/admin/dashboard: a path that host never registers, because
+     * the admin group is subdomain-pinned. Our own login JSON emitted the 404.
+     *
+     * The 404 override added in 981eafb catches this, but catching a ball we throw is
+     * not the fix — it is the safety net for stale links and typed URLs.
+     */
+    public function testTheLandingUrlNamesThePanelsOwnHostNotTheSigninHost(): void
+    {
+        service('superglobals')->setServer('HTTP_HOST', 'manufacturer.shiplore.test');
+        Services::resetSingle('request');
+        Services::resetSingle('siteurifactory');
+        Services::resetSingle('uri');
+
+        try {
+            $redirect = $this->body($this->otpPost())['redirect'] ?? '';
+
+            $this->assertStringContainsString('admin/dashboard', $redirect);
+            $this->assertStringContainsString(
+                'admin.shiplore.test',
+                $redirect,
+                'a platform admin must be sent to the admin host, whichever host they signed in on',
+            );
+            $this->assertStringNotContainsString(
+                'manufacturer.shiplore.test/admin',
+                $redirect,
+                'this is the exact 404 the operator reported',
+            );
+        } finally {
+            service('superglobals')->unsetServer('HTTP_HOST');
+        }
+    }
+
+    /** Same rule the other way: a vendor signing in on the admin host lands on vendor. */
+    public function testAVendorSigningInOnTheAdminHostLandsOnTheVendorHost(): void
+    {
+        $this->users->user['principal_type'] = 'vendor';
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.test');
+        Services::resetSingle('request');
+        Services::resetSingle('siteurifactory');
+        Services::resetSingle('uri');
+
+        try {
+            $this->assertStringContainsString('vendor.shiplore.test', $this->body($this->otpPost())['redirect'] ?? '');
+        } finally {
+            service('superglobals')->unsetServer('HTTP_HOST');
+        }
+    }
+
+    /** And a manufacturer lands on its own host — each principal needs its own case. */
+    public function testAManufacturerLandsOnTheManufacturerHost(): void
+    {
+        $this->users->user['principal_type'] = 'manufacturer';
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.test');
+        Services::resetSingle('request');
+        Services::resetSingle('siteurifactory');
+        Services::resetSingle('uri');
+
+        try {
+            $redirect = $this->body($this->otpPost())['redirect'] ?? '';
+            $this->assertStringContainsString('manufacturer.shiplore.test', $redirect);
+            $this->assertStringContainsString('manufacturer/dashboard', $redirect);
+        } finally {
+            service('superglobals')->unsetServer('HTTP_HOST');
+        }
+    }
+
     public function testInvalidTokenRejected(): void
     {
         $this->verifier->claims = null;
