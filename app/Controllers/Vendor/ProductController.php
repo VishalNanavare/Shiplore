@@ -409,24 +409,6 @@ final class ProductController extends BaseVendorController
     {
         $p = fn (string $k): string => trim((string) $this->request->getPost($k));
 
-        // MRP / selling-price invariant — LOG-ONLY for now, deliberately.
-        //
-        // The rule (0 < base_price <= mrp) is not currently enforced anywhere on the
-        // vendor side, so an unknown number of existing listings already violate it.
-        // Blocking straight away would reject saves that have always been accepted, on
-        // a live panel. Per the project's rollout convention this ships log-only first:
-        // one traffic day tells us how many real vendors trip it, and whether a data
-        // cleanup is needed before it can bite. Promote to a hard failure — the same
-        // `if ($err) return redirect()->back()->with('error', $err)` the manufacturer
-        // controller uses — only after that review.
-        if (($pricingErr = VendorPricing::validate((array) $this->request->getPost(), false)) !== '') {
-            log_message('warning', 'vendor pricing invariant [log-only] vendor={vendor} product={product}: {err}', [
-                'vendor'  => (string) $this->vendorId(),
-                'product' => (string) ($this->request->getPost('id') ?? 'new'),
-                'err'     => $pricingErr,
-            ]);
-        }
-
         return array_merge((array) $this->request->getPost(), [
             'vendor_id' => $this->vendorId(),
             'category_id' => (int) $this->request->getPost('category_id'),
@@ -484,6 +466,26 @@ final class ProductController extends BaseVendorController
         if ($in['title'] === '') { return 'Title is required.'; }
         if ($in['category_id'] <= 0) { return 'Category is required.'; }
         if ($in['tax_class_id'] <= 0 || $in['unit_id'] <= 0) { return 'Tax class and unit are required.'; }
+
+        // MRP / selling-price invariant: 0 < base_price <= mrp. ENFORCED, not log-only.
+        //
+        // It shipped log-only for one commit, purely because nobody knew how much legacy
+        // data would trip it. Production answered that: of 1,801,163 live variants, ZERO
+        // sell above MRP, and all 1,140 rows with mrp = 0 belong to MANUFACTURERS, where
+        // a zero MRP is correct by design. So there is no vendor data to break and no
+        // reason to keep warning instead of refusing.
+        //
+        // Not $required even on create: prices are set per item on the Variants page
+        // afterwards, not on this form (see store()'s own redirect), so demanding both
+        // here would block the create flow. What this catches is a pair that is present
+        // and wrong.
+        //
+        // Manufacturers never reach this method — they have their own controller and
+        // ManufacturerPricing, whose rule is different (0 < making < selling, equality
+        // rejected). VendorPricingTest pins that separation.
+        if (($priceErr = VendorPricing::validate($in, false)) !== '') {
+            return $priceErr;
+        }
 
         return '';
     }

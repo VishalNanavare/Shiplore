@@ -67,6 +67,32 @@ final class VendorPricingTest extends CIUnitTestCase
         $this->assertNotSame('', VendorPricing::validate(['mrp' => '0', 'base_price' => '149']));
     }
 
+    /**
+     * A zero MRP must be caught BY THE ZERO CHECK, not incidentally by the comparison.
+     *
+     * With both fields present, mrp 0 vs base 149 also trips "selling above MRP", so
+     * deleting the isPositive() guard leaves the pair still rejected and every assertion
+     * above still green — a mutation run proved exactly that. A lone zero has nothing to
+     * compare against, so only the dedicated guard can refuse it. This is also the real
+     * autosave shape: one field at a time.
+     */
+    public function testALoneZeroMrpIsRejectedOnItsOwn(): void
+    {
+        $msg = VendorPricing::validate(['mrp' => '0'], false);
+
+        $this->assertNotSame('', $msg);
+        $this->assertStringContainsString('greater than zero', $msg);
+    }
+
+    /** Same reasoning for the selling price. */
+    public function testALoneZeroSellingPriceIsRejectedOnItsOwn(): void
+    {
+        $this->assertStringContainsString(
+            'greater than zero',
+            VendorPricing::validate(['base_price' => '0'], false),
+        );
+    }
+
     public function testMalformedNumbersAreRejected(): void
     {
         $this->assertNotSame('', VendorPricing::validate(['mrp' => '1,99', 'base_price' => 'abc']));
@@ -109,45 +135,91 @@ final class VendorPricingTest extends CIUnitTestCase
     // --------------------------------------------------------- rollout stage
 
     /**
-     * Stage 1 is LOG-ONLY, and that must be provable rather than asserted in a comment.
+     * PROMOTED to enforcing. This assertion previously required the rule to be log-only;
+     * rewritten to the new intent rather than deleted, so the promotion is explicit in
+     * the diff.
      *
-     * An unknown number of live listings already violate this rule, so blocking on day
-     * one would reject saves the panel has always accepted. Per the project convention a
-     * new blocking check ships log-only, gets a traffic day of review, and is promoted in
-     * a separate commit.
+     * Log-only existed for exactly one commit, because nobody knew how much legacy data
+     * would trip the rule. Production answered it: of 1,801,163 live variants, ZERO sell
+     * above MRP, and all 1,140 rows with mrp = 0 belong to manufacturers, where that is
+     * correct. No vendor data to break, so no reason to keep warning instead of refusing.
      *
-     * This pins BOTH halves: the rule is wired in (a violation is logged) and it does NOT
-     * yet block (no redirect, no early return). Asserting only the first would let a
-     * premature promotion to hard-fail slip through silently; asserting only the second
-     * would pass even if the wiring were deleted.
+     * Asserted through validateRow(), the method both store() and update() already gate
+     * on — placing it there is what makes it block, and a rule sitting in productInput()
+     * (where it started) could only ever log.
      */
-    public function testTheVendorRuleIsWiredInButStillLogOnly(): void
+    public function testTheVendorRuleIsEnforcedOnTheWritePath(): void
+    {
+        $body = $this->methodBody('validateRow');
+
+        $this->assertNotSame('', $body, 'validateRow() not found');
+        $this->assertMatchesRegularExpression(
+            '/VendorPricing::validate\(.*?!==\s*\'\'\)\s*\{\s*return\s+\$\w+;/s',
+            $body,
+            'a violation must abort the save, not merely be logged',
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            '/log_message\([^)]*log-only/i',
+            $body,
+            'the log-only stage is over',
+        );
+    }
+
+    /**
+     * Manufacturers must NOT be subjected to the vendor rule.
+     *
+     * Their invariant is different — 0 < making < selling, with equality REJECTED — and
+     * their products legitimately carry mrp = 0, which is all 1,140 of the zero-MRP rows
+     * in production. Running VendorPricing over them would reject every single one.
+     *
+     * The separation is structural: each panel has its own controller and its own rule.
+     * This pins it, because the cheap "fix" for a future bug report would be to reach for
+     * the other panel's validator.
+     */
+    public function testManufacturerProductsAreNotSubjectToTheVendorRule(): void
+    {
+        $mfg = (string) file_get_contents(APPPATH . 'Controllers/Manufacturer/ProductController.php');
+
+        $this->assertStringNotContainsString('VendorPricing', $mfg, 'the manufacturer panel must not use the vendor rule');
+        $this->assertStringContainsString('ManufacturerPricing', $mfg, 'it must use its own');
+
+        // And the vendor rule would indeed reject a manufacturer's legitimate row.
+        $this->assertNotSame(
+            '',
+            VendorPricing::validate(['mrp' => '0', 'base_price' => '118'], false),
+            'proof the separation matters: a manufacturer row fails the vendor rule',
+        );
+    }
+
+    /** Source of Vendor\ProductController with comments stripped, one method's body. */
+    private function methodBody(string $method): string
     {
         $code = '';
 
         foreach (token_get_all((string) file_get_contents(APPPATH . 'Controllers/Vendor/ProductController.php')) as $t) {
             if (is_array($t) && ($t[0] === T_COMMENT || $t[0] === T_DOC_COMMENT)) {
-                continue; // the block above discusses the promotion — do not match on it
+                continue; // the explanatory block names the very strings being matched
             }
             $code .= is_array($t) ? $t[1] : $t;
         }
 
-        $this->assertStringContainsString(
-            'VendorPricing::validate',
-            $code,
-            'the invariant must actually be evaluated on the vendor write path',
-        );
-        // Deliberately not [^)]* — the call nests parentheses, `validate((array) …)`,
-        // so a negated-class match stops at the first ')' and never reaches log_message.
-        $this->assertMatchesRegularExpression(
-            '/VendorPricing::validate\(.*?!==\s*\'\'\)\s*\{\s*log_message\(/s',
-            $code,
-            'a violation must be logged',
-        );
-        $this->assertDoesNotMatchRegularExpression(
-            '/\$pricingErr[^;]*\n?\s*return redirect\(\)/s',
-            $code,
-            'stage 1 must NOT block — promote to a hard failure only after the traffic review',
-        );
+        if (! preg_match('/function\s+' . preg_quote($method, '/') . '\s*\(/', $code, $m, PREG_OFFSET_CAPTURE)) {
+            return '';
+        }
+        $brace = strpos($code, '{', (int) $m[0][1]);
+        $depth = 0;
+
+        for ($i = (int) $brace, $len = strlen($code); $i < $len; $i++) {
+            if ($code[$i] === '{') {
+                $depth++;
+            } elseif ($code[$i] === '}') {
+                $depth--;
+                if ($depth === 0) {
+                    return substr($code, (int) $brace, $i - (int) $brace + 1);
+                }
+            }
+        }
+
+        return '';
     }
 }
