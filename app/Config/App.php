@@ -15,33 +15,99 @@ class App extends BaseConfig
      * WITH a trailing slash:
      *
      * E.g., http://example.com/
+     *
+     * Recomputed from $baseDomain as `https://<domain>/` unless `app.baseURL` is set
+     * explicitly, so moving domains is one .env line and this cannot drift out of step.
+     * Set `app.baseURL` when the scheme is not https (local dev) or the app is not at
+     * the domain root; that always wins, which is also how phpunit.dist.xml pins
+     * http://example.com/ for the suite.
+     *
+     * Kept as a real URL rather than '' because Tests\Support\Libraries\ConfigReader
+     * reads this property with the constructor deliberately bypassed, and HealthTest
+     * validates that raw literal — a fresh checkout with no .env must still name a
+     * usable URL here.
      */
     public string $baseURL = 'https://shiplore.in/';
 
     /**
-     * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
-     * If you want to accept multiple Hostnames, set this.
+     * The root domain every panel hangs off. Override per environment with
+     * `app.baseDomain` in .env — that one line moves the whole platform to another
+     * domain, because $allowedHostnames below is DERIVED from it.
      *
-     * E.g.,
-     * When your site URL ($baseURL) is 'http://example.com/', and your site
-     * also accepts 'http://media.example.com/' and 'http://accounts.example.com/':
-     *     ['media.example.com', 'accounts.example.com']
+     * The literal here is the production default on purpose: .env is gitignored and
+     * does not exist on every box, so an environment that sets nothing must keep
+     * behaving exactly as it did before this was made configurable.
+     *
+     * Note this is deliberately separate from $baseURL rather than parsed out of it.
+     * The test suite overrides app.baseURL to http://example.com/ (phpunit.dist.xml)
+     * while still driving requests at *.shiplore.in hosts, so deriving the hostname
+     * list from $baseURL would empty it under test and 64 test files would start
+     * asserting against unregistered routes.
+     */
+    public string $baseDomain = 'shiplore.in';
+
+    /**
+     * Every subdomain label the router pins a group to, WITHOUT the domain.
+     *
+     * Must stay in step with the 'subdomain' route options in Config\Routes — a label
+     * missing here is not in $allowedHostnames, so SiteURIFactory refuses the host,
+     * site_url() silently falls back to $baseURL's domain and every link on that panel
+     * points at the wrong origin. AllowedHostnamesTest pins the two lists together.
+     *
+     * manufacturer./mshop. mirror vendor./shop. (owner login vs unit-staff login);
+     * monline. is the B2B marketplace where vendors and shops buy from manufacturers.
+     */
+    public const PANEL_SUBDOMAINS = ['admin', 'vendor', 'shop', 'rider', 'manufacturer', 'mshop', 'monline'];
+
+    /**
+     * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
+     *
+     * Derived from $baseDomain in the constructor — do not hand-edit. Left empty here
+     * rather than populated so an explicit value (from .env, or a test) is
+     * distinguishable from "not set yet" and wins.
+     *
+     * This list is load-bearing beyond CI4's host validation: SiteURIFactory
+     * substitutes the REQUEST's host into site_url() only when that host appears here,
+     * which is what keeps every panel's links on its own origin.
      *
      * @var list<string>
      */
-    public array $allowedHostnames = [
-        'shiplore.in',
-        'admin.shiplore.in',
-        'vendor.shiplore.in',
-        'shop.shiplore.in',
-        'rider.shiplore.in',
-        // Manufacturer surfaces. manufacturer. and mshop. mirror vendor. and shop.
-        // (owner login vs unit-staff login); monline. is the B2B marketplace where
-        // vendors and shops buy from manufacturers.
-        'manufacturer.shiplore.in',
-        'mshop.shiplore.in',
-        'monline.shiplore.in',
-    ];
+    public array $allowedHostnames = [];
+
+    public function __construct()
+    {
+        parent::__construct(); // binds app.baseURL / app.baseDomain from .env first
+
+        // $baseDomain is the single source of truth; both values below follow it unless
+        // something explicit was supplied. env() reads $_ENV/$_SERVER/getenv, so this
+        // sees .env AND phpunit.dist.xml's <server name="app.baseURL"> — which is why
+        // the suite keeps its http://example.com/ while production derives from the
+        // domain.
+        if (env('app.baseURL') === null) {
+            $this->baseURL = 'https://' . trim($this->baseDomain, " \t.") . '/';
+        }
+
+        if ($this->allowedHostnames === []) {
+            $this->allowedHostnames = self::hostnamesFor($this->baseDomain);
+        }
+    }
+
+    /**
+     * The root domain plus one host per panel subdomain.
+     *
+     * @return list<string>
+     */
+    public static function hostnamesFor(string $baseDomain): array
+    {
+        $root  = trim($baseDomain, " \t.");
+        $hosts = [$root];
+
+        foreach (self::PANEL_SUBDOMAINS as $label) {
+            $hosts[] = $label . '.' . $root;
+        }
+
+        return $hosts;
+    }
 
     /**
      * --------------------------------------------------------------------------

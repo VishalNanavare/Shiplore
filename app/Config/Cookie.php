@@ -44,8 +44,26 @@ class Cookie extends BaseConfig
      * --------------------------------------------------------------------------
      *
      * Set to `.your-domain.com` for site-wide cookies.
+     *
+     * Derived from Config\App::$baseDomain (as `.<domain>`) so moving environments is
+     * one .env line, not two that can drift apart. Drift here is not cosmetic: the
+     * leading dot is what makes ONE session span admin./vendor./manufacturer., so a
+     * cookie domain that disagrees with the hostnames logs users out on every hop
+     * between panels.
+     *
+     * Left empty rather than pre-filled so an explicit `cookie.domain` in .env is
+     * distinguishable from the default and takes precedence.
      */
-    public string $domain = '.shiplore.in';
+    public string $domain = '';
+
+    public function __construct()
+    {
+        parent::__construct(); // binds cookie.domain from .env first
+
+        if ($this->domain === '') {
+            $this->domain = '.' . trim(config(App::class)->baseDomain, " \t.");
+        }
+    }
 
     /**
      * --------------------------------------------------------------------------
