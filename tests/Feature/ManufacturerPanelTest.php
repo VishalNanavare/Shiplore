@@ -1693,6 +1693,76 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->withSession($this->ownerSession())->get('manufacturer/inventory')->assertRedirect();
     }
 
+    /**
+     * The grid's Manage link must carry its row's unit.
+     *
+     * The grid has one row per (variant, unit). The link dropped mshop_id, so the stock
+     * page fell back to allowedMshopIds()[0] — first row of a query with no ORDER BY.
+     * An owner filtered to Plant B, clicked Manage, recorded production, and it landed in
+     * Plant A with a success message.
+     */
+    public function testTheStockGridLinkCarriesItsRowsUnit(): void
+    {
+        $this->grant(['mfg.inventory.view']);
+        $this->mockInventoryService();
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/inventory')->getBody();
+
+        $this->assertMatchesRegularExpression(
+            '#/stock\?mshop_id=11#',
+            $body,
+            'Manage must open the unit whose row was clicked',
+        );
+    }
+
+    /** The stock page lists variants; this stands in for the real repository. */
+    private function mockVariantList(): void
+    {
+        Services::injectMock('productVariantRepository', new class {
+            public function listWithValues(int $productId): array
+            {
+                return [['id' => 5, 'sku' => 'B-1', 'attributes' => '', 'is_default' => 1]];
+            }
+        });
+    }
+
+    /**
+     * The stock page must SHOW which unit it writes to when there is a choice.
+     *
+     * mshop_id was a hidden input, so a mis-targeted write was invisible until a stock
+     * count disagreed. This owner spans units 11 and 12, so a picker must render.
+     */
+    public function testTheStockPageLetsAnOwnerChooseTheUnit(): void
+    {
+        $this->grant(['mfg.inventory.view', 'mfg.inventory.adjust']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $this->mockInventoryService();
+        $this->mockVariantList();
+
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products/77/stock')->getBody();
+
+        $this->assertMatchesRegularExpression(
+            '/<select[^>]+name="mshop_id"/',
+            $body,
+            'an owner spanning units must be able to see and pick the destination',
+        );
+        $this->assertStringContainsString('Taloja Plant', $body, 'the other unit must be offered');
+    }
+
+    /** A unit id from the query string must still be checked against allowed units. */
+    public function testAForeignUnitInTheQueryStringIsIgnored(): void
+    {
+        $this->grant(['mfg.inventory.view', 'mfg.inventory.adjust']);
+        $this->mockProductForm(['id' => 77, 'title' => 'M8 Bolt', 'category_id' => 10, 'making_price' => '40.00', 'base_price' => '60.00', 'mshop_id' => 11]);
+        $this->mockInventoryService();
+        $this->mockVariantList();
+
+        // 99 belongs to no unit of this manufacturer.
+        $body = (string) $this->withSession($this->ownerSession())->get('manufacturer/products/77/stock?mshop_id=99')->getBody();
+
+        $this->assertStringNotContainsString('value="99" selected', $body, 'a foreign unit must never be selected');
+    }
+
     public function testProduceRecordsStockAgainstTheChosenUnit(): void
     {
         $this->grant(['mfg.inventory.view', 'mfg.inventory.adjust']);

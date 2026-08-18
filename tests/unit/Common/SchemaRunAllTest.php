@@ -189,4 +189,51 @@ final class SchemaRunAllTest extends CIUnitTestCase
             . 'generated column instead (see 50_rider_assign_unique.sql): ' . implode(', ', $offenders),
         );
     }
+
+    /**
+     * Every document type a controller offers must be storable.
+     *
+     * Manufacturer\DocumentUploadController offered `factory_licence` while
+     * vendor_documents.doc_type was ENUM('gst','pan','bank','fssai','address','other').
+     * The string existed in exactly one place in the whole repository — that const — so
+     * the upload either errored under STRICT_ALL_TABLES or was silently coerced to '',
+     * and a manufacturer could not file the one document specific to being one.
+     *
+     * Derived from the schema rather than restated, so widening the ENUM and adding a
+     * type are the same change. This is the drift that a route count or a code review
+     * cannot see: both sides look correct in isolation.
+     */
+    public function testEveryOfferedDocumentTypeIsStorable(): void
+    {
+        $schema = '';
+
+        foreach ((array) glob(self::DIR . '*.sql') as $path) {
+            $schema .= (string) file_get_contents($path);
+        }
+
+        // The LAST definition wins — a later MODIFY supersedes the CREATE TABLE.
+        preg_match_all("/`doc_type`\s+ENUM\(([^)]*)\)/i", $schema, $m);
+        $this->assertNotEmpty($m[1], 'no doc_type ENUM found in the schema');
+        preg_match_all("/'([a-z_]+)'/", (string) end($m[1]), $allowed);
+        $storable = $allowed[1];
+
+        foreach (['Manufacturer', 'Vendor'] as $panel) {
+            $file = APPPATH . "Controllers/{$panel}/DocumentUploadController.php";
+            if (! is_file($file)) {
+                continue;
+            }
+            if (preg_match('/const TYPES = \[([^\]]*)\]/', (string) file_get_contents($file), $t) !== 1) {
+                continue;
+            }
+            preg_match_all("/'([a-z_]+)'/", $t[1], $offered);
+
+            foreach ($offered[1] as $type) {
+                $this->assertContains(
+                    $type,
+                    $storable,
+                    "{$panel}\\DocumentUploadController offers '{$type}', which vendor_documents.doc_type cannot store",
+                );
+            }
+        }
+    }
 }

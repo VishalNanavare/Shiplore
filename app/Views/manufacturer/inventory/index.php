@@ -56,8 +56,15 @@
                                 </span>
                             </td>
                             <td class="text-end">
+                                <?php
+                                // Carry THIS ROW's unit through. The grid has one row per
+                                // (variant, unit), so dropping it meant the stock page fell
+                                // back to the first allowed unit and wrote production into
+                                // whichever plant that happened to be.
+                                ?>
                                 <a class="btn btn-sm btn-outline-secondary"
-                                   href="<?= site_url('manufacturer/products/' . (int) ($r['product_id'] ?? 0) . '/stock') ?>">Manage</a>
+                                   href="<?= site_url('manufacturer/products/' . (int) ($r['product_id'] ?? 0) . '/stock')
+                                       . (($r['mshop_id'] ?? 0) ? '?mshop_id=' . (int) $r['mshop_id'] : '') ?>">Manage</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

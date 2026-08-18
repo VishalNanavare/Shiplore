@@ -60,9 +60,18 @@ final class InventoryController extends BaseManufacturerController
             return redirect()->to('manufacturer/products')->with('error', 'Product not found.');
         }
 
-        $svc      = service('manufacturerInventoryService');
-        $unit     = $this->effectiveMshopId();
-        $unitId   = $unit !== null && $unit > 0 ? $unit : ($this->allowedMshopIds()[0] ?? 0);
+        $svc = service('manufacturerInventoryService');
+
+        // A unit carried from the stock grid wins, so "Manage" on Plant B's row opens
+        // Plant B. Intersected with allowedMshopIds() so a hand-edited query string
+        // cannot reach another plant. Falling back to the first allowed unit is the last
+        // resort, and it is why this page must show which unit it is writing to.
+        $requested = (int) ($this->request->getGet('mshop_id') ?? 0);
+        $allowed   = $this->allowedMshopIds();
+        $unit      = $this->effectiveMshopId();
+        $unitId    = in_array($requested, $allowed, true)
+            ? $requested
+            : ($unit !== null && $unit > 0 ? $unit : ($allowed[0] ?? 0));
         $variants = service('productVariantRepository')->listWithValues($productId);
 
         $levels = $ledger = [];

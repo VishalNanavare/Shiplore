@@ -1,6 +1,37 @@
 <?= $this->extend('layouts/manufacturer') ?>
 <?= $this->section('content') ?>
 
+<?php
+/**
+ * The unit every stock write on this page lands in.
+ *
+ * This used to be a hidden input pinned to $unitId, and $unitOptions was passed by the
+ * controller and never rendered. For an owner spanning several plants $unitId is simply
+ * allowedMshopIds()[0] — first row, no ORDER BY — so filtering the grid to Plant B,
+ * clicking Manage and recording production booked it into Plant A, with a success
+ * message. Nothing in the UI showed which plant had been credited.
+ *
+ * Rendered as a select whenever there is a choice to make, so the destination is always
+ * visible and deliberate. With exactly one unit there is nothing to choose and the hidden
+ * input is still correct. The posted value is re-checked server-side against
+ * allowedMshopIds() either way — this fixes a silent mis-post, it is not the access check.
+ */
+$unitField = static function (string $id) use ($unitOptions, $unitId): string {
+    if (count($unitOptions ?? []) <= 1) {
+        return '<input type="hidden" name="mshop_id" value="' . (int) $unitId . '">';
+    }
+    $out = '<div class="col-12"><label class="form-label small" for="' . esc($id, 'attr') . '">Unit</label>'
+         . '<select class="form-select form-select-sm" id="' . esc($id, 'attr') . '" name="mshop_id" required>';
+
+    foreach ($unitOptions as $uid => $uname) {
+        $out .= '<option value="' . (int) $uid . '"' . ((int) $unitId === (int) $uid ? ' selected' : '') . '>'
+              . esc((string) $uname) . '</option>';
+    }
+
+    return $out . '</select></div>';
+};
+?>
+
 <?php if (session('success')): ?>
     <div class="alert alert-success py-2"><?= esc(session('success')) ?></div>
 <?php endif; ?>
@@ -47,8 +78,8 @@
                             <form method="post" action="<?= site_url('manufacturer/products/' . (int) $product['id'] . '/stock/produce') ?>" class="row g-2 align-items-end">
                                 <?= csrf_field() ?>
                                 <input type="hidden" name="variant_id" value="<?= $vid ?>">
-                                <input type="hidden" name="mshop_id" value="<?= (int) $unitId ?>">
                                 <div class="col-12"><span class="small fw-semibold"><i class="bi bi-hammer me-1"></i>Record production</span></div>
+                                <?= $unitField('pu-' . $vid) ?>
                                 <div class="col-4">
                                     <label class="form-label small" for="q-<?= $vid ?>">Quantity</label>
                                     <input class="form-control form-control-sm" id="q-<?= $vid ?>" name="qty" type="number" step="0.001" min="0.001" required>
@@ -69,8 +100,8 @@
                             <form method="post" action="<?= site_url('manufacturer/products/' . (int) $product['id'] . '/stock/adjust') ?>" class="row g-2 align-items-end">
                                 <?= csrf_field() ?>
                                 <input type="hidden" name="variant_id" value="<?= $vid ?>">
-                                <input type="hidden" name="mshop_id" value="<?= (int) $unitId ?>">
                                 <div class="col-12"><span class="small fw-semibold"><i class="bi bi-sliders me-1"></i>Adjust</span></div>
+                                <?= $unitField('au-' . $vid) ?>
                                 <div class="col-4">
                                     <label class="form-label small" for="d-<?= $vid ?>">Change (+/−)</label>
                                     <input class="form-control form-control-sm" id="d-<?= $vid ?>" name="qty_delta" type="number" step="0.001" required>
