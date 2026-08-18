@@ -12,6 +12,107 @@ one database.
 
 ---
 
+## Scale
+
+| | Files | Lines |
+| --- | ---: | ---: |
+| Controllers | 148 | 25,673 |
+| Views | 356 | 24,078 |
+| Models | 116 | 18,361 |
+| Libraries | 88 | 10,285 |
+| Config | 45 | 7,000 |
+| Filters, helpers, commands | 19 | 1,236 |
+| **Application total** | **772** | **86,633** |
+| Tests | 173 | 26,491 |
+
+**844 routes** across eight surfaces · **262 tables** in 85 schema files · **1,443 tests**
+
+Routes by panel:
+
+| admin | api/v1 | vendor | manufacturer | store | monline | rider |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 310 | 166 | 161 | 77 | 58 | 14 | 5 |
+
+In production this carries roughly **1.8 million product variants** across about **10,000
+shops**, which is why anything touching `product_variants` — a backfill, an index change, a
+migration — needs a plan rather than a single `UPDATE`.
+
+---
+
+## How it fits together
+
+```mermaid
+flowchart TB
+    subgraph HOSTS["Eight subdomains, one codebase"]
+        direction LR
+        A["admin.<br/>310 routes"]
+        V["vendor.<br/>161"]
+        S["shop."]
+        M["manufacturer.<br/>77"]
+        U["mshop."]
+        O["monline.<br/>14"]
+        R["rider.<br/>5"]
+        C["apex storefront<br/>58"]
+    end
+
+    API["api/v1 · 166 routes<br/>shipped mobile + Windows POS clients"]
+
+    subgraph FILTERS["Filter chain — every request"]
+        direction LR
+        F1["WebAuth /<br/>JwtAuth /<br/>RiderAuth"]
+        F2["TenantScope"]
+        F3["Permission"]
+        F4["Throttle"]
+    end
+
+    subgraph CORE["Shared libraries — party-agnostic"]
+        direction LR
+        L1["PolicyEngine<br/>CapabilityResolver<br/>ScopeContext"]
+        L2["Money<br/>GstCalculator<br/>StatusMachine"]
+        L3["MediaService<br/>AuditWriter<br/>ChangeRequestEngine"]
+    end
+
+    DB[("262 tables<br/>~1.8M variants")]
+
+    HOSTS --> FILTERS
+    API --> FILTERS
+    FILTERS --> CORE
+    CORE --> DB
+```
+
+A route group registers **only** on its own subdomain. A vendor path requested on the admin
+host does not 403 — it does not exist there at all.
+
+---
+
+## The commerce flow
+
+The platform's reason to exist: no distributor sits between the manufacturer and the seller,
+so the seller buys low and can pass a real saving to the customer.
+
+```mermaid
+flowchart LR
+    MFG["MANUFACTURER<br/>produces goods"]
+    MON{{"monline<br/>B2B marketplace"}}
+    VEN["VENDOR<br/>resells"]
+    CUS(["CUSTOMER"])
+
+    MFG -- "purchase order" --> MON
+    MON -- "delivered to seller" --> VEN
+    VEN -- "own product record" --> CUS
+
+    MFG -.- P1["making price &lt; selling price<br/><i>ManufacturerPricing</i><br/>no MRP concept"]
+    VEN -.- P2["selling price &le; MRP<br/><i>VendorPricing</i><br/>equality allowed"]
+```
+
+The seller does **not** inherit the manufacturer's product. It creates its own record, sets
+its own MRP and selling price, and sells under its own name. Two separate pricing
+invariants, each enforced on every write path by its own validator — and note they treat
+equality differently on purpose. Selling exactly at MRP is ordinary retail; a manufacturer
+selling exactly at cost is a typo.
+
+---
+
 ## The panels
 
 Every panel is pinned to its own subdomain in `app/Config/Routes.php`. A route group
