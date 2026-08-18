@@ -6,6 +6,7 @@ use CodeIgniter\Config\Factories;
 use CodeIgniter\Test\CIUnitTestCase;
 use Config\App;
 use Config\Cookie;
+use Config\Cors;
 
 /**
  * The platform's domain is configuration, not a literal.
@@ -176,6 +177,61 @@ final class AllowedHostnamesTest extends CIUnitTestCase
             );
         } finally {
             Factories::reset('config');
+        }
+    }
+
+    // ------------------------------------------------------------------- cors
+
+    /** Unset stays locked down — expansion must never happen by default. */
+    public function testCorsIsClosedWhenTheEnvVarIsUnset(): void
+    {
+        $this->assertSame([], $this->corsOriginsFor(''));
+    }
+
+    /** `panels` writes the domain once instead of eight times. */
+    public function testPanelsExpandsToEveryAllowedHost(): void
+    {
+        $origins = $this->corsOriginsFor('panels');
+
+        $this->assertCount(count(config('App')->allowedHostnames), $origins);
+        $this->assertContains('http://admin.shiplore.in', $origins, 'the suite pins baseURL to http, so origins follow that scheme');
+        $this->assertContains('http://monline.shiplore.in', $origins);
+    }
+
+    /** The scheme follows baseURL, so a local http install does not emit https origins. */
+    public function testPanelOriginsFollowTheBaseUrlScheme(): void
+    {
+        foreach ($this->corsOriginsFor('panels') as $origin) {
+            $this->assertStringStartsWith('http://', $origin);
+        }
+    }
+
+    /** Literal origins still work, and mix with the token. */
+    public function testExplicitOriginsStillWorkAlongsideTheToken(): void
+    {
+        $origins = $this->corsOriginsFor('panels,https://partner.example.com');
+
+        $this->assertContains('https://partner.example.com', $origins);
+        $this->assertContains('http://admin.shiplore.in', $origins);
+
+        $onlyLiteral = $this->corsOriginsFor('https://partner.example.com');
+        $this->assertSame(['https://partner.example.com'], $onlyLiteral, 'without the token nothing is expanded');
+    }
+
+    /** @return list<string> */
+    private function corsOriginsFor(string $env): array
+    {
+        $saved                              = $_SERVER['app.corsAllowedOrigins'] ?? null;
+        $_SERVER['app.corsAllowedOrigins'] = $env;
+
+        try {
+            return (new Cors())->default['allowedOrigins'];
+        } finally {
+            if ($saved === null) {
+                unset($_SERVER['app.corsAllowedOrigins']);
+            } else {
+                $_SERVER['app.corsAllowedOrigins'] = $saved;
+            }
         }
     }
 
