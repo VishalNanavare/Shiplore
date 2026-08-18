@@ -327,6 +327,35 @@ trait MinimalSchema
     }
 
     /** Drop the POS tables — see dropUsersTable() for why leaks matter here. */
+    /** Warehouses + stock transfers (81_mfg_warehouses.sql). */
+    protected function ensureMfgTransferTables(): void
+    {
+        $db = $this->schemaConn();
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_stock_transfers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT, transfer_no TEXT,
+            vendor_id INTEGER NOT NULL, from_mshop_id INTEGER NOT NULL, to_mshop_id INTEGER NOT NULL,
+            status TEXT NOT NULL DEFAULT "draft", notes TEXT,
+            dispatched_at TEXT, received_at TEXT, created_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_stock_transfer_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, transfer_id INTEGER NOT NULL,
+            variant_id INTEGER NOT NULL, qty REAL NOT NULL DEFAULT 0, qty_received REAL,
+            created_at TEXT, updated_at TEXT, UNIQUE(transfer_id, variant_id)
+        )');
+        $this->ensureMfgInventoryTables();
+        $this->ensureMshopsTable();
+    }
+
+    protected function dropMfgTransferTables(): void
+    {
+        foreach (['db_mfg_stock_transfer_items', 'db_mfg_stock_transfers'] as $t) {
+            $this->schemaConn()->query('DROP TABLE IF EXISTS ' . $t);
+        }
+        $this->dropMfgInventoryTables();
+        $this->dropMshopsTable();
+    }
+
     protected function dropMfgPosTables(): void
     {
         $db = $this->schemaConn();

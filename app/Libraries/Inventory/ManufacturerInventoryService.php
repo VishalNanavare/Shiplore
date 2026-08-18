@@ -168,6 +168,71 @@ final class ManufacturerInventoryService
      *     consumeBatches() breaks on both. v1 moves on_hand and the ledger only; add
      *     batch costing deliberately, not by copying.
      */
+    /**
+     * Stock LEAVING a unit on a transfer.
+     *
+     * Deliberately separate from sellFromOutlet(): the movement_type is what the whole
+     * ledger is read by, and 'sale' vs 'transfer_out' is the difference between goods
+     * that left the business and goods that moved within it. Reusing the sale path would
+     * make every internal move look like revenue.
+     *
+     * Joins the caller's transaction when $db is passed, so the two ends of a transfer
+     * commit or roll back together.
+     */
+    public function moveOut(int $variantId, int $mshopId, float $qty, int $transferId, ?int $actorId = null, ?object $db = null): bool
+    {
+        return $this->transferMove($variantId, $mshopId, -abs($qty), 'transfer_out', $transferId, $actorId, $db);
+    }
+
+    /** Stock ARRIVING at a unit on a transfer. The mirror of moveOut(). */
+    public function moveIn(int $variantId, int $mshopId, float $qty, int $transferId, ?int $actorId = null, ?object $db = null): bool
+    {
+        return $this->transferMove($variantId, $mshopId, abs($qty), 'transfer_in', $transferId, $actorId, $db);
+    }
+
+    /**
+     * One end of a transfer: adjust the balance and ledger it.
+     *
+     * Both ends share this so they cannot drift apart — an out that ledgers and an in
+     * that does not would leave stock unaccounted for with no error anywhere.
+     */
+    private function transferMove(int $variantId, int $mshopId, float $delta, string $movement, int $transferId, ?int $actorId, ?object $db): bool
+    {
+        if ($delta == 0.0) {
+            return false;
+        }
+
+        $joined = $db !== null;
+        $db     = $db ?? Database::connect();
+
+        if (! $joined) {
+            $db->transBegin();
+        }
+
+        try {
+            $this->ensureRow($variantId, $mshopId, $db);
+            $bal = $this->bump($variantId, $mshopId, $delta, $db);
+            $this->postLedger($variantId, $mshopId, $movement, $delta, $bal, 'mfg_stock_transfer', $transferId, 'unit transfer', $actorId, $db);
+
+            if (! $joined) {
+                $db->transComplete();
+
+                return $db->transStatus();
+            }
+
+            return true;
+        } catch (Throwable) {
+            if (! $joined) {
+                $db->transRollback();
+
+                return false;
+            }
+            // Joined: let the caller's transaction decide, so a half-moved transfer
+            // cannot commit.
+            throw new \RuntimeException('transfer movement failed for variant ' . $variantId);
+        }
+    }
+
     public function sellFromOutlet(int $variantId, int $mshopId, float $qty, int $saleId, ?int $actorId = null, ?object $db = null): bool
     {
         if ($qty <= 0) {

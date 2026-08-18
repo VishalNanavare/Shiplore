@@ -28,6 +28,12 @@ $groups = [
         ['deliveries', 'Deliveries', 'bi-truck', 'manufacturer/deliveries', 'mfg.delivery.assign'],
         ['riders', 'Riders', 'bi-person-badge', 'manufacturer/riders', 'mfg.rider.manage'],
     ]],
+    // Operations. Stock moving between this manufacturer's own units — a warehouse is
+    // a KIND of mshop (81_mfg_warehouses.sql), so it reuses mfg_inventory and the unit
+    // switcher rather than needing a parallel table.
+    ['Operations', 'bi-arrow-left-right', [
+        ['transfers', 'Stock Transfers', 'bi-arrow-left-right', 'manufacturer/transfers', 'mfg.transfer.view'],
+    ]],
     // Finance. The vendor panel has six entries here (Settlements, Commission,
     // Commission Holds, Invoices, Credit Notes, GST) and this panel had none — a
     // manufacturer could sell through the platform and never see a rupee of it.

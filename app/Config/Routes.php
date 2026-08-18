@@ -906,6 +906,14 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
 
     // Governance. Staff changes proposed by a manager land here for the owner's
     // decision; the engine and its tables are reused unchanged (tenant-agnostic).
+    // Stock transfers between this manufacturer's own units. Two steps — dispatch
+    // decrements the source, receipt credits the destination — because goods in
+    // transit belong to neither end.
+    $routes->get('transfers', 'Manufacturer\TransferController::index');
+    $routes->post('transfers', 'Manufacturer\TransferController::store', ['filter' => 'csrf']);
+    $routes->get('transfers/(:num)', 'Manufacturer\TransferController::show/$1');
+    $routes->post('transfers/(:num)/(:alpha)', 'Manufacturer\TransferController::transition/$1/$2', ['filter' => 'csrf']);
+
     // Finance. Read-only: reports what the purchase orders already say rather than
     // creating settlement rows, because no B2B payout cycle or commission rate exists yet.
     $routes->get('earnings', 'Manufacturer\EarningsController::index');
