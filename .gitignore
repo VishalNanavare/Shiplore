@@ -48,12 +48,19 @@
 # Third-party software with its own release channel; never belongs in this repo.
 /pma/
 
-# PHP runtime config. Carries cPanel-specific absolute paths (open_basedir,
-# session.save_path) that describe the production filesystem layout.
-.user.ini
+# PHP runtime config.
+#
+# The ROOT .user.ini is TRACKED, deliberately — it carries zlib.output_compression = Off
+# and display_errors = Off, without which the app does not boot and stack traces leak.
+# Ignoring it once already caused a deployment to delete it and take the site down.
+# It is kept free of server paths and account names; HardeningConfigTest enforces that.
+#
+# php.ini and any NESTED copies stay ignored: those are cPanel-generated per directory
+# and do carry absolute paths.
 php.ini
-**/.user.ini
 **/php.ini
+**/.user.ini
+!/.user.ini
 
 # cPanel leftovers. `test_shiplore_in/` is a subdomain docroot whose DIRECTORY NAME is
 # the deployment hostname — no content grep finds that, only a filename scan does.

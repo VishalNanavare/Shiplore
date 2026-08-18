@@ -109,4 +109,69 @@ final class HardeningConfigTest extends CIUnitTestCase
             $this->assertContains($host, $hosts, $host . ' must be allow-listed');
         }
     }
+
+    // ------------------------------------------------------------- php runtime
+
+    /** @return array<string,string> directive => value, comments stripped */
+    private function userIni(): array
+    {
+        $path = ROOTPATH . '.user.ini';
+        $this->assertFileExists($path, '.user.ini must be tracked — a deployment already deleted it once');
+
+        $out = [];
+
+        foreach (file($path) as $line) {
+            $line = trim($line);
+            if ($line === '' || str_starts_with($line, ';') || str_starts_with($line, '[')) {
+                continue;
+            }
+            [$k, $v] = array_pad(explode('=', $line, 2), 2, '');
+            $out[trim($k)] = trim($v);
+        }
+
+        return $out;
+    }
+
+    /**
+     * The directives the application cannot run without.
+     *
+     * This file was untracked for privacy, a deployment checkout deleted it, and the site
+     * went down: CodeIgniter throws at pre_system when zlib.output_compression is on
+     * (app/Config/Events.php), so NO route resolved. display_errors reverted at the same
+     * moment, which publishes stack traces carrying absolute server paths.
+     *
+     * Tracking the file is the fix; this is what stops someone ignoring it again for the
+     * same well-meant reason.
+     */
+    public function testTheRuntimeIniKeepsTheDirectivesTheAppNeeds(): void
+    {
+        $ini = $this->userIni();
+
+        $this->assertSame('Off', $ini['zlib.output_compression'] ?? '', 'CodeIgniter cannot boot with zlib compression on');
+        $this->assertSame('Off', $ini['display_errors'] ?? '', 'stack traces must never reach a visitor');
+        $this->assertSame('On', $ini['log_errors'] ?? '');
+
+        // A product form with a large variant matrix silently DROPS surplus inputs past
+        // this limit rather than failing, so variants go missing with a success message.
+        $this->assertGreaterThanOrEqual(10000, (int) ($ini['max_input_vars'] ?? 0));
+    }
+
+    /**
+     * …and it must still name no server path or hosting account.
+     *
+     * The original carried error_log = "/home/<account>/logs/php.error.log". Tracking the
+     * file for reliability must not re-publish that: omitting error_log lets PHP fall back
+     * to the server's own log, which is where cPanel looks anyway.
+     */
+    public function testTheRuntimeIniNamesNoServerPath(): void
+    {
+        $body = (string) file_get_contents(ROOTPATH . '.user.ini');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '#^\s*[a-z_.]+\s*=\s*"?/home/#mi',
+            $body,
+            'a hosting-account path must not be published — omit the directive and use the server default',
+        );
+        $this->assertArrayNotHasKey('error_log', $this->userIni(), 'error_log names an account path; leave it to the server');
+    }
 }
