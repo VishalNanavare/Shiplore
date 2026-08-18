@@ -28,6 +28,14 @@ $groups = [
         ['deliveries', 'Deliveries', 'bi-truck', 'manufacturer/deliveries', 'mfg.delivery.assign'],
         ['riders', 'Riders', 'bi-person-badge', 'manufacturer/riders', 'mfg.rider.manage'],
     ]],
+    // Finance. The vendor panel has six entries here (Settlements, Commission,
+    // Commission Holds, Invoices, Credit Notes, GST) and this panel had none — a
+    // manufacturer could sell through the platform and never see a rupee of it.
+    // Earnings is the first and the one that matters; the rest need a B2B payout cycle
+    // and commission rate to be decided before they mean anything.
+    ['Finance', 'bi-cash-coin', [
+        ['earnings', 'Earnings', 'bi-graph-up-arrow', 'manufacturer/earnings', 'mfg.invoice.view'],
+    ]],
     // Business identity and the per-user feed. Mirrors the vendor panel's Team group;
     // staff, media and documents join it as those screens land.
     ['Governance', 'bi-check2-square', [

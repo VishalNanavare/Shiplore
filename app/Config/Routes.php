@@ -906,6 +906,10 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
 
     // Governance. Staff changes proposed by a manager land here for the owner's
     // decision; the engine and its tables are reused unchanged (tenant-agnostic).
+    // Finance. Read-only: reports what the purchase orders already say rather than
+    // creating settlement rows, because no B2B payout cycle or commission rate exists yet.
+    $routes->get('earnings', 'Manufacturer\EarningsController::index');
+
     $routes->get('approvals', 'Manufacturer\ApprovalController::index');
     $routes->post('approvals/(:num)/decide', 'Manufacturer\ApprovalController::decide/$1', ['filter' => 'csrf']);
     $routes->get('requests', 'Manufacturer\ApprovalController::mine');
