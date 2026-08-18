@@ -287,19 +287,48 @@ final class ManufacturerInventoryService
     }
 
     /** Apply a signed delta to on_hand (floored at 0) and return the new balance. */
+    /**
+     * Apply a delta to on_hand ATOMICALLY, then derive the stock status from the value
+     * the database actually settled on.
+     *
+     * This used to read on_hand, add the delta in PHP, and write the absolute result.
+     * That is a lost update: two counter sales running together both read 10 and both
+     * write 9, so one sale silently never happened. Stock drifts upward against reality
+     * and only surfaces at a physical count. The vendor InventoryService::bump() has
+     * always used an SQL expression; this is the same correction.
+     *
+     * CASE WHEN rather than GREATEST deliberately — GREATEST is MySQL/MariaDB only, and
+     * SQLite (which the test suite runs on) spells the scalar form MAX(). CASE is the
+     * one form both engines agree on, so the tests exercise production's real statement.
+     *
+     * The delta is formatted as a plain decimal literal rather than interpolated raw:
+     * every caller passes an internal float today, but a bare concatenation is one
+     * careless change away from being reachable from a request.
+     */
     private function bump(int $variantId, int $mshopId, float $delta, object $db): float
     {
-        $row  = $db->table('mfg_inventory')->select('on_hand, reorder_level')
-            ->where('variant_id', $variantId)->where('mshop_id', $mshopId)->get()->getRowArray();
-        $next = max(0.0, (float) ($row['on_hand'] ?? 0) + $delta);
+        $mag  = number_format(abs($delta), 3, '.', '');
+        $expr = $delta >= 0
+            ? 'on_hand + ' . $mag
+            : 'CASE WHEN on_hand - ' . $mag . ' < 0 THEN 0 ELSE on_hand - ' . $mag . ' END';
 
+        $db->table('mfg_inventory')
+            ->where('variant_id', $variantId)->where('mshop_id', $mshopId)
+            ->set('on_hand', $expr, false)
+            ->update();
+
+        // Re-read so status reflects what the database holds, not what PHP guessed it
+        // would hold — under concurrency those differ, which is the whole point.
+        $row     = $db->table('mfg_inventory')->select('on_hand, reorder_level')
+            ->where('variant_id', $variantId)->where('mshop_id', $mshopId)->get()->getRowArray();
+        $next    = (float) ($row['on_hand'] ?? 0);
         $reorder = $row['reorder_level'] ?? null;
         $status  = $next <= 0 ? 'out_of_stock'
             : (($reorder !== null && $next <= (float) $reorder) ? 'low' : 'in_stock');
 
         $db->table('mfg_inventory')
             ->where('variant_id', $variantId)->where('mshop_id', $mshopId)
-            ->update(['on_hand' => $next, 'status' => $status]);
+            ->update(['status' => $status]);
 
         return $next;
     }

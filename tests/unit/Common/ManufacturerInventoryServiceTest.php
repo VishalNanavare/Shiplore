@@ -46,6 +46,93 @@ final class ManufacturerInventoryServiceTest extends CIUnitTestCase
         parent::tearDown();
     }
 
+    /**
+     * Successive decrements accumulate.
+     *
+     * Be clear about what this does and does not prove. It runs two sales in sequence, so
+     * it passes under the old read-modify-write implementation too — a genuine lost update
+     * needs two connections interleaving between the SELECT and the UPDATE, which PHPUnit
+     * on one SQLite connection cannot stage. What this pins is the arithmetic and the
+     * ledger: that switching to an SQL expression did not change the ordinary result.
+     *
+     * testTheDecrementIsAppliedByTheDatabase() below is what actually pins the race fix.
+     */
+    public function testSuccessiveDecrementsAccumulate(): void
+    {
+        $this->seedCatalogue();
+        $this->svc->produce(5, 11, 10.0, 40.0, [], 1);
+
+        $this->svc->sellFromOutlet(5, 11, 1.0, 101, 1);
+        $this->svc->sellFromOutlet(5, 11, 1.0, 102, 1);
+
+        $this->assertSame(
+            8.0,
+            (float) $this->svc->levels(5, 11)['on_hand'],
+            'both decrements must land — 10 - 1 - 1',
+        );
+    }
+
+    /** The floor still holds, and it is the DATABASE applying it, not PHP. */
+    public function testStockCannotGoNegative(): void
+    {
+        $this->seedCatalogue();
+        $this->svc->produce(5, 11, 2.0, 40.0, [], 1);
+        $this->svc->adjust(5, 11, -50.0, 'damage', '', 1);
+
+        $this->assertSame(0.0, (float) $this->svc->levels(5, 11)['on_hand']);
+        $this->assertSame('out_of_stock', $this->svc->levels(5, 11)['status']);
+    }
+
+    /**
+     * The decrement must be an SQL expression, not a value computed in PHP.
+     *
+     * The behavioural tests above pass under either implementation when nothing else is
+     * touching the row, which is every test run. This is what actually pins the fix.
+     * GREATEST is deliberately absent: it is MySQL-only, and SQLite spells it MAX(), so
+     * using it would mean the suite never exercises production's real statement.
+     */
+    public function testTheDecrementIsAppliedByTheDatabase(): void
+    {
+        $src = (string) file_get_contents(APPPATH . 'Libraries/Inventory/ManufacturerInventoryService.php');
+        $body = $this->methodBody($src, 'bump');
+
+        $this->assertNotSame('', $body, 'bump() not found');
+        $this->assertMatchesRegularExpression(
+            "/->set\(\s*'on_hand'\s*,\s*\\\$expr\s*,\s*false\s*\)/",
+            $body,
+            'on_hand must be updated by an unescaped SQL expression',
+        );
+        $this->assertStringContainsString('CASE WHEN on_hand', $body, 'the floor must be applied in SQL');
+        $this->assertStringNotContainsString('GREATEST', $body, 'GREATEST is MySQL-only — SQLite would never run this path');
+        $this->assertDoesNotMatchRegularExpression(
+            "/update\(\[\s*'on_hand'\s*=>/",
+            $body,
+            'writing an absolute on_hand is the lost update this fix removes',
+        );
+    }
+
+    private function methodBody(string $src, string $method): string
+    {
+        if (! preg_match('/function\s+' . preg_quote($method, '/') . '\s*\(/', $src, $m, PREG_OFFSET_CAPTURE)) {
+            return '';
+        }
+        $brace = strpos($src, '{', (int) $m[0][1]);
+        $depth = 0;
+
+        for ($i = (int) $brace, $len = strlen($src); $i < $len; $i++) {
+            if ($src[$i] === '{') {
+                $depth++;
+            } elseif ($src[$i] === '}') {
+                $depth--;
+                if ($depth === 0) {
+                    return substr($src, (int) $brace, $i - (int) $brace + 1);
+                }
+            }
+        }
+
+        return '';
+    }
+
     public function testProduceCreatesTheRowAndRaisesOnHand(): void
     {
         $this->assertTrue($this->svc->produce(5, 11, 120.0, 40.0, [], 1));
