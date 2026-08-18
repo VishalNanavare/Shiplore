@@ -8,14 +8,28 @@
         </span>
         <?php
         // Shared by admin/vendor/manufacturer/rider layouts, so this renders while
-        // impersonating on ANY of those hosts, not just admin's own. 'admin/portal/leave'
-        // is a standalone route (Routes.php) outside the admin group precisely so an
-        // impersonated (non-platform) session can still reach it, but it still needs an
-        // explicit admin-host URL: PortalController::leave() itself already redirects
-        // back to admin.shiplore.in on success, so this keeps the exit link consistent
-        // with where the flow actually lands.
+        // impersonating on ANY of those hosts, not just admin's own.
+        //
+        // site_url(), NOT panel_url() — deliberately, and it is load-bearing.
+        // 'admin/portal/leave' is registered STANDALONE in Routes.php, outside the
+        // subdomain-pinned admin group, exactly so an impersonated (principal_type-
+        // swapped) session can reach it from any panel host; PanelSubdomainIsolationTest
+        // pins that it resolves on all five. panel_url() is for routes restricted to
+        // ANOTHER subdomain, which this is not.
+        //
+        // Using it here produced a cross-ORIGIN action, and partials/_scripts.php loads
+        // js/ajax-forms.js on every panel page: its isExcluded() does not exempt this
+        // form, so it cancels the native POST (which SameSite=Lax permits — same site)
+        // and replays it through fetch() with an X-Requested-With header, forcing a CORS
+        // preflight nothing answers. The request never left the browser and the button
+        // silently did nothing.
+        //
+        // The cross-host hop still happens, just on the RESPONSE: leave() redirects to
+        // admin.shiplore.in, AjaxRedirectFilter turns that into a JSON envelope, and
+        // ajax-forms.js navigates via window.location.assign() — a top-level navigation,
+        // which is unrestricted cross-origin.
         ?>
-        <form method="post" action="<?= panel_url('admin', 'admin/portal/leave') ?>" class="m-0">
+        <form method="post" action="<?= site_url('admin/portal/leave') ?>" class="m-0">
             <?= csrf_field() ?>
             <button type="submit" class="btn btn-sm btn-light fw-semibold">
                 <i class="bi bi-box-arrow-left me-1"></i>Return to Admin

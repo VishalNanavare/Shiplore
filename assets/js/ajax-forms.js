@@ -157,11 +157,37 @@
     }
 
     /* ---------- form interception ---------- */
+
+    // A form whose action leaves this page's ORIGIN cannot be replayed through fetch()
+    // here, and must be left to the browser.
+    //
+    // Two independent reasons, either one fatal: the X-Requested-With header below is not
+    // CORS-safelisted, so the request needs a preflight that nothing on this platform
+    // answers; and credentials:'same-origin' would drop the .shiplore.in session cookie
+    // even if it were answered. The native submit the interceptor would have cancelled
+    // works fine — panel subdomains are the same SITE, which is what SameSite=Lax governs.
+    //
+    // Note "same site" is NOT "same origin": manufacturer.shiplore.in -> admin.shiplore.in
+    // is same-site (so the cookie rides along on a real form POST) but cross-origin (so
+    // fetch refuses it). Without this guard the failure is SILENT on the server — nothing
+    // reaches PHP, so there is no 404, no log line and no audit row to find. That is
+    // exactly how the impersonation banner's "Return to Admin" button sat broken.
+    function isCrossOrigin(form) {
+        var action = form.getAttribute('action');
+        if (!action) { return false; }                                     // posts to self
+        try {
+            return new URL(action, window.location.href).origin !== window.location.origin;
+        } catch (err) {
+            return false;                                                  // unparseable: let the browser decide
+        }
+    }
+
     function isExcluded(form) {
         if (form.hasAttribute('data-no-ajax')) { return true; }
         if (form.getAttribute('target')) { return true; }                  // _blank print etc.
         if ((form.getAttribute('method') || 'get').toLowerCase() !== 'post') { return true; }
         if (form.closest('#pos, #cnApp')) { return true; }                 // POS / credit-note custom JS
+        if (isCrossOrigin(form)) { return true; }                          // see above — must submit natively
         return false;
     }
 

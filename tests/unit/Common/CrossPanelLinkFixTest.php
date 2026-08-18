@@ -148,12 +148,82 @@ final class CrossPanelLinkFixTest extends CIUnitTestCase
 
     // ---------------------------------------------------------------- partials/_impersonation_banner.php
 
-    public function testImpersonationBannerLeaveFormUsesPanelUrl(): void
+    /**
+     * REVERSED, deliberately. This assertion used to require panel_url() here, and that
+     * requirement was wrong — it is what broke "Return to Admin". Rewritten to assert the
+     * corrected intent rather than deleted, so the reversal is explicit in the diff.
+     *
+     * `admin/portal/leave` is NOT a cross-panel link. Routes.php:186 registers it
+     * STANDALONE, outside the subdomain-pinned admin group, precisely so an impersonated
+     * (principal_type-swapped) session can reach it from any panel host — and
+     * PanelSubdomainIsolationTest::testPortalLeaveResolvesFromAnyPanelHost() already pins
+     * that it resolves on all five. panel_helper.php states its own scope: routes
+     * restricted to ANOTHER subdomain. This route is host-agnostic, so site_url() was
+     * always correct.
+     *
+     * What made the panel_url() version fail is that it produced a cross-ORIGIN action.
+     * partials/_scripts.php:5 loads js/ajax-forms.js on every panel page; its
+     * isExcluded() does not exempt this form, so it calls preventDefault() on the native
+     * POST — which SameSite=Lax would have allowed, same site — and replays it through
+     * fetch() with an X-Requested-With header. That forces a CORS preflight nothing
+     * answers, and credentials:'same-origin' would drop the session cookie even if CORS
+     * were opened. The request never left the browser: no 404, no 403, no server log.
+     * Hence "clicking does nothing".
+     */
+    public function testImpersonationBannerLeaveFormPostsToTheCurrentHost(): void
     {
         $code = $this->code(APPPATH . 'Views/partials/_impersonation_banner.php');
 
-        $this->assertStringContainsString("panel_url('admin', 'admin/portal/leave')", $code);
-        $this->assertDoesNotMatchRegularExpression("/site_url\('admin\/portal\/leave'\)/", $code);
+        $this->assertStringContainsString("site_url('admin/portal/leave')", $code);
+        $this->assertDoesNotMatchRegularExpression(
+            "/panel_url\(\s*'admin'\s*,\s*'admin\/portal\/leave'\s*\)/",
+            $code,
+            'a cross-origin action here is silently swallowed by the global ajax-forms interceptor',
+        );
+    }
+
+    /**
+     * The behavioural half — the source assertion above cannot tell whether the RENDERED
+     * action actually stays on the current host.
+     *
+     * That it does is not obvious, and is the reason site_url() is safe here:
+     * Config\App::$baseURL is the fixed 'https://shiplore.in/', so site_url() looks like
+     * it should emit that host everywhere. It does not. SiteURIFactory::getValidHost()
+     * swaps in the REQUEST's host whenever that host is listed in
+     * Config\App::$allowedHostnames — which every panel subdomain is. Verified here by
+     * rendering rather than by reading, on each panel host in turn, because the banner is
+     * shared by four layouts and only misbehaved off admin.
+     *
+     * The three singleton resets are all load-bearing: site_url() reads
+     * service('request')->getUri(), and that SiteURI is built once by the siteurifactory
+     * from the superglobals. Reset only 'request' and the stale URI survives, the host
+     * silently stays example.com, and the assertion tests nothing.
+     */
+    public function testImpersonationBannerActionIsSameOriginOnEveryPanelHost(): void
+    {
+        foreach (['manufacturer.shiplore.in', 'vendor.shiplore.in', 'rider.shiplore.in', 'admin.shiplore.in'] as $host) {
+            service('superglobals')->setServer('HTTP_HOST', $host);
+            \Config\Services::resetSingle('request');
+            \Config\Services::resetSingle('siteurifactory');
+            \Config\Services::resetSingle('uri');
+
+            session()->set(['is_impersonating' => true, 'impersonation_label' => 'Manufacturer · Bright Stationery', 'impersonator_name' => 'Super Admin']);
+
+            $html = view('partials/_impersonation_banner');
+
+            $this->assertMatchesRegularExpression('/<form[^>]+action="([^"]*)"/', $html, "banner did not render on {$host}");
+            preg_match('/<form[^>]+action="([^"]*)"/', $html, $m);
+            $action = html_entity_decode($m[1]);
+
+            $this->assertSame(
+                $host,
+                parse_url($action, PHP_URL_HOST),
+                "on {$host} the leave form posts to {$action} — a cross-origin action is cancelled by ajax-forms.js and never reaches the server",
+            );
+
+            session()->remove(['is_impersonating', 'impersonation_label', 'impersonator_name']);
+            service('superglobals')->unsetServer('HTTP_HOST');
+        }
     }
 
     // ---------------------------------------------------------------- monline/_layout.php

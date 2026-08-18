@@ -95,4 +95,55 @@ final class AjaxFormTest extends CIUnitTestCase
         $this->assertArrayHasKey('csrf', $json);
         $this->assertArrayHasKey('csrf_name', $json);
     }
+
+    // ------------------------------------------------------- cross-origin guard
+
+    /**
+     * A form whose action leaves this origin must be handed back to the browser.
+     *
+     * The interceptor replays every POST through fetch() with an X-Requested-With header
+     * (not CORS-safelisted, so a preflight nothing answers) and credentials:'same-origin'
+     * (which drops the .shiplore.in cookie cross-origin). Both are fatal, and both fail
+     * SILENTLY as far as the server is concerned — nothing reaches PHP, so there is no
+     * 404, no log line, no audit row. The impersonation banner's "Return to Admin" button
+     * sat broken exactly this way once panel_url() made its action cross-origin.
+     *
+     * Asserted on the shipped file. There is no JS test runner in this project, so this
+     * is a source assertion — it pins that the guard is WIRED INTO isExcluded(), not
+     * merely defined, which is the way this could silently regress.
+     */
+    public function testAjaxFormsLeavesCrossOriginFormsToTheBrowser(): void
+    {
+        $js = (string) file_get_contents(FCPATH . 'assets/js/ajax-forms.js');
+
+        // Strip comments first — the block above isCrossOrigin() discusses the very
+        // identifiers being searched for, and has already fooled assertions in this repo.
+        $code = preg_replace('!/\*.*?\*/|//[^\n]*!s', '', $js);
+
+        $this->assertMatchesRegularExpression(
+            '/function isCrossOrigin\s*\(\s*form\s*\)/',
+            $code,
+            'the cross-origin guard must exist',
+        );
+        $this->assertMatchesRegularExpression(
+            '/new URL\(\s*action\s*,\s*window\.location\.href\s*\)\.origin\s*!==\s*window\.location\.origin/',
+            $code,
+            'it must compare ORIGIN — same-site is not enough, fetch() refuses cross-origin',
+        );
+        $this->assertMatchesRegularExpression(
+            '/function isExcluded[\s\S]{0,600}?isCrossOrigin\(form\)\s*\)\s*\{\s*return true;/',
+            $code,
+            'defining the guard is not enough — isExcluded() must actually call it',
+        );
+    }
+
+    /** The mirrored copy under assets/ must not drift from the one the browser loads. */
+    public function testAjaxFormsSourceAndPublicCopiesAreIdentical(): void
+    {
+        $this->assertSame(
+            md5_file(ROOTPATH . 'assets/js/ajax-forms.js'),
+            md5_file(FCPATH . 'assets/js/ajax-forms.js'),
+            'assets/js/ajax-forms.js and public/assets/js/ajax-forms.js have diverged',
+        );
+    }
 }
