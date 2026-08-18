@@ -26,28 +26,92 @@ use Config\Cors;
 final class AllowedHostnamesTest extends CIUnitTestCase
 {
     /**
-     * The default must reproduce the previous hardcoded list EXACTLY.
+     * The configured domain drives the whole list, in order.
      *
-     * .env is gitignored and absent on some boxes, so an environment that overrides
-     * nothing has to behave as it did before this became configurable. Written out in
-     * full rather than generated, so a change to the derivation cannot quietly agree
-     * with itself.
+     * Written out in full rather than generated, so a change to the derivation cannot
+     * quietly agree with itself. The value comes from phpunit.dist.xml's
+     * app.baseDomain — proof in itself that the list follows configuration rather than
+     * anything written into app/Config/App.php.
      */
-    public function testTheDefaultReproducesThePreviousHardcodedList(): void
+    public function testTheConfiguredDomainDrivesTheWholeList(): void
     {
         $this->assertSame(
             [
-                'shiplore.in',
-                'admin.shiplore.in',
-                'vendor.shiplore.in',
-                'shop.shiplore.in',
-                'rider.shiplore.in',
-                'manufacturer.shiplore.in',
-                'mshop.shiplore.in',
-                'monline.shiplore.in',
+                'shiplore.test',
+                'admin.shiplore.test',
+                'vendor.shiplore.test',
+                'shop.shiplore.test',
+                'rider.shiplore.test',
+                'manufacturer.shiplore.test',
+                'mshop.shiplore.test',
+                'monline.shiplore.test',
             ],
             config('App')->allowedHostnames,
         );
+    }
+
+    /**
+     * No tracked config file may name a real deployment domain.
+     *
+     * The repository is public. The domain is not a secret — it is in DNS and in
+     * certificate-transparency logs regardless — but the platform's address is
+     * deployment configuration and belongs in .env, which is gitignored. This is the
+     * assertion that keeps someone "helpfully" restoring a working default.
+     *
+     * `.test` is reserved by RFC 6761 and `localhost` by RFC 2606, so neither can ever
+     * be a real deployment.
+     */
+    public function testTrackedConfigNamesNoRealDomain(): void
+    {
+        // Constructor bypassed, exactly as Tests\Support\Libraries\ConfigReader does, so
+        // these are the literals as written in the file — not the .env-resolved values.
+        $raw = new class extends App {
+            public function __construct() {}
+        };
+
+        $this->assertSame('localhost', $raw->baseDomain, 'app/Config/App.php must not name a real domain');
+        $this->assertSame('https://localhost/', $raw->baseURL, 'app/Config/App.php must not name a real base URL');
+        $this->assertSame([], $raw->allowedHostnames, 'the hostname list must be derived, never written out');
+
+        $rawCookie = new class extends Cookie {
+            public function __construct() {}
+        };
+        $this->assertSame('', $rawCookie->domain, 'app/Config/Cookie.php must not name a real domain');
+
+        // And a sweep, so a real domain cannot arrive in some OTHER literal in these
+        // files. Asserts it actually examined something first — the earlier version of
+        // this test matched nothing and passed with zero assertions.
+        $scanned = 0;
+
+        foreach (['Config/App.php', 'Config/Cookie.php', 'Config/Cors.php'] as $file) {
+            $code = '';
+
+            foreach (token_get_all((string) file_get_contents(APPPATH . $file)) as $t) {
+                if (is_array($t) && ($t[0] === T_COMMENT || $t[0] === T_DOC_COMMENT)) {
+                    continue; // comments discuss the design; only code is the concern
+                }
+                $code .= is_array($t) ? $t[1] : $t;
+            }
+            $scanned += strlen($code);
+
+            // Any dotted hostname appearing anywhere inside a string literal, including
+            // inside a URL. Case-SENSITIVE on purpose: a real TLD is lowercase, whereas
+            // this codebase's env keys are camelCase ('app.baseURL', 's3.accessKey'), so
+            // requiring a lowercase final label separates hostnames from config keys.
+            preg_match_all('/[\'"][^\'"]*?\b((?:[a-z0-9-]+\.)+[a-z]{2,})\b/', $code, $m);
+
+            foreach ($m[1] as $host) {
+                // .test and .localhost are reserved by RFC 6761, example.* by RFC 2606,
+                // so none of them can ever be a real deployment.
+                $this->assertMatchesRegularExpression(
+                    '/(^|\.)(test|localhost|example\.(com|org|net))$/',
+                    $host,
+                    "{$file} hardcodes '{$host}' — the deployment domain belongs in .env (app.baseDomain)",
+                );
+            }
+        }
+
+        $this->assertGreaterThan(0, $scanned, 'no config source was read — the sweep proved nothing');
     }
 
     /**
@@ -101,7 +165,7 @@ final class AllowedHostnamesTest extends CIUnitTestCase
         $this->assertContains('admin.example.co.uk', $hosts);
         $this->assertContains('manufacturer.example.co.uk', $hosts);
         $this->assertContains('monline.example.co.uk', $hosts);
-        $this->assertNotContains('admin.shiplore.in', $hosts, 'nothing may stay pinned to the old domain');
+        $this->assertNotContains('admin.shiplore.test', $hosts, 'nothing may stay pinned to the old domain');
     }
 
     /**
@@ -126,7 +190,7 @@ final class AllowedHostnamesTest extends CIUnitTestCase
         $this->assertContains('admin.example.co.uk', $fresh->allowedHostnames);
         $this->assertContains('mshop.example.co.uk', $fresh->allowedHostnames);
         $this->assertNotContains(
-            'admin.shiplore.in',
+            'admin.shiplore.test',
             $fresh->allowedHostnames,
             'allowedHostnames is hardcoded again — changing baseDomain no longer moves the platform',
         );
@@ -153,8 +217,8 @@ final class AllowedHostnamesTest extends CIUnitTestCase
     /**
      * And it must follow a CHANGED base domain, not just agree with the default.
      *
-     * Same lesson as the hostnames above: '.shiplore.in' hardcoded back into Cookie
-     * satisfies the assertion above, because the default App also says shiplore.in.
+     * Same lesson as the hostnames above: '.shiplore.test' hardcoded back into Cookie
+     * satisfies the assertion above, because the default App also says shiplore.test.
      * Injecting a different App is what separates "derived" from "coincidentally equal".
      */
     public function testTheCookieDomainFollowsAChangedBaseDomain(): void
@@ -194,8 +258,8 @@ final class AllowedHostnamesTest extends CIUnitTestCase
         $origins = $this->corsOriginsFor('panels');
 
         $this->assertCount(count(config('App')->allowedHostnames), $origins);
-        $this->assertContains('http://admin.shiplore.in', $origins, 'the suite pins baseURL to http, so origins follow that scheme');
-        $this->assertContains('http://monline.shiplore.in', $origins);
+        $this->assertContains('http://admin.shiplore.test', $origins, 'the suite pins baseURL to http, so origins follow that scheme');
+        $this->assertContains('http://monline.shiplore.test', $origins);
     }
 
     /** The scheme follows baseURL, so a local http install does not emit https origins. */
@@ -212,7 +276,7 @@ final class AllowedHostnamesTest extends CIUnitTestCase
         $origins = $this->corsOriginsFor('panels,https://partner.example.com');
 
         $this->assertContains('https://partner.example.com', $origins);
-        $this->assertContains('http://admin.shiplore.in', $origins);
+        $this->assertContains('http://admin.shiplore.test', $origins);
 
         $onlyLiteral = $this->corsOriginsFor('https://partner.example.com');
         $this->assertSame(['https://partner.example.com'], $onlyLiteral, 'without the token nothing is expanded');

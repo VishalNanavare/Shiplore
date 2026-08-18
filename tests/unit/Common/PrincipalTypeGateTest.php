@@ -8,8 +8,8 @@ use PHPUnit\Framework\TestCase;
  * The principal-type gate on WebAuthFilter, and its staged rollout.
  *
  * WebAuthFilter used to prove only "some session is logged in". Because the
- * session cookie is scoped to .shiplore.in (app/Config/Cookie.php), a vendor login
- * at vendor.shiplore.in is also sent to admin.shiplore.in, so the per-controller
+ * session cookie is scoped to .shiplore.test (app/Config/Cookie.php), a vendor login
+ * at vendor.shiplore.test is also sent to admin.shiplore.test, so the per-controller
  * permission checks were the only barrier to the admin panel — and 34 of those are
  * gated on vendor-scoped codes vendor roles actually hold
  * (see AdminGuardScopeTest).

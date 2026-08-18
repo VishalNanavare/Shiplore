@@ -79,7 +79,7 @@ final class DocumentRegistersTest extends CIUnitTestCase
 
     public function testAdminInvoiceRegister(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         // payment.view is platform-scoped. It replaced the vendor-scoped
         // invoice.view this register used to gate on — see the negative case below.
         $this->grantAdmin(['payment.view']);
@@ -93,7 +93,7 @@ final class DocumentRegistersTest extends CIUnitTestCase
 
     public function testAdminCommissionHoldQueue(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         $this->grantAdmin(['commission.view']);
 
         $r = $this->withSession($this->adminSess())->get('admin/commission-holds');
@@ -117,7 +117,7 @@ final class DocumentRegistersTest extends CIUnitTestCase
      */
     public function testVendorScopedPermissionCannotOpenAdminRegisters(string $perm, string $url): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         $this->grantAdmin([$perm]);
 
         $r = $this->withSession($this->adminSess())->get($url);
@@ -137,7 +137,7 @@ final class DocumentRegistersTest extends CIUnitTestCase
 
     public function testVendorInvoiceRegisterIsTenantScoped(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         Services::injectMock('capabilityRepository', new class {
             public function loadAssignments(int $u): array
             {

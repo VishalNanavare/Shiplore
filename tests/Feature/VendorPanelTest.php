@@ -22,7 +22,7 @@ final class VendorPanelTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.in');
+        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.test');
         Services::resetSingle('request');
         Services::resetSingle('routes');
         Services::resetSingle('router');
@@ -106,7 +106,7 @@ final class VendorPanelTest extends CIUnitTestCase
     /**
      * Runtime counterpart to CrossPanelLinkFixTest's source assertion: the sidebar's
      * monline entries must be emitted as absolute URLs on the monline host. Rendered
-     * on vendor.shiplore.in (see setUp), a relative /monline/browse would hit a path
+     * on vendor.shiplore.test (see setUp), a relative /monline/browse would hit a path
      * the monline route group never registers on this host — a 404 on the main
      * navigation vendors use to buy from manufacturers.
      */
@@ -119,10 +119,10 @@ final class VendorPanelTest extends CIUnitTestCase
         });
         $body = (string) $this->withSession($this->vendorSession())->get('vendor/dashboard')->getBody();
 
-        $this->assertStringContainsString('//monline.shiplore.in/monline/browse', $body);
-        $this->assertStringContainsString('//monline.shiplore.in/monline/orders', $body);
+        $this->assertStringContainsString('//monline.shiplore.test/monline/browse', $body);
+        $this->assertStringContainsString('//monline.shiplore.test/monline/orders', $body);
         // The bug being locked out: the same paths resolved against the vendor host.
-        $this->assertStringNotContainsString('//vendor.shiplore.in/monline/', $body);
+        $this->assertStringNotContainsString('//vendor.shiplore.test/monline/', $body);
     }
 
     /** ...while every same-panel link stays on the vendor host. */
@@ -136,7 +136,7 @@ final class VendorPanelTest extends CIUnitTestCase
         $body = (string) $this->withSession($this->vendorSession())->get('vendor/dashboard')->getBody();
 
         $this->assertStringContainsString('vendor/products', $body);
-        $this->assertStringNotContainsString('monline.shiplore.in/vendor/', $body);
+        $this->assertStringNotContainsString('monline.shiplore.test/vendor/', $body);
     }
 
     public function testStaffMemberSeesShopScopedSidebar(): void

@@ -44,6 +44,11 @@
 
     <php>
         <server name="app.baseURL" value="http://example.com/"/>
+        <!-- The suite drives requests at *.shiplore.test hosts, so the panel hostname
+             list has to cover that domain. Deliberately a RESERVED .test domain rather
+             than the production one: no test should depend on where this happens to be
+             deployed, and app/Config/App.php no longer names a real domain at all. -->
+        <server name="app.baseDomain" value="shiplore.test"/>
         <server name="CODEIGNITER_SCREAM_DEPRECATIONS" value="0"/>
         <!-- Test-only signing key so TokenService::secret() doesn't throw under
              CIUnitTestCase/FeatureTestTrait — every api/v1 JWT-gated endpoint test

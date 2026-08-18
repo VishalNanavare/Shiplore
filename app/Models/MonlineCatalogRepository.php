@@ -7,7 +7,7 @@ namespace App\Models;
 use Config\Database;
 
 /**
- * MonlineCatalogRepository — the manufacturer catalogue shown on monline.shiplore.in.
+ * MonlineCatalogRepository — the manufacturer catalogue shown on monline.<domain>.
  *
  * The mirror image of StoreCatalogRepository: that one EXCLUDES manufacturers, this one
  * shows ONLY manufacturers. Kept separate rather than parameterising the consumer

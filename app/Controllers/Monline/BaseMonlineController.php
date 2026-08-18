@@ -7,7 +7,7 @@ namespace App\Controllers\Monline;
 use App\Controllers\BaseController;
 
 /**
- * BaseMonlineController — shared base for monline.shiplore.in, the B2B marketplace
+ * BaseMonlineController — shared base for monline.<domain>, the B2B marketplace
  * where vendors and shops buy from manufacturers.
  *
  * Buyers are EXISTING vendor-panel users (principal_type='vendor') with a resolvable

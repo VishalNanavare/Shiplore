@@ -5,7 +5,7 @@ declare(strict_types=1);
 use CodeIgniter\Test\CIUnitTestCase;
 
 /**
- * Production regression (introduced by commit 78041ff, found live on shiplore.in).
+ * Production regression (introduced by commit 78041ff, found live on shiplore.test).
  *
  * StoreShopRepository::nearby() bounding-box pre-filter gained a
  * `limit(max($limit * 5, 500))` safety valve with NO ORDER BY. MySQL is then free

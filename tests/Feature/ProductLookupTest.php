@@ -83,7 +83,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testAdminShopsReturnsVendorShops(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         $this->grantAdmin(['product.view']);
         Services::injectMock('vendorShopRepository', new class {
             public function list(int $v): array { return [['id' => 2, 'name' => 'Main Shop']]; }
@@ -97,7 +97,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testAdminCategoryDefaultsReturnsTaxAndHsn(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         $this->grantAdmin(['product.view']);
         Services::injectMock('catalogLookupRepository', new class {
             public function defaultsForCategory(int $c): array { return ['tax_class_id' => 3, 'tax_class_name' => 'GST 12%', 'gst_pct' => '12.00', 'hsn_id' => 5, 'hsn_code' => '6403']; }
@@ -110,7 +110,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testAdminLookupDeniedWithoutPermission(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         $this->grantAdmin(['order.view']);
         $r = $this->ajaxGet($this->adminSess(), 'admin/lookup/vendors/7/shops');
         $r->assertStatus(403);
@@ -118,7 +118,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testVendorShopsForcesOwnVendorId(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->grantVendor();
         $spy = new class {
             public int $askedFor = 0;
@@ -132,7 +132,7 @@ final class ProductLookupTest extends CIUnitTestCase
 
     public function testVendorAttributesRejectsForeignCategory(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->grantVendor();
         Services::injectMock('adminProductRepository', new class {
             public function allowedCategories(int $v): array { return [['id' => 10, 'name' => 'Allowed']]; } // 99 not allowed

@@ -7,7 +7,7 @@ use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
 
 /**
- * monline.shiplore.in — the B2B marketplace. Browsing must be public; only the price
+ * monline.shiplore.test — the B2B marketplace. Browsing must be public; only the price
  * stays gated behind a resolved buyer session.
  */
 final class MonlineTest extends CIUnitTestCase
@@ -17,7 +17,7 @@ final class MonlineTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        service('superglobals')->setServer('HTTP_HOST', 'monline.shiplore.in');
+        service('superglobals')->setServer('HTTP_HOST', 'monline.shiplore.test');
         Services::resetSingle('request');
         Services::resetSingle('routes');
         Services::resetSingle('router');

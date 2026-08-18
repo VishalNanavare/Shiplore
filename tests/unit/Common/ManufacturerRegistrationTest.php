@@ -86,7 +86,7 @@ final class ManufacturerRegistrationTest extends CIUnitTestCase
     /**
      * The in-progress registration must NOT share the vendor flow's session key.
      *
-     * The session cookie is domain-wide (.shiplore.in), so a half-finished vendor
+     * The session cookie is domain-wide (.shiplore.test), so a half-finished vendor
      * registration and a half-finished manufacturer registration live in the same
      * session — reusing 'reg' would let them silently overwrite each other.
      */

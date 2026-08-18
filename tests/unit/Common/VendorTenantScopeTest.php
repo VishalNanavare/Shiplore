@@ -322,7 +322,7 @@ final class VendorTenantScopeTest extends CIUnitTestCase
 
     public function testAdminDeleteSpecialWiresVendorIdThroughToRepo(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         Services::injectMock('capabilityRepository', new class {
             public function loadAssignments(int $u): array
             {
@@ -348,7 +348,7 @@ final class VendorTenantScopeTest extends CIUnitTestCase
 
     public function testVendorDeleteTierWiresCallersOwnVendorId(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         Services::injectMock('capabilityRepository', new class {
             public function loadAssignments(int $u): array
             {

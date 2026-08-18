@@ -151,7 +151,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testStaffHoursChangeBecomesChangeRequest(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->asShopStaff();
 
         $r = $this->withSession(service('session')->get() + $this->staffSess())
@@ -168,7 +168,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testVendorInboxListsPendingRequests(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->asVendorOwner();
 
         $r = $this->withSession($this->sess())->get('vendor/approvals');
@@ -181,7 +181,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testVendorDecideRoutesToEngineAsVendorRole(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->asVendorOwner();
 
         $r = $this->withSession(service('session')->get() + $this->sess())
@@ -195,7 +195,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testStaffWithoutApprovePermCannotOpenInbox(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->asShopStaff();
 
         $this->withSession($this->staffSess())->get('vendor/approvals')->assertRedirect();
@@ -222,7 +222,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testAdminQueueListsAndDecides(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         $this->grantAdmin(['request.approve.admin']);
 
         $page = $this->withSession($this->adminSess())->get('admin/approvals');
@@ -238,7 +238,7 @@ final class GovernanceApprovalsTest extends CIUnitTestCase
 
     public function testAdminQueueBlockedWithoutPermission(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         $this->grantAdmin([]);
 
         $this->withSession($this->adminSess())->get('admin/approvals')->assertRedirect();

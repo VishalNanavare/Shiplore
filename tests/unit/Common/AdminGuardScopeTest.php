@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  *
  * The admin route group carries only the `webAuth` filter, which proves a session
  * is logged in — not that it belongs to an admin. The session cookie is scoped to
- * .shiplore.in, so one vendor login is valid on admin.shiplore.in too. The only
+ * .shiplore.test, so one vendor login is valid on admin.shiplore.test too. The only
  * thing standing between a vendor staffer and an admin page is the per-controller
  * guard() call, and PolicyEngine::can() is a bare in_array over permission codes
  * with no scope check.

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Libraries\Monline;
 
 /**
- * MonlineCart — the B2B basket for monline.shiplore.in.
+ * MonlineCart — the B2B basket for monline.<domain>.
  *
  * Separate from App\Libraries\Store\CartService for one concrete reason: the session
- * cookie is domain-wide (`.shiplore.in`, app/Config/Cookie.php), so shiplore.in and
- * monline.shiplore.in share ONE session in a given browser. CartService hardcodes
+ * cookie is domain-wide (`.<domain>`, app/Config/Cookie.php), so <domain> and
+ * monline.<domain> share ONE session in a given browser. CartService hardcodes
  * `private const KEY = 'store_cart'`; reusing it would silently merge a shopper's
  * consumer basket with a vendor's wholesale order — same browser, same key, two very
  * different carts.

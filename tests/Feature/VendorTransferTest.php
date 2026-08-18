@@ -16,7 +16,7 @@ final class VendorTransferTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.in');
+        service('superglobals')->setServer('HTTP_HOST', 'vendor.shiplore.test');
         Services::resetSingle('request');
         Services::resetSingle('routes');
         Services::resetSingle('router');

@@ -35,7 +35,7 @@ final class PolicyEngine
      *
      * can() is deliberately scope-blind, which is correct for the vendor and rider
      * panels where the tenant is established elsewhere. It is not sufficient for
-     * /admin/*: those routes are path-based (so they resolve on vendor.shiplore.in,
+     * /admin/*: those routes are path-based (so they resolve on vendor.<domain>,
      * where a vendor's session cookie is already sent), and database/sql/11_seed.sql
      * grants every vendor/shop-scoped permission to vendor_owner — including codes the
      * admin panel guards on, such as settlement.view, product.update, media.view,

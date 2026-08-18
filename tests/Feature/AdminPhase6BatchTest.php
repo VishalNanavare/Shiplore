@@ -19,7 +19,7 @@ final class AdminPhase6BatchTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.test');
         Services::resetSingle('request');
         Services::resetSingle('routes');
         Services::resetSingle('router');
@@ -307,7 +307,7 @@ final class AdminPhase6BatchTest extends CIUnitTestCase
             public function gstConfig(): ?array { return ['rounding_mode' => 'commercial', 'composition' => 0, 'rcm_default' => 0, 'einvoice_enabled' => 1, 'invoice_series_format' => 'INV-{FY}-{SEQ}', 'fy_start_month' => 4]; }
             public function deliveryMaxRadiusKm(): float { return 5.0; }
             public function brandName(): string { return 'Shiplore'; }
-            public function logoUrl(): string { return 'https://shiplore.in/assets/images/logo.png'; }
+            public function logoUrl(): string { return 'https://shiplore.test/assets/images/logo.png'; }
             public function moduleEnabled(string $m): bool { return true; }
         });
         $r = $this->withSession($this->sess())->get('admin/settings');

@@ -25,7 +25,7 @@ use CodeIgniter\HTTP\ResponseInterface;
  *      vendors.party_type='manufacturer', so it lands in the manufacturer panel.
  *
  * The in-progress registration lives under its own session key. The session cookie is
- * domain-wide (.shiplore.in), so reusing the vendor flow's 'reg' key would let a half
+ * domain-wide (.<domain>), so reusing the vendor flow's 'reg' key would let a half
  * finished vendor registration and a half-finished manufacturer registration overwrite
  * each other in the same browser.
  *

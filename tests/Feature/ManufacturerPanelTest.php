@@ -40,7 +40,7 @@ final class ManufacturerPanelTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        service('superglobals')->setServer('HTTP_HOST', 'manufacturer.shiplore.in');
+        service('superglobals')->setServer('HTTP_HOST', 'manufacturer.shiplore.test');
         Services::resetSingle('request');
         Services::resetSingle('routes');
         Services::resetSingle('router');

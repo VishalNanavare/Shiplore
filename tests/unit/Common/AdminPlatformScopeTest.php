@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * Why this matters: PolicyEngine::can() is a bare in_array over permission codes with
  * no scope test, the admin route group is path-based (so /admin/* resolves on
- * vendor.shiplore.in, where the vendor's cookie is already sent), and
+ * vendor.shiplore.test, where the vendor's cookie is already sent), and
  * database/sql/11_seed.sql grants EVERY vendor/shop-scoped permission to vendor_owner.
  * Around 34 admin guards name codes that are in that grant — settlement.view,
  * product.update, media.view, report.export, order.cancel, transfer.approve — so the

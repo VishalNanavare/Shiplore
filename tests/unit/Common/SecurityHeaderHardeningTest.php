@@ -110,7 +110,7 @@ final class SecurityHeaderHardeningTest extends CIUnitTestCase
         $body = (string) json_encode(['csp-report' => [
             'violated-directive' => 'script-src',
             'blocked-uri'        => 'https://evil.example/x.js',
-            'document-uri'       => 'https://shiplore.in/store',
+            'document-uri'       => 'https://shiplore.test/store',
         ]]);
         $r = $this->withBody($body)->withBodyFormat('json')->post('csp-report');
         $r->assertStatus(204);

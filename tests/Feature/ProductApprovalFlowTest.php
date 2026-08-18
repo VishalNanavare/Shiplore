@@ -46,7 +46,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
     // ---- Vendor submit ----
     public function testVendorSubmitWiresToRepoForOwnProduct(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->grant([], 'vendor', 1);
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return ['id' => 1, 'display_name' => 'Sole Mate']; }
@@ -67,7 +67,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
 
     public function testVendorCannotSubmitAnotherVendorsProduct(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->grant([], 'vendor', 1);
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return ['id' => 1, 'display_name' => 'Sole Mate']; }
@@ -89,7 +89,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
     // ---- Vendor publish / unpublish (vendor controls storefront visibility) ----
     public function testVendorPublishWiresForOwnApprovedProduct(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->grant([], 'vendor', 1);
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return ['id' => 1, 'display_name' => 'Sole Mate']; }
@@ -109,7 +109,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
 
     public function testVendorCannotPublishAnotherVendorsProduct(): void
     {
-        $this->withHost('vendor.shiplore.in');
+        $this->withHost('vendor.shiplore.test');
         $this->grant([], 'vendor', 1);
         Services::injectMock('vendorAccountRepository', new class {
             public function findByOwnerUserId(int $u): ?array { return ['id' => 1, 'display_name' => 'Sole Mate']; }
@@ -130,7 +130,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
     // ---- Admin publish ----
     public function testAdminPublishWires(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         $this->grant(['product.approve']);
         $spy = new class {
             public bool $published = false;
@@ -145,7 +145,7 @@ final class ProductApprovalFlowTest extends CIUnitTestCase
 
     public function testAdminPublishDeniedWithoutPermission(): void
     {
-        $this->withHost('admin.shiplore.in');
+        $this->withHost('admin.shiplore.test');
         $this->grant(['product.view']);
         Services::injectMock('productApprovalRepository', new class {
             public function publish(int $id, int $a): bool { return true; }

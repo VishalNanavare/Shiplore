@@ -13,7 +13,7 @@ use Config\App;
  * root route silently falls through to the apex — which is Store\StoreController::home,
  * the consumer storefront.
  *
- * That failure mode is invisible in code review and total in effect: monline.shiplore.in
+ * That failure mode is invisible in code review and total in effect: monline.shiplore.test
  * would have served the consumer shop, with consumer pricing, on the B2B hostname.
  *
  * This test makes the omission impossible to ship: add a hostname to
@@ -35,7 +35,7 @@ final class SubdomainRootRouteTest extends CIUnitTestCase
         $labels = [];
         foreach ((new App())->allowedHostnames as $host) {
             $parts = explode('.', $host);
-            // 'shiplore.in' is the apex (2 labels) — it uses the fallback by design.
+            // 'shiplore.test' is the apex (2 labels) — it uses the fallback by design.
             if (count($parts) > 2) {
                 $labels[] = $parts[0];
             }

@@ -658,8 +658,8 @@ final class MonlineB2bTest extends CIUnitTestCase
 
     /**
      * The B2B cart must NOT reuse the consumer cart's session key. The cookie is
-     * domain-wide, so one browser shares a session between shiplore.in and
-     * monline.shiplore.in — the same key would merge a shopper's basket with a
+     * domain-wide, so one browser shares a session between shiplore.test and
+     * monline.shiplore.test — the same key would merge a shopper's basket with a
      * vendor's wholesale order.
      */
     public function testB2bCartUsesItsOwnSessionKey(): void
@@ -694,7 +694,7 @@ final class MonlineB2bTest extends CIUnitTestCase
     /**
      * The monline location override must NOT reuse the storefront's location session
      * key either — same domain-wide-cookie hazard as the cart. A buyer changing where
-     * shiplore.in delivers their groceries must never silently change what monline
+     * shiplore.test delivers their groceries must never silently change what monline
      * sorts by, and vice versa.
      */
     public function testMonlineLocationUsesItsOwnSessionKey(): void

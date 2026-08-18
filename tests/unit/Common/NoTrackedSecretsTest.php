@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
  * Audit finding C1: `s3_storage/.env` was tracked and carried the live object-store
  * access key and secret — the sole authentication for the bucket holding vendor and
  * rider KYC scans, GST certificates and invoice PDFs. A second literal copy sat in
- * `s3_storage/public/s3test.php`, which is inside the docroot of s3.shiplore.in.
+ * `s3_storage/public/s3test.php`, which is inside the docroot of s3.shiplore.test.
  *
  * `.gitignore`'s `/.env` is root-anchored, so it only ever covered the project-root
  * env file; the nested application's was never matched.

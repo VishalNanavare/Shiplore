@@ -25,7 +25,7 @@ final class AjaxFormTest extends CIUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.test');
         Services::resetSingle('request');
         Services::resetSingle('routes');
         Services::resetSingle('router');
@@ -103,7 +103,7 @@ final class AjaxFormTest extends CIUnitTestCase
      *
      * The interceptor replays every POST through fetch() with an X-Requested-With header
      * (not CORS-safelisted, so a preflight nothing answers) and credentials:'same-origin'
-     * (which drops the .shiplore.in cookie cross-origin). Both are fatal, and both fail
+     * (which drops the .shiplore.test cookie cross-origin). Both are fatal, and both fail
      * SILENTLY as far as the server is concerned — nothing reaches PHP, so there is no
      * 404, no log line, no audit row. The impersonation banner's "Return to Admin" button
      * sat broken exactly this way once panel_url() made its action cross-origin.

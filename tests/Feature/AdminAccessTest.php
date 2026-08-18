@@ -31,14 +31,14 @@ final class AdminAccessTest extends CIUnitTestCase
      * tearDown() must undo this with unsetServer(), not just Services::reset():
      * Superglobals::setServer() writes straight into the real $_SERVER array (see
      * system/Superglobals.php), which Services::reset() does not touch — it only
-     * drops cached service INSTANCES. Left unset, 'admin.shiplore.in' would leak into
+     * drops cached service INSTANCES. Left unset, 'admin.shiplore.test' would leak into
      * every test that runs afterward in the same PHPUnit process, silently deciding
      * which panel's routes THEY see regardless of what they actually test.
      */
     protected function setUp(): void
     {
         parent::setUp();
-        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.in');
+        service('superglobals')->setServer('HTTP_HOST', 'admin.shiplore.test');
         Services::resetSingle('request');
         Services::resetSingle('routes');
         Services::resetSingle('router');

@@ -25,7 +25,7 @@
         // silently did nothing.
         //
         // The cross-host hop still happens, just on the RESPONSE: leave() redirects to
-        // admin.shiplore.in, AjaxRedirectFilter turns that into a JSON envelope, and
+        // admin.<domain>, AjaxRedirectFilter turns that into a JSON envelope, and
         // ajax-forms.js navigates via window.location.assign() — a top-level navigation,
         // which is unrestricted cross-origin.
         ?>

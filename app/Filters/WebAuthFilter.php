@@ -91,8 +91,8 @@ final class WebAuthFilter implements FilterInterface
      * Pin a route group to one kind of principal (`webAuth:platform`, `webAuth:vendor`).
      *
      * Without this the filter proved only "some session is logged in". The session
-     * cookie is scoped to .shiplore.in (app/Config/Cookie.php), so a vendor login at
-     * vendor.shiplore.in is sent to admin.shiplore.in as well — leaving the
+     * cookie is scoped to .<domain> (app/Config/Cookie.php), so a vendor login at
+     * vendor.<domain> is sent to admin.<domain> as well — leaving the
      * per-controller permission checks as the only thing between vendor staff and
      * the admin panel. Those checks are inconsistent: 34 admin authorization sites
      * are gated on vendor- or shop-scoped permission codes that vendor roles

@@ -7,7 +7,7 @@ use Config\App;
 
 /**
  * Manufacturers sell B2B only — their products must never reach the consumer
- * storefront (shiplore.in) or the customer mobile apps.
+ * storefront (shiplore.test) or the customer mobile apps.
  *
  * StoreCatalogRepository is the single gate for both surfaces: the web storefront and
  * Api\V1\CustomerApiController are both thin wrappers over it. But several of its read
@@ -123,7 +123,7 @@ final class ManufacturerCatalogExclusionTest extends CIUnitTestCase
         $hosts  = (new App())->allowedHostnames;
         $routes = (string) file_get_contents(APPPATH . 'Config/Routes.php');
 
-        foreach (['manufacturer.shiplore.in', 'mshop.shiplore.in', 'monline.shiplore.in'] as $h) {
+        foreach (['manufacturer.shiplore.test', 'mshop.shiplore.test', 'monline.shiplore.test'] as $h) {
             $this->assertContains($h, $hosts);
         }
 

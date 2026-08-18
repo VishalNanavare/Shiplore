@@ -8,8 +8,8 @@ namespace App\Libraries\Monline;
  * BuyerLocationService — an optional location override for monline's proximity sort.
  *
  * Separate from App\Libraries\Store\LocationService for the same reason MonlineCart is
- * separate from CartService: the session cookie is domain-wide (`.shiplore.in`), so
- * shiplore.in and monline.shiplore.in share ONE session in a given browser. Reusing the
+ * separate from CartService: the session cookie is domain-wide (`.<domain>`), so
+ * <domain> and monline.<domain> share ONE session in a given browser. Reusing the
  * storefront's key would let a "deliver my groceries here" pick silently change what a
  * B2B buyer sees sorted by, and vice versa.
  *

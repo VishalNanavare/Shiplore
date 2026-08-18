@@ -7,7 +7,7 @@ namespace App\Controllers\Monline;
 use CodeIgniter\HTTP\RedirectResponse;
 
 /**
- * Monline\CatalogController — the monline.shiplore.in entry point.
+ * Monline\CatalogController — the monline.<domain> entry point.
  *
  * Browsing is public: anyone can see manufacturer products, images, categories and MOQ.
  * The price is the only thing gated, and only behind a resolved buyer session — same

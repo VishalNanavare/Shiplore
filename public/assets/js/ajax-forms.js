@@ -163,11 +163,11 @@
     //
     // Two independent reasons, either one fatal: the X-Requested-With header below is not
     // CORS-safelisted, so the request needs a preflight that nothing on this platform
-    // answers; and credentials:'same-origin' would drop the .shiplore.in session cookie
+    // answers; and credentials:'same-origin' would drop the .<domain> session cookie
     // even if it were answered. The native submit the interceptor would have cancelled
     // works fine — panel subdomains are the same SITE, which is what SameSite=Lax governs.
     //
-    // Note "same site" is NOT "same origin": manufacturer.shiplore.in -> admin.shiplore.in
+    // Note "same site" is NOT "same origin": manufacturer.<domain> -> admin.<domain>
     // is same-site (so the cookie rides along on a real form POST) but cross-origin (so
     // fetch refuses it). Without this guard the failure is SILENT on the server — nothing
     // reaches PHP, so there is no 404, no log line and no audit row to find. That is

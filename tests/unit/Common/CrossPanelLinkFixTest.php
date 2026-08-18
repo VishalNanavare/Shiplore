@@ -61,8 +61,8 @@ final class CrossPanelLinkFixTest extends CIUnitTestCase
     /**
      * The sidebar was MISSED by the original sweep, which only covered
      * vendor/dashboard.php. The two Procurement entries name monline routes, and the
-     * sidebar renders every item's URL through site_url() — so on vendor.shiplore.in
-     * they resolved to vendor.shiplore.in/monline/browse, a path the monline group
+     * sidebar renders every item's URL through site_url() — so on vendor.shiplore.test
+     * they resolved to vendor.shiplore.test/monline/browse, a path the monline group
      * (subdomain-pinned to `monline`) never registers there. Result: the primary
      * navigation a vendor uses to reach monline 404'd, while the dashboard's two links
      * to the same places worked.
@@ -187,7 +187,7 @@ final class CrossPanelLinkFixTest extends CIUnitTestCase
      * action actually stays on the current host.
      *
      * That it does is not obvious, and is the reason site_url() is safe here:
-     * Config\App::$baseURL is the fixed 'https://shiplore.in/', so site_url() looks like
+     * Config\App::$baseURL is the fixed 'https://shiplore.test/', so site_url() looks like
      * it should emit that host everywhere. It does not. SiteURIFactory::getValidHost()
      * swaps in the REQUEST's host whenever that host is listed in
      * Config\App::$allowedHostnames — which every panel subdomain is. Verified here by
@@ -201,7 +201,7 @@ final class CrossPanelLinkFixTest extends CIUnitTestCase
      */
     public function testImpersonationBannerActionIsSameOriginOnEveryPanelHost(): void
     {
-        foreach (['manufacturer.shiplore.in', 'vendor.shiplore.in', 'rider.shiplore.in', 'admin.shiplore.in'] as $host) {
+        foreach (['manufacturer.shiplore.test', 'vendor.shiplore.test', 'rider.shiplore.test', 'admin.shiplore.test'] as $host) {
             service('superglobals')->setServer('HTTP_HOST', $host);
             \Config\Services::resetSingle('request');
             \Config\Services::resetSingle('siteurifactory');

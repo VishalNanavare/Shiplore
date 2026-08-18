@@ -37,7 +37,7 @@ $groups = [
     //
     // The two monline entries leave this panel: monline is pinned to its own
     // subdomain, so their hrefs go through panel_url() at render time (see the loop
-    // below) — site_url() would build vendor.shiplore.in/monline/..., which the
+    // below) — site_url() would build vendor.<domain>/monline/..., which the
     // monline group never registers on that host.
     ['Procurement', 'bi-cart-plus', [
         ['monline', 'Buy on monline', 'bi-shop-window', 'monline/browse', 'monline.browse'],

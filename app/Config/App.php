@@ -22,29 +22,33 @@ class App extends BaseConfig
      * the domain root; that always wins, which is also how phpunit.dist.xml pins
      * http://example.com/ for the suite.
      *
-     * Kept as a real URL rather than '' because Tests\Support\Libraries\ConfigReader
-     * reads this property with the constructor deliberately bypassed, and HealthTest
-     * validates that raw literal — a fresh checkout with no .env must still name a
-     * usable URL here.
+     * The literal is a placeholder, NOT this platform's address — the real domain
+     * belongs in .env and nowhere in tracked code. It stays a syntactically valid URL
+     * rather than '' because Tests\Support\Libraries\ConfigReader reads this property
+     * with the constructor deliberately bypassed and HealthTest validates that raw
+     * value.
      */
-    public string $baseURL = 'https://shiplore.in/';
+    public string $baseURL = 'https://localhost/';
 
     /**
-     * The root domain every panel hangs off. Override per environment with
-     * `app.baseDomain` in .env — that one line moves the whole platform to another
-     * domain, because $allowedHostnames below is DERIVED from it.
+     * The root domain every panel hangs off, and the single value that moves the whole
+     * platform: $baseURL above and $allowedHostnames below are both DERIVED from it.
      *
-     * The literal here is the production default on purpose: .env is gitignored and
-     * does not exist on every box, so an environment that sets nothing must keep
-     * behaving exactly as it did before this was made configurable.
+     * SET `app.baseDomain` IN .env — IT IS REQUIRED IN EVERY DEPLOYED ENVIRONMENT.
+     * The `localhost` placeholder is not a working default and is not this platform's
+     * address; tracked code deliberately names no real domain. Deploy without .env and
+     * every panel hostname resolves to *.localhost, so CI4 rejects the real Host header
+     * and site_url() emits links to localhost. That failure is loud and immediate by
+     * design — the alternative, defaulting to a real domain, silently points a
+     * misconfigured environment at production.
      *
-     * Note this is deliberately separate from $baseURL rather than parsed out of it.
-     * The test suite overrides app.baseURL to http://example.com/ (phpunit.dist.xml)
-     * while still driving requests at *.shiplore.in hosts, so deriving the hostname
-     * list from $baseURL would empty it under test and 64 test files would start
-     * asserting against unregistered routes.
+     * Deliberately separate from $baseURL rather than parsed out of it: the suite pins
+     * app.baseURL to http://example.com/ while driving requests at *.shiplore.test
+     * hosts (phpunit.dist.xml sets both), so deriving the hostname list from $baseURL
+     * would empty it under test and 65 test files would assert against unregistered
+     * routes.
      */
-    public string $baseDomain = 'shiplore.in';
+    public string $baseDomain = 'localhost';
 
     /**
      * Every subdomain label the router pins a group to, WITHOUT the domain.

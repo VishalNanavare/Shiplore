@@ -10,7 +10,7 @@ declare(strict_types=1);
  * app/Config/Routes.php is restricted to registering only on its own subdomain via
  * the 'subdomain' route option — see PanelSubdomainIsolationTest for why. site_url()
  * and base_url() resolve against the CURRENT request's host, so a plain
- * site_url('vendor/dashboard') called while serving manufacturer.shiplore.in
+ * site_url('vendor/dashboard') called while serving manufacturer.<domain>
  * produces a URL that will never match any registered route: same host, wrong
  * panel's path.
  *

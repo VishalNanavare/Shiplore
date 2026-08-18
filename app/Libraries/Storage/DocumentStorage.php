@@ -156,7 +156,7 @@ final class DocumentStorage
         // $dummyRoute always lives in ITS OWN panel's route group (its first path
         // segment names that panel), but the caller redirecting here does not
         // necessarily run on that panel's host — Admin\MediaController::view() calls
-        // this with 'vendor/media/file' while serving admin.shiplore.in, and the
+        // this with 'vendor/media/file' while serving admin.<domain>, and the
         // shared App\Controllers\MediaController::serve() (reachable from any host)
         // uses the 'vendor/kyc/file' default regardless of who is asking. Since panel
         // route groups are host-restricted, a plain site_url() here would carry the

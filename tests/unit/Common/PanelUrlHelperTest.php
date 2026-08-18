@@ -9,9 +9,9 @@ use CodeIgniter\Test\CIUnitTestCase;
  * panel_url() (app/Helpers/panel_helper.php) is what closes the cross-panel-link half
  * of the subdomain isolation fix — see PanelSubdomainIsolationTest for the routing
  * half. Restricting each panel's route group to its own subdomain (Audit: operator
- * reported https://shiplore.in/monline/browse serving the same page as
- * https://monline.shiplore.in/browse) means a plain site_url('vendor/dashboard')
- * called while serving manufacturer.shiplore.in now points at a path that never
+ * reported https://shiplore.test/monline/browse serving the same page as
+ * https://monline.shiplore.test/browse) means a plain site_url('vendor/dashboard')
+ * called while serving manufacturer.shiplore.test now points at a path that never
  * resolves on that host. panel_url() builds the link on the TARGET panel's own host
  * instead, exactly mirroring the pattern Admin\PortalController::portalUrl() already
  * used for the admin impersonation feature — this is the general-purpose version of
@@ -69,8 +69,8 @@ final class PanelUrlHelperTest extends CIUnitTestCase
     public function testBuildsAnAbsoluteUrlOnTheTargetSubdomain(): void
     {
         $this->assertSame(
-            'https://monline.shiplore.in/monline/browse',
-            $this->urlFor('vendor.shiplore.in', 'monline', 'monline/browse'),
+            'https://monline.shiplore.test/monline/browse',
+            $this->urlFor('vendor.shiplore.test', 'monline', 'monline/browse'),
         );
     }
 
@@ -78,8 +78,8 @@ final class PanelUrlHelperTest extends CIUnitTestCase
     public function testWorksFromASiblingSubdomainToo(): void
     {
         $this->assertSame(
-            'https://monline.shiplore.in/monline/orders',
-            $this->urlFor('shop.shiplore.in', 'monline', 'monline/orders'),
+            'https://monline.shiplore.test/monline/orders',
+            $this->urlFor('shop.shiplore.test', 'monline', 'monline/orders'),
         );
     }
 
@@ -87,8 +87,8 @@ final class PanelUrlHelperTest extends CIUnitTestCase
     public function testWorksInTheOppositeDirection(): void
     {
         $this->assertSame(
-            'https://vendor.shiplore.in/vendor/dashboard',
-            $this->urlFor('monline.shiplore.in', 'vendor', 'vendor/dashboard'),
+            'https://vendor.shiplore.test/vendor/dashboard',
+            $this->urlFor('monline.shiplore.test', 'vendor', 'vendor/dashboard'),
         );
     }
 
@@ -96,8 +96,8 @@ final class PanelUrlHelperTest extends CIUnitTestCase
     public function testSamePanelTargetStaysOnTheCurrentHost(): void
     {
         $this->assertSame(
-            'https://admin.shiplore.in/admin/dashboard',
-            $this->urlFor('admin.shiplore.in', 'admin', 'admin/dashboard'),
+            'https://admin.shiplore.test/admin/dashboard',
+            $this->urlFor('admin.shiplore.test', 'admin', 'admin/dashboard'),
         );
     }
 
@@ -105,8 +105,8 @@ final class PanelUrlHelperTest extends CIUnitTestCase
     public function testSchemeFollowsTheCurrentRequestNotHardcodedHttps(): void
     {
         $this->assertSame(
-            'http://rider.shiplore.in/rider/dashboard',
-            $this->urlFor('admin.shiplore.in', 'rider', 'rider/dashboard', secure: false),
+            'http://rider.shiplore.test/rider/dashboard',
+            $this->urlFor('admin.shiplore.test', 'rider', 'rider/dashboard', secure: false),
         );
     }
 
@@ -118,9 +118,9 @@ final class PanelUrlHelperTest extends CIUnitTestCase
     public function testFallsBackToARelativeUrlWhenTheTargetIsNotAllowlisted(): void
     {
         // 'evil' is not, and never will be, in Config\App::$allowedHostnames.
-        $url = $this->urlFor('admin.shiplore.in', 'evil', 'evil/path');
+        $url = $this->urlFor('admin.shiplore.test', 'evil', 'evil/path');
 
-        $this->assertStringNotContainsString('evil.shiplore.in', $url);
+        $this->assertStringNotContainsString('evil.shiplore.test', $url);
         $this->assertStringContainsString('/evil/path', $url, 'must still resolve to a URL on the CURRENT (trusted) host, not fail outright');
     }
 
@@ -141,7 +141,7 @@ final class PanelUrlHelperTest extends CIUnitTestCase
     /** A bare two-label host (the apex itself) has no subdomain to strip — must not crash or mis-target. */
     public function testApexHostAsCurrentHostDoesNotCrash(): void
     {
-        $url = $this->urlFor('shiplore.in', 'monline', 'monline/browse');
+        $url = $this->urlFor('shiplore.test', 'monline', 'monline/browse');
 
         $this->assertStringContainsString('/monline/browse', $url);
     }

@@ -7,14 +7,14 @@ use CodeIgniter\Router\RouteCollection;
 use CodeIgniter\Test\CIUnitTestCase;
 
 /**
- * The operator reported this directly: https://shiplore.in/monline/browse loads the
- * same page as https://monline.shiplore.in/browse — removing the subdomain from a
+ * The operator reported this directly: https://shiplore.test/monline/browse loads the
+ * same page as https://monline.shiplore.test/browse — removing the subdomain from a
  * panel URL still serves the panel. Every branded panel had the same shape: the route
  * groups for admin, vendor (+ shop), rider, manufacturer (+ mshop) and monline are all
  * PATH-based with no host restriction, so CI4 registers them regardless of which
  * hostname the request arrived on. The subdomains were decorative.
  *
- * `s3.shiplore.in` and `pma.shiplore.in` are separate applications entirely (not this
+ * `s3.shiplore.test` and `pma.shiplore.test` are separate applications entirely (not this
  * CI4 app's routing) and are explicitly out of scope, per the operator.
  *
  * These are genuine behavioral tests, not source assertions: each one constructs a
@@ -69,12 +69,12 @@ final class PanelSubdomainIsolationTest extends CIUnitTestCase
     public static function panelProvider(): array
     {
         return [
-            'admin/dashboard'        => ['admin/dashboard', ['admin.shiplore.in']],
-            'vendor/dashboard'       => ['vendor/dashboard', ['vendor.shiplore.in', 'shop.shiplore.in']],
-            'rider/login'            => ['rider/login', ['rider.shiplore.in']],
-            'rider/dashboard'        => ['rider/dashboard', ['rider.shiplore.in']],
-            'manufacturer/dashboard' => ['manufacturer/dashboard', ['manufacturer.shiplore.in', 'mshop.shiplore.in']],
-            'monline/browse'         => ['monline/browse', ['monline.shiplore.in']],
+            'admin/dashboard'        => ['admin/dashboard', ['admin.shiplore.test']],
+            'vendor/dashboard'       => ['vendor/dashboard', ['vendor.shiplore.test', 'shop.shiplore.test']],
+            'rider/login'            => ['rider/login', ['rider.shiplore.test']],
+            'rider/dashboard'        => ['rider/dashboard', ['rider.shiplore.test']],
+            'manufacturer/dashboard' => ['manufacturer/dashboard', ['manufacturer.shiplore.test', 'mshop.shiplore.test']],
+            'monline/browse'         => ['monline/browse', ['monline.shiplore.test']],
         ];
     }
 
@@ -82,13 +82,13 @@ final class PanelSubdomainIsolationTest extends CIUnitTestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('panelProvider')]
     public function testApexDoesNotServeAnyPanelPath(string $path): void
     {
-        $routes = $this->routesFor('shiplore.in');
+        $routes = $this->routesFor('shiplore.test');
         $get    = $routes->getRoutes('GET');
 
         $this->assertArrayNotHasKey(
             $path,
             $get,
-            "shiplore.in (apex) must not resolve '{$path}' — that is the exact regression the operator reported for monline/browse",
+            "shiplore.test (apex) must not resolve '{$path}' — that is the exact regression the operator reported for monline/browse",
         );
     }
 
@@ -97,8 +97,8 @@ final class PanelSubdomainIsolationTest extends CIUnitTestCase
     public function testWrongPanelHostDoesNotServeAnotherPanelsPath(string $path, array $ownHosts): void
     {
         $allHosts = [
-            'admin.shiplore.in', 'vendor.shiplore.in', 'shop.shiplore.in', 'rider.shiplore.in',
-            'manufacturer.shiplore.in', 'mshop.shiplore.in', 'monline.shiplore.in',
+            'admin.shiplore.test', 'vendor.shiplore.test', 'shop.shiplore.test', 'rider.shiplore.test',
+            'manufacturer.shiplore.test', 'mshop.shiplore.test', 'monline.shiplore.test',
         ];
 
         foreach (array_diff($allHosts, $ownHosts) as $wrongHost) {
@@ -124,7 +124,7 @@ final class PanelSubdomainIsolationTest extends CIUnitTestCase
     /** api/v1 is a separate concern (mobile apps) and must stay reachable from every host. */
     public function testApiV1IsNotRestrictedByHost(): void
     {
-        foreach (['shiplore.in', 'admin.shiplore.in', 'monline.shiplore.in'] as $host) {
+        foreach (['shiplore.test', 'admin.shiplore.test', 'monline.shiplore.test'] as $host) {
             $routes = $this->routesFor($host);
             $get    = $routes->getRoutes('POST');
 
@@ -135,7 +135,7 @@ final class PanelSubdomainIsolationTest extends CIUnitTestCase
     /** The storefront and shared auth/registration routes must stay reachable on the apex. */
     public function testApexStillServesTheStorefrontAndSharedAuthRoutes(): void
     {
-        $routes = $this->routesFor('shiplore.in');
+        $routes = $this->routesFor('shiplore.test');
         $get    = $routes->getRoutes('GET');
 
         $this->assertArrayHasKey('/', $get, 'the apex root (consumer storefront) must still resolve');
@@ -152,7 +152,7 @@ final class PanelSubdomainIsolationTest extends CIUnitTestCase
      */
     public function testPortalLeaveResolvesFromAnyPanelHost(): void
     {
-        foreach (['admin.shiplore.in', 'vendor.shiplore.in', 'manufacturer.shiplore.in', 'rider.shiplore.in', 'monline.shiplore.in'] as $host) {
+        foreach (['admin.shiplore.test', 'vendor.shiplore.test', 'manufacturer.shiplore.test', 'rider.shiplore.test', 'monline.shiplore.test'] as $host) {
             $routes = $this->routesFor($host);
             $post   = $routes->getRoutes('POST');
 
@@ -161,16 +161,16 @@ final class PanelSubdomainIsolationTest extends CIUnitTestCase
     }
 
     /**
-     * admin.shiplore.in must still be able to reach the "Go to Portal" admin-only POST
+     * admin.shiplore.test must still be able to reach the "Go to Portal" admin-only POST
      * routes that impersonate into another panel — those live INSIDE the admin group
-     * and are only ever posted to from admin.shiplore.in itself (confirmed by reading
+     * and are only ever posted to from admin.shiplore.test itself (confirmed by reading
      * Admin\PortalController::portalUrl(), which builds an explicit absolute URL to the
      * TARGET panel's own subdomain for the resulting redirect, rather than a relative
      * one — it already anticipated this restriction).
      */
     public function testAdminHostCanStillReachThePortalEnterRoutes(): void
     {
-        $routes = $this->routesFor('admin.shiplore.in');
+        $routes = $this->routesFor('admin.shiplore.test');
         $post   = $routes->getRoutes('POST');
 
         // (:num) is stored in the route key as its regex, wrapped in the capturing
