@@ -25,7 +25,7 @@ one database.
 | **Application total** | **772** | **86,633** |
 | Tests | 173 | 26,491 |
 
-**844 routes** across eight surfaces · **262 tables** in 85 schema files · **1,443 tests**
+**844 routes** across eight surfaces · **262 tables** in 85 schema files · **1,473 tests**
 
 Routes by panel:
 
@@ -39,124 +39,138 @@ migration — needs a plan rather than a single `UPDATE`.
 
 ---
 
-## How it fits together
+## Who uses Shiplore
+
+Five kinds of people, each with their own way in.
 
 ```mermaid
-flowchart TB
-    subgraph HOSTS["Eight subdomains, one codebase"]
-        direction LR
-        A["admin.<br/>310 routes"]
-        V["vendor.<br/>161"]
-        S["shop."]
-        M["manufacturer.<br/>77"]
-        U["mshop."]
-        O["monline.<br/>14"]
-        R["rider.<br/>5"]
-        C["apex storefront<br/>58"]
-    end
+flowchart TD
+    A["🛡️ ADMIN<br/>runs the platform"]
+    M["🏭 MANUFACTURER<br/>makes goods"]
+    V["🏪 VENDOR<br/>sells to the public"]
+    R["🛵 RIDER<br/>delivers"]
+    C["🛒 CUSTOMER<br/>buys"]
 
-    API["api/v1 · 166 routes<br/>shipped mobile + Windows POS clients"]
-
-    subgraph FILTERS["Filter chain — every request"]
-        direction LR
-        F1["WebAuth /<br/>JwtAuth /<br/>RiderAuth"]
-        F2["TenantScope"]
-        F3["Permission"]
-        F4["Throttle"]
-    end
-
-    subgraph CORE["Shared libraries — party-agnostic"]
-        direction LR
-        L1["PolicyEngine<br/>CapabilityResolver<br/>ScopeContext"]
-        L2["Money<br/>GstCalculator<br/>StatusMachine"]
-        L3["MediaService<br/>AuditWriter<br/>ChangeRequestEngine"]
-    end
-
-    DB[("262 tables<br/>~1.8M variants")]
-
-    HOSTS --> FILTERS
-    API --> FILTERS
-    FILTERS --> CORE
-    CORE --> DB
+    M -->|"sells wholesale"| V
+    V -->|"sells retail"| C
+    V -->|"sends out for delivery"| R
+    R -->|"delivers to"| C
+    A -->|"approves and oversees everyone"| V
 ```
 
-A route group registers **only** on its own subdomain. A vendor path requested on the admin
-host does not 403 — it does not exist there at all.
+## One vendor, many shops
 
----
-
-## The commerce flow
-
-The platform's reason to exist: no distributor sits between the manufacturer and the seller,
-so the seller buys low and can pass a real saving to the customer.
+A vendor signs in once and works across **all** their shops from a single window. Their
+shop staff sign in separately and see **only their own shop** — same codebase, different
+door.
 
 ```mermaid
-flowchart LR
-    MFG["MANUFACTURER<br/>produces goods"]
-    MON{{"monline<br/>B2B marketplace"}}
-    VEN["VENDOR<br/>resells"]
-    CUS(["CUSTOMER"])
+flowchart TD
+    VO["Vendor owner<br/>signs in at vendor."]
+    S1["Shop A"]
+    S2["Shop B"]
+    S3["Shop C"]
+    ST["Shop staff<br/>sign in at shop."]
 
-    MFG -- "purchase order" --> MON
-    MON -- "delivered to seller" --> VEN
-    VEN -- "own product record" --> CUS
-
-    MFG -.- P1["making price &lt; selling price<br/><i>ManufacturerPricing</i><br/>no MRP concept"]
-    VEN -.- P2["selling price &le; MRP<br/><i>VendorPricing</i><br/>equality allowed"]
+    VO -->|"switches between them"| S1
+    VO --> S2
+    VO --> S3
+    ST -->|"sees only their own"| S2
 ```
 
-The seller does **not** inherit the manufacturer's product. It creates its own record, sets
-its own MRP and selling price, and sells under its own name. Two separate pricing
-invariants, each enforced on every write path by its own validator — and note they treat
-equality differently on purpose. Selling exactly at MRP is ordinary retail; a manufacturer
-selling exactly at cost is a typo.
-
----
+Manufacturers work the same way: an owner signs in at `manufacturer.` and spans every
+plant; unit staff sign in at `mshop.` and see only theirs.
 
 ## The panels
 
-Every panel is pinned to its own subdomain in `app/Config/Routes.php`. A route group
-registers **only** on its own host, so a path belonging to another panel does not merely
-403 there — it never exists.
+Each audience gets its own web address. Every panel is locked to its own subdomain, so a
+vendor page simply does not exist on the admin address.
 
-| Panel | Subdomain | Who signs in |
+| Panel | Address | Who signs in |
 | --- | --- | --- |
-| Admin | `admin.` | Platform staff |
-| Vendor | `vendor.` | Seller owners |
-| Shop | `shop.` | Shop-level staff of a seller |
-| Manufacturer | `manufacturer.` | Manufacturer owners |
-| Unit | `mshop.` | Staff of one manufacturing unit |
-| Monline | `monline.` | The B2B marketplace, where sellers buy from manufacturers |
-| Rider | `rider.` | Delivery riders |
-| Storefront | apex | Customers |
+| Admin | `admin.` | platform staff |
+| Vendor | `vendor.` | vendor owners — all their shops |
+| Shop | `shop.` | shop staff — one shop |
+| Manufacturer | `manufacturer.` | manufacturer owners — all their plants |
+| Unit | `mshop.` | plant staff — one plant |
+| Monline | `monline.` | the wholesale marketplace |
+| Rider | `rider.` | delivery riders |
+| Storefront | main domain | customers |
 
-Crossing panels needs `panel_url()` (`app/Helpers/panel_helper.php`), never `site_url()` —
-the latter resolves against the *current* host and would produce a URL that matches no
-registered route. The exception is a route deliberately registered outside every group so
-it resolves everywhere; `admin/portal/leave` is the one such route, and it must use
-`site_url()`.
+## The mobile and desktop apps
 
----
+Three shipped apps talk to the same backend over one JSON API. They authenticate with a
+token rather than a browser session.
 
-## The two seller types
+```mermaid
+flowchart LR
+    CA["📱 Customer app"]
+    PA["🧾 POS app<br/>counter billing"]
+    RA["🛵 Rider app"]
+    API["api/v1<br/>one JSON API"]
+    DB[("the same database<br/>the panels use")]
 
-Sellers and manufacturers are both rows in `vendors`, separated by `party_type`. That single
-fact drives most of the architecture.
+    CA --> API
+    PA --> API
+    RA --> API
+    API --> DB
+```
 
-**A manufacturer** produces goods and sells them wholesale. Its locations are `mshops`, its
-stock is `mfg_inventory`, its orders are `mfg_purchase_orders`. It prices with a **making
-price** (cost to produce) and a **selling price** (what a seller pays), and the invariant
-`0 < making < selling` is enforced by `App\Libraries\Catalog\ManufacturerPricing` on every
-write path. A manufacturer has no MRP concept at all.
+**These apps are already in users' hands and cannot be updated in step with the server**,
+so anything `api/v1` returns has to keep working. That constraint shapes a lot of the
+code: new features get new tables and new endpoints rather than changing existing ones.
 
-**A vendor** buys from manufacturers, then creates its *own* product record to sell to
-customers. Its locations are `shops`, its stock is `inventory`, its orders are `orders`. It
-prices with an **MRP** and a **selling price**, and the invariant `0 < selling <= mrp` is
-enforced by `App\Libraries\Catalog\VendorPricing`. Equality is allowed here — selling
-exactly at MRP is ordinary retail, whereas a manufacturer selling exactly at cost is a typo.
+The POS app also works **offline** and syncs when it reconnects — `php spark sync:work`
+drains that queue.
 
-With no distributor in between, the seller's margin is the point: they buy below MRP and
-pass some of that on, so the storefront can show a genuine saving.
+## How a request is handled
+
+Every request, from a browser or an app, goes through the same four checks before it
+reaches any code that touches data.
+
+```mermaid
+flowchart LR
+    IN["a request"] --> A["Who are you?"] --> T["Which shop or plant<br/>is yours?"] --> P["Are you allowed<br/>to do this?"] --> RL["Not too often?"] --> OUT["the page or the data"]
+```
+
+In the code those are `WebAuthFilter` / `JwtAuthFilter`, `TenantScopeFilter`,
+`PermissionFilter` and `ThrottleFilter`. The second one matters most: nearly every query
+is scoped to the signed-in tenant, so a change that skips it is a data leak between
+businesses, not a bug.
+
+## Money flows one way
+
+```mermaid
+flowchart LR
+    M["Manufacturer<br/>making price → selling price"]
+    V["Vendor<br/>selling price ≤ MRP"]
+    C["Customer<br/>pays the selling price"]
+
+    M -->|"vendor buys wholesale"| V
+    V -->|"sells below MRP"| C
+```
+
+A manufacturer prices with a **making price** (what it costs to produce) and a **selling
+price** (what a vendor pays) — it has no MRP at all. A vendor then creates its **own**
+product and prices it with an **MRP** and a **selling price** at or below it. With no
+distributor in between, the vendor buys low and can show the customer a real saving.
+
+Both rules are enforced in code on every save — `ManufacturerPricing` and `VendorPricing`.
+
+### Under the hood
+
+Both are rows in `vendors`, separated by `party_type` — one table, two behaviours.
+
+| | Manufacturer | Vendor |
+| --- | --- | --- |
+| Locations | `mshops` | `shops` |
+| Stock | `mfg_inventory` | `inventory` |
+| Orders | `mfg_purchase_orders` | `orders` |
+| Pricing rule | `0 < making < selling` | `0 < selling <= mrp` |
+| Enforced by | `ManufacturerPricing` | `VendorPricing` |
+
+Equality differs on purpose: selling exactly at MRP is ordinary retail, while a
+manufacturer selling exactly at cost is a typo.
 
 ---
 
