@@ -222,6 +222,88 @@ final class NoPersonalDataTest extends CIUnitTestCase
         $this->assertSame([], $offenders, "a tracked path names the deployment host:\n" . implode("\n", $offenders));
     }
 
+    /**
+     * No real uploaded content may be tracked at all.
+     *
+     * The gap this closes was invisible to every text scan, mine included. A tracked
+     * .xlsx under the nested object-store app published seven live email addresses and
+     * roughly 250 real people's names — inside xl/sharedStrings.xml, zip-compressed
+     * within a binary file, so a grep for '@' finds nothing. A scanned handwritten
+     * signature sat beside it, and no regex will ever read a PNG.
+     *
+     * The rule is therefore structural rather than pattern-based: user-uploaded data
+     * has no business being in the repository, whatever it happens to contain. Cheap to
+     * enforce, and it cannot be defeated by compression or an image format.
+     */
+    public function testNoUploadedUserContentIsTracked(): void
+    {
+        $offenders = array_values(array_filter(
+            $this->trackedPaths(),
+            static function (string $p): bool {
+                if (! preg_match('#(^|/)writable/(data|uploads|\.meta)/#', $p)) {
+                    return false;
+                }
+
+                // CodeIgniter ships index.html / .htaccess placeholders in these
+                // directories to stop directory listing. They are scaffolding, and
+                // removing them would REDUCE security.
+                return ! preg_match('#/(index\.html|\.htaccess|\.gitkeep)$#', $p);
+            },
+        ));
+
+        $this->assertSame(
+            [],
+            $offenders,
+            "uploaded user content is published — it can contain names, emails and signatures no text scan would find:\n"
+                . implode("\n", $offenders),
+        );
+    }
+
+    /**
+     * Binary documents that ARE tracked must not carry contact details.
+     *
+     * Belt and braces for the check above: if a spreadsheet or PDF is ever legitimately
+     * committed, its text payload is still read. XLSX and DOCX are zip containers, so
+     * they are opened and their XML parts scanned rather than sniffed as bytes.
+     */
+    public function testTrackedDocumentsCarryNoEmailAddresses(): void
+    {
+        $offenders = [];
+
+        foreach ($this->trackedPaths() as $rel) {
+            if (! preg_match('/\.(xlsx|docx|pptx|pdf)$/i', $rel)) {
+                continue;
+            }
+            $abs = ROOTPATH . $rel;
+            if (! is_file($abs)) {
+                continue;
+            }
+
+            $text = '';
+
+            if (preg_match('/\.(xlsx|docx|pptx)$/i', $rel) && class_exists(ZipArchive::class)) {
+                $zip = new ZipArchive();
+                if ($zip->open($abs) === true) {
+                    for ($i = 0; $i < $zip->numFiles; $i++) {
+                        $name = (string) $zip->getNameIndex($i);
+                        if (str_ends_with($name, '.xml')) {
+                            $text .= (string) $zip->getFromIndex($i);
+                        }
+                    }
+                    $zip->close();
+                }
+            } else {
+                $text = (string) file_get_contents($abs);
+            }
+
+            if (preg_match('/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/', $text, $m)) {
+                $offenders[] = $rel . '  ' . $m[0];
+            }
+        }
+
+        $this->assertSame([], $offenders, "a tracked document contains email addresses:\n" . implode("\n", $offenders));
+    }
+
     /** No hosting-account path in ANY tracked file, including the nested app's config. */
     public function testNoServerPathAnywhereInTheRepository(): void
     {

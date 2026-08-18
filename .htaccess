@@ -23,7 +23,17 @@ Options -Indexes
 	</IfModule>
 </FilesMatch>
 
-# Dotfiles and editor/VCS leftovers (.env, .git/*, .DS_Store, *.swp, ...).
+# Dotfiles: .env, .DS_Store, *.swp and friends.
+#
+# FilesMatch tests the BASENAME only, so this rule does NOT cover a dotted
+# DIRECTORY: a request for /.git/config asks for the file `config`, which does not
+# start with a dot and therefore sails straight past. The comment here used to claim
+# it covered `.git/*`; it never did.
+#
+# That gap matters more than it looks. The rewrite below sends only non-existent
+# paths to public/index.php, so DocumentRoot is the project root and real files are
+# served directly — .git/ included. An exposed .git/ hands over the entire repository
+# and its full history, which would defeat making the GitHub repo private.
 <FilesMatch "^\.">
 	<IfModule authz_core_module>
 		Require all denied
@@ -32,6 +42,16 @@ Options -Indexes
 		Deny from all
 	</IfModule>
 </FilesMatch>
+
+# Dotted DIRECTORIES, which FilesMatch above cannot reach. Matched on the request
+# path, so /.git/config, /.git/HEAD and every object under it are refused.
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteRule "(^|/)\.(git|svn|hg|bzr|idea|vscode)(/|$)" - [F,L]
+</IfModule>
+<IfModule !mod_rewrite.c>
+	RedirectMatch 404 "(^|/)\.(git|svn|hg|bzr|idea|vscode)(/|$)"
+</IfModule>
 
 # Never serve raw data/backup/log files, wherever they end up.
 <FilesMatch "\.(sql|sqlite|db|log|bak|old|orig|save|swp|tar|gz|zip)$">

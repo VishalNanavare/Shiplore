@@ -34,7 +34,7 @@
 # published history. Everything below stayed readable in earlier commits, so any
 # credential that ever appeared in one must be treated as disclosed and ROTATED —
 # deleting the file is not a remedy. See the demo staff logins in
-# database/sql/99b_demo_staff_logins.sql (password `demo1234`, users 110/111/113).
+# database/sql/99b_demo_staff_logins.sql — it shipped a working staff password.
 # ---------------------------------------------------------------------------
 
 # Schema, migrations, seeds and import tooling. Carried real seed records, demo
@@ -60,3 +60,10 @@ php.ini
 /test_shiplore_in/
 .ftpquota
 /.htaccess 1
+
+# Real uploaded content of the nested object-store app. A tracked .xlsx here published
+# seven live email addresses and ~250 real names inside xl/sharedStrings.xml, plus a
+# scanned handwritten signature — none of it findable by a text grep, because the
+# payload is zip-compressed inside a binary file.
+/s3_storage/writable/data/
+/s3_storage/writable/.meta/

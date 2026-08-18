@@ -7,7 +7,7 @@
         <div class="d-flex flex-wrap align-items-end gap-3" style="margin-top:-48px">
             <span class="rounded-circle bg-white text-primary d-grid border border-3 border-white shadow-sm" style="width:96px;height:96px;place-items:center;font-weight:700;font-size:2rem">VN</span>
             <div class="flex-grow-1">
-                <h2 class="h5 mb-0">Vishal Nanavare</h2>
+                <h2 class="h5 mb-0">Alex Doe</h2>
                 <div class="text-secondary small"><i class="bi bi-briefcase me-1"></i>Platform Administrator · <i class="bi bi-geo-alt ms-1 me-1"></i>Pune, IN</div>
             </div>
             <div><button class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Edit Profile</button></div>
