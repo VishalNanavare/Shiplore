@@ -141,4 +141,107 @@ final class NoPersonalDataTest extends CIUnitTestCase
 
         $this->assertSame([], $offenders, "a server path is published:\n" . implode("\n", $offenders));
     }
+
+    // ------------------------------------------------------- whole-repository checks
+
+    /**
+     * Every TRACKED path, across the whole repository — not just first-party PHP.
+     *
+     * The checks above read file CONTENTS under app/ and tests/. Two whole classes of
+     * exposure are invisible to that, and both were live:
+     *
+     *  - a path can leak the deployment hostname in its own NAME. A cPanel subdomain
+     *    docroot was tracked as `test_shiplore_in/`, i.e. the hostname with dots
+     *    replaced by underscores. No content grep finds that, ever.
+     *  - directories excluded from the first-party scan (the nested s3_storage/ app,
+     *    a committed phpMyAdmin) are still published, and one of them carried the
+     *    hosting account name in a config file.
+     *
+     * Uses git ls-files, so untracked working-tree files are correctly ignored — only
+     * what is actually published counts.
+     *
+     * @return list<string>
+     */
+    private function trackedPaths(): array
+    {
+        exec('git -C ' . escapeshellarg(ROOTPATH) . ' ls-files 2>&1', $out, $code);
+
+        return $code === 0 ? array_values(array_filter($out)) : [];
+    }
+
+    /**
+     * A hostname flattened into a path: `<label>_<label>_<tld>` for a real TLD.
+     *
+     * Deliberately matches the SHAPE rather than the brand — searching for the brand
+     * would mean writing it back into the tree.
+     */
+    private static function looksLikeHostnamePath(string $path): bool
+    {
+        return (bool) preg_match('#(^|/)[a-z0-9]+_[a-z0-9]+_(in|com|net|org|co|io)(/|$)#i', $path);
+    }
+
+    /**
+     * The predicate is asserted against fixed samples, not only against the live tree.
+     *
+     * Once the offending directory was untracked there was nothing left for the tree
+     * scan to catch, so disabling the filter changed nothing and the check passed
+     * either way — a mutation run proved it vacuous. These samples keep it honest
+     * whether or not the repository currently happens to be clean.
+     *
+     * @return list<array{0:string,1:bool}>
+     */
+    public static function hostnamePathProvider(): array
+    {
+        return [
+            'the real leftover: a cPanel subdomain docroot' => ['test_shiplore_in/.htaccess', true],
+            'apex form'                                     => ['example_co_in/index.php', true],
+            'nested'                                        => ['deploy/staging_example_com/x.txt', true],
+            'dotcom'                                        => ['my_site_com/a', true],
+            'ordinary snake_case file'                      => ['app/Views/order_summary.php', false],
+            'ordinary source path'                          => ['app/Models/UserRepository.php', false],
+            'underscored test name'                         => ['tests/unit/Common/NoPersonalDataTest.php', false],
+            'two-part snake_case dir'                       => ['app/some_helper/file.php', false],
+        ];
+    }
+
+    /**
+     * @dataProvider hostnamePathProvider
+     */
+    public function testTheHostnamePathPredicateIsCorrect(string $path, bool $expected): void
+    {
+        $this->assertSame($expected, self::looksLikeHostnamePath($path));
+    }
+
+    public function testNoTrackedPathNamesTheDeploymentHost(): void
+    {
+        $paths = $this->trackedPaths();
+        $this->assertNotEmpty($paths, 'git ls-files returned nothing — this check proved nothing');
+
+        $offenders = array_values(array_filter($paths, static fn (string $p): bool => self::looksLikeHostnamePath($p)));
+
+        $this->assertSame([], $offenders, "a tracked path names the deployment host:\n" . implode("\n", $offenders));
+    }
+
+    /** No hosting-account path in ANY tracked file, including the nested app's config. */
+    public function testNoServerPathAnywhereInTheRepository(): void
+    {
+        $offenders = [];
+
+        foreach ($this->trackedPaths() as $rel) {
+            $abs = ROOTPATH . $rel;
+            if (! is_file($abs) || filesize($abs) > 2_000_000) {
+                continue;
+            }
+            // Third-party sources legitimately quote example paths in their own docs.
+            if (preg_match('#(^|/)(vendor|system|node_modules)/#', $rel)) {
+                continue;
+            }
+            $body = (string) file_get_contents($abs);
+            if (preg_match('#/home/[a-z0-9_]+/#i', $body, $m)) {
+                $offenders[] = $rel . '  ' . trim($m[0]);
+            }
+        }
+
+        $this->assertSame([], $offenders, "a hosting-account path is published:\n" . implode("\n", $offenders));
+    }
 }

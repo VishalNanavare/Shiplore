@@ -28,7 +28,7 @@
 /database/_full_schema.sql
 
 # ---------------------------------------------------------------------------
-# Untracked when this repository was made public (github.com/VishalNanavare/Shiplore).
+# Untracked when this repository was made public.
 #
 # NOTE, and it is the important part: ignoring a path does NOT remove it from the
 # published history. Everything below stayed readable in earlier commits, so any
@@ -54,3 +54,9 @@
 php.ini
 **/.user.ini
 **/php.ini
+
+# cPanel leftovers. `test_shiplore_in/` is a subdomain docroot whose DIRECTORY NAME is
+# the deployment hostname — no content grep finds that, only a filename scan does.
+/test_shiplore_in/
+.ftpquota
+/.htaccess 1
