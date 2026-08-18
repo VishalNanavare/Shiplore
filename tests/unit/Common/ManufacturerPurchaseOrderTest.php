@@ -68,6 +68,111 @@ final class ManufacturerPurchaseOrderTest extends CIUnitTestCase
         $this->assertLessThan($trust, $check, 'seller_mshop_id must pass requireMshopAccess() before it is trusted');
     }
 
+    /**
+     * EVERY transition must check the unit, not just accept.
+     *
+     * The unit check lived only inside the `accept` branch, and only fired when a unit
+     * was posted. Once a PO was accepted against unit B, its seller_mshop_id is stored on
+     * the row — and pack, dispatch and reject re-read it with no check at all. Dispatch
+     * calls shipStockForPo(), which decrements the FULFILLING unit's mfg_inventory. So a
+     * store keeper assigned to unit A could ship unit B's stock, which is exactly what
+     * the unit-isolation model exists to prevent.
+     *
+     * Asserted structurally: the guard must sit BEFORE the branch that special-cases
+     * accept, so it covers every action rather than one.
+     */
+    public function testEveryTransitionChecksTheUnitNotJustAccept(): void
+    {
+        $body = $this->methodBody($this->controller(), 'transition');
+
+        $this->assertStringContainsString(
+            'requireUnitOnPo',
+            $body,
+            'every transition must verify the PO’s assigned unit, not only the one posted on accept',
+        );
+
+        $unitGuard  = strpos($body, 'requireUnitOnPo');
+        $acceptOnly = strpos($body, "if (\$action === 'accept')");
+        $this->assertNotFalse($unitGuard);
+        $this->assertNotFalse($acceptOnly);
+        $this->assertLessThan(
+            $acceptOnly,
+            $unitGuard,
+            'the unit guard must run for ALL actions — placing it inside the accept branch is the original bug',
+        );
+    }
+
+    /**
+     * The LIST is unit-scoped too, or the guard above only hides the door.
+     *
+     * listForSeller() had no unit parameter at all, unlike its sibling listForBuyer(),
+     * which has taken $shopIds since it was written. Guarding the detail and transition
+     * pages while still listing every plant's orders would leave the ids on screen and
+     * the isolation only one URL away.
+     */
+    public function testTheOrderListIsScopedToTheUsersUnits(): void
+    {
+        $body = $this->methodBody($this->read('Models/PurchaseOrderRepository.php'), 'listForSeller');
+
+        $this->assertNotSame('', $body, 'listForSeller() not found');
+        $this->assertStringContainsString('$mshopIds', $body, 'listForSeller() must accept a unit scope');
+        $this->assertMatchesRegularExpression(
+            '/if \(\$mshopIds !== null\)[\s\S]{0,200}?whereIn\(\'po\.seller_mshop_id\'/',
+            $body,
+            'the unit scope must actually constrain the query',
+        );
+        // A pending order has no unit yet and must stay visible, or nobody can accept it.
+        $this->assertStringContainsString(
+            "orWhere('po.seller_mshop_id', null)",
+            $body,
+            'unassigned orders must remain listable',
+        );
+    }
+
+    /** Owners span every unit; staff are handed only their own. */
+    public function testTheControllerPassesTheUnitScopeForStaffOnly(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '/\$this->isOwner\(\)\s*\?\s*null\s*:\s*\$this->allowedMshopIds\(\)/',
+            $this->methodBody($this->controller(), 'index'),
+            'staff must be scoped to allowedMshopIds(); passing null unconditionally is the bug',
+        );
+    }
+
+    /** Reading one PO is unit-scoped too, so a foreign unit's order is not even visible. */
+    public function testShowIsAlsoUnitScoped(): void
+    {
+        $this->assertStringContainsString(
+            'requireUnitOnPo',
+            $this->methodBody($this->controller(), 'show'),
+            'a unit-scoped user must not read another unit’s purchase order',
+        );
+    }
+
+    /**
+     * The helper must FAIL CLOSED on an unassigned PO only when the user is unit-scoped.
+     *
+     * A PO that has not been accepted yet has no seller_mshop_id, and every unit of the
+     * manufacturer is still a legitimate candidate — refusing there would make it
+     * impossible to accept anything. An owner spanning all units must likewise pass.
+     */
+    public function testTheUnitGuardAllowsAnUnassignedOrder(): void
+    {
+        $body = $this->methodBody($this->controller(), 'requireUnitOnPo');
+
+        $this->assertNotSame('', $body, 'requireUnitOnPo() not found');
+        $this->assertStringContainsString(
+            'seller_mshop_id',
+            $body,
+            'the guard must read the unit already stored on the PO',
+        );
+        $this->assertMatchesRegularExpression(
+            '/<=\s*0\)\s*\{\s*return null;/s',
+            $body,
+            'an unassigned PO must pass — it has no unit to check yet',
+        );
+    }
+
     /** A rejection reason is captured, length-capped, and stored on the PO. */
     public function testRejectCapturesTheReason(): void
     {
@@ -96,7 +201,13 @@ final class ManufacturerPurchaseOrderTest extends CIUnitTestCase
     {
         $src = $this->controller();
 
-        $this->assertStringContainsString('listForSeller((int) $this->manufacturerId()', $this->methodBody($src, 'index'));
+        // Matched across newlines: the call now spans several lines because it also
+        // passes the unit scope. What must hold is that the FIRST argument is the acting
+        // manufacturer, never a request parameter — not how the call is wrapped.
+        $this->assertMatchesRegularExpression(
+            '/listForSeller\(\s*\(int\)\s*\$this->manufacturerId\(\)/s',
+            $this->methodBody($src, 'index'),
+        );
         $this->assertStringContainsString("findFor(\$id, (int) \$this->manufacturerId(), 'seller')", $this->methodBody($src, 'show'));
 
         $transition = $this->methodBody($src, 'transition');

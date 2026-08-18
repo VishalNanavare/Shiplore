@@ -30,7 +30,12 @@ final class PurchaseOrderController extends BaseManufacturerController
         $status = trim((string) $this->request->getGet('status'));
 
         return $this->render('manufacturer/orders/index', 'orders', 'Purchase Orders', [
-            'orders'  => service('purchaseOrderRepository')->listForSeller((int) $this->manufacturerId(), $status ?: null),
+            // Owners span every unit and pass null; unit staff get their own units only.
+            'orders'  => service('purchaseOrderRepository')->listForSeller(
+                (int) $this->manufacturerId(),
+                $status ?: null,
+                $this->isOwner() ? null : $this->allowedMshopIds(),
+            ),
             'filters' => ['status' => $status],
         ]);
     }
@@ -47,6 +52,9 @@ final class PurchaseOrderController extends BaseManufacturerController
         $found = service('purchaseOrderRepository')->findFor($id, (int) $this->manufacturerId(), 'seller');
         if ($found === null) {
             return redirect()->to('manufacturer/purchase-orders')->with('error', 'Purchase order not found.');
+        }
+        if ($denied = $this->requireUnitOnPo($found['po'])) {
+            return $denied;
         }
 
         return $this->render('manufacturer/orders/show', 'orders', (string) $found['po']['po_no'], [
@@ -74,6 +82,18 @@ final class PurchaseOrderController extends BaseManufacturerController
         ];
         if (! isset($map[$action])) {
             return redirect()->to('manufacturer/purchase-orders/' . $id)->with('error', 'Unknown action.');
+        }
+
+        // The unit already assigned to this PO gates EVERY action, not just accept.
+        // Once accepted against unit B the order carries seller_mshop_id, and dispatch
+        // calls shipStockForPo(), which decrements THAT unit's mfg_inventory — so
+        // without this a store keeper on unit A could ship unit B's stock.
+        $found = service('purchaseOrderRepository')->findFor($id, (int) $this->manufacturerId(), 'seller');
+        if ($found === null) {
+            return redirect()->to('manufacturer/purchase-orders')->with('error', 'Purchase order not found.');
+        }
+        if ($denied = $this->requireUnitOnPo($found['po'])) {
+            return $denied;
         }
 
         $extra = [];
@@ -105,5 +125,29 @@ final class PurchaseOrderController extends BaseManufacturerController
         return $res['ok']
             ? redirect()->to('manufacturer/purchase-orders/' . $id)->with('success', 'Order marked ' . $map[$action] . '.')
             : redirect()->to('manufacturer/purchase-orders/' . $id)->with('error', $res['error']);
+    }
+
+    /**
+     * Refuse a purchase order that belongs to a unit this user may not act on.
+     *
+     * Reads the unit ALREADY STORED on the row, which is what the accept-branch check
+     * cannot cover: that one validates the unit being chosen, and every later transition
+     * re-reads the stored one.
+     *
+     * An unassigned PO passes deliberately. A pending order has no seller_mshop_id yet
+     * and every unit of this manufacturer is still a legitimate candidate — refusing here
+     * would make it impossible to accept anything. requireMshopAccess() then does the
+     * real work on the unit that gets chosen. Owners span all units and pass either way.
+     *
+     * @param array<string,mixed> $po
+     */
+    private function requireUnitOnPo(array $po): ?RedirectResponse
+    {
+        $unit = (int) ($po['seller_mshop_id'] ?? 0);
+        if ($unit <= 0) {
+            return null;
+        }
+
+        return $this->requireMshopAccess($unit);
     }
 }

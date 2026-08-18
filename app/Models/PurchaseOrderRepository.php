@@ -295,7 +295,14 @@ final class PurchaseOrderRepository
     }
 
     /** POs received BY this manufacturer. @return list<array<string,mixed>> */
-    public function listForSeller(int $sellerVendorId, ?string $status = null): array
+    /**
+     * @param list<int>|null $mshopIds unit-scoped staff see only their own units' orders;
+     *                                 null means every unit (an owner). Mirrors
+     *                                 listForBuyer()'s $shopIds, which this lacked —
+     *                                 unit staff could previously list, open and dispatch
+     *                                 another plant's orders.
+     */
+    public function listForSeller(int $sellerVendorId, ?string $status = null, ?array $mshopIds = null): array
     {
         if ($sellerVendorId <= 0) {
             return [];
@@ -306,6 +313,13 @@ final class PurchaseOrderRepository
             ->join('shops s', 's.id = po.buyer_shop_id', 'left')
             ->where('po.seller_vendor_id', $sellerVendorId)
             ->where('po.deleted_at', null);
+
+        // Unit staff see their own units' orders, plus everything not yet assigned to a
+        // unit — a pending order has no seller_mshop_id and is still theirs to accept.
+        if ($mshopIds !== null) {
+            $ids = $mshopIds ?: [0];
+            $b->groupStart()->whereIn('po.seller_mshop_id', $ids)->orWhere('po.seller_mshop_id', null)->groupEnd();
+        }
 
         if ($status !== null && $status !== '') {
             $b->where('po.status', $status);
