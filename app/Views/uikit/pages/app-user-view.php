@@ -6,7 +6,7 @@
         <div class="card uk-card mb-3"><div class="card-body text-center">
             <span class="rounded-circle bg-primary-subtle text-primary d-grid mx-auto mb-2" style="width:84px;height:84px;place-items:center;font-weight:700;font-size:1.8rem">RI</span>
             <h2 class="h5 mb-0">Riya Iyer</h2>
-            <div class="text-secondary small">riya@hub.io</div>
+            <div class="text-secondary small">riya@example.com</div>
             <span class="badge bg-danger-subtle text-danger mt-2">Admin</span>
             <div class="row text-center mt-3">
                 <div class="col-4"><div class="h6 mb-0">128</div><div class="text-secondary small">Tasks</div></div>

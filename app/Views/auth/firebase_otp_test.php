@@ -24,7 +24,7 @@
             </div>
             <div class="mb-2">
                 <label class="form-label small">Phone (with country code)</label>
-                <input id="fbPhone" class="form-control" value="+919768181958" placeholder="+9198XXXXXXXX" autocomplete="off">
+                <input id="fbPhone" class="form-control" value="+919800000000" placeholder="+9198XXXXXXXX" autocomplete="off">
             </div>
             <div id="recaptcha" class="mb-2"></div>
             <button id="fbSend" class="btn btn-primary w-100 mb-2">Send OTP</button>

@@ -20,7 +20,7 @@ declare(strict_types=1);
  * explicitly, validate it against Config\App::$allowedHostnames before trusting it
  * (defence in depth against a spoofed Host header), and fall back to a same-host
  * relative URL whenever the target can't be validated — e.g. local dev, where
- * shiplorelocal.in's subdomains are not listed in allowedHostnames, or a request
+ * localdev.test's subdomains are not listed in allowedHostnames, or a request
  * whose Host header isn't a normal dotted hostname at all.
  *
  * Usage in views:       panel_url('monline', 'monline/browse')

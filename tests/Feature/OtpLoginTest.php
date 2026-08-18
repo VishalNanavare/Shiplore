@@ -23,11 +23,11 @@ final class OtpLoginTest extends CIUnitTestCase
         parent::setUp();
 
         $this->verifier = new class {
-            public ?array $claims = ['phone_number' => '+919768181958', 'sub' => 'fbuid'];
+            public ?array $claims = ['phone_number' => '+919800000000', 'sub' => 'fbuid'];
             public function verify(string $t, int $n = 0): ?array { return $this->claims; }
         };
         $this->users = new class {
-            public ?array $user = ['id' => 1, 'name' => 'Vishal', 'email' => 'v@x.com', 'phone' => '9768181958', 'status' => 'active', 'principal_type' => 'platform'];
+            public ?array $user = ['id' => 1, 'name' => 'Vishal', 'email' => 'v@x.com', 'phone' => '9800000000', 'status' => 'active', 'principal_type' => 'platform'];
             public function findByPhone(string $p): ?array { return $this->user; }
         };
 

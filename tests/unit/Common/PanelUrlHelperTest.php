@@ -125,17 +125,17 @@ final class PanelUrlHelperTest extends CIUnitTestCase
     }
 
     /**
-     * Local dev hosts (shiplorelocal.in and friends) are not in allowedHostnames, so
+     * Local dev hosts (localdev.test and friends) are not in allowedHostnames, so
      * the helper must degrade to a same-host relative URL rather than emitting a
      * broken absolute one — this is the same fallback PortalController::portalUrl()
      * already relies on for local testing.
      */
     public function testFallsBackGracefullyOnAnUnlistedLocalDevHost(): void
     {
-        $url = $this->urlFor('vendor.shiplorelocal.in', 'monline', 'monline/browse');
+        $url = $this->urlFor('vendor.localdev.test', 'monline', 'monline/browse');
 
         $this->assertStringContainsString('/monline/browse', $url);
-        $this->assertStringNotContainsString('monline.shiplorelocal.in', $url);
+        $this->assertStringNotContainsString('monline.localdev.test', $url);
     }
 
     /** A bare two-label host (the apex itself) has no subdomain to strip — must not crash or mis-target. */

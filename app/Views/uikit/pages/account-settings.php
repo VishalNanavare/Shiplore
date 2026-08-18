@@ -13,7 +13,7 @@
             <div class="row g-3" style="max-width:640px">
                 <div class="col-md-6"><label class="form-label">First name</label><input class="form-control" value="Vishal"></div>
                 <div class="col-md-6"><label class="form-label">Last name</label><input class="form-control" value="Nanavare"></div>
-                <div class="col-md-8"><label class="form-label">Email</label><input class="form-control" value="vishal@commercehub.io"></div>
+                <div class="col-md-8"><label class="form-label">Email</label><input class="form-control" value="user@example.com"></div>
                 <div class="col-md-4"><label class="form-label">Timezone</label><select class="form-select"><option>IST (UTC+5:30)</option><option>UTC</option></select></div>
                 <div class="col-12"><button class="btn btn-primary">Save changes</button> <button class="btn btn-light">Cancel</button></div>
             </div>

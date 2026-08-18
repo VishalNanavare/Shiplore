@@ -13,7 +13,7 @@
         </div>
         <label class="form-label mt-3">Referral link</label>
         <div class="input-group">
-            <input class="form-control" id="cbLink" value="https://commercehub.io/r/VN-2026" readonly>
+            <input class="form-control" id="cbLink" value="https://example.com/r/VN-2026" readonly>
             <button class="btn btn-outline-primary uk-copy" data-target="#cbLink"><i class="bi bi-clipboard"></i></button>
         </div>
     </div></div></div>

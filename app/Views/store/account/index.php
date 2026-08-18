@@ -226,7 +226,7 @@ $orderActions = static function (array $o) {
                     <h2 class="h6 mb-2">Need help?</h2>
                     <p class="text-secondary small mb-2">Our team typically responds within 24 hours. Returns are eligible within 7 days of delivery.</p>
                     <ul class="list-unstyled small mb-0">
-                        <li class="mb-1"><i class="bi bi-envelope me-2 text-secondary"></i>support@commercehub.io</li>
+                        <li class="mb-1"><i class="bi bi-envelope me-2 text-secondary"></i>support@example.com</li>
                         <li><i class="bi bi-telephone me-2 text-secondary"></i>1800-123-4567</li>
                     </ul>
                 </div></div></div>

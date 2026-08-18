@@ -6,7 +6,7 @@ use CodeIgniter\Router\RouteCollection;
 
 // ---- Per-subdomain root entry points ----
 // Each panel host lands on its own login at the bare root; the apex
-// (shiplorelocal.in) shows the customer storefront. `subdomain` is
+// (localdev.test) shows the customer storefront. `subdomain` is
 // domain-agnostic so this also works on production (<domain>).
 $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'admin']);   // admin.  -> staff login (-> admin dashboard if authed)
 $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'vendor']);  // vendor. -> staff login (-> vendor dashboard if authed)
@@ -23,7 +23,7 @@ $routes->get('/', 'Auth\LoginController::show',      ['subdomain' => 'mshop']); 
 // catalogue, wrong audience, consumer pricing. The full marketplace lands in phase B;
 // this entry point is deliberately live ahead of it so the subdomain is never wrong.
 $routes->get('/', 'Monline\CatalogController::home', ['subdomain' => 'monline']);   // monline. -> B2B marketplace
-$routes->get('/', 'Store\StoreController::home');                                  // apex shiplorelocal.in -> ecommerce homepage
+$routes->get('/', 'Store\StoreController::home');                                  // apex localdev.test -> ecommerce homepage
 
 // ---- Media (private files served by uuid) ----
 $routes->get('media/(:segment)', 'MediaController::serve/$1');

@@ -20,7 +20,7 @@
         <div class="card uk-card mb-3"><div class="card-body">
             <h2 class="uk-section-title mb-3">About</h2>
             <ul class="list-unstyled small mb-0">
-                <li class="mb-2"><i class="bi bi-envelope me-2 text-secondary"></i>vishal@commercehub.io</li>
+                <li class="mb-2"><i class="bi bi-envelope me-2 text-secondary"></i>user@example.com</li>
                 <li class="mb-2"><i class="bi bi-telephone me-2 text-secondary"></i>+91 98xxx xxxxx</li>
                 <li class="mb-2"><i class="bi bi-calendar3 me-2 text-secondary"></i>Joined Jan 2026</li>
                 <li><i class="bi bi-shield-check me-2 text-secondary"></i>Super Admin</li>

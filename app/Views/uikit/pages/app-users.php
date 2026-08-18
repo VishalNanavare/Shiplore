@@ -24,12 +24,12 @@
         <tbody>
         <?php
         $users = [
-            ['Riya Iyer','riya@hub.io','RI','primary','Admin','danger','Enterprise','Active','success'],
-            ['Sahil Nair','sahil@hub.io','SN','success','Vendor','primary','Growth','Active','success'],
-            ['Aman Khan','aman@hub.io','AK','warning','Staff','info','Starter','Pending','warning'],
-            ['Meera Das','meera@hub.io','MD','info','Vendor','primary','Growth','Active','success'],
-            ['Vivaan N.','vivaan@hub.io','VN','danger','Delivery','secondary','—','Suspended','danger'],
-            ['Kiara Menon','kiara@hub.io','KM','primary','Vendor','primary','Starter','Active','success'],
+            ['Riya Iyer','riya@example.com','RI','primary','Admin','danger','Enterprise','Active','success'],
+            ['Sahil Nair','sahil@example.com','SN','success','Vendor','primary','Growth','Active','success'],
+            ['Aman Khan','aman@example.com','AK','warning','Staff','info','Starter','Pending','warning'],
+            ['Meera Das','meera@example.com','MD','info','Vendor','primary','Growth','Active','success'],
+            ['Vivaan N.','vivaan@example.com','VN','danger','Delivery','secondary','—','Suspended','danger'],
+            ['Kiara Menon','kiara@example.com','KM','primary','Vendor','primary','Starter','Active','success'],
         ];
         foreach ($users as $u): ?>
             <tr>

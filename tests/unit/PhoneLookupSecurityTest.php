@@ -39,8 +39,8 @@ final class PhoneLookupSecurityTest extends CIUnitTestCase
     /** The exact attack: a US number must never resolve an Indian account. */
     public function testForeignNumberCannotResolveIndianAccount(): void
     {
-        $attackerUs = '+19178181958';   // attacker owns and can Firebase-verify this
-        $victimIn   = '+919178181958';  // stored on the victim's users row
+        $attackerUs = '+19100000001';   // attacker owns and can Firebase-verify this
+        $victimIn   = '+919100000001';  // stored on the victim's users row
 
         $this->assertNotContains(
             $victimIn,
@@ -52,7 +52,7 @@ final class PhoneLookupSecurityTest extends CIUnitTestCase
     /** A non-Indian number yields no candidates at all, so the lookup cannot match. */
     public function testForeignNumberYieldsNoCandidates(): void
     {
-        $this->assertSame([], $this->candidates('+19178181958'));
+        $this->assertSame([], $this->candidates('+19100000001'));
         $this->assertSame([], $this->candidates('+442071838750'));
     }
 

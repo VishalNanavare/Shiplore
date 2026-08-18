@@ -92,7 +92,7 @@ PEM;
             'iat'          => time() - 10,
             'auth_time'    => time() - 10,
             'exp'          => time() + 3600,
-            'phone_number' => '+919768181958',
+            'phone_number' => '+919800000000',
         ], $override);
 
         $h    = $this->b64((string) json_encode($header));
@@ -107,7 +107,7 @@ PEM;
     {
         $claims = $this->verifier()->verify($this->token());
         $this->assertIsArray($claims);
-        $this->assertSame('+919768181958', $claims['phone_number']);
+        $this->assertSame('+919800000000', $claims['phone_number']);
         $this->assertSame('uid-123', $claims['sub']);
     }
 

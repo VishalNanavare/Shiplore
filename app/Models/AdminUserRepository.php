@@ -161,8 +161,8 @@ final class AdminUserRepository
             $db->table('users')->insert([
                 'uuid' => bin2hex(random_bytes(18)), 'principal_type' => 'platform',
                 // Normalise to E.164 like every other flow. Storing the raw input meant a
-                // staff row could hold "9768181958" while a customer row held
-                // "+919768181958" for the same human — findByPhone() then matches two rows
+                // staff row could hold "9800000000" while a customer row held
+                // "+919800000000" for the same human — findByPhone() then matches two rows
                 // and returns null, silently breaking phone login for BOTH.
                 'name' => mb_substr((string) $d['name'], 0, 191), 'email' => $d['email'],
                 'phone' => StoreCustomerRepository::normalizePhone((string) ($d['phone'] ?? '')),

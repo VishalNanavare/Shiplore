@@ -140,7 +140,7 @@ final class AdminIntegrationTest extends CIUnitTestCase
         $this->grant(['integration.manage']);
         Services::injectMock('integrationRepository', new class {
             public function get(string $p): ?array { return ['provider' => $p, 'status' => 'connected', 'config' => '{}', 'config_arr' => []]; }
-            public function config(string $p): array { return ['host' => 'smtp.gmail.com', 'port' => '587', 'username' => 'u@gmail.com', 'password' => 'app-pass', 'encryption' => 'tls', 'from_email' => 'u@gmail.com']; }
+            public function config(string $p): array { return ['host' => 'smtp.gmail.com', 'port' => '587', 'username' => 'u@example.com', 'password' => 'app-pass', 'encryption' => 'tls', 'from_email' => 'u@example.com']; }
             public function upsert(string $p, array $c, string $s = 'connected', ?int $a = null): bool { return true; }
             public function setStatus(string $p, string $s, ?int $a = null): bool { return true; }
         });
@@ -155,7 +155,7 @@ final class AdminIntegrationTest extends CIUnitTestCase
 
         $r->assertRedirect();
         $this->assertCount(1, $mailer->sent, 'the Test button actually sends an email via the configured SMTP');
-        $this->assertSame('u@gmail.com', $mailer->sent[0]);
+        $this->assertSame('u@example.com', $mailer->sent[0]);
     }
 
     public function testGstApiTest(): void

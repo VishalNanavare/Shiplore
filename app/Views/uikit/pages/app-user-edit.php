@@ -13,7 +13,7 @@
             <div class="row g-3">
                 <div class="col-md-6"><label class="form-label">First name</label><input class="form-control" value="Riya"></div>
                 <div class="col-md-6"><label class="form-label">Last name</label><input class="form-control" value="Iyer"></div>
-                <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" value="riya@hub.io"></div>
+                <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" value="riya@example.com"></div>
                 <div class="col-md-6"><label class="form-label">Mobile</label><input class="form-control" value="+91 98xxx"></div>
                 <div class="col-md-6"><label class="form-label">Role</label><select class="form-select"><option>Admin</option><option>Vendor</option><option>Staff</option></select></div>
                 <div class="col-md-6"><label class="form-label">Status</label><select class="form-select"><option>Active</option><option>Pending</option><option>Suspended</option></select></div>
