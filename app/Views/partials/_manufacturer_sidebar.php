@@ -23,6 +23,7 @@ $groups = [
         ['inventory', 'Stock', 'bi-clipboard-data', 'manufacturer/inventory', 'mfg.inventory.view'],
     ]],
     ['Sales', 'bi-bag', [
+        ['pos', 'Counter', 'bi-shop', 'manufacturer/pos', 'mfg.pos.view'],
         ['orders', 'Purchase Orders', 'bi-receipt', 'manufacturer/purchase-orders', 'mfg.po.view'],
         ['deliveries', 'Deliveries', 'bi-truck', 'manufacturer/deliveries', 'mfg.delivery.assign'],
         ['riders', 'Riders', 'bi-person-badge', 'manufacturer/riders', 'mfg.rider.manage'],

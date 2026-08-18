@@ -2180,4 +2180,200 @@ final class ManufacturerPanelTest extends CIUnitTestCase
         $this->withSession($this->staffSession())->get('manufacturer/notifications')->assertStatus(200);
         $this->assertSame([self::STAFF_UID], $seen);
     }
+
+    // ------------------------------------------------------------------------- pos
+
+    /**
+     * The counter's repository, recording what unit id each call was given.
+     *
+     * The unit is the whole point of these tests: an invoice series and a stock balance
+     * both belong to one unit, and a posted mshop_id must never reach a plant the
+     * session cannot access. The sale itself is proved against real tables in
+     * ManufacturerPosSaleTest — here the mock only reports which unit it was handed.
+     */
+    private function mockPosRepo(): object
+    {
+        $repo = new class {
+            public array $searchedUnits = [];
+            public array $soldUnits     = [];
+            public array $receiptCalls  = [];
+
+            public function search(int $m, int $unit, string $q, int $limit = 20): array
+            {
+                $this->searchedUnits[] = $unit;
+
+                return [['variant_id' => 5, 'sku' => 'B-1', 'base_price' => '118.0000', 'title' => 'M8 Bolt', 'tax_rate' => '18.00', 'on_hand' => '100.000']];
+            }
+
+            public function resolveLines(int $m, array $cart, int $unit): array
+            {
+                return $cart === [] ? [] : [[
+                    'variant_id' => 5, 'sku' => 'B-1', 'title' => 'M8 Bolt', 'hsn' => '7318',
+                    'qty' => 1.0, 'unit_price' => 118.0, 'making_price' => 40.0,
+                    'tax_rate' => 18.0, 'line_discount' => 0.0,
+                ]];
+            }
+
+            public function createSale(array $ctx, array $lines, array $pay, array $opts = []): array
+            {
+                $this->soldUnits[] = (int) $ctx['mshop_id'];
+
+                return ['ok' => true, 'sale_id' => 4, 'invoice_no' => 'BHW/2026-27/000001',
+                    'grand_total' => 118.0, 'paid' => 200.0, 'change' => 82.0];
+            }
+
+            public function findForReceipt(int $saleId, int $m): ?array
+            {
+                $this->receiptCalls[] = [$saleId, $m];
+
+                return ['id' => $saleId, 'invoice_no' => 'BHW/2026-27/000001', 'unit_name' => 'Bhiwandi Plant',
+                    'unit_gstin' => '27AAACP1234F1Z5', 'address_json' => '{}', 'cashier_name' => 'Meera Iyer',
+                    'customer_name' => null, 'sold_at' => '2026-08-18 11:00:00', 'taxable_value' => '100.0000',
+                    'discount_total' => '0.0000', 'round_off' => '0.0000', 'grand_total' => '118.0000',
+                    'items' => [['product_title_snapshot' => 'M8 Bolt', 'sku_snapshot' => 'B-1', 'qty' => '1.000', 'unit_price' => '118.0000', 'line_total' => '118.0000', 'tax_rate' => '18.00', 'taxable_value' => '100.0000', 'cgst' => '9.0000', 'sgst' => '9.0000']],
+                    'payments' => [['tender_type' => 'cash', 'amount' => '200.0000']],
+                    'tax_buckets' => [['rate' => 18.0, 'taxable' => 100.0, 'cgst' => 9.0, 'sgst' => 9.0]]];
+            }
+
+            public function recent(int $m, array $units, int $limit = 20): array
+            {
+                return [['id' => 4, 'invoice_no' => 'BHW/2026-27/000001', 'grand_total' => '118.0000', 'sold_at' => '2026-08-18 11:00:00', 'status' => 'completed', 'unit_name' => 'Bhiwandi Plant']];
+            }
+        };
+        Services::injectMock('manufacturerPosSaleRepository', $repo);
+
+        return $repo;
+    }
+
+    public function testCounterRenders(): void
+    {
+        $this->grant(['mfg.pos.view', 'mfg.pos.sell']);
+        $this->mockPosRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/pos?mshop_id=11');
+
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('BHW/2026-27/000001', $body, 'recent sales belong on the counter');
+        $this->assertStringNotContainsString('You can view the counter but not ring up sales', $body);
+    }
+
+    public function testCounterIsDeniedWithoutThePermission(): void
+    {
+        $this->grant(['mfg.product.view']);
+        $this->mockPosRepo();
+
+        $this->withSession($this->ownerSession())->get('manufacturer/pos?mshop_id=11')->assertRedirect();
+    }
+
+    /** View without sell is read-only, not a 403 — a supervisor may check the day's takings. */
+    public function testViewWithoutSellRendersAReadOnlyCounter(): void
+    {
+        $this->grant(['mfg.pos.view']);
+        $this->mockPosRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/pos?mshop_id=11');
+
+        $r->assertStatus(200);
+        $this->assertStringContainsString('You can view the counter but not ring up sales', (string) $r->getBody());
+    }
+
+    public function testRingingUpASaleRequiresTheSellPermission(): void
+    {
+        $this->grant(['mfg.pos.view']);
+        $repo = $this->mockPosRepo();
+
+        $r = $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/pos/sale', $this->csrf() + ['mshop_id' => '11', 'items' => [['variant_id' => '5', 'qty' => '1']]]);
+
+        $r->assertStatus(403);
+        $this->assertSame([], $repo->soldUnits, 'nothing may be recorded');
+    }
+
+    public function testASaleIsRecordedAgainstThePostedUnit(): void
+    {
+        $this->grant(['mfg.pos.view', 'mfg.pos.sell']);
+        $repo = $this->mockPosRepo();
+
+        $r = $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/pos/sale', $this->csrf() + [
+                'mshop_id' => '12', 'client_uuid' => 'web-1',
+                'items'    => [['variant_id' => '5', 'qty' => '1']],
+                'payments' => [['tender_type' => 'cash', 'amount' => '200']],
+            ]);
+
+        $r->assertStatus(200);
+        $this->assertSame([12], $repo->soldUnits);
+    }
+
+    /**
+     * A posted unit id must be intersected with the session's own units. Unit 13 is
+     * another manufacturer's plant; accepting it would sell their stock on our invoice
+     * series.
+     */
+    public function testAPostedUnitOutsideTheSessionIsRefused(): void
+    {
+        $this->grant(['mfg.pos.view', 'mfg.pos.sell']);
+        $repo = $this->mockPosRepo();
+
+        $this->withSession($this->postSession($this->ownerSession()))
+            ->post('manufacturer/pos/sale', $this->csrf() + [
+                'mshop_id' => '13',
+                'items'    => [['variant_id' => '5', 'qty' => '1']],
+                'payments' => [['tender_type' => 'cash', 'amount' => '200']],
+            ]);
+
+        $this->assertNotContains(13, $repo->soldUnits, "another manufacturer's unit must never be sold from");
+    }
+
+    /** Staff are pinned to their assigned unit — 11 — whatever they post. */
+    public function testStaffCannotSellFromAUnitTheyAreNotAssignedTo(): void
+    {
+        $this->grant(['mfg.pos.view', 'mfg.pos.sell']);
+        $repo = $this->mockPosRepo();
+
+        $this->withSession($this->postSession($this->staffSession()))
+            ->post('manufacturer/pos/sale', $this->csrf() + [
+                'mshop_id' => '12',
+                'items'    => [['variant_id' => '5', 'qty' => '1']],
+                'payments' => [['tender_type' => 'cash', 'amount' => '200']],
+            ]);
+
+        $this->assertNotContains(12, $repo->soldUnits, 'unit 12 is not this staff member’s');
+    }
+
+    public function testCounterSearchIsScopedToTheSelectedUnit(): void
+    {
+        $this->grant(['mfg.pos.view', 'mfg.pos.sell']);
+        $repo = $this->mockPosRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/pos/search?q=bolt&mshop_id=12');
+
+        $r->assertStatus(200);
+        $this->assertSame([12], $repo->searchedUnits);
+        $this->assertStringContainsString('M8 Bolt', (string) $r->getBody());
+    }
+
+    public function testCounterSearchIsDeniedWithoutTheSellPermission(): void
+    {
+        $this->grant(['mfg.pos.view']);
+        $this->mockPosRepo();
+
+        $this->withSession($this->ownerSession())->get('manufacturer/pos/search?q=bolt&mshop_id=11')->assertStatus(403);
+    }
+
+    /** The receipt lookup must carry the session's manufacturer id, not just the sale id. */
+    public function testTheReceiptIsLookedUpWithTheSessionsManufacturerId(): void
+    {
+        $this->grant(['mfg.pos.view']);
+        $repo = $this->mockPosRepo();
+
+        $r = $this->withSession($this->ownerSession())->get('manufacturer/pos/receipt/4');
+
+        $r->assertStatus(200);
+        $this->assertSame([[4, 1]], $repo->receiptCalls);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('BHW/2026-27/000001', $body);
+        $this->assertStringNotContainsString('you saved', strtolower($body), 'mrp is unused here — a savings line would print the whole sale as a discount');
+    }
 }

@@ -151,6 +151,60 @@ final class ManufacturerInventoryService
         }
     }
 
+    /**
+     * Take stock off the books for a factory-outlet counter sale.
+     *
+     * THREE THINGS A COPY OF InventoryService::sell() GETS WRONG HERE:
+     *
+     *  1. movement_type must be 'sale'. The vendor service writes 'pos_sale' when
+     *     $isPos is true, and mfg_inventory_ledger.movement_type has no such member —
+     *     under strict mode that throws, and without it MySQL truncates to '' and the
+     *     sale commits with a junk ledger row.
+     *  2. When $db is passed it JOINS the caller's transaction and must not open its
+     *     own. The sale is one transaction: numbering, sale, lines, payments and this
+     *     decrement either all land or none do.
+     *  3. No batch consumption. mfg_stock_batches has no deleted_at and its status
+     *     enum is ('active','expired','consumed') with no 'depleted', so a ported FIFO
+     *     consumeBatches() breaks on both. v1 moves on_hand and the ledger only; add
+     *     batch costing deliberately, not by copying.
+     */
+    public function sellFromOutlet(int $variantId, int $mshopId, float $qty, int $saleId, ?int $actorId = null, ?object $db = null): bool
+    {
+        if ($qty <= 0) {
+            return false;
+        }
+
+        $joined = $db !== null;
+        $db     = $db ?? Database::connect();
+
+        if (! $joined) {
+            $db->transBegin();
+        }
+
+        try {
+            $this->ensureRow($variantId, $mshopId, $db);
+            $bal = $this->bump($variantId, $mshopId, -$qty, $db);
+            $this->postLedger($variantId, $mshopId, 'sale', -$qty, $bal, 'mfg_pos_sale', $saleId, 'factory outlet sale', $actorId, $db);
+
+            if (! $joined) {
+                $db->transComplete();
+
+                return $db->transStatus();
+            }
+
+            return true;
+        } catch (Throwable) {
+            if (! $joined) {
+                $db->transRollback();
+
+                return false;
+            }
+            // Joined: let the caller's transaction decide. Rethrowing keeps a failed
+            // decrement from silently leaving a committed sale with no stock movement.
+            throw new \RuntimeException('outlet stock decrement failed for variant ' . $variantId);
+        }
+    }
+
     /** @return list<array<string,mixed>> recent movements, newest first */
     public function ledger(int $variantId, int $mshopId, int $limit = 50): array
     {

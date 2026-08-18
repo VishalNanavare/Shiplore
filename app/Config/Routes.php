@@ -897,6 +897,13 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->post('variants/(:num)/delete', 'Manufacturer\ProductVariantController::delete/$1', ['filter' => 'csrf']);
     $routes->post('variants/(:num)/barcodes', 'Manufacturer\ProductVariantController::saveBarcodes/$1', ['filter' => 'csrf']);
 
+    // Factory-outlet counter. Runs entirely on mfg_pos_* + mfg_inventory and touches
+    // nothing the shipped mobile/Windows POS clients read.
+    $routes->get('pos', 'Manufacturer\PosController::index');
+    $routes->get('pos/search', 'Manufacturer\PosController::search');
+    $routes->post('pos/sale', 'Manufacturer\PosController::sale', ['filter' => 'csrf']);
+    $routes->get('pos/receipt/(:num)', 'Manufacturer\PosController::receipt/$1');
+
     // Governance. Staff changes proposed by a manager land here for the owner's
     // decision; the engine and its tables are reused unchanged (tenant-agnostic).
     $routes->get('approvals', 'Manufacturer\ApprovalController::index');

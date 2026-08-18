@@ -279,6 +279,62 @@ trait MinimalSchema
         )');
     }
 
+    /** database/sql/79_manufacturer_pos.sql — the factory-outlet counter tables. */
+    protected function ensureMfgPosTables(): void
+    {
+        $db = $this->schemaConn();
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_pos_sales (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, terminal_id INTEGER, shift_id INTEGER,
+            mshop_id INTEGER NOT NULL, vendor_id INTEGER NOT NULL, cashier_user_id INTEGER,
+            customer_name TEXT, customer_phone TEXT, client_uuid TEXT,
+            invoice_no TEXT, financial_year TEXT NOT NULL, seq_no INTEGER NOT NULL,
+            subtotal REAL NOT NULL DEFAULT 0, discount_total REAL NOT NULL DEFAULT 0,
+            taxable_value REAL NOT NULL DEFAULT 0, cgst REAL NOT NULL DEFAULT 0,
+            sgst REAL NOT NULL DEFAULT 0, igst REAL NOT NULL DEFAULT 0, cess REAL NOT NULL DEFAULT 0,
+            round_off REAL NOT NULL DEFAULT 0, grand_total REAL NOT NULL DEFAULT 0,
+            payment_method TEXT NOT NULL DEFAULT "cash", notes TEXT,
+            sold_at TEXT NOT NULL, status TEXT NOT NULL DEFAULT "completed",
+            created_at TEXT, updated_at TEXT,
+            UNIQUE(vendor_id, client_uuid),
+            UNIQUE(mshop_id, financial_year, seq_no)
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_pos_sale_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, mfg_pos_sale_id INTEGER NOT NULL, variant_id INTEGER,
+            product_title_snapshot TEXT NOT NULL, sku_snapshot TEXT, hsn_snapshot TEXT,
+            qty REAL NOT NULL, unit_price REAL NOT NULL, making_price_snapshot REAL,
+            discount_amount REAL NOT NULL DEFAULT 0, taxable_value REAL NOT NULL DEFAULT 0,
+            tax_rate REAL NOT NULL DEFAULT 0, cgst REAL NOT NULL DEFAULT 0, sgst REAL NOT NULL DEFAULT 0,
+            igst REAL NOT NULL DEFAULT 0, cess REAL NOT NULL DEFAULT 0,
+            is_gst_inclusive INTEGER NOT NULL DEFAULT 0, line_total REAL NOT NULL DEFAULT 0,
+            is_temporary INTEGER NOT NULL DEFAULT 0, status TEXT NOT NULL DEFAULT "active",
+            created_at TEXT, updated_at TEXT
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_pos_sale_payments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, mfg_pos_sale_id INTEGER NOT NULL, tender_type TEXT NOT NULL,
+            amount REAL NOT NULL, reference TEXT, status TEXT NOT NULL DEFAULT "captured",
+            created_at TEXT, updated_at TEXT
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_pos_sequence (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            mshop_id INTEGER NOT NULL, financial_year TEXT NOT NULL,
+            last_invoice_no INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT, updated_at TEXT,
+            UNIQUE(mshop_id, financial_year)
+        )');
+    }
+
+    /** Drop the POS tables — see dropUsersTable() for why leaks matter here. */
+    protected function dropMfgPosTables(): void
+    {
+        $db = $this->schemaConn();
+        foreach (['db_mfg_pos_sales', 'db_mfg_pos_sale_items', 'db_mfg_pos_sale_payments', 'db_mfg_pos_sequence'] as $t) {
+            $db->query('DROP TABLE IF EXISTS ' . $t);
+        }
+    }
+
     /** Drop the manufacturer stock tables — see dropUsersTable() for why this matters. */
     protected function dropMfgInventoryTables(): void
     {
