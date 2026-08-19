@@ -121,6 +121,79 @@ final class MailerErrorTest extends CIUnitTestCase
         );
     }
 
+    // --------------------------------------------------- port / encryption pairing
+
+    /**
+     * 465 is IMPLICIT SSL, 587 is STARTTLS, and pairing them the other way round does
+     * not fail with a protocol error — the client sends plaintext at a server waiting
+     * for a handshake, so the socket hangs until it times out. That reads as "the host
+     * is blocking us" and sends the operator chasing an entirely different problem.
+     * This exact pairing was live on the production config.
+     */
+    public function testPort465RequiresSsl(): void
+    {
+        $this->assertTrue($this->mailer(['port' => '465', 'encryption' => 'tls'])->hasCryptoMismatch());
+        $this->assertFalse($this->mailer(['port' => '465', 'encryption' => 'ssl'])->hasCryptoMismatch());
+        $this->assertSame('ssl', $this->mailer(['port' => '465'])->impliedCrypto());
+    }
+
+    public function testPort587RequiresStarttls(): void
+    {
+        $this->assertTrue($this->mailer(['port' => '587', 'encryption' => 'ssl'])->hasCryptoMismatch());
+        $this->assertFalse($this->mailer(['port' => '587', 'encryption' => 'tls'])->hasCryptoMismatch());
+        $this->assertSame('tls', $this->mailer(['port' => '587'])->impliedCrypto());
+    }
+
+    /** A non-standard port implies nothing, so anything the operator chose stands. */
+    public function testANonStandardPortImpliesNothing(): void
+    {
+        $this->assertNull($this->mailer(['port' => '2525'])->impliedCrypto());
+        $this->assertFalse($this->mailer(['port' => '2525', 'encryption' => 'tls'])->hasCryptoMismatch());
+    }
+
+    /** Unencrypted is a deliberate choice, not a mismatch to correct. */
+    public function testExplicitlyNoEncryptionIsNotAMismatch(): void
+    {
+        $this->assertFalse($this->mailer(['port' => '465', 'encryption' => 'none'])->hasCryptoMismatch());
+    }
+
+    /** sendmail has no port or encryption at all, so the check must not fire. */
+    public function testSendmailIsNeverAMismatch(): void
+    {
+        $this->assertFalse($this->mailer(['protocol' => 'sendmail', 'port' => '465', 'encryption' => 'tls'])->hasCryptoMismatch());
+    }
+
+    /**
+     * Both LAYERS of the pairing guard stay wired.
+     *
+     * Source assertions, and deliberately so: the controller pre-check needs the whole
+     * admin flow stood up, and the send-time correction only shows in the settings array
+     * handed to CodeIgniter's Email, which this environment cannot intercept without a
+     * fake transport. hasCryptoMismatch() itself is covered behaviourally above — what
+     * these pin is that its two CALLERS still exist, which a mutation run showed nothing
+     * else was checking.
+     *
+     * Two layers on purpose: the controller stops a doomed test send with a readable
+     * message, and the correction in send() means every other caller — password reset,
+     * the notification worker — still delivers rather than timing out.
+     */
+    public function testBothLayersOfThePairingGuardStayWired(): void
+    {
+        $mailer = (string) file_get_contents(APPPATH . 'Libraries/Notify/Mailer.php');
+        $admin  = (string) file_get_contents(APPPATH . 'Controllers/Admin/IntegrationController.php');
+
+        $this->assertStringContainsString(
+            '$crypto = $paired;',
+            $mailer,
+            'send() must resolve a contradicting pair in favour of the port',
+        );
+        $this->assertStringContainsString(
+            '$mailer->hasCryptoMismatch()',
+            $admin,
+            'the Test button must refuse a mismatched pair before attempting a send',
+        );
+    }
+
     /** THE ONE THAT MATTERS: no credential may reach the browser. */
     public function testTheEncodedPasswordIsStrippedFromATranscript(): void
     {

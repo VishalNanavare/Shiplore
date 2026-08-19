@@ -154,6 +154,21 @@ final class IntegrationController extends BaseController
             $stamp    = date('Y-m-d H:i:s');
 
             $mailer = service('mailer');
+
+            // Caught BEFORE attempting a send. A 465/tls pair does not fail with a
+            // protocol error — it hangs until the socket times out, which reads as "the
+            // host is blocking us" and sends the operator chasing the wrong thing.
+            if ($mailer->hasCryptoMismatch()) {
+                service('integrationRepository')->setStatus($spec['provider'], 'error', (int) session()->get('user_id'));
+
+                return redirect()->to('admin/integrations/' . $slug)->with(
+                    'error',
+                    'Port ' . (int) ($config['port'] ?? 0) . ' requires encryption "'
+                    . $mailer->impliedCrypto() . '", but "' . ($config['encryption'] ?? '')
+                    . '" is set. Port 465 is implicit SSL; port 587 is STARTTLS. Fix the pair and test again.',
+                );
+            }
+
             $ok     = $mailer->send(
                 $to,
                 $brand . ' email test — ' . $stamp,

@@ -56,6 +56,33 @@ final class Mailer
     }
 
     /**
+     * The encryption the PORT implies, whatever is configured.
+     *
+     * Exposed so the admin screen can warn before a send is attempted: a 465/tls pair
+     * fails as a silent timeout with no protocol error to report, which is far harder to
+     * read than being told the two disagree.
+     */
+    public function impliedCrypto(): ?string
+    {
+        return match ((int) $this->str('port')) {
+            465     => 'ssl',
+            587     => 'tls',
+            default => null,
+        };
+    }
+
+    /** True when the saved port and encryption contradict each other. */
+    public function hasCryptoMismatch(): bool
+    {
+        $crypto  = strtolower($this->str('encryption'));
+        $implied = $this->impliedCrypto();
+
+        return $this->protocol() === 'smtp'
+            && $crypto !== '' && $crypto !== 'none'
+            && $implied !== null && $implied !== $crypto;
+    }
+
+    /**
      * Strip anything that could carry a credential.
      *
      * The AUTH lines are base64, so they do not LOOK like a password and would be
@@ -157,6 +184,27 @@ final class Mailer
             $port = (int) $this->str('port');
             if ($port <= 0) {
                 $port = $crypto === 'ssl' ? 465 : 587;
+            }
+
+            // The PORT decides the protocol, so a contradiction is resolved in its
+            // favour rather than attempted and left to time out.
+            //
+            // 465 is IMPLICIT TLS: the handshake happens the moment the socket opens.
+            // 587 is STARTTLS: connect in plaintext, then upgrade. Pair 465 with 'tls'
+            // and the client sends plaintext at a server waiting for a handshake, so the
+            // connection hangs until the timeout with no protocol-level error to report
+            // — a saved config that looks entirely reasonable in the admin form and
+            // simply never delivers. That exact pairing was live here.
+            $paired = $port === 465 ? 'ssl' : ($port === 587 ? 'tls' : $crypto);
+            if ($crypto !== 'none' && $paired !== $crypto) {
+                log_message('warning', sprintf(
+                    'Mailer: port %d implies "%s" but "%s" was configured — using "%s".',
+                    $port,
+                    $paired,
+                    $crypto,
+                    $paired,
+                ));
+                $crypto = $paired;
             }
             $settings += [
                 'SMTPHost'    => $this->str('host'),
