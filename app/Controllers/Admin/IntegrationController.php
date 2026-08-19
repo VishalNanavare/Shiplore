@@ -247,10 +247,15 @@ final class IntegrationController extends BaseController
         // away, so the operator is told whether the port is blocked, the name does not
         // resolve, TLS fails, or the credentials are wrong — rather than being handed
         // "your server might not be configured", which describes all four.
+        // Asked of EVERY transport, not just smtp. sendmail fails silently inside
+        // CodeIgniter when popen is unavailable, so the operator who takes our advice to
+        // switch would otherwise land straight back in the dark.
+        $detail = $mailer->diagnose();
+
         return redirect()->to($back)->withInput()->with(
             'error',
             'Could not send via "' . $transport . '". ' . ($mailer->lastError() ?: 'No detail was reported.')
-            . ($transport === 'smtp' ? ' Connection test: ' . $mailer->diagnose() : ''),
+            . ($detail !== '' ? ' Diagnosis: ' . $detail : ''),
         );
     }
 
@@ -344,9 +349,10 @@ final class IntegrationController extends BaseController
                     // ends the diagnosis instead of advancing it — which is how an email
                     // outage here went several rounds without anyone seeing the error.
                     // Mailer::lastError() is redacted of credentials before it gets here,
-                    // and diagnose() adds the network-level reason the framework discards.
+                    // and diagnose() adds what the framework discards — the network-level
+                    // reason for smtp, the local-handoff reason for sendmail.
                     : 'Could not send via "' . $transport . '". ' . ($mailer->lastError() ?: 'No detail was reported.')
-                        . ' Connection test: ' . $mailer->diagnose()
+                        . (($d = $mailer->diagnose()) !== '' ? ' Diagnosis: ' . $d : '')
             );
         }
 

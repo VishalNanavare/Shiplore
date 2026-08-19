@@ -99,10 +99,26 @@ final class MailerDiagnoseTest extends CIUnitTestCase
 
     // ------------------------------------------------------- nothing to probe
 
-    /** sendmail hands off to a local binary. There is no socket, so there is nothing to test. */
-    public function testSendmailHasNothingToProbe(): void
+    /**
+     * sendmail opens no socket, so the network probe must not run for it.
+     *
+     * It is NOT true that there is nothing to check, though — see the sendmail section at
+     * the end of this file. An earlier version returned '' here and called the job done,
+     * which would have left the operator in the dark at exactly the moment they took our
+     * advice and switched transport.
+     */
+    public function testSendmailNeverOpensASocket(): void
     {
-        $this->assertSame('', $this->mailer(['protocol' => 'sendmail'], $this->failing(111, 'refused'))->diagnose());
+        $probed = false;
+        $connector = static function () use (&$probed): array {
+            $probed = true;
+
+            return [false, 111, 'refused'];
+        };
+
+        $this->mailer(['protocol' => 'sendmail'], $connector)->diagnose();
+
+        $this->assertFalse($probed, 'sendmail pipes to a local binary — there is no host to connect to');
     }
 
     public function testAnEmptyHostHasNothingToProbe(): void
@@ -502,6 +518,127 @@ final class MailerDiagnoseTest extends CIUnitTestCase
         )->diagnose();
 
         $this->assertNotAccused($out);
+    }
+
+    // ------------------------------------------- sendmail preflight
+
+    /**
+     * Switching to sendmail must not be another leap of faith.
+     *
+     * CodeIgniter's sendWithSendmail() (system/Email/Email.php) returns false SILENTLY
+     * when popen is unusable or the pipe cannot be opened — no setErrorMessage, so the
+     * operator gets only "Unable to send email using Sendmail". That is the same dark room
+     * the SMTP generic string put them in, and they would arrive at it immediately after
+     * taking our advice to switch transport. These checks name the cause instead.
+     *
+     * @param array{popen?:bool,exists?:bool,executable?:bool} $env
+     */
+    private function localMail(array $env = []): callable
+    {
+        $env += ['popen' => true, 'exists' => true, 'executable' => true];
+
+        return static fn (string $path): array => $env;
+    }
+
+    private function sendmailer(array $env = [], array $over = []): Mailer
+    {
+        return new Mailer($over + [
+            'protocol' => 'sendmail', 'from_email' => 'user@example.com', 'from_name' => 'Test',
+            'password' => 'sup3r-s3cret',
+        ], null, $this->localMail($env));
+    }
+
+    /** popen disabled is the failure that reports NOTHING at all through CodeIgniter. */
+    public function testSendmailReportsWhenPhpCannotRunPrograms(): void
+    {
+        $out = $this->sendmailer(['popen' => false])->diagnose();
+
+        $this->assertStringContainsString('popen', $out, 'name the disabled function so the host can be asked to allow it');
+        $this->assertStringContainsString('disable_functions', $out, 'and name the ini setting that holds it — that is the actual fix');
+        $this->assertStringContainsStringIgnoringCase('cannot', $out);
+    }
+
+    /** A wrong sendmail_path is an easy misconfiguration and must say so plainly. */
+    public function testSendmailReportsAMissingBinary(): void
+    {
+        $out = $this->sendmailer(['exists' => false], ['sendmail_path' => '/usr/sbin/nope'])->diagnose();
+
+        $this->assertStringContainsString('/usr/sbin/nope', $out, 'name the path that was looked for');
+        $this->assertStringContainsStringIgnoringCase('not found', $out);
+    }
+
+    /** Present but not executable is a different fix (permissions), so it reads differently. */
+    public function testSendmailReportsANonExecutableBinary(): void
+    {
+        $out = $this->sendmailer(['executable' => false])->diagnose();
+
+        $this->assertStringContainsStringIgnoringCase('not executable', $out);
+        $this->assertStringNotContainsStringIgnoringCase('not found', $out, 'a permissions problem must not read as a missing file');
+    }
+
+    /**
+     * When the local side is healthy, say so — and point at what is left.
+     *
+     * If sendmail is present and runnable, a failed send was rejected further along (the
+     * MTA queue, or a From address this server is not authorised to send for). Returning
+     * '' here would leave the operator with only the generic string again.
+     */
+    public function testSendmailConfirmsAHealthyLocalSetup(): void
+    {
+        $out = $this->sendmailer()->diagnose();
+
+        $this->assertStringContainsString('/usr/sbin/sendmail', $out, 'name what was checked');
+        $this->assertStringContainsStringIgnoringCase('handed', $out, 'the message left PHP successfully');
+        $this->assertStringContainsStringIgnoringCase('From address', $out, 'the remaining suspect worth naming');
+    }
+
+    /** The default path is used when none is configured. */
+    public function testSendmailUsesTheDefaultPathWhenUnset(): void
+    {
+        $this->assertStringContainsString('/usr/sbin/sendmail', $this->sendmailer(['exists' => false])->diagnose());
+    }
+
+    /** A custom sendmail_path is honoured. */
+    public function testACustomSendmailPathIsUsed(): void
+    {
+        $out = $this->sendmailer([], ['sendmail_path' => '/opt/local/bin/sendmail'])->diagnose();
+
+        $this->assertStringContainsString('/opt/local/bin/sendmail', $out);
+    }
+
+    /** The credential must not leak here either. */
+    public function testTheSendmailDiagnosisNeverCarriesTheCredential(): void
+    {
+        $out = $this->sendmailer([], ['sendmail_path' => '/bin/sup3r-s3cret'])->diagnose();
+
+        $this->assertStringNotContainsString('sup3r-s3cret', $out);
+    }
+
+    /**
+     * "mail" hands to PHP's own mail() — no binary of ours to check, so stay quiet.
+     *
+     * The host is deliberately still set. Switching transport does not clear the SMTP
+     * fields, so a real "mail" config almost always carries a leftover host — and without
+     * one here the empty-host guard masks the transport check entirely, which a mutation
+     * run demonstrated by leaving "route 'mail' into the network probe" alive.
+     */
+    public function testTheMailTransportHasNothingToPreflight(): void
+    {
+        $probed = false;
+        $connector = static function () use (&$probed): array {
+            $probed = true;
+
+            return [false, 110, 'Connection timed out'];
+        };
+
+        $out = (new Mailer(
+            ['protocol' => 'mail', 'from_email' => 'u@example.com', 'host' => 'smtp.leftover.example', 'port' => '587'],
+            $connector,
+            $this->localMail(['exists' => false]),
+        ))->diagnose();
+
+        $this->assertSame('', $out);
+        $this->assertFalse($probed, '"mail" must not open a socket to a stale SMTP host');
     }
 
     /**

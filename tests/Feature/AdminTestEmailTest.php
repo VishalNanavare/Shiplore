@@ -55,7 +55,7 @@ final class AdminTestEmailTest extends CIUnitTestCase
             public function hasCryptoMismatch(): bool { return $this->badPair; }
             public function impliedCrypto(): ?string { return 'tls'; }
             public function lastError(): string { return $this->ok ? '' : 'Connection timed out after 30s'; }
-            public function diagnose(): string { return $this->ok ? '' : 'smtp.example.com:587 is reachable.'; }
+            public function diagnose(): string { return $this->ok ? '' : 'DIAGNOSIS-MARKER: the port is reachable.'; }
             public function send(string $to, string $subject, string $body): bool
             {
                 $this->sent[] = ['to' => $to, 'subject' => $subject, 'body' => $body];
@@ -209,6 +209,28 @@ final class AdminTestEmailTest extends CIUnitTestCase
 
         $this->assertStringContainsString('Connection timed out after 30s', (string) session()->getFlashdata('error'));
         $r->assertRedirect();
+    }
+
+    /**
+     * The diagnosis must REACH THE OPERATOR, not just exist.
+     *
+     * diagnose() is where the real reason lives — the network-level cause for smtp, the
+     * local-handoff cause for sendmail — and all of it is worthless if the controller
+     * drops it. A mutation run found nothing asserting this wiring: replacing the
+     * diagnose() call with an empty string left every other test green.
+     */
+    public function testTheDiagnosisReachesTheOperator(): void
+    {
+        $this->grant(['integration.manage']);
+        $this->mailer->ok = false;
+
+        $this->send();
+
+        $this->assertStringContainsString(
+            'DIAGNOSIS-MARKER',
+            (string) session()->getFlashdata('error'),
+            'the diagnosis must be shown, whatever the transport',
+        );
     }
 
     /** The same 465/tls trap the Test button catches — this path must not bypass it. */

@@ -56,7 +56,13 @@ final class Mailer
      *        needs working DNS is a test that fails for reasons unrelated to this code.
      *        Production passes nothing and gets the real socket.
      */
-    public function __construct(private array $cfg, private $connector = null) {}
+    /**
+     * @param callable|null $localMailProbe inspects the LOCAL mail setup, for diagnose()
+     *        only. Signature: fn(string $path): array{popen:bool,exists:bool,executable:bool}.
+     *        Injected for the same reason as $connector — a test must be able to exercise
+     *        "sendmail is missing" without the machine actually lacking sendmail.
+     */
+    public function __construct(private array $cfg, private $connector = null, private $localMailProbe = null) {}
 
     public function lastError(): string
     {
@@ -152,8 +158,11 @@ final class Mailer
      */
     public function diagnose(): string
     {
+        if ($this->protocol() === 'sendmail') {
+            return $this->diagnoseSendmail(); // no socket, but plenty that can still be wrong
+        }
         if ($this->protocol() !== 'smtp') {
-            return ''; // sendmail/mail pipe to a local binary — there is no socket to test.
+            return ''; // "mail" hands to PHP's own mail() — nothing of ours to inspect.
         }
         $host = $this->str('host');
         if ($host === '') {
@@ -312,6 +321,75 @@ final class Mailer
             $where,
             mb_substr($greeting, 0, 80),
         ));
+    }
+
+    /**
+     * Preflight the LOCAL mail handoff, for the sendmail transport.
+     *
+     * Switching to sendmail is the standing advice on a host that intercepts outbound SMTP,
+     * so it must not become another leap of faith. CodeIgniter's sendWithSendmail()
+     * returns false SILENTLY when popen is unusable or the pipe will not open — no
+     * setErrorMessage at all — leaving only "Unable to send email using Sendmail". That is
+     * the same dark room the SMTP generic string created, reached immediately after taking
+     * our advice.
+     *
+     * Read-only: it inspects the binary and the PHP environment, and sends nothing.
+     */
+    private function diagnoseSendmail(): string
+    {
+        $path = $this->str('sendmail_path') ?: '/usr/sbin/sendmail';
+        $env  = $this->localMail($path);
+
+        // Checked FIRST because it is the failure CodeIgniter reports as nothing at all,
+        // and because no amount of fixing the binary helps while it is true.
+        if (! ($env['popen'] ?? true)) {
+            return $this->redact(
+                'PHP on this server cannot run external programs — popen() is disabled, and that is how a'
+                . ' message is handed to sendmail. Ask the host to remove popen from disable_functions,'
+                . ' or use an SMTP relay this server is allowed to reach.',
+            );
+        }
+        if (! ($env['exists'] ?? true)) {
+            return $this->redact(sprintf(
+                'The sendmail program was not found at "%s". Ask the host for the correct path and set it as'
+                . ' "sendmail_path" — common alternatives are /usr/lib/sendmail and /usr/sbin/exim.',
+                $path,
+            ));
+        }
+        if (! ($env['executable'] ?? true)) {
+            return $this->redact(sprintf(
+                '"%s" exists but is not executable by the web server, so the message cannot be handed over.'
+                . ' This is a permissions problem on the host, not a setting in this panel.',
+                $path,
+            ));
+        }
+
+        return $this->redact(sprintf(
+            '"%s" is present and PHP can run it, so the message was handed to the local mail server and'
+            . ' rejected further along. The usual cause is a From address this server is not authorised to'
+            . ' send for — use an address on a domain hosted here. The host\'s mail log has the rest.',
+            $path,
+        ));
+    }
+
+    /**
+     * What the local mail setup looks like. Real filesystem calls are @-suppressed: an
+     * open_basedir restriction turns them into warnings, and a diagnostic must not become
+     * a second failure.
+     *
+     * @return array{popen:bool,exists:bool,executable:bool}
+     */
+    private function localMail(string $path): array
+    {
+        if ($this->localMailProbe !== null) {
+            return ($this->localMailProbe)($path);
+        }
+
+        return [
+            'popen'      => function_usable('popen'),
+            'exists'     => (bool) @file_exists($path),
+            'executable' => (bool) @is_executable($path),
+        ];
     }
 
     /**
