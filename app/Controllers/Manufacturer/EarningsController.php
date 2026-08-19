@@ -30,12 +30,23 @@ final class EarningsController extends BaseManufacturerController
             return $denied;
         }
 
-        $repo = service('manufacturerEarningsRepository');
-        $mid  = (int) $this->manufacturerId();
+        $repo    = service('manufacturerEarningsRepository');
+        $policy  = service('b2bPolicy');
+        $mid     = (int) $this->manufacturerId();
+        $summary = $repo->summary($mid);
+
+        // Commission is applied from the configured rate, which defaults to zero. That
+        // default is the honest one: "nothing configured" and "we take nothing" produce
+        // the same number, so an unconfigured screen shows the manufacturer their gross
+        // rather than a figure somebody invented. The view says which is in force.
+        $commission = $policy->commissionOn($summary['earned']);
 
         return $this->render('manufacturer/earnings/index', 'earnings', 'Earnings', [
-            'summary' => $repo->summary($mid),
-            'orders'  => $repo->earnedOrders($mid),
+            'summary'    => $summary,
+            'orders'     => $repo->earnedOrders($mid),
+            'commission' => $commission,
+            'net'        => round($summary['earned'] - $commission, 2),
+            'policy'     => $policy,
         ]);
     }
 }

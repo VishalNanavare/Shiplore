@@ -34,11 +34,35 @@ $money = static fn ($v): string => '₹' . number_format((float) $v, 2);
         </div></div>
     </div>
     <div class="col-md-4">
-        <div class="card h-100 border-0" style="background:transparent"><div class="card-body small text-secondary">
-            Earnings are counted when the buyer <strong>confirms receipt</strong>, not when
-            an order ships. Figures are gross — platform commission for B2B orders is not
-            configured yet, so nothing is deducted here.
+        <div class="card h-100"><div class="card-body">
+            <div class="text-secondary small text-uppercase" style="letter-spacing:.06em">
+                Net after commission
+            </div>
+            <div class="fs-3 fw-semibold"><?= esc($money($net ?? 0)) ?></div>
+            <div class="small text-secondary">
+                <?php if (($policy->commissionPercent() ?? 0) > 0): ?>
+                    less <?= esc(rtrim(rtrim(number_format($policy->commissionPercent(), 2), '0'), '.')) ?>%
+                    commission (<?= esc($money($commission ?? 0)) ?>)
+                <?php else: ?>
+                    No platform commission is configured, so nothing is deducted.
+                <?php endif; ?>
+            </div>
         </div></div>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-12">
+        <div class="small text-secondary">
+            Earnings are counted when the buyer <strong>confirms receipt</strong>, not when an
+            order ships.
+            <?php if ($policy->payoutsConfigured()): ?>
+                Payouts run every <?= (int) $policy->payoutCycleDays() ?> days.
+            <?php else: ?>
+                No payout cycle is configured yet, so these figures are what you have earned
+                rather than what has been paid.
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 
