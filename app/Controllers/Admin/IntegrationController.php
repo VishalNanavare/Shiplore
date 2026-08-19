@@ -281,6 +281,23 @@ final class IntegrationController extends BaseController
         $spec   = $this->spec($slug);
         $config = service('integrationRepository')->config($spec['provider']);
 
+        // Save and Test are two submit buttons on ONE form, and Test reads the SAVED
+        // config — it never sees the dropdown. So changing Transport and clicking Test
+        // silently tests the old transport and blames it, with nothing on screen hinting
+        // the change was ignored. That cost a real diagnosis session: after proving the
+        // host intercepts SMTP and that sendmail was the fix, the next test still said
+        // 'Could not send via "smtp"', because the dropdown had never been saved.
+        $postedProtocol = trim((string) $this->request->getPost('protocol'));
+        $savedProtocol  = trim((string) ($config['protocol'] ?? ''));
+        if ($postedProtocol !== '' && $savedProtocol !== '' && $postedProtocol !== $savedProtocol) {
+            return redirect()->to('admin/integrations/' . $slug)->with(
+                'error',
+                'Transport is set to "' . $postedProtocol . '" on screen, but "' . $savedProtocol
+                . '" is what has been saved — and the test uses the saved settings. Click "Save settings" first,'
+                . ' then test.',
+            );
+        }
+
         $missing = [];
         foreach ($spec['fields'] as $f) {
             if (($f[3] ?? false) && trim((string) ($config[$f[0]] ?? '')) === '') {

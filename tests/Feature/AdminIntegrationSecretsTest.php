@@ -249,6 +249,93 @@ final class AdminIntegrationSecretsTest extends CIUnitTestCase
         $this->assertSame($json, $this->repo->captured['service_account_json']);
     }
 
+    // ------------------------------------------------------------- unsaved changes
+
+    /**
+     * "Test connection" must not silently test SETTINGS THAT ARE NOT SAVED.
+     *
+     * Save and Test are two submit buttons on one form. Change the Transport dropdown,
+     * click Test, and the form posts to the test endpoint — which reads the SAVED config
+     * from the database and never sees the dropdown. The operator watches a test of the
+     * old transport and is told the old transport failed, with nothing on screen
+     * suggesting their change was ignored.
+     *
+     * This cost a real diagnosis session: after establishing beyond doubt that the host
+     * intercepts SMTP and that sendmail was the fix, the next test still reported
+     * 'Could not send via "smtp"' — because the dropdown had been changed but not saved.
+     */
+    public function testTestingWithAnUnsavedTransportIsRefused(): void
+    {
+        $this->grant();
+
+        $data = ['protocol' => 'sendmail', 'host' => 'smtp.example.com', 'from_email' => 'no-reply@example.com'];
+        $data[csrf_token()] = csrf_hash();
+        $this->withSession(service('session')->get() + $this->sess())->post('admin/integrations/email/test', $data);
+
+        $error = (string) session()->getFlashdata('error');
+        $this->assertStringContainsString('sendmail', $error, 'name what is on screen');
+        $this->assertStringContainsString('smtp', $error, 'and what is actually saved');
+        // 'Save settings', not 'save' — the loose form is satisfied by the phrase
+        // "is what has been saved" elsewhere in the same message, so it passed with the
+        // instruction deleted. A mutation run caught it.
+        $this->assertStringContainsString('Save settings', $error, 'and what to do about it');
+    }
+
+    /** A matching transport tests normally — the guard must not block the ordinary case. */
+    public function testTestingWithTheSavedTransportProceeds(): void
+    {
+        $this->grant();
+
+        $data = ['protocol' => 'smtp', 'test_to' => 'someone@example.com'];
+        $data[csrf_token()] = csrf_hash();
+        $this->withSession(service('session')->get() + $this->sess())->post('admin/integrations/email/test', $data);
+
+        // Asserted against text the guard REALLY emits. The first version looked for
+        // 'not been saved', which appears nowhere — the message says "is what has been
+        // saved" — so it passed whether or not the guard fired.
+        $this->assertStringNotContainsString(
+            'is what has been saved',
+            (string) session()->getFlashdata('error'),
+            'an unchanged transport must not be reported as unsaved',
+        );
+    }
+
+    /** A form that posts no protocol at all (other providers) must not trip the guard. */
+    public function testAProviderWithoutATransportFieldIsUnaffected(): void
+    {
+        $this->grant();
+
+        $data = ['provider_name' => 'x', 'base_url' => 'https://x', 'client_id' => 'c', 'client_secret' => ''];
+        $data[csrf_token()] = csrf_hash();
+        $this->withSession(service('session')->get() + $this->sess())->post('admin/integrations/gst-api/test', $data);
+
+        $this->assertStringNotContainsString('is what has been saved', (string) session()->getFlashdata('error'));
+    }
+
+    /**
+     * A first-time setup has NOTHING saved, so there is no "unsaved change" to report.
+     *
+     * Telling someone that "sendmail on screen differs from '' saved" is noise — the
+     * missing-required-fields check already says what is actually wrong. Without this
+     * case the empty-saved guard is untested, which a mutation run demonstrated.
+     */
+    public function testAFreshInstallWithNothingSavedIsNotReportedAsUnsaved(): void
+    {
+        $this->grant();
+        Services::injectMock('integrationRepository', new class {
+            public function get(string $p): ?array { return null; }
+            public function config(string $p): array { return []; }
+            public function upsert(string $p, array $c, string $s = 'connected', ?int $a = null): bool { return true; }
+            public function setStatus(string $p, string $s, ?int $a = null): bool { return true; }
+        });
+
+        $data = ['protocol' => 'sendmail', 'from_email' => 'no-reply@example.com'];
+        $data[csrf_token()] = csrf_hash();
+        $this->withSession(service('session')->get() + $this->sess())->post('admin/integrations/email/test', $data);
+
+        $this->assertStringNotContainsString('is what has been saved', (string) session()->getFlashdata('error'));
+    }
+
     // ------------------------------------------------------------- AWS screen
 
     public function testTheAwsSecretIsNotEchoedIntoTheFormHtml(): void
