@@ -70,6 +70,23 @@ final class MailerDiagnoseTest extends CIUnitTestCase
         return $this->scripted(['plain' => ['say', $line], 'ssl' => ['say', $line]]);
     }
 
+    /**
+     * The probe reached the "everything looks fine" verdict and accused nobody.
+     *
+     * Asserted POSITIVELY, on text the passing branch actually emits. The first version of
+     * these guards asserted only the absence of the word "intercept" — which the
+     * who-answered message never contains, because it says "redirecting". Every one of
+     * them passed no matter which branch ran, and a mutation run found six of them dead at
+     * once. Absence assertions are only worth anything against a string the code can
+     * really produce.
+     */
+    private function assertNotAccused(string $out): void
+    {
+        $this->assertStringContainsStringIgnoringCase('reachable', $out, 'expected the clean verdict');
+        $this->assertStringNotContainsString('different mail system', $out, 'the who-answered check must not have fired');
+        $this->assertStringNotContainsStringIgnoringCase('intercept', $out);
+    }
+
     /** @param array<string,mixed> $over */
     private function mailer(array $over = [], ?callable $connector = null): Mailer
     {
@@ -274,14 +291,15 @@ final class MailerDiagnoseTest extends CIUnitTestCase
      */
     public function testSilenceOnAnImplicitTlsPortIsNotInterception(): void
     {
+        // The banner must name the CONFIGURED host, or the separate who-answered check
+        // fires and this test stops being about implicit TLS at all.
         $out = $this->mailer([], $this->scripted([
             'plain' => ['say', ''],
-            'ssl'   => ['say', "220 smtp.gmail.com ESMTP ready\r\n"],
+            'ssl'   => ['say', "220 smtp.example.com ESMTP ready\r\n"],
         ]))->diagnose();
 
-        $this->assertStringNotContainsStringIgnoringCase('intercept', $out, 'a silent plain socket on 465 is the specification, not an attack');
-        $this->assertStringNotContainsStringIgnoringCase('sendmail', $out, 'and it must not recommend abandoning a transport that works');
-        $this->assertStringContainsStringIgnoringCase('reachable', $out);
+        $this->assertStringNotContainsStringIgnoringCase('sendmail', $out, 'it must not recommend abandoning a transport that works');
+        $this->assertNotAccused($out);
     }
 
     /** On 465 the greeting must be read THROUGH TLS, the only place it exists. */
@@ -319,11 +337,10 @@ final class MailerDiagnoseTest extends CIUnitTestCase
     {
         $out = $this->mailer(['port' => '465', 'encryption' => 'tls'], $this->scripted([
             'plain' => ['say', ''],
-            'ssl'   => ['say', "220 smtp.gmail.com ESMTP ready\r\n"],
+            'ssl'   => ['say', "220 smtp.example.com ESMTP ready\r\n"],
         ]))->diagnose();
 
-        $this->assertStringNotContainsStringIgnoringCase('intercept', $out);
-        $this->assertStringContainsStringIgnoringCase('reachable', $out);
+        $this->assertNotAccused($out);
     }
 
     /** And "ssl" means implicit TLS on a non-standard port, where 465 cannot carry it. */
@@ -358,6 +375,133 @@ final class MailerDiagnoseTest extends CIUnitTestCase
         )->diagnose();
 
         $this->assertStringContainsStringIgnoringCase('reachable', $out);
+    }
+
+    // ------------------------------------------- who actually answered
+
+    /**
+     * THE REAL FAULT ON THIS HOST, and the one the probe kept missing.
+     *
+     * A live test connected to smtp.gmail.com:587 and was greeted by
+     * "220-43.170.178.68.host.secureserver.net ESMTP Exim 4.99.5". That is GoDaddy's own
+     * mail server, not Gmail: outbound SMTP is transparently redirected to the local MTA.
+     * The session then reached "starttls: 220 TLS go ahead" and died on the handshake,
+     * because a secureserver.net certificate cannot satisfy a connection addressed to
+     * smtp.gmail.com.
+     *
+     * A 220 was returned, so every check the probe had said "reachable, the network is not
+     * the problem, check your App Password" — advice that can never succeed, because the
+     * credentials are not reaching Gmail at all. The contradiction was sitting in the
+     * banner the probe was already printing, and it did not read it.
+     */
+    public function testABannerFromADifferentMailSystemIsInterception(): void
+    {
+        $out = $this->mailer(
+            ['host' => 'smtp.gmail.com', 'port' => '587', 'encryption' => 'tls'],
+            $this->scripted(['plain' => ['say', "220-43.170.178.68.host.secureserver.net ESMTP Exim 4.99.5\r\n"]]),
+        )->diagnose();
+
+        $this->assertStringContainsString('secureserver.net', $out, 'name who actually answered');
+        $this->assertStringContainsString('smtp.gmail.com', $out, 'and who was asked for');
+        $this->assertStringContainsStringIgnoringCase('sendmail', $out, 'the only transport that works when the network redirects SMTP');
+        $this->assertStringNotContainsString('App Password', $out, 'credentials cannot be the problem when they never reach the provider');
+    }
+
+    /** The provider answering as itself is the normal case and must stay quiet. */
+    public function testAMatchingBannerIsNotFlagged(): void
+    {
+        $out = $this->mailer(
+            ['host' => 'smtp.gmail.com', 'port' => '587', 'encryption' => 'tls'],
+            $this->scripted(['plain' => ['say', "220 smtp.gmail.com ESMTP a1b2c3 - gsmtp\r\n"]]),
+        )->diagnose();
+
+        $this->assertNotAccused($out);
+    }
+
+    /**
+     * A provider legitimately answering under a sibling hostname is NOT interception.
+     *
+     * Microsoft banners smtp.office365.com as a specific node like
+     * PA4PR03CA0123.outlook.office365.com. Demanding an exact hostname match would call
+     * that an attack — the same over-confident heuristic that produced the 465 false
+     * positive. The comparison is on the registrable domain for exactly this reason.
+     */
+    public function testASiblingHostnameFromTheSameProviderIsNotFlagged(): void
+    {
+        $out = $this->mailer(
+            ['host' => 'smtp.office365.com', 'port' => '587', 'encryption' => 'tls'],
+            $this->scripted(['plain' => ['say', "220 PA4PR03CA0123.outlook.office365.com Microsoft ESMTP ready\r\n"]]),
+        )->diagnose();
+
+        $this->assertNotAccused($out);
+    }
+
+    /** A banner with no parseable hostname proves nothing, so it must not accuse. */
+    public function testAnUnparseableBannerIsNotTreatedAsInterception(): void
+    {
+        $out = $this->mailer(
+            ['host' => 'smtp.gmail.com', 'port' => '587', 'encryption' => 'tls'],
+            $this->scripted(['plain' => ['say', "220 ESMTP ready\r\n"]]),
+        )->diagnose();
+
+        $this->assertNotAccused($out);
+    }
+
+    /** A single-label or IP host has no domain to compare, so the check stands down. */
+    public function testALocalRelayIsNotFlagged(): void
+    {
+        $out = $this->mailer(
+            ['host' => 'localhost', 'port' => '25', 'encryption' => 'none'],
+            $this->scripted(['plain' => ['say', "220 mail.internal ESMTP Postfix\r\n"]]),
+        )->diagnose();
+
+        $this->assertNotAccused($out);
+    }
+
+    /**
+     * An IP address as the host has no domain to compare, so the check must stand down.
+     *
+     * A relay configured by IP is an ordinary setup. Without the IP guard,
+     * registrableDomain('192.168.1.10') returns the last two octets, "1.10", which differs
+     * from any banner's domain and would accuse every such config of interception.
+     */
+    public function testAnIpAddressHostIsNotComparedAgainstTheBanner(): void
+    {
+        $out = $this->mailer(
+            ['host' => '192.168.1.10', 'port' => '25', 'encryption' => 'none'],
+            $this->scripted(['plain' => ['say', "220 mail.provider.net ESMTP Postfix\r\n"]]),
+        )->diagnose();
+
+        $this->assertNotAccused($out);
+    }
+
+    /**
+     * A first token that is not a hostname must not be treated as one.
+     *
+     * "220 ESMTP;v=1.2 ready" contains a dot, so a lax pattern would lift "ESMTP;v=1.2",
+     * call it a domain and accuse. Requiring hostname characters throughout is what stops
+     * that — the same over-confidence that produced the 465 false positive, caught here
+     * before it reaches anyone.
+     */
+    public function testAPunctuatedNonHostnameTokenIsNotTreatedAsAHost(): void
+    {
+        $out = $this->mailer(
+            ['host' => 'smtp.gmail.com', 'port' => '587', 'encryption' => 'tls'],
+            $this->scripted(['plain' => ['say', "220 ESMTP;v=1.2 ready\r\n"]]),
+        )->diagnose();
+
+        $this->assertNotAccused($out);
+    }
+
+    /** Hostnames are case-insensitive; a banner shouting must not read as a different host. */
+    public function testTheComparisonIsCaseInsensitive(): void
+    {
+        $out = $this->mailer(
+            ['host' => 'smtp.gmail.com', 'port' => '587', 'encryption' => 'tls'],
+            $this->scripted(['plain' => ['say', "220 SMTP.GMAIL.COM ESMTP ready\r\n"]]),
+        )->diagnose();
+
+        $this->assertNotAccused($out);
     }
 
     /**

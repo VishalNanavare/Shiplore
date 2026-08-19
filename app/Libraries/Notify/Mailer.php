@@ -276,6 +276,35 @@ final class Mailer
             ));
         }
 
+        // A 220 is necessary but NOT sufficient — it says something is speaking SMTP, not
+        // that it is the server you asked for. On this host a connection to
+        // smtp.gmail.com:587 was greeted by "220-...host.secureserver.net ESMTP Exim":
+        // outbound mail is transparently redirected to the local MTA. Every reachability
+        // check passed, so the probe reported "the network is not the problem, check your
+        // App Password" — advice that can never work, because the credentials never reach
+        // Gmail. The refutation was in the banner it was already printing.
+        $asked  = $this->str('host');
+        $banner = $this->bannerHost($greeting);
+
+        // No `$banner !== ''` guard here on purpose: differentMailSystem() already returns
+        // false for anything it cannot compare, so the extra check changed no behaviour and
+        // a mutation run could not tell its removal from the original. Redundant code that
+        // mutation cannot distinguish is code with no test behind it — one decision point
+        // is better than two, and the decision belongs in differentMailSystem().
+        if ($this->differentMailSystem($asked, $banner)) {
+            return $this->redact(sprintf(
+                '%s answered, but the greeting came from "%s" — a different mail system from the "%s" you'
+                . ' configured. This server is redirecting outbound SMTP to its own mail host, so the username'
+                . ' and password never reach %s and no credential change can fix it. The TLS handshake then'
+                . ' fails because that host presents its own certificate. Switch Transport to "sendmail", which'
+                . ' hands the message to the local mail server directly and never touches the network.',
+                $where,
+                $banner,
+                $asked,
+                $asked,
+            ));
+        }
+
         return $this->redact(sprintf(
             '%s is reachable and answered "%s", so the network is not the problem. The failure is later in the'
             . ' session — most often the username or password. A Gmail account needs a 16-character App Password,'
@@ -283,6 +312,56 @@ final class Mailer
             $where,
             mb_substr($greeting, 0, 80),
         ));
+    }
+
+    /**
+     * The hostname an SMTP banner announces, or '' when it does not announce one.
+     *
+     * Banners are "220 host ESMTP ..." or the multiline "220-host ...". Anything that does
+     * not yield a dotted name is returned as '' rather than guessed at: a check that
+     * accuses on weak evidence is how the last false positive happened.
+     */
+    private function bannerHost(string $greeting): string
+    {
+        if (preg_match('/^220[\s-]+([A-Za-z0-9._-]+\.[A-Za-z0-9._-]+)/', $greeting, $m) !== 1) {
+            return '';
+        }
+
+        return rtrim($m[1], '.');
+    }
+
+    /**
+     * True when two hostnames belong to different mail systems.
+     *
+     * Compared on the registrable domain, NOT the full hostname, because providers
+     * legitimately answer under a sibling name — smtp.office365.com banners as
+     * something.outlook.office365.com, and demanding an exact match would call that an
+     * attack. That is the same over-confident heuristic that produced the port-465 false
+     * positive, so this errs the other way: anything it cannot compare confidently
+     * (single-label names, IP literals) returns false and says nothing.
+     */
+    private function differentMailSystem(string $asked, string $banner): bool
+    {
+        $a = $this->registrableDomain($asked);
+        $b = $this->registrableDomain($banner);
+
+        return $a !== '' && $b !== '' && $a !== $b;
+    }
+
+    /** Last two labels, lowercased. '' for IP literals and single-label names. */
+    private function registrableDomain(string $host): string
+    {
+        $host = strtolower(trim($host, " \t."));
+        if ($host === '' || filter_var($host, FILTER_VALIDATE_IP) !== false) {
+            return '';
+        }
+
+        $labels = explode('.', $host);
+        if (count($labels) < 2) {
+            return '';
+        }
+
+        return implode('.', array_slice($labels, -2));
     }
 
     /**
