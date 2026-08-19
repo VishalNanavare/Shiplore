@@ -154,6 +154,24 @@ final class ManufacturerPermissionScopeTest extends CIUnitTestCase
                 $sql,
                 "{$name} uses SOURCE, a client-only command",
             );
+
+            // A routine body is MULTI-STATEMENT. phpMyAdmin splits a script on ';' and
+            // sends each piece separately, so BEGIN…END is cut at its first internal
+            // semicolon and the server gets a truncated CREATE — #1064 near ''. Adding
+            // DELIMITER does not save it either, since the assertion above bans that for
+            // apply_sql.php's sake, and the two constraints together leave no way to
+            // ship a routine that both tools can apply.
+            //
+            // This was added after 81_mfg_warehouses.sql failed on a live import for
+            // exactly this reason: the DELIMITER rule above did not imply it, because a
+            // CREATE PROCEDURE with no DELIMITER passes that check and breaks harder.
+            // Idempotence without a routine is the flat PREPARE-guarded form in 77.
+            $this->assertDoesNotMatchRegularExpression(
+                '/\bCREATE\s+(OR\s+REPLACE\s+)?(DEFINER\s*=\s*\S+\s+)?(PROCEDURE|FUNCTION|TRIGGER)\b/i',
+                $sql,
+                "{$name} defines a stored routine — its BEGIN…END body is split on ';' by "
+                . 'phpMyAdmin and arrives truncated. Use the flat PREPARE-guarded form (see 77).',
+            );
             $checked++;
         }
 
