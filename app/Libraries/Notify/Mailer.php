@@ -34,7 +34,52 @@ final class Mailer
      *        holding the local box's own TLS certificate), use sendmail instead:
      *        it pipes to the local MTA and never touches the network.
      */
+    /**
+     * Why the last send failed, safe to show an operator.
+     *
+     * send() returns only a bool, so every failure used to end at "see writable/logs".
+     * On a shared host an operator often cannot read those, which turns a one-field
+     * misconfiguration into a support round-trip — that is exactly how a live email
+     * outage here stayed undiagnosed. The Test button now prints this instead.
+     *
+     * REDACTED before it is stored: CodeIgniter's SMTP debugger echoes the session
+     * transcript, which contains the base64 AUTH exchange, and the config carries the
+     * password. Neither may reach a browser.
+     */
+    private string $lastError = '';
+
     public function __construct(private array $cfg) {}
+
+    public function lastError(): string
+    {
+        return $this->lastError;
+    }
+
+    /**
+     * Strip anything that could carry a credential.
+     *
+     * The AUTH lines are base64, so they do not LOOK like a password and would be
+     * copied into a support ticket by anyone who did not know. Matched on the SMTP
+     * verbs rather than on the password value, because the value is not always echoed
+     * verbatim and matching on it would miss the encoded form entirely.
+     */
+    private function redact(string $raw): string
+    {
+        // No  after the alternation: an SMTP verb is followed by a space or
+        // end-of-line, and (\s.*)? covers both. An earlier version carried a literal
+        // BACKSPACE byte here where  was meant — a shell heredoc ate the escape as
+        // the file was written — so the pattern matched an unprintable character that
+        // never occurs and the redaction silently did nothing. grep showed the line as
+        // correct; od -c found it.
+        $clean = preg_replace('/^(AUTH|334|235|535)(\s.*)?$/mi', '$1 [redacted]', strip_tags($raw)) ?? $raw;
+        $pass  = (string) ($this->cfg['password'] ?? '');
+        if ($pass !== '') {
+            $clean = str_replace([$pass, base64_encode($pass)], '[redacted]', $clean);
+        }
+
+        return trim(mb_substr($clean, 0, 600));
+    }
+
 
     /**
      * Transport for this send: 'smtp' (network socket to a remote server),
@@ -68,12 +113,18 @@ final class Mailer
         // which made "email isn't arriving" indistinguishable from "email was never
         // attempted" — callers only see a bool, and logger.threshold=4 discards anything
         // below error, so an unconfigured mailer left no trace anywhere.
+        $this->lastError = '';
+
         if ($to === '') {
+            $this->lastError = 'No recipient address.';
             log_message('error', 'Mailer: refusing to send — empty recipient.');
 
             return false;
         }
         if (! $this->configured()) {
+            $this->lastError = $this->protocol() === 'smtp'
+                ? 'SMTP is selected but Host or Username is empty.'
+                : 'Transport "' . $this->protocol() . '" needs a From address.';
             log_message('error', sprintf(
                 'Mailer: refusing to send to %s — transport "%s" is not configured (%s).',
                 $to,
@@ -133,8 +184,11 @@ final class Mailer
                 return true;
             }
 
-            log_message('error', "Mailer: {$protocol} send to {$to} failed. " . $email->printDebugger(['headers']));
+            $debug           = $email->printDebugger(['headers']);
+            $this->lastError = $this->redact($debug);
+            log_message('error', "Mailer: {$protocol} send to {$to} failed. " . $debug);
         } catch (Throwable $e) {
+            $this->lastError = $this->redact($e->getMessage());
             log_message('error', 'Mailer: ' . $e->getMessage());
         }
 

@@ -153,7 +153,8 @@ final class IntegrationController extends BaseController
             $transport = trim((string) ($config['protocol'] ?? '')) ?: 'smtp';
             $stamp    = date('Y-m-d H:i:s');
 
-            $ok = service('mailer')->send(
+            $mailer = service('mailer');
+            $ok     = $mailer->send(
                 $to,
                 $brand . ' email test — ' . $stamp,
                 '<p>This is a test email from ' . esc($brand) . '.</p>'
@@ -167,7 +168,14 @@ final class IntegrationController extends BaseController
                 $ok ? 'success' : 'error',
                 $ok
                     ? 'Test email sent to ' . $to . ' via "' . $transport . '" — check that inbox (and spam) to confirm delivery.'
-                    : 'Could not send a test email via "' . $transport . '". If the log shows a certificate mismatch, this host is intercepting outbound SMTP — switch Transport to "sendmail". See writable/logs for the exact error.'
+                    // Show the REASON, not a pointer to a logfile. On shared hosting
+                    // an operator frequently cannot read writable/logs, so "see the log"
+                    // ends the diagnosis instead of advancing it — which is how an email
+                    // outage here went several rounds without anyone seeing the error.
+                    // Mailer::lastError() is redacted of credentials before it gets here.
+                    : 'Could not send via "' . $transport . '". ' . ($mailer->lastError() ?: 'No detail was reported.')
+                        . ' — a connection timeout or certificate mismatch means this host blocks outbound SMTP;'
+                        . ' switch Transport to "sendmail". An authentication failure on Gmail means it needs a 16-character App Password.'
             );
         }
 
