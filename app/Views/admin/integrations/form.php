@@ -20,14 +20,23 @@ $statusMap = ['connected' => 'success', 'disconnected' => 'secondary', 'error' =
         <form method="post" action="<?= site_url('admin/integrations/' . $slug) ?>">
             <?= csrf_field() ?>
             <?php foreach ($spec['fields'] as $f): [$key, $label, $type, $req] = $f; $opts = $f[4] ?? []; $val = (string) ($config[$key] ?? ''); ?>
+                <?php
+                // Secret values are NEVER rendered back into the page — not even inside a
+                // type="password" input, whose value sits in the HTML source regardless of
+                // the dots on screen. Blank means "keep what is saved" (the controller
+                // enforces it), and the placeholder tells the operator a value exists.
+                // Keep the condition in step with IntegrationController::isSecretField().
+                $secret      = $type === 'password' || $key === 'service_account_json';
+                $placeholder = $secret && $val !== '' ? 'saved — leave blank to keep' : '';
+                ?>
                 <div class="mb-3">
-                    <label class="form-label"><?= esc($label) ?> <?php if ($req): ?><span class="text-danger">*</span><?php endif; ?> <?php if (in_array($type, ['password'], true)): ?><i class="bi bi-shield-lock text-secondary small" title="secret"></i><?php endif; ?></label>
+                    <label class="form-label"><?= esc($label) ?> <?php if ($req): ?><span class="text-danger">*</span><?php endif; ?> <?php if ($secret): ?><i class="bi bi-shield-lock text-secondary small" title="secret"></i><?php endif; ?></label>
                     <?php if ($type === 'textarea'): ?>
-                        <textarea name="<?= esc($key, 'attr') ?>" class="form-control" rows="3"><?= esc($val) ?></textarea>
+                        <textarea name="<?= esc($key, 'attr') ?>" class="form-control" rows="3" placeholder="<?= esc($placeholder, 'attr') ?>"><?= $secret ? '' : esc($val) ?></textarea>
                     <?php elseif ($type === 'select'): ?>
                         <select name="<?= esc($key, 'attr') ?>" class="form-select"><?php foreach ($opts as $o): ?><option value="<?= esc($o, 'attr') ?>" <?= $val === $o ? 'selected' : '' ?>><?= esc(strtoupper($o)) ?></option><?php endforeach; ?></select>
                     <?php else: ?>
-                        <input type="<?= $type === 'password' ? 'password' : 'text' ?>" name="<?= esc($key, 'attr') ?>" class="form-control" value="<?= esc($val, 'attr') ?>" autocomplete="off">
+                        <input type="<?= $type === 'password' ? 'password' : 'text' ?>" name="<?= esc($key, 'attr') ?>" class="form-control" value="<?= $secret ? '' : esc($val, 'attr') ?>" placeholder="<?= esc($placeholder, 'attr') ?>" autocomplete="off">
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>

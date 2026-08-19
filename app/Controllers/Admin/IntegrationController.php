@@ -102,9 +102,35 @@ final class IntegrationController extends BaseController
         }
         $spec = $this->spec($slug);
 
+        // Stored values are needed BEFORE building the new config: secret fields render
+        // empty in the form (their values must not reach the page source), so a blank
+        // secret means "keep what is saved", not "clear it". Non-secret fields keep the
+        // old semantics — blank clears — pinned by test so this rule cannot widen.
+        $stored = service('integrationRepository')->config($spec['provider']);
+
         $config = [];
         foreach ($spec['fields'] as $f) {
-            $config[$f[0]] = trim((string) $this->request->getPost($f[0]));
+            [$key, , $type] = $f;
+            $posted = (string) $this->request->getPost($key);
+
+            // Passwords lose ALL whitespace, not just the ends — esection's lesson.
+            // Google shows an App Password as four spaced groups ("abcd efgh ijkl mnop")
+            // purely for readability; pasted as-is it is a 19-character credential that
+            // fails with the same 535 as a wrong password, and nothing on any screen can
+            // say why. No provider issues a credential with meaningful internal spaces,
+            // so the strip can only turn a guaranteed failure into the intended value.
+            // The service-account JSON is exempt — its whitespace is meaningful.
+            $posted = $type === 'password'
+                ? (string) preg_replace('/\s+/u', '', $posted)
+                : trim($posted);
+
+            if ($posted === '' && $this->isSecretField($f) && trim((string) ($stored[$key] ?? '')) !== '') {
+                $config[$key] = (string) $stored[$key];
+
+                continue;
+            }
+
+            $config[$key] = $posted;
         }
 
         service('integrationRepository')->upsert($spec['provider'], $config, 'connected', (int) session()->get('user_id'));
@@ -226,6 +252,20 @@ final class IntegrationController extends BaseController
             'Could not send via "' . $transport . '". ' . ($mailer->lastError() ?: 'No detail was reported.')
             . ($transport === 'smtp' ? ' Connection test: ' . $mailer->diagnose() : ''),
         );
+    }
+
+    /**
+     * A field whose saved value must never reach the browser again.
+     *
+     * The password type covers most of them; service_account_json is a textarea — it has
+     * to be, it is a JSON document — but holds a Firebase PRIVATE KEY, the most sensitive
+     * value on any of these screens.
+     *
+     * @param array{0:string,1:string,2:string,3:bool,4?:array} $field
+     */
+    private function isSecretField(array $field): bool
+    {
+        return $field[2] === 'password' || $field[0] === 'service_account_json';
     }
 
     public function test(string $slug): RedirectResponse

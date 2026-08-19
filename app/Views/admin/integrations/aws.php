@@ -17,9 +17,16 @@
                     <thead class="table-light"><tr><th style="width:240px">Setting</th><th>Value</th></tr></thead>
                     <tbody>
                     <?php foreach ($rows as $r): ?>
+                        <?php
+                        // Secret rows render EMPTY — a type="password" input's value still
+                        // sits in the page source. Blank means keep (the controller skips
+                        // writing a blank secret). Keep the name test in step with
+                        // AwsSettingsController::isSecretName().
+                        $secret = str_contains(strtolower((string) $r['name']), 'secret');
+                        ?>
                         <tr>
                             <td class="small fw-medium"><?= esc($r['name']) ?><input type="hidden" name="name[]" value="<?= esc($r['name'], 'attr') ?>"></td>
-                            <td><input name="value[]" class="form-control form-control-sm" value="<?= esc($r['key_value'], 'attr') ?>"<?= str_contains((string) $r['name'], 'secret') ? ' type="password"' : '' ?>></td>
+                            <td><input name="value[]" class="form-control form-control-sm" value="<?= $secret ? '' : esc($r['key_value'], 'attr') ?>"<?= $secret ? ' type="password" placeholder="saved — leave blank to keep"' : '' ?>></td>
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($rows)): ?>

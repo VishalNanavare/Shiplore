@@ -40,10 +40,26 @@ final class AwsSettingsController extends BaseController
         $userId = (int) session()->get('user_id');
 
         foreach ($names as $i => $name) {
-            $repo->set((string) $name, (string) ($values[$i] ?? ''), $userId);
+            $name  = (string) $name;
+            $value = (string) ($values[$i] ?? '');
+
+            // Secret rows render empty in the form (their values must not reach the page
+            // source), so a blank secret means "keep what is saved" — skip the write
+            // entirely rather than overwrite the stored credential with ''.
+            if ($value === '' && $this->isSecretName($name)) {
+                continue;
+            }
+
+            $repo->set($name, $value, $userId);
         }
 
         return redirect()->to('admin/integrations/aws')->with('success', 'AWS / S3 settings saved.');
+    }
+
+    /** Keep in step with the render condition in Views/admin/integrations/aws.php. */
+    private function isSecretName(string $name): bool
+    {
+        return str_contains(strtolower($name), 'secret');
     }
 
     /** Round-trip write/read/delete test against the saved S3 config. */
