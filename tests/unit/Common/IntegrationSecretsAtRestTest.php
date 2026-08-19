@@ -189,4 +189,51 @@ final class IntegrationSecretsAtRestTest extends CIUnitTestCase
         $this->assertSame('', $cfg['password'], 'unreadable secret degrades to empty');
         $this->assertSame('h', $cfg['host'], 'and the rest of the config survives');
     }
+
+    // ---------------------------------------------------------------- write integrity
+
+    /**
+     * A config that cannot be JSON-encoded is REFUSED, not written as garbage.
+     *
+     * json_encode() returns false on invalid UTF-8, and the query builder writes false
+     * as 0 - poisoning the whole config column: every later read degrades to [] and the
+     * transport silently reads back as smtp while the UI said "settings saved".
+     */
+    public function testAConfigThatCannotBeEncodedIsRefusedWithoutDestroyingTheRow(): void
+    {
+        $repo = new IntegrationRepository();
+        $repo->upsert(self::PROVIDER, ['protocol' => 'sendmail', 'host' => 'good']);
+
+        $ok = $repo->upsert(self::PROVIDER, ['protocol' => 'sendmail', 'host' => "bad\xB1byte"]);
+
+        $this->assertFalse($ok, 'an unencodable config must report failure');
+        $this->assertSame('good', $repo->config(self::PROVIDER)['host'], 'and the previous row must survive intact');
+    }
+
+    /**
+     * With duplicate rows, read and write MUST pick the same one - the lowest id.
+     *
+     * The table has no unique key on (provider, owner_type), and without ORDER BY the
+     * "first row" is whatever the engine returns, so a hand-inserted duplicate could be
+     * the one that gets written while the other is the one that gets read. During a live
+     * incident this is indistinguishable from "the save is being lost".
+     */
+    public function testWithDuplicateRowsReadAndWriteAgreeOnTheLowestId(): void
+    {
+        $db = Database::connect();
+        $db->table('integration_accounts')->insert(['provider' => self::PROVIDER, 'owner_type' => 'platform',
+            'config' => json_encode(['protocol' => 'smtp']), 'status' => 'connected']);
+        $db->table('integration_accounts')->insert(['provider' => self::PROVIDER, 'owner_type' => 'platform',
+            'config' => json_encode(['protocol' => 'mail']), 'status' => 'connected']);
+
+        $repo = new IntegrationRepository();
+        $this->assertSame('smtp', $repo->config(self::PROVIDER)['protocol'], 'read follows the lowest id');
+
+        $repo->upsert(self::PROVIDER, ['protocol' => 'sendmail']);
+
+        $rows = $db->table('integration_accounts')->where('provider', self::PROVIDER)
+            ->orderBy('id', 'ASC')->get()->getResultArray();
+        $this->assertSame('sendmail', json_decode($rows[0]['config'], true)['protocol'], 'write lands on the same row the read uses');
+        $this->assertSame('mail', json_decode($rows[1]['config'], true)['protocol'], 'the duplicate is untouched, not raced');
+    }
 }

@@ -130,10 +130,33 @@ final class IntegrationController extends BaseController
                 continue;
             }
 
+            // Selects only accept their declared options; anything else keeps the stored
+            // value. Without this, a missing or empty "protocol" persisted '' — which
+            // every reader coerces to smtp — so a truncated POST or a stale form could
+            // flip the transport back while reporting "settings saved".
+            $options = $f[4] ?? [];
+            if ($type === 'select' && ! in_array($posted, $options, true)) {
+                $config[$key] = (string) ($stored[$key] ?? '');
+
+                continue;
+            }
+
             $config[$key] = $posted;
         }
 
-        service('integrationRepository')->upsert($spec['provider'], $config, 'connected', (int) session()->get('user_id'));
+        // The write's outcome decides the message. This used to flash "settings saved."
+        // unconditionally, so a failed write (poisoned JSON, schema drift, vanished row)
+        // was indistinguishable from success — during a live outage that reads as "the
+        // save keeps not taking effect" with no clue where it is lost.
+        $ok = service('integrationRepository')->upsert($spec['provider'], $config, 'connected', (int) session()->get('user_id'));
+        if (! $ok) {
+            log_message('error', 'IntegrationController: the ' . $spec['provider'] . ' settings write failed — see preceding repository log lines.');
+
+            return redirect()->to('admin/integrations/' . $slug)->with(
+                'error',
+                $spec['label'] . ' settings could not be saved — the database write failed. Nothing was changed; the previous settings still apply.',
+            );
+        }
 
         return redirect()->to('admin/integrations/' . $slug)->with('success', $spec['label'] . ' settings saved.');
     }
@@ -289,12 +312,21 @@ final class IntegrationController extends BaseController
         // 'Could not send via "smtp"', because the dropdown had never been saved.
         $postedProtocol = trim((string) $this->request->getPost('protocol'));
         $savedProtocol  = trim((string) ($config['protocol'] ?? ''));
-        if ($postedProtocol !== '' && $savedProtocol !== '' && $postedProtocol !== $savedProtocol) {
+        // Compared against the EFFECTIVE saved transport: an empty saved value runs as
+        // smtp (Mailer's default), so a fresh install with the dropdown on sendmail would
+        // silently test smtp while the screen says sendmail — the exact shape of the live
+        // incident. The first version skipped the check when nothing was saved, on the
+        // reasoning that the missing-fields error covers it; an audit ranked that hole
+        // first among this guard's gaps.
+        if ($postedProtocol !== '' && $postedProtocol !== ($savedProtocol !== '' ? $savedProtocol : 'smtp')) {
             return redirect()->to('admin/integrations/' . $slug)->with(
                 'error',
-                'Transport is set to "' . $postedProtocol . '" on screen, but "' . $savedProtocol
-                . '" is what has been saved — and the test uses the saved settings. Click "Save settings" first,'
-                . ' then test.',
+                $savedProtocol === ''
+                    ? 'No transport has been saved yet, so the test would run with the default "smtp" while the'
+                        . ' screen shows "' . $postedProtocol . '". Click "Save settings" first, then test.'
+                    : 'Transport is set to "' . $postedProtocol . '" on screen, but "' . $savedProtocol
+                        . '" is what has been saved — and the test uses the saved settings. Click "Save settings" first,'
+                        . ' then test.',
             );
         }
 

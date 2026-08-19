@@ -313,13 +313,16 @@ final class AdminIntegrationSecretsTest extends CIUnitTestCase
     }
 
     /**
-     * A first-time setup has NOTHING saved, so there is no "unsaved change" to report.
+     * A fresh install posting a NON-DEFAULT transport is told to save first.
      *
-     * Telling someone that "sendmail on screen differs from '' saved" is noise — the
-     * missing-required-fields check already says what is actually wrong. Without this
-     * case the empty-saved guard is untested, which a mutation run demonstrated.
+     * This reverses an earlier decision, deliberately. The first version stayed silent
+     * when nothing was saved, reasoning that the missing-required-fields check would
+     * explain things - but with nothing saved the test RUNS WITH THE DEFAULT "smtp"
+     * while the screen says "sendmail", which is the exact shape of the live incident:
+     * the operator watches smtp fail and believes sendmail was tested. An audit ranked
+     * this hole first among the guard's gaps.
      */
-    public function testAFreshInstallWithNothingSavedIsNotReportedAsUnsaved(): void
+    public function testAFreshInstallPostingADifferentTransportIsToldToSaveFirst(): void
     {
         $this->grant();
         Services::injectMock('integrationRepository', new class {
@@ -333,7 +336,87 @@ final class AdminIntegrationSecretsTest extends CIUnitTestCase
         $data[csrf_token()] = csrf_hash();
         $this->withSession(service('session')->get() + $this->sess())->post('admin/integrations/email/test', $data);
 
-        $this->assertStringNotContainsString('is what has been saved', (string) session()->getFlashdata('error'));
+        $error = (string) session()->getFlashdata('error');
+        $this->assertStringContainsString('No transport has been saved yet', $error);
+        $this->assertStringContainsString('Save settings', $error);
+    }
+
+    /** Posting the default itself on a fresh install is NOT a mismatch - nothing differs. */
+    public function testAFreshInstallPostingTheDefaultTransportIsNotBlocked(): void
+    {
+        $this->grant();
+        Services::injectMock('integrationRepository', new class {
+            public function get(string $p): ?array { return null; }
+            public function config(string $p): array { return []; }
+            public function upsert(string $p, array $c, string $s = 'connected', ?int $a = null): bool { return true; }
+            public function setStatus(string $p, string $s, ?int $a = null): bool { return true; }
+        });
+
+        $data = ['protocol' => 'smtp', 'from_email' => 'no-reply@example.com'];
+        $data[csrf_token()] = csrf_hash();
+        $this->withSession(service('session')->get() + $this->sess())->post('admin/integrations/email/test', $data);
+
+        $this->assertStringNotContainsString('No transport has been saved yet', (string) session()->getFlashdata('error'));
+    }
+
+    // ------------------------------------------------------------- select whitelist
+
+    /**
+     * Select fields only accept their declared options; anything else keeps the stored
+     * value. A missing or empty "protocol" used to persist '' - which every reader
+     * coerces to smtp - so a truncated POST or a stale form could silently flip the
+     * transport back while reporting "settings saved".
+     */
+    public function testAnUnknownTransportValueKeepsTheStoredOne(): void
+    {
+        $this->grant();
+
+        $this->saveEmail(['protocol' => 'carrier-pigeon']);
+
+        $this->assertSame('smtp', $this->repo->captured['protocol'], 'an out-of-whitelist value must not persist');
+    }
+
+    public function testABlankTransportKeepsTheStoredOne(): void
+    {
+        $this->grant();
+
+        $this->saveEmail(['protocol' => '']);
+
+        $this->assertSame('smtp', $this->repo->captured['protocol'], "'' reads back as smtp everywhere - it must never be stored");
+    }
+
+    public function testAValidTransportChangeIsSaved(): void
+    {
+        $this->grant();
+
+        $this->saveEmail(['protocol' => 'sendmail']);
+
+        $this->assertSame('sendmail', $this->repo->captured['protocol']);
+    }
+
+    // ------------------------------------------------------------- failed writes
+
+    /**
+     * A failed database write must not be reported as saved.
+     *
+     * save() used to discard upsert()'s boolean and flash "settings saved."
+     * unconditionally - so a write that failed (poisoned JSON, schema drift, vanished
+     * row) looked identical to success, and the operator had no reason to doubt it.
+     */
+    public function testAFailedWriteIsNotReportedAsSaved(): void
+    {
+        $this->grant();
+        Services::injectMock('integrationRepository', new class {
+            public function get(string $p): ?array { return null; }
+            public function config(string $p): array { return []; }
+            public function upsert(string $p, array $c, string $s = 'connected', ?int $a = null): bool { return false; }
+            public function setStatus(string $p, string $s, ?int $a = null): bool { return true; }
+        });
+
+        $this->saveEmail(['protocol' => 'sendmail']);
+
+        $this->assertNull(session()->getFlashdata('success'), 'no success flash for a failed write');
+        $this->assertStringContainsStringIgnoringCase('could not be saved', (string) session()->getFlashdata('error'));
     }
 
     // ------------------------------------------------------------- AWS screen

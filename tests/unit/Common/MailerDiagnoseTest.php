@@ -520,6 +520,27 @@ final class MailerDiagnoseTest extends CIUnitTestCase
         $this->assertNotAccused($out);
     }
 
+    /**
+     * A protocol value with trailing UNICODE whitespace still matches.
+     *
+     * ASCII trim() does not remove a non-breaking space, and a hand-edited database
+     * value (phpMyAdmin pastes carry them easily) like "sendmail\xC2\xA0" silently maps
+     * to the smtp fallback - the operator sets sendmail and watches smtp run, with
+     * nothing anywhere saying why.
+     */
+    public function testAProtocolWithTrailingUnicodeWhitespaceStillMatches(): void
+    {
+        $m = new Mailer(
+            ['protocol' => "sendmail\xC2\xA0", 'from_email' => 'u@example.com'],
+            null,
+            $this->localMail(['exists' => false]),
+        );
+
+        $out = $m->diagnose();
+
+        $this->assertStringContainsStringIgnoringCase('not found', $out, 'the sendmail preflight must run - NBSP must not demote it to smtp');
+    }
+
     // ------------------------------------------- sendmail preflight
 
     /**

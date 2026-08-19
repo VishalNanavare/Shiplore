@@ -470,9 +470,20 @@ final class Mailer
      */
     private function protocol(): string
     {
-        $p = strtolower($this->str('protocol'));
+        // Unicode whitespace stripped explicitly: ASCII trim() does not remove a
+        // non-breaking space, and a hand-edited value like "sendmail\u{A0}" (phpMyAdmin
+        // pastes carry them easily) would silently map to the smtp fallback — the
+        // operator sets sendmail and watches smtp run, with nothing saying why.
+        $p = strtolower((string) preg_replace('/^[\s\p{Z}]+|[\s\p{Z}]+$/u', '', $this->str('protocol')));
 
-        return in_array($p, ['smtp', 'sendmail', 'mail'], true) ? $p : 'smtp';
+        if (in_array($p, ['smtp', 'sendmail', 'mail'], true)) {
+            return $p;
+        }
+        if ($p !== '') {
+            log_message('warning', 'Mailer: unrecognised transport "' . $p . '" in the saved config — falling back to smtp.');
+        }
+
+        return 'smtp';
     }
 
     /** True when enough config is present to attempt a send. */

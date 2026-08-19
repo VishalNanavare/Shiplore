@@ -39,8 +39,13 @@ final class IntegrationRepository
     public function get(string $provider): ?array
     {
         try {
+            // ORDER BY id: the table has no unique key on (provider, owner_type), so with
+            // duplicate rows "the first one" is whatever the engine returns — and upsert()
+            // must land on the SAME row this reads, or a save looks lost. Lowest id wins,
+            // deterministically, in both places.
             $row = Database::connect()->table('integration_accounts')
                 ->where('provider', $provider)->where('owner_type', 'platform')->where('deleted_at', null)
+                ->orderBy('id', 'ASC')->limit(1)
                 ->get()->getRowArray();
         } catch (\Throwable $e) {
             // Callers degrade to "not configured", which is the safe behaviour — but it
@@ -79,15 +84,30 @@ final class IntegrationRepository
     /** @param array<string,mixed> $config Idempotent per provider. */
     public function upsert(string $provider, array $config, string $status = 'connected', ?int $actorId = null): bool
     {
-        $config   = $this->encryptSecrets($config);
+        $config = $this->encryptSecrets($config);
+
+        // Encoded ONCE, and checked. json_encode() returns false on invalid UTF-8, and
+        // the query builder writes false as 0 — poisoning the whole column: every later
+        // read degrades to [] and the transport silently reads back as smtp, while the
+        // UI said "settings saved". Refusing the write keeps the previous row intact.
+        try {
+            $json = json_encode($config, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            log_message('error', 'IntegrationRepository: refusing to save provider "' . $provider . '" — the config cannot be JSON-encoded (' . $e->getMessage() . '). The previous settings are untouched.');
+
+            return false;
+        }
+
         $db       = Database::connect();
         $existing = $db->table('integration_accounts')
             ->select('id')->where('provider', $provider)->where('owner_type', 'platform')->where('deleted_at', null)
+            // Same deterministic row as get() — see the comment there.
+            ->orderBy('id', 'ASC')->limit(1)
             ->get()->getRowArray();
 
         if ($existing !== null) {
             return $db->table('integration_accounts')->where('id', $existing['id'])->update([
-                'config'     => json_encode($config),
+                'config'     => $json,
                 'status'     => $status,
                 'updated_by' => $actorId,
             ]);
@@ -96,7 +116,7 @@ final class IntegrationRepository
         return (bool) $db->table('integration_accounts')->insert([
             'provider'   => $provider,
             'owner_type' => 'platform',
-            'config'     => json_encode($config),
+            'config'     => $json,
             'status'     => $status,
             'created_by' => $actorId,
         ]);
