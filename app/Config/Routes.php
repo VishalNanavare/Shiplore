@@ -927,6 +927,10 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     // Finance. Read-only: reports what the purchase orders already say rather than
     // creating settlement rows, because no B2B payout cycle or commission rate exists yet.
     $routes->get('earnings', 'Manufacturer\EarningsController::index');
+    // Payout runs. Read-only: a seller who can trigger their own settlement decides when
+    // they are owed money, which is a conflict the vendor panel does not have either.
+    $routes->get('settlements', 'Manufacturer\SettlementController::index');
+    $routes->get('settlements/(:num)', 'Manufacturer\SettlementController::show/$1');
 
     $routes->get('approvals', 'Manufacturer\ApprovalController::index');
     $routes->post('approvals/(:num)/decide', 'Manufacturer\ApprovalController::decide/$1', ['filter' => 'csrf']);

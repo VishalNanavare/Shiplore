@@ -43,6 +43,7 @@ $groups = [
     // and commission rate to be decided before they mean anything.
     ['Finance', 'bi-cash-coin', [
         ['earnings', 'Earnings', 'bi-graph-up-arrow', 'manufacturer/earnings', 'mfg.invoice.view'],
+        ['settlements', 'Settlements', 'bi-cash-stack', 'manufacturer/settlements', 'mfg.settlement.view'],
     ]],
     // Business identity and the per-user feed. Mirrors the vendor panel's Team group;
     // staff, media and documents join it as those screens land.

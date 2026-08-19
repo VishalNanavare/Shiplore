@@ -347,6 +347,33 @@ trait MinimalSchema
         $this->ensureMshopsTable();
     }
 
+    /** settlements + settlement_lines, reused by manufacturers (83_mfg_settlements.sql). */
+    protected function ensureSettlementTables(): void
+    {
+        $db = $this->schemaConn();
+        $db->query('CREATE TABLE IF NOT EXISTS db_settlements (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT, vendor_id INTEGER NOT NULL,
+            period_start TEXT, period_end TEXT,
+            gross REAL DEFAULT 0, commission_total REAL DEFAULT 0, refund_total REAL DEFAULT 0,
+            tcs REAL DEFAULT 0, tds REAL DEFAULT 0, fees REAL DEFAULT 0, adjustments REAL DEFAULT 0,
+            net_payable REAL DEFAULT 0, idempotency_key TEXT,
+            status TEXT NOT NULL DEFAULT "draft", created_by INTEGER,
+            created_at TEXT, updated_at TEXT, UNIQUE(idempotency_key)
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_settlement_lines (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, settlement_id INTEGER NOT NULL,
+            ref_type TEXT NOT NULL, ref_id INTEGER, sub_order_id INTEGER,
+            amount REAL DEFAULT 0, direction TEXT NOT NULL, created_at TEXT
+        )');
+    }
+
+    protected function dropSettlementTables(): void
+    {
+        foreach (['db_settlement_lines', 'db_settlements'] as $t) {
+            $this->schemaConn()->query('DROP TABLE IF EXISTS ' . $t);
+        }
+    }
+
     protected function dropMfgTransferTables(): void
     {
         foreach (['db_mfg_stock_transfer_items', 'db_mfg_stock_transfers'] as $t) {
