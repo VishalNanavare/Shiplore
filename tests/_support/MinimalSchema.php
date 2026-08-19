@@ -356,6 +356,52 @@ trait MinimalSchema
         $this->dropMshopsTable();
     }
 
+    /** Counter returns + credit notes (82_mfg_pos_returns.sql). */
+    protected function ensureMfgReturnTables(): void
+    {
+        $this->ensureMfgPosTables();
+        // Returns put stock BACK, so the inventory tables are part of this fixture —
+        // ensureMfgPosTables() does not bring them.
+        $this->ensureMfgInventoryTables();
+        $this->ensureMshopsTable();
+        // Returns put stock BACK, so the inventory tables are part of this fixture —
+        // ensureMfgPosTables() does not bring them.
+        $this->ensureMfgInventoryTables();
+        $this->ensureMshopsTable();
+        $db = $this->schemaConn();
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_pos_returns (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT, credit_note_no TEXT,
+            financial_year TEXT, seq_no INTEGER, mfg_pos_sale_id INTEGER NOT NULL,
+            mshop_id INTEGER NOT NULL, vendor_id INTEGER NOT NULL, reason TEXT,
+            refund_method TEXT NOT NULL DEFAULT "cash",
+            taxable_value REAL DEFAULT 0, cgst REAL DEFAULT 0, sgst REAL DEFAULT 0,
+            igst REAL DEFAULT 0, total REAL DEFAULT 0,
+            status TEXT NOT NULL DEFAULT "completed", created_by INTEGER,
+            created_at TEXT, updated_at TEXT
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_pos_return_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, return_id INTEGER NOT NULL,
+            mfg_pos_sale_item_id INTEGER NOT NULL, variant_id INTEGER,
+            qty REAL DEFAULT 0, unit_price REAL DEFAULT 0, taxable_value REAL DEFAULT 0,
+            tax_rate REAL DEFAULT 0, cgst REAL DEFAULT 0, sgst REAL DEFAULT 0,
+            line_total REAL DEFAULT 0, created_at TEXT
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_mfg_pos_cn_sequence (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, mshop_id INTEGER NOT NULL,
+            financial_year TEXT NOT NULL, last_cn_no INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT, updated_at TEXT, UNIQUE(mshop_id, financial_year)
+        )');
+    }
+
+    protected function dropMfgReturnTables(): void
+    {
+        foreach (['db_mfg_pos_return_items', 'db_mfg_pos_returns', 'db_mfg_pos_cn_sequence'] as $t) {
+            $this->schemaConn()->query('DROP TABLE IF EXISTS ' . $t);
+        }
+        $this->dropMfgInventoryTables();
+        $this->dropMfgPosTables();
+    }
+
     protected function dropMfgPosTables(): void
     {
         $db = $this->schemaConn();

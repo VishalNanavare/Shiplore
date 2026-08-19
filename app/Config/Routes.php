@@ -903,6 +903,11 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
     $routes->get('pos/search', 'Manufacturer\PosController::search');
     $routes->post('pos/sale', 'Manufacturer\PosController::sale', ['filter' => 'csrf']);
     $routes->get('pos/receipt/(:num)', 'Manufacturer\PosController::receipt/$1');
+    // Counter returns + credit notes. A credit note has its OWN number series: GST
+    // treats it as a distinct document from the invoice it reverses.
+    $routes->get('pos/returns', 'Manufacturer\PosController::returns');
+    $routes->post('pos/returns', 'Manufacturer\PosController::processReturn', ['filter' => 'csrf']);
+    $routes->get('pos/credit-note/(:num)', 'Manufacturer\PosController::creditNote/$1');
 
     // Governance. Staff changes proposed by a manager land here for the owner's
     // decision; the engine and its tables are reused unchanged (tenant-agnostic).

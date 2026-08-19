@@ -25,6 +25,7 @@ $groups = [
     ]],
     ['Sales', 'bi-bag', [
         ['pos', 'Counter', 'bi-shop', 'manufacturer/pos', 'mfg.pos.view'],
+        ['returns', 'Returns', 'bi-arrow-return-left', 'manufacturer/pos/returns', 'mfg.pos.return'],
         ['orders', 'Purchase Orders', 'bi-receipt', 'manufacturer/purchase-orders', 'mfg.po.view'],
         ['deliveries', 'Deliveries', 'bi-truck', 'manufacturer/deliveries', 'mfg.delivery.assign'],
         ['riders', 'Riders', 'bi-person-badge', 'manufacturer/riders', 'mfg.rider.manage'],

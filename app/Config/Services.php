@@ -746,6 +746,11 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('manufacturerDeliveryRepository') : new \App\Models\ManufacturerDeliveryRepository();
     }
 
+    public static function manufacturerPosReturnRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('manufacturerPosReturnRepository') : new \App\Models\ManufacturerPosReturnRepository();
+    }
+
     public static function manufacturerComboRepository($getShared = true)
     {
         return $getShared ? static::getSharedInstance('manufacturerComboRepository') : new \App\Models\ManufacturerComboRepository();

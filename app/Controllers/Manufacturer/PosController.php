@@ -134,6 +134,86 @@ final class PosController extends BaseManufacturerController
         return view('manufacturer/pos/receipt', ['sale' => $sale]);
     }
 
+    /** Find a bill to return against. */
+    public function returns()
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+        if ($denied = $this->guard('mfg.pos.return')) {
+            return $denied;
+        }
+
+        $repo = service('manufacturerPosReturnRepository');
+        $ref  = trim((string) $this->request->getGet('ref'));
+        $mid  = (int) $this->manufacturerId();
+        $sale = $ref !== '' ? $repo->findSale($ref, $mid) : null;
+
+        // A bill from a unit this user cannot act on is treated as not found rather
+        // than shown read-only: seeing another plant's takings is the leak, not the
+        // returning.
+        if ($sale !== null && ! in_array((int) $sale['mshop_id'], $this->allowedMshopIds(), true)) {
+            $sale = null;
+        }
+
+        return $this->render('manufacturer/pos/returns', 'pos', 'Returns', [
+            'ref'    => $ref,
+            'sale'   => $sale,
+            'recent' => $repo->recent($mid, $this->allowedMshopIds(), 10),
+        ]);
+    }
+
+    /** Record the return and go straight to its credit note. */
+    public function processReturn(): RedirectResponse
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+        if ($denied = $this->guard('mfg.pos.return')) {
+            return $denied;
+        }
+
+        $lines = [];
+
+        foreach ((array) ($this->request->getPost('qty') ?? []) as $itemId => $qty) {
+            if ((float) $qty > 0) {
+                $lines[] = ['sale_item_id' => (int) $itemId, 'qty' => (float) $qty];
+            }
+        }
+
+        $res = service('manufacturerPosReturnRepository')->createReturn(
+            (int) $this->request->getPost('sale_id'),
+            (int) $this->manufacturerId(),
+            $lines,
+            trim((string) $this->request->getPost('reason')),
+            (string) $this->request->getPost('refund_method'),
+            (int) session()->get('user_id'),
+        );
+
+        return $res['ok']
+            ? redirect()->to('manufacturer/pos/credit-note/' . (int) $res['return_id'])
+                ->with('success', 'Credit note ' . $res['credit_note_no'] . ' issued.')
+            : redirect()->to('manufacturer/pos/returns')->with('error', $res['error']);
+    }
+
+    /** The printable credit note. Standalone, like the sale receipt. */
+    public function creditNote(int $returnId)
+    {
+        if ($denied = $this->requireManufacturer()) {
+            return $denied;
+        }
+        if ($denied = $this->guard('mfg.pos.view')) {
+            return $denied;
+        }
+
+        $cn = service('manufacturerPosReturnRepository')->findForCreditNote($returnId, (int) $this->manufacturerId());
+        if ($cn === null) {
+            return redirect()->to('manufacturer/pos')->with('error', 'Credit note not found.');
+        }
+
+        return view('manufacturer/pos/credit_note', ['cn' => $cn]);
+    }
+
     // ---- internals ---------------------------------------------------------
 
     /**

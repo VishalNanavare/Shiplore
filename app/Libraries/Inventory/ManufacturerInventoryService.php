@@ -233,6 +233,49 @@ final class ManufacturerInventoryService
         }
     }
 
+    /**
+     * Goods coming BACK over the counter on a return.
+     *
+     * movement_type 'return', not 'transfer_in' or a negative sale: the ledger is read
+     * by movement type, and a return is neither an internal move nor negative revenue.
+     * Joins the caller's transaction so a failed credit note cannot leave stock already
+     * restored.
+     */
+    public function returnToOutlet(int $variantId, int $mshopId, float $qty, int $returnId, ?int $actorId = null, ?object $db = null): bool
+    {
+        if ($qty <= 0) {
+            return false;
+        }
+
+        $joined = $db !== null;
+        $db     = $db ?? Database::connect();
+
+        if (! $joined) {
+            $db->transBegin();
+        }
+
+        try {
+            $this->ensureRow($variantId, $mshopId, $db);
+            $bal = $this->bump($variantId, $mshopId, $qty, $db);
+            $this->postLedger($variantId, $mshopId, 'return', $qty, $bal, 'mfg_pos_return', $returnId, 'counter return', $actorId, $db);
+
+            if (! $joined) {
+                $db->transComplete();
+
+                return $db->transStatus();
+            }
+
+            return true;
+        } catch (Throwable) {
+            if (! $joined) {
+                $db->transRollback();
+
+                return false;
+            }
+            throw new \RuntimeException('outlet stock return failed for variant ' . $variantId);
+        }
+    }
+
     public function sellFromOutlet(int $variantId, int $mshopId, float $qty, int $saleId, ?int $actorId = null, ?object $db = null): bool
     {
         if ($qty <= 0) {
