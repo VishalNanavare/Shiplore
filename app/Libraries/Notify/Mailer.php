@@ -191,50 +191,98 @@ final class Mailer
                 ));
             }
 
-            $greeting = trim((string) fgets($sock, 512));
+            // WHERE the greeting lives depends on the port, and getting this wrong produces
+            // a confident lie. 465 is IMPLICIT TLS (RFC 8314): the server says NOTHING on a
+            // plain socket and sends its 220 only after the handshake, inside the encrypted
+            // channel. 587 is STARTTLS: the server greets in plaintext first.
+            //
+            // An earlier version read the plain socket either way, so normal Gmail-on-465
+            // silence was reported as "something is intercepting this port, use sendmail".
+            // That shipped and reached an operator. Its own evidence contradicted it — the
+            // TCP connect had SUCCEEDED, which rules out the blocked port the advice was
+            // aimed at.
+            $crypto      = strtolower($this->str('encryption'));
+            $implicitTls = $crypto === 'ssl' || $port === 465;
+
+            if (! $implicitTls) {
+                $greeting = $this->readGreeting($sock);
+                fclose($sock);
+
+                return $this->verdict($where, $greeting);
+            }
+
+            // Plain TCP was only ever a reachability check here; nothing will be said on it.
             fclose($sock);
 
-            // Connected, but is it actually an SMTP server? A host that transparently
-            // redirects outbound mail ports to its own service passes every reachability
-            // check and then fails the session in ways that look like bad credentials.
-            // The greeting is the only thing that separates the two.
-            if (! str_starts_with($greeting, '220')) {
+            [$tls, $tlsNo, $tlsErr] = $this->connect('ssl://' . $host, $port);
+            if (! is_resource($tls)) {
                 return $this->redact(sprintf(
-                    '%s accepted a connection but did not answer with an SMTP greeting (it said "%s").'
-                    . ' Something on the network is intercepting this port. Use Transport "sendmail".',
+                    '%s is reachable over plain TCP, but the TLS handshake failed — %s (errno %d).'
+                    . ' The port is NOT blocked, so this is an encryption or certificate problem rather than a'
+                    . ' firewall. A host that intercepts outbound mail presents its own certificate here, which'
+                    . ' fails verification exactly like this; Transport "sendmail" avoids the network entirely.',
                     $where,
-                    mb_substr($greeting, 0, 80) ?: '(nothing)',
+                    $tlsErr !== '' ? $tlsErr : 'no reason reported',
+                    $tlsNo,
                 ));
             }
 
-            // The port is open and speaks SMTP. If TLS is expected, that is the next thing
-            // that can fail, and it fails for reasons a firewall diagnosis would misread.
-            $crypto = strtolower($this->str('encryption'));
-            if ($crypto === 'ssl' || $port === 465) {
-                [$tls, $tlsNo, $tlsErr] = $this->connect('ssl://' . $host, $port);
-                if (! is_resource($tls)) {
-                    return $this->redact(sprintf(
-                        '%s is reachable over plain TCP, but the TLS handshake failed — %s (errno %d).'
-                        . ' The port is not blocked, so this is an encryption or certificate problem, not a firewall.',
-                        $where,
-                        $tlsErr !== '' ? $tlsErr : 'no reason reported',
-                        $tlsNo,
-                    ));
-                }
-                fclose($tls);
-            }
+            $greeting = $this->readGreeting($tls);
+            fclose($tls);
 
-            return $this->redact(sprintf(
-                '%s is reachable and answered "%s", so the network is not the problem. The failure is later in the'
-                . ' session — most often the username or password. A Gmail account needs a 16-character App Password,'
-                . ' not the account password.',
-                $where,
-                mb_substr($greeting, 0, 80),
-            ));
+            return $this->verdict($where, $greeting);
         } catch (Throwable $e) {
             // A diagnostic must never become a second failure.
             return $this->redact('The connection test could not run: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Read the SMTP banner, bounded.
+     *
+     * fsockopen's timeout covers the CONNECT only; the read that follows falls back to
+     * default_socket_timeout, 60 seconds on a stock PHP. A peer that connects and then
+     * says nothing would park the admin request for a minute — and on an implicit-TLS
+     * port silence is the NORMAL case, so this is the common path, not a rare one.
+     *
+     * @param resource $sock
+     */
+    private function readGreeting($sock): string
+    {
+        // Best-effort: a fake stream in a test is not a socket and simply declines.
+        @stream_set_timeout($sock, self::PROBE_TIMEOUT);
+
+        return trim((string) fgets($sock, 512));
+    }
+
+    /**
+     * Turn a banner into an answer.
+     *
+     * Shared by both paths so the plaintext-greeting port and the implicit-TLS port cannot
+     * drift into judging the same evidence differently.
+     */
+    private function verdict(string $where, string $greeting): string
+    {
+        // Connected and handshaked, but is this actually an SMTP server? A host that
+        // transparently redirects outbound mail ports to its own service passes every
+        // reachability check and then fails the session in ways that look like bad
+        // credentials. The banner is the only thing that separates the two.
+        if (! str_starts_with($greeting, '220')) {
+            return $this->redact(sprintf(
+                '%s accepted a connection but did not answer with an SMTP greeting (it said "%s").'
+                . ' Something on the network is intercepting this port. Use Transport "sendmail".',
+                $where,
+                mb_substr($greeting, 0, 80) ?: '(nothing)',
+            ));
+        }
+
+        return $this->redact(sprintf(
+            '%s is reachable and answered "%s", so the network is not the problem. The failure is later in the'
+            . ' session — most often the username or password. A Gmail account needs a 16-character App Password,'
+            . ' not the account password.',
+            $where,
+            mb_substr($greeting, 0, 80),
+        ));
     }
 
     /**
@@ -381,11 +429,17 @@ final class Mailer
                 return true;
             }
 
-            // [] not ['headers']. printDebugger() appends the raw Date/From/To/Message-ID
-            // dump AFTER the messages, and redact() caps the result at 600 characters — so
-            // a real failure reported ~100 characters of generic text followed by 500 of
-            // header noise, cut off mid-word in "Mime-Version". The headers are never the
-            // reason. An empty include list returns the messages alone.
+            // [] not ['headers']. The headers are never the reason a send failed, and a
+            // failure that reports 100 characters of diagnosis followed by 500 characters
+            // of Date/From/Message-ID — cut off mid-word in "Mime-Version", as a live one
+            // did — reads as noise and buries the part that matters.
+            //
+            // Readability only. An earlier version of this comment claimed the dump was
+            // "eating the 600-character budget", which is arithmetically impossible:
+            // printDebugger() returns messages FIRST then the <pre> block, and redact()
+            // cuts with mb_substr($clean, 0, 600) — a head-keeping cut. Short messages
+            // always survive whole; appended headers cannot displace one character of
+            // them. Worth stating, because that false claim was used to justify this line.
             $debug           = $email->printDebugger([]);
             $this->lastError = $this->redact($debug);
             log_message('error', "Mailer: {$protocol} send to {$to} failed. " . $debug);

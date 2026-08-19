@@ -35,22 +35,39 @@ final class MailerDiagnoseTest extends CIUnitTestCase
         return static fn (string $target, int $port, int $timeout): array => [false, $errno, $errstr];
     }
 
-    /** A connector that connects and speaks the given greeting line. */
-    private function greeting(string $line, ?callable $onTarget = null): callable
+    /**
+     * A connector scripted per TARGET.
+     *
+     * Plain TCP and ssl:// must be answerable independently, because they are different
+     * questions and the probe's whole job is to tell them apart. $plan keys: 'plain' and
+     * 'ssl'. Each value is ['fail', errno, errstr] or ['say', "220 ...\r\n"] — and "say
+     * nothing" is ['say', ''], which is precisely what an implicit-TLS server does on a
+     * plain socket.
+     *
+     * @param array<string,array{0:string,1:mixed,2?:string}> $plan
+     */
+    private function scripted(array $plan): callable
     {
-        return static function (string $target, int $port, int $timeout) use ($line, $onTarget): array {
-            if ($onTarget !== null) {
-                $refusal = $onTarget($target);
-                if ($refusal !== null) {
-                    return $refusal;
-                }
+        return static function (string $target, int $port, int $timeout) use ($plan): array {
+            $key  = str_starts_with($target, 'ssl://') ? 'ssl' : 'plain';
+            $step = $plan[$key] ?? ['say', "220 default ESMTP\r\n"];
+
+            if ($step[0] === 'fail') {
+                return [false, (int) $step[1], (string) ($step[2] ?? '')];
             }
+
             $s = fopen('php://memory', 'r+');
-            fwrite($s, $line);
+            fwrite($s, (string) $step[1]);
             rewind($s);
 
             return [$s, 0, ''];
         };
+    }
+
+    /** Shorthand: both sockets answer with the same greeting. */
+    private function greeting(string $line): callable
+    {
+        return $this->scripted(['plain' => ['say', $line], 'ssl' => ['say', $line]]);
     }
 
     /** @param array<string,mixed> $over */
@@ -117,7 +134,12 @@ final class MailerDiagnoseTest extends CIUnitTestCase
     /** Reachable and speaking SMTP means the transport is fine and the fault is later. */
     public function testAReachableServerSaysTheFaultIsLaterInTheSession(): void
     {
-        $out = $this->mailer([], $this->greeting("220 smtp.example.com ESMTP ready\r\n"))->diagnose();
+        // Port 465, so the greeting lives inside the TLS channel — the plain socket is
+        // silent, which is correct and must not be read as a fault.
+        $out = $this->mailer([], $this->scripted([
+            'plain' => ['say', ''],
+            'ssl'   => ['say', "220 smtp.example.com ESMTP ready\r\n"],
+        ]))->diagnose();
 
         $this->assertStringContainsStringIgnoringCase('reachable', $out);
         // 'App Password', not 'password'. The loose form is satisfied by any passing
@@ -136,7 +158,12 @@ final class MailerDiagnoseTest extends CIUnitTestCase
      */
     public function testAnAnswerThatIsNotAnSmtpGreetingIsCalledOut(): void
     {
-        $out = $this->mailer([], $this->greeting("HTTP/1.1 400 Bad Request\r\n"))->diagnose();
+        // Port 587: STARTTLS, so the server DOES greet in plaintext and a non-220 answer
+        // there is genuinely wrong. On 465 the same silence is correct — see below.
+        $out = $this->mailer(
+            ['port' => '587', 'encryption' => 'tls'],
+            $this->scripted(['plain' => ['say', "HTTP/1.1 400 Bad Request\r\n"]]),
+        )->diagnose();
 
         $this->assertStringContainsStringIgnoringCase('did not answer', $out);
         $this->assertStringContainsStringIgnoringCase('intercept', $out, 'a non-SMTP answer on an SMTP port means something is in the middle');
@@ -151,15 +178,11 @@ final class MailerDiagnoseTest extends CIUnitTestCase
      */
     public function testATlsFailureOnAReachablePortIsDistinguished(): void
     {
-        // Plain connect succeeds; the ssl:// attempt fails.
-        $connector = $this->greeting(
-            "220 smtp.example.com ESMTP ready\r\n",
-            static fn (string $target): ?array => str_starts_with($target, 'ssl://')
-                ? [false, 0, 'SSL operation failed with code 1. certificate verify failed']
-                : null,
-        );
-
-        $out = $this->mailer([], $connector)->diagnose();
+        // Plain connect succeeds and stays silent, as a 465 server should; ssl:// fails.
+        $out = $this->mailer([], $this->scripted([
+            'plain' => ['say', ''],
+            'ssl'   => ['fail', 0, 'SSL operation failed with code 1. certificate verify failed'],
+        ]))->diagnose();
 
         $this->assertStringContainsStringIgnoringCase('TLS', $out);
         $this->assertStringContainsString('certificate verify failed', $out);
@@ -208,12 +231,18 @@ final class MailerDiagnoseTest extends CIUnitTestCase
     /**
      * The raw header dump is not part of the reported error.
      *
-     * printDebugger() concatenates the debug messages and THEN the raw headers, and
-     * redact() caps the result at 600 characters. Asking for headers meant a real failure
-     * reported ~100 characters of generic text followed by 500 characters of Date/From/
-     * Message-ID — the operator's actual message was cut off mid-word in "Mime-Version".
-     * Passing an empty include list returns the messages alone (Email.php: the <pre> block
-     * is only appended when $rawData is non-empty).
+     * Asking for headers meant a real failure reported ~100 characters of diagnosis
+     * followed by 500 characters of Date/From/Message-ID, cut off mid-word in
+     * "Mime-Version". An empty include list returns the messages alone (Email.php: the
+     * <pre> block is appended only when $rawData is non-empty).
+     *
+     * READABILITY, not capacity. This was first justified by the claim that the header
+     * dump "consumed the 600-character budget" — which is impossible. printDebugger()
+     * returns messages FIRST and the <pre> block LAST, and redact() ends with
+     * mb_substr($clean, 0, 600), a head-keeping cut: if the messages are under 600
+     * characters every one of them survives, and if they are over it the headers
+     * contribute nothing. Appended headers can never displace a debug message. Recorded
+     * because a wrong reason attached to a right change is how the wrong reason survives.
      *
      * A source assertion: intercepting printDebugger's arguments needs a fake CodeIgniter
      * Email, and the behaviour being pinned is which argument is passed.
@@ -224,5 +253,125 @@ final class MailerDiagnoseTest extends CIUnitTestCase
 
         $this->assertStringContainsString('printDebugger([])', $src);
         $this->assertStringNotContainsString("printDebugger(['headers'])", $src);
+    }
+
+    // ------------------------------------------- implicit TLS vs STARTTLS
+
+    /**
+     * THE BUG THIS FIXES. Silence on a plain socket to port 465 is CORRECT.
+     *
+     * 465 is implicit TLS (RFC 8314): the server sends nothing until the client completes
+     * a TLS handshake, and the 220 greeting only arrives afterwards, inside the encrypted
+     * channel. Reading a plaintext greeting there and calling the silence "interception"
+     * is a false positive — and it shipped. A live probe told the operator that something
+     * on their network was hijacking port 465 and to abandon SMTP for sendmail, when what
+     * had actually happened was Gmail behaving exactly as specified.
+     *
+     * The evidence in that same message contradicted its own conclusion: the TCP
+     * connection SUCCEEDED, which rules out the blocked port the advice was aimed at. A
+     * diagnostic that confidently names the wrong cause is worse than the generic string
+     * it replaced, because the generic string at least did not send anyone anywhere.
+     */
+    public function testSilenceOnAnImplicitTlsPortIsNotInterception(): void
+    {
+        $out = $this->mailer([], $this->scripted([
+            'plain' => ['say', ''],
+            'ssl'   => ['say', "220 smtp.gmail.com ESMTP ready\r\n"],
+        ]))->diagnose();
+
+        $this->assertStringNotContainsStringIgnoringCase('intercept', $out, 'a silent plain socket on 465 is the specification, not an attack');
+        $this->assertStringNotContainsStringIgnoringCase('sendmail', $out, 'and it must not recommend abandoning a transport that works');
+        $this->assertStringContainsStringIgnoringCase('reachable', $out);
+    }
+
+    /** On 465 the greeting must be read THROUGH TLS, the only place it exists. */
+    public function testTheGreetingIsReadThroughTlsOnAnImplicitTlsPort(): void
+    {
+        $out = $this->mailer([], $this->scripted([
+            'plain' => ['say', ''],
+            'ssl'   => ['say', "220 mx.unmistakable-banner.example ESMTP\r\n"],
+        ]))->diagnose();
+
+        $this->assertStringContainsString('unmistakable-banner', $out, 'the reported greeting must come from the TLS channel');
+    }
+
+    /** Garbage over TLS on 465 IS interception — the check moves, it does not vanish. */
+    public function testANonSmtpAnswerOverTlsIsStillInterception(): void
+    {
+        $out = $this->mailer([], $this->scripted([
+            'plain' => ['say', ''],
+            'ssl'   => ['say', "HTTP/1.1 200 OK\r\n"],
+        ]))->diagnose();
+
+        $this->assertStringContainsStringIgnoringCase('intercept', $out);
+    }
+
+    /**
+     * Port 465 means implicit TLS even when the encryption field says otherwise.
+     *
+     * Both halves of that condition need their own case. Every other test here uses 465
+     * AND "ssl" together, so either half alone satisfies them and a mutation run kept both
+     * "465 no longer counts" and "ssl no longer counts" alive. The port is authoritative:
+     * a saved 465/tls pair is exactly the contradiction hasCryptoMismatch() exists to
+     * catch, and diagnose() must not read the plain socket just because a field is wrong.
+     */
+    public function testPort465IsImplicitTlsEvenWhenEncryptionSaysTls(): void
+    {
+        $out = $this->mailer(['port' => '465', 'encryption' => 'tls'], $this->scripted([
+            'plain' => ['say', ''],
+            'ssl'   => ['say', "220 smtp.gmail.com ESMTP ready\r\n"],
+        ]))->diagnose();
+
+        $this->assertStringNotContainsStringIgnoringCase('intercept', $out);
+        $this->assertStringContainsStringIgnoringCase('reachable', $out);
+    }
+
+    /** And "ssl" means implicit TLS on a non-standard port, where 465 cannot carry it. */
+    public function testSslEncryptionIsImplicitTlsOnANonStandardPort(): void
+    {
+        $out = $this->mailer(['port' => '2465', 'encryption' => 'ssl'], $this->scripted([
+            'plain' => ['say', ''],
+            'ssl'   => ['say', "220 mx.custom-port-banner.example ESMTP\r\n"],
+        ]))->diagnose();
+
+        $this->assertStringContainsString('custom-port-banner', $out, 'the banner must come from the TLS channel on any ssl port');
+        $this->assertStringContainsString('2465', $out);
+    }
+
+    /** 587 is STARTTLS: the server greets in plaintext, so silence there IS suspicious. */
+    public function testSilenceOnAStarttlsPortIsStillSuspicious(): void
+    {
+        $out = $this->mailer(
+            ['port' => '587', 'encryption' => 'tls'],
+            $this->scripted(['plain' => ['say', '']]),
+        )->diagnose();
+
+        $this->assertStringContainsStringIgnoringCase('did not answer', $out);
+    }
+
+    /** A normal 587 greeting reads as reachable, with no TLS probe needed. */
+    public function testAPlaintextGreetingOn587ReadsAsReachable(): void
+    {
+        $out = $this->mailer(
+            ['port' => '587', 'encryption' => 'tls'],
+            $this->scripted(['plain' => ['say', "220 smtp.example.com ESMTP\r\n"]]),
+        )->diagnose();
+
+        $this->assertStringContainsStringIgnoringCase('reachable', $out);
+    }
+
+    /**
+     * A silent socket must not hang the admin page.
+     *
+     * fsockopen's timeout covers the CONNECT only. The read that follows falls back to
+     * default_socket_timeout — 60 seconds on a stock PHP — so a server that connects and
+     * then says nothing would park the request for a minute. On an implicit-TLS port
+     * silence is the NORMAL case, so this is not a rare path; it is the common one.
+     */
+    public function testTheGreetingReadHasItsOwnTimeout(): void
+    {
+        $src = (string) file_get_contents(APPPATH . 'Libraries/Notify/Mailer.php');
+
+        $this->assertStringContainsString('stream_set_timeout', $src, 'the greeting read must be bounded, or a silent socket hangs the page');
     }
 }
