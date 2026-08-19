@@ -232,8 +232,17 @@
 
         block();
 
-        var action = form.getAttribute('action') || window.location.href;
-        var method = (form.getAttribute('method') || 'post');
+        // The CLICKED BUTTON's formaction/formmethod win, exactly as a native submit
+        // works. This interceptor used to read only the form's own attributes, so every
+        // button posted to the form's default action: on the integrations screen "Test
+        // saved settings" silently SAVED instead of testing, and on the monline cart
+        // "Remove" posted to the quantity-update endpoint instead of removing the line.
+        // getAttribute, not the .formAction property — the property falls back to the
+        // form's action even when no attribute is present, which would hide the override.
+        var action = (submitter && submitter.getAttribute('formaction'))
+            || form.getAttribute('action') || window.location.href;
+        var method = (submitter && submitter.getAttribute('formmethod'))
+            || form.getAttribute('method') || 'post';
 
         fetch(action, {
             method: method,
