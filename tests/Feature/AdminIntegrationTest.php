@@ -144,9 +144,17 @@ final class AdminIntegrationTest extends CIUnitTestCase
             public function upsert(string $p, array $c, string $s = 'connected', ?int $a = null): bool { return true; }
             public function setStatus(string $p, string $s, ?int $a = null): bool { return true; }
         });
+        // The mock must answer the FULL interface the controller calls, not just send().
+        // It previously stopped at send(), so adding the port/encryption pre-check broke
+        // this test with "Call to undefined method" — the mock had silently drifted
+        // behind the real Mailer. Note the config above is 587/tls, a correct pair, so
+        // hasCryptoMismatch() is false here and the send still happens.
         $mailer = new class {
             public array $sent = [];
             public function configured(): bool { return true; }
+            public function hasCryptoMismatch(): bool { return false; }
+            public function impliedCrypto(): ?string { return 'tls'; }
+            public function lastError(): string { return ''; }
             public function send(string $to, string $subject, string $body): bool { $this->sent[] = $to; return true; }
         };
         Services::injectMock('mailer', $mailer);

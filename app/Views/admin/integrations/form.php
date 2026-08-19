@@ -34,6 +34,11 @@ $statusMap = ['connected' => 'success', 'disconnected' => 'secondary', 'error' =
             <div class="d-flex gap-2">
                 <button class="btn btn-primary"><i class="bi bi-save me-1"></i>Save settings</button>
                 <button class="btn btn-outline-info" formaction="<?= site_url('admin/integrations/' . $slug . '/test') ?>"><i class="bi bi-plug me-1"></i>Test connection</button>
+                <?php if ($slug === 'email'): ?>
+                    <?php // A link, not a formaction: this leaves the page, and posting the
+                          // unsaved form to it would silently discard whatever was typed here. ?>
+                    <a class="btn btn-outline-secondary" href="<?= site_url('admin/integrations/email/compose') ?>"><i class="bi bi-envelope-paper me-1"></i>Send a test email…</a>
+                <?php endif; ?>
             </div>
         </form>
     </div></div></div>
@@ -41,7 +46,8 @@ $statusMap = ['connected' => 'success', 'disconnected' => 'secondary', 'error' =
         <h2 class="uk-section-title mb-2">About this integration</h2>
         <p class="text-secondary small mb-2"><?= esc($spec['blurb']) ?></p>
         <?php if ($slug === 'email'): ?>
-            <p class="text-secondary small mb-0"><i class="bi bi-info-circle me-1"></i>"Test connection" sends a <strong>real email</strong> to the "Send test email to" address using the settings currently on screen. Check that inbox <em>and its spam folder</em> — a delivered message is the only proof the transport works. If it fails, <code>writable/logs</code> has the exact error.</p>
+            <p class="text-secondary small mb-2"><i class="bi bi-info-circle me-1"></i>"Test connection" sends a <strong>real email</strong> with fixed content to the "Send test email to" address. Check that inbox <em>and its spam folder</em> — a delivered message is the only proof the transport works. The failure message names the actual reason.</p>
+            <p class="text-secondary small mb-0"><i class="bi bi-envelope-paper me-1"></i>Use <a href="<?= site_url('admin/integrations/email/compose') ?>">Send a test email</a> when you need to choose the recipient, subject and message body yourself.</p>
         <?php else: ?>
             <p class="text-secondary small mb-0"><i class="bi bi-info-circle me-1"></i>"Test connection" validates that all required fields are present. Live calls run from the corresponding service at runtime.</p>
         <?php endif; ?>

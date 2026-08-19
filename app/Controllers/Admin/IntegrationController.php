@@ -112,6 +112,119 @@ final class IntegrationController extends BaseController
         return redirect()->to('admin/integrations/' . $slug)->with('success', $spec['label'] . ' settings saved.');
     }
 
+    /**
+     * Compose a test email — the operator supplies recipient, subject and body.
+     *
+     * "Test connection" sends fixed content to a saved address, which proves the
+     * transport accepted a message and nothing more. During an outage the questions
+     * that actually arise are narrower than that: does a real subject line survive,
+     * does the body arrive readable, does delivery to THIS mailbox work rather than
+     * the no_reply@ one in settings. This screen answers all three.
+     */
+    public function compose()
+    {
+        if ($denied = $this->guard()) {
+            return $denied;
+        }
+        $spec   = $this->spec('email');
+        $config = service('integrationRepository')->config($spec['provider']);
+
+        return view('admin/integrations/test_email', [
+            'title'     => 'Send a test email · Admin',
+            'pageTitle' => 'Send a test email',
+            'active'    => 'int-email',
+            'userName'  => session()->get('user_name') ?: 'User',
+            'spec'      => $spec,
+            'config'    => $config,
+            'to'        => trim((string) ($config['test_to'] ?? '')) ?: trim((string) ($config['from_email'] ?? '')),
+            'transport' => trim((string) ($config['protocol'] ?? '')) ?: 'smtp',
+        ]);
+    }
+
+    /**
+     * Send what the operator typed.
+     *
+     * Three containment decisions, all deliberate. An authenticated admin who can send
+     * an arbitrary subject and body to an arbitrary address FROM the business domain —
+     * passing that domain's SPF and DKIM — holds a better phishing primitive than most
+     * attackers can build, so the feature is kept to exactly what a delivery test needs:
+     *
+     *   - the body is escaped, so typed input can never become live markup. Authoring
+     *     HTML is not part of the job; confirming a message arrives readable is.
+     *   - the subject is stripped of CR/LF. A newline in a subject is header injection,
+     *     which is how a Bcc gets added to a message nobody meant to copy.
+     *   - a footer names the message as an admin test and carries the sending user id,
+     *     so it is neither deniable nor anonymous. The operator's own subject and body
+     *     are left untouched — the footer is additive, because rewriting the subject
+     *     would defeat the one thing they came here to check.
+     */
+    public function sendTest(): RedirectResponse
+    {
+        if ($denied = $this->guard()) {
+            return $denied;
+        }
+        $back    = 'admin/integrations/email/compose';
+        $spec    = $this->spec('email');
+        $config  = service('integrationRepository')->config($spec['provider']);
+
+        $to      = trim((string) $this->request->getPost('to'));
+        $subject = trim((string) $this->request->getPost('subject'));
+        $message = (string) $this->request->getPost('message');
+
+        if ($to === '' || ! filter_var($to, FILTER_VALIDATE_EMAIL)) {
+            return redirect()->to($back)->withInput()->with('error', 'Enter a valid email address to send to.');
+        }
+        if ($subject === '') {
+            return redirect()->to($back)->withInput()->with('error', 'Enter a subject.');
+        }
+        if (trim($message) === '') {
+            return redirect()->to($back)->withInput()->with('error', 'Enter a message to send.');
+        }
+
+        // CR/LF out of the subject before it reaches any header.
+        $subject = trim((string) preg_replace('/[\r\n]+/', ' ', $subject));
+
+        $mailer    = service('mailer');
+        $transport = trim((string) ($config['protocol'] ?? '')) ?: 'smtp';
+
+        // Same pre-flight the fixed-content test does: a 465/tls pair does not fail
+        // with a protocol error, it hangs until the socket times out, which reads as a
+        // blocked host and sends the operator after the wrong problem.
+        if ($mailer->hasCryptoMismatch()) {
+            return redirect()->to($back)->withInput()->with(
+                'error',
+                'Port ' . (int) ($config['port'] ?? 0) . ' requires encryption "' . $mailer->impliedCrypto()
+                . '", but "' . ($config['encryption'] ?? '') . '" is set. Port 465 is implicit SSL; port 587 is STARTTLS.',
+            );
+        }
+
+        $uid   = (int) session()->get('user_id');
+        $stamp = date('Y-m-d H:i:s');
+        $body  = '<div>' . nl2br(esc($message)) . '</div>'
+            . '<hr><p style="color:#777;font-size:12px">'
+            . 'This is a test message sent from the ' . esc(service('settingsRepository')->brandName())
+            . ' admin panel by user #' . $uid . ' at ' . esc($stamp) . ' UTC, via "' . esc($transport) . '".'
+            . '</p>';
+
+        $ok = $mailer->send($to, $subject, $body);
+        service('integrationRepository')->setStatus($spec['provider'], $ok ? 'connected' : 'error', $uid);
+
+        if ($ok) {
+            return redirect()->to($back)->with(
+                'success',
+                'Sent to ' . $to . ' via "' . $transport . '". Check that inbox and its spam folder — '
+                . 'a delivered message is the only proof the transport works.',
+            );
+        }
+
+        return redirect()->to($back)->withInput()->with(
+            'error',
+            'Could not send via "' . $transport . '". ' . ($mailer->lastError() ?: 'No detail was reported.')
+            . ' — a connection timeout or certificate mismatch means this host blocks outbound SMTP;'
+            . ' switch Transport to "sendmail". An authentication failure on Gmail means it needs a 16-character App Password.',
+        );
+    }
+
     public function test(string $slug): RedirectResponse
     {
         if ($denied = $this->guard()) {

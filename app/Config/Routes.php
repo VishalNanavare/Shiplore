@@ -501,6 +501,13 @@ $routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']
     $routes->get('integrations/aws', 'Admin\AwsSettingsController::index');
     $routes->post('integrations/aws/save', 'Admin\AwsSettingsController::save', ['filter' => 'csrf']);
     $routes->post('integrations/aws/test', 'Admin\AwsSettingsController::test', ['filter' => ['csrf', 'throttle:5,300']]);
+    // Compose-and-send a test email with an operator-supplied subject, body and
+    // recipient. Registered ABOVE integrations/(:segment) for readability only —
+    // (:segment) matches one segment, so a three-segment path could not reach it
+    // regardless. Throttled like the fixed-content test below: this sends real mail
+    // from the business domain, so it is rate-limited rather than free.
+    $routes->get('integrations/email/compose', 'Admin\IntegrationController::compose');
+    $routes->post('integrations/email/compose', 'Admin\IntegrationController::sendTest', ['filter' => ['csrf', 'throttle:10,300']]);
     $routes->get('integrations/(:segment)', 'Admin\IntegrationController::show/$1');
     $routes->post('integrations/(:segment)', 'Admin\IntegrationController::save/$1', ['filter' => 'csrf']);
     $routes->post('integrations/(:segment)/test', 'Admin\IntegrationController::test/$1', ['filter' => ['csrf', 'throttle:5,300']]);
