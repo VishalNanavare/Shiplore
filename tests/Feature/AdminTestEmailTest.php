@@ -55,6 +55,7 @@ final class AdminTestEmailTest extends CIUnitTestCase
             public function hasCryptoMismatch(): bool { return $this->badPair; }
             public function impliedCrypto(): ?string { return 'tls'; }
             public function lastError(): string { return $this->ok ? '' : 'Connection timed out after 30s'; }
+            public function diagnose(): string { return $this->ok ? '' : 'smtp.example.com:587 is reachable.'; }
             public function send(string $to, string $subject, string $body): bool
             {
                 $this->sent[] = ['to' => $to, 'subject' => $subject, 'body' => $body];

@@ -48,7 +48,15 @@ final class Mailer
      */
     private string $lastError = '';
 
-    public function __construct(private array $cfg) {}
+    /**
+     * @param callable|null $connector opens one socket, for diagnose() only.
+     *        Signature: fn(string $target, int $port, int $timeout): array{0:resource|false,1:int,2:string}
+     *        — the resource (or false), then errno and errstr as fsockopen reports them.
+     *        Injected so the probe's branching is testable without a network: a test that
+     *        needs working DNS is a test that fails for reasons unrelated to this code.
+     *        Production passes nothing and gets the real socket.
+     */
+    public function __construct(private array $cfg, private $connector = null) {}
 
     public function lastError(): string
     {
@@ -107,6 +115,147 @@ final class Mailer
         return trim(mb_substr($clean, 0, 600));
     }
 
+
+    /**
+     * How long a single probe socket may take, in seconds.
+     *
+     * Two probes run at worst, so this bounds the admin page at ~16s. Long enough that a
+     * silently-dropped packet (the signature of a firewall that blackholes rather than
+     * refuses) reaches its timeout instead of being reported as something else; short
+     * enough that the page still returns.
+     */
+    private const PROBE_TIMEOUT = 8;
+
+    /**
+     * Find out whether this box can reach the configured SMTP server at all.
+     *
+     * CodeIgniter discards the answer. system/Email/Email.php:1910 calls fsockopen()
+     * without @-suppression, so a failed connection raises a PHP warning that the error
+     * handler converts into an ErrorException — and the next line, which would have
+     * recorded errno/errstr via setErrorMessage(), never executes. spoolEmail() catches it
+     * at :1709, logs it, and reports only "Unable to send email using SMTP. Your server
+     * might not be configured to send mail using this method." That string sends an
+     * operator to check settings that are correct, while the real reason sits in
+     * writable/logs where shared hosting will not let them read it.
+     *
+     * So we open our own socket and keep what we learn. Plain TCP FIRST, deliberately: it
+     * is the only way to separate "this host blocks outbound SMTP" (switch to sendmail)
+     * from "the port is open but TLS fails" (fix the encryption setting or a certificate).
+     * Probing straight through ssl:// collapses both into one failure and would recommend
+     * the wrong fix half the time.
+     *
+     * Read-only and side-effect free — it never sends anything. Called by the admin
+     * screens on failure, NOT by send(): send() is on the password-reset path and the
+     * notification worker, which must not pay two socket timeouts per failure.
+     *
+     * @return string a reason to show an operator, or '' when there is nothing to probe
+     */
+    public function diagnose(): string
+    {
+        if ($this->protocol() !== 'smtp') {
+            return ''; // sendmail/mail pipe to a local binary — there is no socket to test.
+        }
+        $host = $this->str('host');
+        if ($host === '') {
+            return '';
+        }
+
+        $port = (int) $this->str('port');
+        if ($port <= 0) {
+            $port = strtolower($this->str('encryption')) === 'ssl' ? 465 : 587;
+        }
+        $where = $host . ':' . $port;
+
+        try {
+            [$sock, $errno, $errstr] = $this->connect($host, $port);
+
+            if (! is_resource($sock)) {
+                // DNS is a different fault with a different remedy. Recommending sendmail
+                // for a misspelled hostname wastes the same afternoon the generic message
+                // already wasted, so the two must not read alike.
+                if (stripos($errstr, 'getaddrinfo') !== false || stripos($errstr, 'Name or service not known') !== false) {
+                    return $this->redact(sprintf(
+                        'The host name "%s" could not be resolved (%s). Check it for a typo before anything else.',
+                        $host,
+                        $errstr,
+                    ));
+                }
+
+                return $this->redact(sprintf(
+                    'Could not open a connection to %s — %s (errno %d). Nothing was rejected: the connection never'
+                    . ' completed, which on shared hosting almost always means outbound SMTP is blocked.'
+                    . ' Switch Transport to "sendmail" to hand the message to the local mail server instead.',
+                    $where,
+                    $errstr !== '' ? $errstr : 'no reason reported',
+                    $errno,
+                ));
+            }
+
+            $greeting = trim((string) fgets($sock, 512));
+            fclose($sock);
+
+            // Connected, but is it actually an SMTP server? A host that transparently
+            // redirects outbound mail ports to its own service passes every reachability
+            // check and then fails the session in ways that look like bad credentials.
+            // The greeting is the only thing that separates the two.
+            if (! str_starts_with($greeting, '220')) {
+                return $this->redact(sprintf(
+                    '%s accepted a connection but did not answer with an SMTP greeting (it said "%s").'
+                    . ' Something on the network is intercepting this port. Use Transport "sendmail".',
+                    $where,
+                    mb_substr($greeting, 0, 80) ?: '(nothing)',
+                ));
+            }
+
+            // The port is open and speaks SMTP. If TLS is expected, that is the next thing
+            // that can fail, and it fails for reasons a firewall diagnosis would misread.
+            $crypto = strtolower($this->str('encryption'));
+            if ($crypto === 'ssl' || $port === 465) {
+                [$tls, $tlsNo, $tlsErr] = $this->connect('ssl://' . $host, $port);
+                if (! is_resource($tls)) {
+                    return $this->redact(sprintf(
+                        '%s is reachable over plain TCP, but the TLS handshake failed — %s (errno %d).'
+                        . ' The port is not blocked, so this is an encryption or certificate problem, not a firewall.',
+                        $where,
+                        $tlsErr !== '' ? $tlsErr : 'no reason reported',
+                        $tlsNo,
+                    ));
+                }
+                fclose($tls);
+            }
+
+            return $this->redact(sprintf(
+                '%s is reachable and answered "%s", so the network is not the problem. The failure is later in the'
+                . ' session — most often the username or password. A Gmail account needs a 16-character App Password,'
+                . ' not the account password.',
+                $where,
+                mb_substr($greeting, 0, 80),
+            ));
+        } catch (Throwable $e) {
+            // A diagnostic must never become a second failure.
+            return $this->redact('The connection test could not run: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * One socket attempt. @-suppressed on purpose — the whole point is to KEEP the
+     * errno/errstr rather than let a warning become an exception the way it does inside
+     * CodeIgniter's Email.
+     *
+     * @return array{0:resource|false,1:int,2:string}
+     */
+    private function connect(string $target, int $port): array
+    {
+        if ($this->connector !== null) {
+            return ($this->connector)($target, $port, self::PROBE_TIMEOUT);
+        }
+
+        $errno  = 0;
+        $errstr = '';
+        $sock   = @fsockopen($target, $port, $errno, $errstr, self::PROBE_TIMEOUT);
+
+        return [$sock, (int) $errno, (string) $errstr];
+    }
 
     /**
      * Transport for this send: 'smtp' (network socket to a remote server),
@@ -232,7 +381,12 @@ final class Mailer
                 return true;
             }
 
-            $debug           = $email->printDebugger(['headers']);
+            // [] not ['headers']. printDebugger() appends the raw Date/From/To/Message-ID
+            // dump AFTER the messages, and redact() caps the result at 600 characters — so
+            // a real failure reported ~100 characters of generic text followed by 500 of
+            // header noise, cut off mid-word in "Mime-Version". The headers are never the
+            // reason. An empty include list returns the messages alone.
+            $debug           = $email->printDebugger([]);
             $this->lastError = $this->redact($debug);
             log_message('error', "Mailer: {$protocol} send to {$to} failed. " . $debug);
         } catch (Throwable $e) {

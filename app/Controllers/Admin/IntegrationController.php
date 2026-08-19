@@ -217,11 +217,14 @@ final class IntegrationController extends BaseController
             );
         }
 
+        // diagnose() opens its own socket and keeps the errno/errstr CodeIgniter throws
+        // away, so the operator is told whether the port is blocked, the name does not
+        // resolve, TLS fails, or the credentials are wrong — rather than being handed
+        // "your server might not be configured", which describes all four.
         return redirect()->to($back)->withInput()->with(
             'error',
             'Could not send via "' . $transport . '". ' . ($mailer->lastError() ?: 'No detail was reported.')
-            . ' — a connection timeout or certificate mismatch means this host blocks outbound SMTP;'
-            . ' switch Transport to "sendmail". An authentication failure on Gmail means it needs a 16-character App Password.',
+            . ($transport === 'smtp' ? ' Connection test: ' . $mailer->diagnose() : ''),
         );
     }
 
@@ -300,10 +303,10 @@ final class IntegrationController extends BaseController
                     // an operator frequently cannot read writable/logs, so "see the log"
                     // ends the diagnosis instead of advancing it — which is how an email
                     // outage here went several rounds without anyone seeing the error.
-                    // Mailer::lastError() is redacted of credentials before it gets here.
+                    // Mailer::lastError() is redacted of credentials before it gets here,
+                    // and diagnose() adds the network-level reason the framework discards.
                     : 'Could not send via "' . $transport . '". ' . ($mailer->lastError() ?: 'No detail was reported.')
-                        . ' — a connection timeout or certificate mismatch means this host blocks outbound SMTP;'
-                        . ' switch Transport to "sendmail". An authentication failure on Gmail means it needs a 16-character App Password.'
+                        . ' Connection test: ' . $mailer->diagnose()
             );
         }
 

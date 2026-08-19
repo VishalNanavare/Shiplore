@@ -40,10 +40,18 @@ final class AuthResetTest extends CIUnitTestCase
             public function consume(int $id): void { $this->consumed = $id; }
         };
 
+        // Declares the WHOLE Mailer API, not just send(). A double that covers only what
+        // the controller calls today breaks the day a controller calls one more method,
+        // and it breaks pointing at the controller rather than at itself.
+        // MailerMockDriftTest enforces this.
         $this->mailer = new class {
             public array $sent = [];
             public bool $ok = true;
             public function configured(): bool { return true; }
+            public function lastError(): string { return $this->ok ? '' : 'send failed'; }
+            public function diagnose(): string { return ''; }
+            public function impliedCrypto(): ?string { return null; }
+            public function hasCryptoMismatch(): bool { return false; }
             public function send(string $to, string $subject, string $body): bool
             {
                 $this->sent[] = ['to' => $to, 'subject' => $subject, 'body' => $body];

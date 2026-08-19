@@ -155,6 +155,7 @@ final class AdminIntegrationTest extends CIUnitTestCase
             public function hasCryptoMismatch(): bool { return false; }
             public function impliedCrypto(): ?string { return 'tls'; }
             public function lastError(): string { return ''; }
+            public function diagnose(): string { return ''; }
             public function send(string $to, string $subject, string $body): bool { $this->sent[] = $to; return true; }
         };
         Services::injectMock('mailer', $mailer);
