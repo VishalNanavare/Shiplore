@@ -96,17 +96,13 @@ final class OtpLoginTest extends CIUnitTestCase
         try {
             $redirect = $this->body($this->otpPost())['redirect'] ?? '';
 
-            $this->assertStringContainsString('admin/dashboard', $redirect);
-            $this->assertStringContainsString(
-                'admin.shiplore.test',
-                $redirect,
-                'a platform admin must be sent to the admin host, whichever host they signed in on',
-            );
-            $this->assertStringNotContainsString(
-                'manufacturer.shiplore.test/admin',
-                $redirect,
-                'this is the exact 404 the operator reported',
-            );
+            // assertSame on the WHOLE url, not assertStringContainsString on a fragment.
+            // A containment check passes on
+            //   https://admin.<domain>/https:/admin.<domain>/admin/dashboard
+            // because the doubled string still contains both fragments — which is
+            // exactly how that malformed URL reached production. The only assertion
+            // that catches a mangled URL is one that pins the entire thing.
+            $this->assertSame('http://admin.shiplore.test/admin/dashboard', $redirect);
         } finally {
             service('superglobals')->unsetServer('HTTP_HOST');
         }
@@ -122,7 +118,7 @@ final class OtpLoginTest extends CIUnitTestCase
         Services::resetSingle('uri');
 
         try {
-            $this->assertStringContainsString('vendor.shiplore.test', $this->body($this->otpPost())['redirect'] ?? '');
+            $this->assertSame('http://vendor.shiplore.test/vendor/dashboard', $this->body($this->otpPost())['redirect'] ?? '');
         } finally {
             service('superglobals')->unsetServer('HTTP_HOST');
         }
@@ -138,9 +134,7 @@ final class OtpLoginTest extends CIUnitTestCase
         Services::resetSingle('uri');
 
         try {
-            $redirect = $this->body($this->otpPost())['redirect'] ?? '';
-            $this->assertStringContainsString('manufacturer.shiplore.test', $redirect);
-            $this->assertStringContainsString('manufacturer/dashboard', $redirect);
+            $this->assertSame('http://manufacturer.shiplore.test/manufacturer/dashboard', $this->body($this->otpPost())['redirect'] ?? '');
         } finally {
             service('superglobals')->unsetServer('HTTP_HOST');
         }

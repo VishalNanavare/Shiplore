@@ -184,7 +184,13 @@ final class LoginController extends BaseController
 
         return $this->response->setJSON([
             'ok'       => true,
-            'redirect' => site_url($this->landingFor($user['principal_type'] ?? null)),
+            // NOT wrapped in site_url(). landingFor() returns an ABSOLUTE panel URL, and
+            // site_url() prepends the base to whatever it is given — it does not detect
+            // that its argument is already absolute. Wrapping produced
+            // https://admin.<domain>/https:/admin.<domain>/admin/dashboard on the live
+            // site: a real 404 that shipped because the commit adding it asserted
+            // site_url() "accepts an absolute URL unchanged" without checking.
+            'redirect' => $this->landingFor($user['principal_type'] ?? null),
             'csrf'     => csrf_hash(),
         ]);
     }
