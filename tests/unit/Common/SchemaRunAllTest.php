@@ -191,6 +191,61 @@ final class SchemaRunAllTest extends CIUnitTestCase
     }
 
     /**
+     * Every mfg.* permission a controller GUARDS ON must actually be seeded.
+     *
+     * mfg.combo.manage was named in 76_manufacturer_parity.sql's own header comment and
+     * never inserted. A screen guarded on a permission that does not exist denies every
+     * unit manager while OWNERS SAIL THROUGH, because owners bypass the permission check
+     * entirely — so it looks fine to whoever builds and tests it, and only breaks for the
+     * staff it was written for. mfg.transfer.* had the opposite shape for two phases:
+     * seeded, granted, and no screen behind it.
+     *
+     * Derived from the schema so adding a guard and seeding its permission are the same
+     * change.
+     */
+    public function testEveryGuardedManufacturerPermissionIsSeeded(): void
+    {
+        // Only INSERT INTO `permissions` ... VALUES tuples count as "seeded".
+        //
+        // Scanning the whole file for the quoted code does NOT work, and a mutation run
+        // proved it: deleting the INSERT left the role_permissions GRANT still naming
+        // 'mfg.combo.manage', which satisfied the match. A grant references a permission;
+        // it does not create one, and a grant whose JOIN finds nothing inserts no rows
+        // and raises no error. Same family as a comment quoting the string it guards.
+        $known = [];
+
+        foreach ((array) glob(self::DIR . '*.sql') as $path) {
+            $sql = preg_replace('/^\s*--.*$/m', '', (string) file_get_contents($path)) ?? '';
+
+            if (preg_match_all('/INSERT\s+(?:IGNORE\s+)?INTO\s+`?permissions`?\s*\([^)]*\)\s*VALUES(.*?);/is', $sql, $blocks) === 0) {
+                continue;
+            }
+
+            foreach ($blocks[1] as $block) {
+                // First quoted value of each tuple is the permission code.
+                preg_match_all("/\(\s*'([a-z0-9_.]+)'/i", $block, $codes);
+                $known = array_merge($known, $codes[1]);
+            }
+        }
+        $known = array_unique($known);
+        $this->assertNotEmpty($known, 'no permissions found in any INSERT INTO permissions block');
+
+        $missing = [];
+
+        foreach ((array) glob(APPPATH . 'Controllers/Manufacturer/*.php') as $file) {
+            preg_match_all("/guard\(\s*'(mfg\.[a-z_.]+)'/", (string) file_get_contents($file), $g);
+
+            foreach (array_unique($g[1]) as $perm) {
+                if (! in_array($perm, $known, true)) {
+                    $missing[] = basename($file) . ' guards on ' . $perm;
+                }
+            }
+        }
+
+        $this->assertSame([], $missing, "these permissions are guarded on but never seeded:\n" . implode("\n", $missing));
+    }
+
+    /**
      * Every document type a controller offers must be storable.
      *
      * Manufacturer\DocumentUploadController offered `factory_licence` while

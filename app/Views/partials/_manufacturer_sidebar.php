@@ -21,6 +21,7 @@ $groups = [
         ['units', 'Units', 'bi-buildings', 'manufacturer/units', 'mfg.unit.view'],
         ['products', 'Products', 'bi-box-seam', 'manufacturer/products', 'mfg.product.view'],
         ['inventory', 'Stock', 'bi-clipboard-data', 'manufacturer/inventory', 'mfg.inventory.view'],
+        ['combos', 'Combo Offers', 'bi-boxes', 'manufacturer/combos', 'mfg.combo.manage'],
     ]],
     ['Sales', 'bi-bag', [
         ['pos', 'Counter', 'bi-shop', 'manufacturer/pos', 'mfg.pos.view'],

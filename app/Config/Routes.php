@@ -906,6 +906,11 @@ $routes->group('manufacturer', ['filter' => 'webAuth:manufacturer', 'subdomain' 
 
     // Governance. Staff changes proposed by a manager land here for the owner's
     // decision; the engine and its tables are reused unchanged (tenant-agnostic).
+    // Combo offers. Forked from the vendor version because that one can publish to the
+    // consumer storefront and prices with MRP — both wrong for a manufacturer.
+    $routes->get('combos', 'Manufacturer\ComboController::index');
+    $routes->post('combos', 'Manufacturer\ComboController::store', ['filter' => 'csrf']);
+
     // Stock transfers between this manufacturer's own units. Two steps — dispatch
     // decrements the source, receipt credits the destination — because goods in
     // transit belong to neither end.
