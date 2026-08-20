@@ -205,7 +205,33 @@ final class PortalController extends BaseController
             'impersonation_kind', 'impersonation_label', 'impersonation_entity_id',
         ]);
 
-        return redirect()->to($this->portalUrl('admin', 'admin/dashboard'))->with('success', 'Returned to the admin panel.');
+        return redirect()->to($this->portalUrl('admin', $this->returnPath($kind, $entityId)))->with('success', 'Returned to the admin panel.');
+    }
+
+    /**
+     * Where "Exit" lands, instead of always admin/dashboard — the vendor/shop was
+     * reached by drilling into its admin detail page, so returning there keeps that
+     * context instead of dropping it. kind + entityId are already in session for
+     * every impersonation (see startStaffImpersonation()); no new session key needed.
+     * Rider is deliberately left on the dashboard — a separate branch with no admin
+     * detail-page analog.
+     */
+    private function returnPath(string $kind, int $entityId): string
+    {
+        if ($kind === 'vendor') {
+            return 'admin/vendors/' . $entityId;
+        }
+        if ($kind === 'manufacturer') {
+            return 'admin/manufacturers/' . $entityId;
+        }
+        if ($kind === 'shop') {
+            $vendorId = (int) (Database::connect()->table('shops')->select('vendor_id')->where('id', $entityId)->get()->getRowArray()['vendor_id'] ?? 0);
+            if ($vendorId > 0) {
+                return 'admin/vendors/' . $vendorId;
+            }
+        }
+
+        return 'admin/dashboard';
     }
 
     // ---- helpers -----------------------------------------------------------

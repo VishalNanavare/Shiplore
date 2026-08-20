@@ -156,18 +156,28 @@ $m = $metrics ?? [];
             </div>
         </div></div>
 
-        <div class="card mb-3"><div class="card-header fw-semibold d-flex justify-content-between"><span><i class="bi bi-shop me-1"></i>Shops</span><span class="text-secondary small"><?= count($shops) ?></span></div>
+        <div class="card mb-3"><div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-shop me-1"></i>Shops <span class="text-secondary small fw-normal"><?= count($shops) ?></span></span>
+                <a href="<?= site_url('admin/shops') ?>?vendor_id=<?= (int) $vendor['id'] ?>" class="btn btn-sm btn-outline-secondary">View all shops</a>
+            </div>
             <div class="table-responsive"><table class="table table-sm table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>Shop</th><th>Code</th><th>Pincode</th><th>Radius</th><th>Status</th></tr></thead>
+                <thead class="table-light"><tr><th>Shop</th><th>Code</th><th>Pincode</th><th>Radius</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
                 <tbody>
                 <?php foreach ($shops as $s): ?>
                     <tr><td class="fw-medium"><a href="<?= site_url('admin/shops/' . $s['id']) ?>" class="text-reset text-decoration-none"><?= esc($s['name']) ?></a></td>
                         <td class="small text-secondary"><?= esc($s['code'] ?? '') ?></td>
                         <td class="small"><?= esc($s['pincode'] ?? '') ?></td>
                         <td class="small"><?= $s['delivery_radius_km'] !== null ? esc($s['delivery_radius_km']) . ' km' : '—' ?></td>
-                        <td><span class="badge text-bg-<?= ($s['status'] ?? '') === 'active' || ($s['status'] ?? '') === 'open' ? 'success' : 'secondary' ?>"><?= esc($s['status'] ?? '') ?></span></td></tr>
+                        <td><span class="badge text-bg-<?= ($s['status'] ?? '') === 'active' || ($s['status'] ?? '') === 'open' ? 'success' : 'secondary' ?>"><?= esc($s['status'] ?? '') ?></span></td>
+                        <td class="text-end">
+                            <form method="post" action="<?= site_url('admin/portal/enter/shop/' . $s['id']) ?>" class="d-inline"
+                                  onsubmit="return confirm('Open the shop portal for <?= esc($s['name'], 'attr') ?>? You will be signed in as its vendor until you return to admin.');">
+                                <?= csrf_field() ?>
+                                <button class="btn btn-sm btn-outline-primary" title="Go to Shop Portal"><i class="bi bi-box-arrow-up-right"></i></button>
+                            </form>
+                        </td></tr>
                 <?php endforeach; ?>
-                <?php if (empty($shops)): ?><tr><td colspan="5" class="text-center text-secondary py-3">No shops.</td></tr><?php endif; ?>
+                <?php if (empty($shops)): ?><tr><td colspan="6" class="text-center text-secondary py-3">No shops.</td></tr><?php endif; ?>
                 </tbody>
             </table></div>
         </div>

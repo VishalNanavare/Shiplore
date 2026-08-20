@@ -37,6 +37,10 @@ final class VendorRepositoryUpdateFieldsTest extends CIUnitTestCase
     protected function tearDown(): void
     {
         Database::connect()->table('vendors')->where('id', $this->vendorId)->delete();
+        // ensureUsersTable() creates db_users for real in the process-wide :memory: DB —
+        // left behind, it flips every other file's unmocked fail-open re-check
+        // (WebAuthFilter -> apiAuthRepository->isActive()) to fail-closed. Must drop.
+        $this->dropUsersTable();
         parent::tearDown();
     }
 

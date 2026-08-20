@@ -24,16 +24,26 @@ final class AdminShopTest extends CIUnitTestCase
         $this->grant(['shop.view', 'shop.update']);
 
         Services::injectMock('shopRepository', new class {
+            public ?array $lastFilters = null;
+
             public function list(array|string|null $f = null): array
             {
+                $this->lastFilters = is_array($f) ? $f : null;
+
                 return [
                     ['id' => 1, 'name' => 'Andheri Outlet', 'code' => 'AND-1', 'pincode' => '400058', 'state_code' => '27', 'gstin_status' => 'verified', 'status' => 'inactive', 'vendor' => 'Acme Foods'],
                     ['id' => 2, 'name' => 'Bandra Outlet', 'code' => 'BAN-1', 'pincode' => '400050', 'state_code' => '27', 'gstin_status' => 'pending', 'status' => 'active', 'vendor' => 'Acme Foods'],
                 ];
             }
-            public function countList(array $f = []): int { return 2; }
+            public function countList(array $f = []): int { $this->lastFilters = $f; return 2; }
             public function findById(int $id): ?array { return $id === 1 ? ['id' => 1, 'status' => 'inactive'] : null; }
             public function updateStatus(int $id, string $status, ?int $actorId = null): bool { return true; }
+        });
+        Services::injectMock('vendorRepository', new class {
+            public function findById(int $id): ?array
+            {
+                return $id === 701 ? ['id' => 701, 'display_name' => 'Acme Foods'] : null;
+            }
         });
     }
 
@@ -71,6 +81,40 @@ final class AdminShopTest extends CIUnitTestCase
         $result->assertStatus(200);
         $this->assertStringContainsString('Andheri Outlet', (string) $result->getBody());
         $this->assertStringContainsString('shopsTable', (string) $result->getBody());
+    }
+
+    public function testListPassesTheVendorIdFilterThrough(): void
+    {
+        $repo = service('shopRepository');
+
+        $this->withSession($this->adminSession())->get('admin/shops?vendor_id=701');
+
+        $this->assertSame(701, $repo->lastFilters['vendor_id'] ?? null);
+    }
+
+    public function testListWithoutAVendorIdParamDoesNotScopeByVendor(): void
+    {
+        $repo = service('shopRepository');
+
+        $this->withSession($this->adminSession())->get('admin/shops');
+
+        $this->assertEmpty($repo->lastFilters['vendor_id'] ?? null);
+    }
+
+    public function testListShowsWhichVendorItIsFilteredTo(): void
+    {
+        $result = $this->withSession($this->adminSession())->get('admin/shops?vendor_id=701');
+        $html   = (string) $result->getBody();
+
+        $this->assertStringContainsString('Filtered to vendor:', $html);
+        $this->assertStringContainsString('>Acme Foods<', $html);
+    }
+
+    public function testListWithoutAVendorFilterDoesNotShowTheVendorBanner(): void
+    {
+        $result = $this->withSession($this->adminSession())->get('admin/shops');
+
+        $this->assertStringNotContainsString('Filtered to vendor:', (string) $result->getBody());
     }
 
     public function testActivateRedirectsBackToList(): void

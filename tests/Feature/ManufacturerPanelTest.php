@@ -332,25 +332,15 @@ final class ManufacturerPanelTest extends CIUnitTestCase
     /**
      * The documents screen reads vendor_documents/media_assets through raw queries
      * rather than a mockable repository, so those two tables have to exist for real.
+     * Uses MinimalSchema's shared definitions (not a local one) — a second, narrower
+     * bespoke copy is exactly what let AdminVendorShopNavigationTest fail under
+     * --order-by=random when this file's table won the race and lacked a column
+     * that controller path actually needs.
      */
     private function ensureVendorDocumentTables(): void
     {
-        $db = $this->schemaConn();
-        $db->query('CREATE TABLE IF NOT EXISTS db_vendor_documents (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            vendor_id INTEGER NOT NULL, doc_type TEXT, media_id INTEGER,
-            status TEXT NOT NULL DEFAULT "uploaded",
-            created_by INTEGER, updated_by INTEGER,
-            created_at TEXT, updated_at TEXT, deleted_at TEXT
-        )');
-        $db->query('CREATE TABLE IF NOT EXISTS db_media_assets (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            uuid TEXT, bucket TEXT, object_key TEXT, owner_type TEXT, owner_id INTEGER,
-            mime TEXT, original_name TEXT, size_bytes INTEGER,
-            visibility TEXT NOT NULL DEFAULT "private",
-            status TEXT NOT NULL DEFAULT "active",
-            created_by INTEGER, created_at TEXT, deleted_at TEXT
-        )');
+        $this->ensureVendorDocumentsTable();
+        $this->ensureMediaAssetsTable();
     }
 
     /** `notifications` is not in MinimalSchema, so any page reaching it needs this. */

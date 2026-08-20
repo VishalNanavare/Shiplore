@@ -22,29 +22,35 @@ final class ShopController extends BaseController
             return $denied;
         }
 
-        $req     = $this->request;
-        $status  = trim((string) $req->getGet('status'));
-        $q       = trim((string) $req->getGet('q'));
-        $perRaw  = (string) $req->getGet('per_page');
-        $perPage = in_array((int) $perRaw, [25, 50, 100, 200], true) ? (int) $perRaw : 50;
-        $page    = max(1, (int) $req->getGet('page'));
+        $req      = $this->request;
+        $status   = trim((string) $req->getGet('status'));
+        $q        = trim((string) $req->getGet('q'));
+        $vendorId = (int) $req->getGet('vendor_id');
+        $perRaw   = (string) $req->getGet('per_page');
+        $perPage  = in_array((int) $perRaw, [25, 50, 100, 200], true) ? (int) $perRaw : 50;
+        $page     = max(1, (int) $req->getGet('page'));
 
-        $f     = ['status' => $status ?: null, 'q' => $q];
+        $f     = ['status' => $status ?: null, 'q' => $q, 'vendor_id' => $vendorId ?: null];
         $repo  = service('shopRepository');
         $total = $repo->countList($f);
         $f['limit']  = $perPage;
         $f['offset'] = ($page - 1) * $perPage;
 
+        // Reached from a vendor's detail page's "View all shops" link — name the
+        // vendor in the banner rather than leaving the scoping silent.
+        $filterVendor = $vendorId > 0 ? service('vendorRepository')->findById($vendorId) : null;
+
         return view('admin/shops/index', [
-            'title'     => 'Shops · Admin',
-            'pageTitle' => 'Shops',
-            'active'    => 'shops',
-            'userName'  => session()->get('user_name') ?: 'User',
-            'shops'     => $repo->list($f),
-            'total'     => $total,
-            'page'      => $page,
-            'perPage'   => $perPage,
-            'filters'   => ['status' => $status, 'q' => $q],
+            'title'        => 'Shops · Admin',
+            'pageTitle'    => 'Shops',
+            'active'       => 'shops',
+            'userName'     => session()->get('user_name') ?: 'User',
+            'shops'        => $repo->list($f),
+            'total'        => $total,
+            'page'         => $page,
+            'perPage'      => $perPage,
+            'filters'      => ['status' => $status, 'q' => $q, 'vendor_id' => $vendorId ?: ''],
+            'filterVendor' => $filterVendor,
         ]);
     }
 

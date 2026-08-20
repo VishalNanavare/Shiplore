@@ -143,15 +143,8 @@ final class AdminVendorEditFieldsTest extends CIUnitTestCase
         });
 
         // form() joins media_assets for the logo preview via a raw query, not a
-        // mockable repository — same minimal shape ManufacturerPanelTest already uses.
-        \Config\Database::connect()->query('CREATE TABLE IF NOT EXISTS db_media_assets (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            uuid TEXT, bucket TEXT, object_key TEXT, owner_type TEXT, owner_id INTEGER,
-            mime TEXT, original_name TEXT, size_bytes INTEGER,
-            visibility TEXT NOT NULL DEFAULT "private",
-            status TEXT NOT NULL DEFAULT "active",
-            created_by INTEGER, created_at TEXT, deleted_at TEXT
-        )');
+        // mockable repository, so it has to exist for real.
+        $this->ensureMediaAssetsTable();
 
         $r = $this->withSession($this->sess())->get('admin/vendors/501/edit');
 

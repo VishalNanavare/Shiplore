@@ -32,7 +32,7 @@ trait MinimalSchema
         $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             uuid TEXT, principal_type TEXT NOT NULL, name TEXT NOT NULL,
-            email TEXT, phone TEXT, password_hash TEXT,
+            email TEXT, phone TEXT, password_hash TEXT, last_login_at TEXT,
             status TEXT NOT NULL DEFAULT "active",
             created_at TEXT, updated_at TEXT, deleted_at TEXT
         )');
@@ -484,6 +484,30 @@ trait MinimalSchema
             uuid TEXT, parent_id INTEGER, name TEXT NOT NULL, slug TEXT NOT NULL,
             path TEXT NOT NULL, level INTEGER NOT NULL DEFAULT 0, sort_order INTEGER NOT NULL DEFAULT 0,
             status TEXT NOT NULL DEFAULT "active",
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /** database/sql/01_master.sql:242 (media_assets) / :223 (vendor_documents). */
+    protected function ensureMediaAssetsTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_media_assets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, bucket TEXT, object_key TEXT, owner_type TEXT, owner_id INTEGER,
+            mime TEXT, original_name TEXT, size_bytes INTEGER,
+            visibility TEXT NOT NULL DEFAULT "private",
+            status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, created_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    protected function ensureVendorDocumentsTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_vendor_documents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            vendor_id INTEGER NOT NULL, doc_type TEXT, media_id INTEGER, expires_at TEXT,
+            status TEXT NOT NULL DEFAULT "uploaded",
+            created_by INTEGER, updated_by INTEGER,
             created_at TEXT, updated_at TEXT, deleted_at TEXT
         )');
     }

@@ -6,12 +6,19 @@ $statusBadge = ['active' => 'success', 'inactive' => 'secondary', 'closed_temp' 
 $gstBadge    = ['unverified' => 'secondary', 'pending' => 'info', 'verified' => 'success', 'failed' => 'danger'];
 $fStatus     = $filters['status'] ?? '';
 $fQ          = $filters['q'] ?? '';
-$base        = array_filter(['status' => $fStatus, 'q' => $fQ, 'per_page' => $perPage], static fn ($v) => $v !== '');
+$fVendorId   = $filters['vendor_id'] ?? '';
+$base        = array_filter(['status' => $fStatus, 'q' => $fQ, 'vendor_id' => $fVendorId, 'per_page' => $perPage], static fn ($v) => $v !== '');
 $qs          = $base ? http_build_query($base) : '';
 $mk          = static fn (int $n) => site_url('admin/shops') . '?' . http_build_query($base + ['page' => $n]);
 ?>
 <?php if ($m = session('success')): ?><div class="alert alert-success"><?= esc($m) ?></div><?php endif; ?>
 <?php if ($m = session('error')): ?><div class="alert alert-danger"><?= esc($m) ?></div><?php endif; ?>
+<?php if ($filterVendor ?? null): ?>
+    <div class="alert alert-info d-flex justify-content-between align-items-center">
+        <span>Filtered to vendor: <a href="<?= site_url('admin/vendors/' . $filterVendor['id']) ?>" class="alert-link"><?= esc($filterVendor['display_name']) ?></a></span>
+        <a href="<?= site_url('admin/shops') ?>" class="btn btn-sm btn-outline-secondary">Clear filter</a>
+    </div>
+<?php endif; ?>
 
 <div class="card">
     <div class="card-header">
@@ -20,6 +27,7 @@ $mk          = static fn (int $n) => site_url('admin/shops') . '?' . http_build_
             <a href="<?= site_url('admin/shops/new') ?>" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Shop</a>
         </div>
         <form method="get" action="<?= site_url('admin/shops') ?>" class="row g-2">
+            <?php if ($fVendorId !== ''): ?><input type="hidden" name="vendor_id" value="<?= esc($fVendorId, 'attr') ?>"><?php endif; ?>
             <div class="col-12 col-md">
                 <input type="search" name="q" value="<?= esc($fQ, 'attr') ?>" class="form-control form-control-sm" placeholder="Search name, code, pincode or vendor…">
             </div>

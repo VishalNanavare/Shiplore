@@ -57,6 +57,11 @@ final class ShopRepository
         if (! empty($f['status'])) {
             $b->where('s.status', $f['status']);
         }
+        // Vendor/shop panel UX, sub-project C — scopes the admin shop list to one
+        // vendor, so a vendor's detail page can link straight to "its" shops.
+        if (! empty($f['vendor_id'])) {
+            $b->where('s.vendor_id', (int) $f['vendor_id']);
+        }
         // Shop approval, phase 4 — the "Pending Approval → Shop Approval" queue's own
         // filter, separate from 'status' (open/close/active/inactive is a different
         // axis from the approval gate — see 85_shop_approval.sql).
