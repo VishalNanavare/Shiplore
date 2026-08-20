@@ -24,8 +24,16 @@ final class RiderApiController extends BaseApiController
     public function me()
     {
         $rider = service('riderRepository')->profile($this->userId());
+        if ($rider === null) {
+            return $this->notRider();
+        }
+        // vendor_id/vendor_status were added to profile() for the vendor-status gate
+        // (RiderAuthFilter, the WEB panel's internal use) and are not part of this
+        // response's shape — this is the already-shipped mobile app, so no new field
+        // goes out even though most JSON clients would tolerate one.
+        unset($rider['vendor_id'], $rider['vendor_status']);
 
-        return $rider === null ? $this->notRider() : $this->ok($rider);
+        return $this->ok($rider);
     }
 
     /**

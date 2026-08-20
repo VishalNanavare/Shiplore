@@ -182,7 +182,7 @@ final class MobileApiTest extends CIUnitTestCase
             public bool $isRider;
             public array $calls = [];
             public function __construct(bool $r) { $this->isRider = $r; }
-            public function profile(int $u): ?array { return $this->isRider ? ['id' => 1, 'availability' => 'available', 'status' => 'active', 'name' => 'Ravi', 'phone' => '9'] : null; }
+            public function profile(int $u): ?array { return $this->isRider ? ['id' => 1, 'vendor_id' => 501, 'availability' => 'available', 'status' => 'active', 'name' => 'Ravi', 'phone' => '9', 'vendor_status' => 'active'] : null; }
             public function setAvailability(int $u, string $s): bool { $this->calls[] = "avail:$s"; return true; }
             public function assignments(int $u, ?string $s = null): array { return [['delivery_id' => 1, 'order_no' => 'ORD-1', 'status' => 'assigned', 'cod_amount' => '999.00', 'pickup' => [], 'drop' => []]]; }
             public function assignment(int $id, int $u): ?array { return $id === 1 ? ['delivery_id' => 1, 'items' => []] : null; }
@@ -204,6 +204,23 @@ final class MobileApiTest extends CIUnitTestCase
         $r = $this->withHeaders($this->bearer(5, 'rider'))->get('api/v1/rider/me');
         $r->assertStatus(200);
         $this->assertStringContainsString('available', (string) $r->getJSON());
+    }
+
+    /**
+     * vendor_id/vendor_status were added to RiderRepository::profile() for the
+     * vendor-status gate (RiderAuthFilter, an internal/web-panel concern) and must not
+     * leak into this response — it is the already-shipped mobile app, and me() returns
+     * the WHOLE profile array directly, so a new key here is a new key in the app's
+     * response, unlike an internal-only lookup.
+     */
+    public function testRiderMeDoesNotLeakTheVendorStatusFields(): void
+    {
+        $this->riderMock();
+
+        $body = (string) $this->withHeaders($this->bearer(5, 'rider'))->get('api/v1/rider/me')->getJSON();
+
+        $this->assertStringNotContainsString('vendor_status', $body);
+        $this->assertStringNotContainsString('vendor_id', $body);
     }
 
     public function testNonRiderForbidden(): void

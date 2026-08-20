@@ -42,9 +42,13 @@ final class RiderRepository
     /** @return array<string,mixed>|null Rider profile. */
     public function profile(int $userId): ?array
     {
+        // db.vendor_id + v.status selected alongside — an additive, internal-lookup
+        // change (RiderApiController::notRiderGuard() and the vendor-status gate both
+        // reuse this one query rather than each adding their own).
         $row = Database::connect()->table('delivery_boys db')
-            ->select('db.id, db.availability, db.status, db.vehicle_type, db.vehicle_no, db.current_lat, db.current_lng, db.max_active_orders, u.name, u.phone')
+            ->select('db.id, db.vendor_id, db.availability, db.status, db.vehicle_type, db.vehicle_no, db.current_lat, db.current_lng, db.max_active_orders, u.name, u.phone, v.status AS vendor_status')
             ->join('users u', 'u.id = db.user_id', 'left')
+            ->join('vendors v', 'v.id = db.vendor_id', 'left')
             ->where('db.user_id', $userId)->where('db.deleted_at', null)
             ->get()->getRowArray();
 
