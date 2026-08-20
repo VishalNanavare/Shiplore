@@ -252,6 +252,27 @@ abstract class BaseVendorController extends BaseController
             return redirect()->to('login')->with('error', 'This login is not linked to a vendor account.');
         }
 
+        // Vendor status lifecycle phase 5. $this->vendor()['status'] was already being
+        // fetched by every caller of vendor()/vendorId() above and simply never checked
+        // — this is the one place it needs to be, since every Vendor\* controller
+        // action passes through here first. Covers owner + vendor-level staff + shop-
+        // level staff uniformly: all three resolve through the same vendor_staff table
+        // (VendorAccountRepository::findByOwnerUserId()/findStaffVendor()).
+        //
+        // session()->destroy(), not a bare redirect — mirroring WebAuthFilter's own
+        // inactive-account handling exactly. A redirect alone risks a loop: the login
+        // page still sees isLoggedIn=true with principal_type='vendor' and would send
+        // them straight back into this same guard via landingFor().
+        //
+        // Log-only by default; see VendorStatusGate. This runs unconditionally either
+        // way (cheap — no query, the row is already in hand) but only actually blocks
+        // once the operator has flipped vendor.enforceStatusGate.
+        if (service('vendorStatusGate')->shouldBlockForVendorStatus($this->vendor(), 'Vendor\\* panel login for user #' . session()->get('user_id'))) {
+            session()->destroy();
+
+            return redirect()->to('login')->with('error', 'This vendor account is not active. Please contact your administrator.');
+        }
+
         return null;
     }
 
