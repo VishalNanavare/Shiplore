@@ -78,7 +78,8 @@ trait MinimalSchema
 
     /**
      * database/sql/01_master.sql:380, gstin_status added by 12_gst_verification.sql:43,
-     * min_order_value/delivery_fee/free_delivery_above by 44_shop_delivery_rules.sql:7-9.
+     * min_order_value/delivery_fee/free_delivery_above by 44_shop_delivery_rules.sql:7-9,
+     * approval_status/approved_by/approved_at/rejected_reason by 85_shop_approval.sql.
      */
     protected function ensureShopsTable(): void
     {
@@ -90,6 +91,7 @@ trait MinimalSchema
             delivery_radius_km REAL, pickup_enabled INTEGER NOT NULL DEFAULT 0, prep_time_min INTEGER,
             min_order_value REAL NOT NULL DEFAULT 0, delivery_fee REAL NOT NULL DEFAULT 0, free_delivery_above REAL,
             status TEXT NOT NULL DEFAULT "active",
+            approval_status TEXT NOT NULL DEFAULT "not_required", approved_by INTEGER, approved_at TEXT, rejected_reason TEXT,
             created_at TEXT, updated_at TEXT, deleted_at TEXT
         )');
     }
