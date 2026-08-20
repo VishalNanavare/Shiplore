@@ -236,6 +236,19 @@ final class VendorController extends BaseController
                 ->where('v.id', (int) $vendor['id'])->where('m.status', 'active')->get()->getRowArray();
             $logoUuid        = $row['uuid'] ?? null;
             $commissionPlans = service('commissionRepository')->list('active');
+
+            // The select must never silently drop the vendor's current plan: if it was
+            // deactivated after being assigned, it won't be in the 'active' list, the
+            // <option> disappears, the browser defaults to "None", and saving the form
+            // for ANY unrelated reason then wipes commission_plan_id to NULL with no
+            // warning. Keep it visible (and selected) even once inactive.
+            $currentPlanId = (int) ($vendor['commission_plan_id'] ?? 0);
+            if ($currentPlanId > 0 && ! in_array($currentPlanId, array_column($commissionPlans, 'id'), true)) {
+                $current = service('commissionRepository')->findById($currentPlanId);
+                if ($current !== null) {
+                    $commissionPlans[] = $current;
+                }
+            }
         }
 
         return view('admin/vendors/form', [

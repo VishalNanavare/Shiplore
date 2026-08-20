@@ -35,7 +35,7 @@
                         <select name="commission_plan_id" class="form-select">
                             <option value="">None</option>
                             <?php foreach ($commissionPlans as $cp): ?>
-                                <option value="<?= esc($cp['id'], 'attr') ?>" <?= (int) ($vendor['commission_plan_id'] ?? 0) === (int) $cp['id'] ? 'selected' : '' ?>><?= esc($cp['name']) ?></option>
+                                <option value="<?= esc($cp['id'], 'attr') ?>" <?= (int) ($vendor['commission_plan_id'] ?? 0) === (int) $cp['id'] ? 'selected' : '' ?>><?= esc($cp['name']) ?><?= ($cp['status'] ?? 'active') !== 'active' ? ' (inactive)' : '' ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

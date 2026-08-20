@@ -75,6 +75,15 @@ final class VendorRepositoryUpdateFieldsTest extends CIUnitTestCase
 
     public function testBlankPanStateAndCommissionPlanAreStoredAsNull(): void
     {
+        // Pre-seed non-null values first — these columns already default to NULL on
+        // insert, so without this the assertions below would pass identically even if
+        // update() dropped pan/state_code/commission_plan_id from its write entirely
+        // (adversarial audit finding, 2026-08-20). Same fix pattern already applied to
+        // testPayoutCycleDefaultsToWeeklyWhenOmitted for the same reason.
+        Database::connect()->table('vendors')->where('id', $this->vendorId)->update([
+            'pan' => 'ZZZZZ0000Z', 'state_code' => 'DL', 'commission_plan_id' => 3, 'is_composition' => 1,
+        ]);
+
         (new VendorRepository())->update($this->vendorId, [
             'legal_name' => 'New Legal', 'display_name' => 'New Display', 'business_type_id' => 2,
             'pan' => '', 'state_code' => '', 'commission_plan_id' => 0,

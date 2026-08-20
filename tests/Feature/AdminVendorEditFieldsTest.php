@@ -86,9 +86,12 @@ final class AdminVendorEditFieldsTest extends CIUnitTestCase
     {
         $this->grant(['vendor.settings.manage']);
 
+        // Leading/trailing whitespace is deliberate: without it, trim() is a no-op on
+        // this fixture and could be deleted from the controller without this test
+        // noticing (adversarial audit finding, 2026-08-20).
         $this->submit([
             'legal_name' => 'Acme Pvt Ltd', 'display_name' => 'Acme', 'business_type_id' => '3',
-            'pan' => 'abcde1234f', 'state_code' => 'mh', 'commission_plan_id' => '7',
+            'pan' => ' abcde1234f ', 'state_code' => ' mh ', 'commission_plan_id' => '7',
             'payout_cycle' => 'monthly', 'is_composition' => '1',
         ]);
 
@@ -157,6 +160,48 @@ final class AdminVendorEditFieldsTest extends CIUnitTestCase
         $this->assertStringContainsString('Standard 10%', $html);
         $this->assertStringContainsString('name="payout_cycle"', $html);
         $this->assertStringContainsString('name="is_composition"', $html);
+    }
+
+    /**
+     * Adversarial audit finding (2026-08-20, sub-project B, high severity): form()
+     * only ever fetched commissionRepository->list('active'), so a vendor whose
+     * assigned plan was later deactivated would see no matching <option> — the
+     * select silently falls back to "None" with no visible warning, and re-saving
+     * the form for ANY unrelated reason (e.g. fixing a typo in legal_name) then
+     * wipes commission_plan_id to NULL. The fix must keep the vendor's currently
+     * assigned plan visible and selected even once it's no longer active.
+     */
+    public function testEditFormKeepsTheVendorsCurrentCommissionPlanSelectedEvenIfDeactivated(): void
+    {
+        $this->grant(['vendor.settings.manage']);
+        $this->repo->vendor += ['commission_plan_id' => 4];
+        Services::injectMock('commissionRepository', new class {
+            public function list(?string $status = null): array
+            {
+                // Plan 4 (the vendor's own) is deliberately NOT in the active list —
+                // simulates it having been deactivated after the vendor was assigned it.
+                return [['id' => 5, 'name' => 'Premium 5%', 'status' => 'active']];
+            }
+            public function findById(int $id): ?array
+            {
+                return $id === 4 ? ['id' => 4, 'name' => 'Standard 10% (legacy)', 'status' => 'inactive'] : null;
+            }
+        });
+        Services::injectMock('businessTypeRepository', new class {
+            public function list(?string $status = null): array { return [['id' => 2, 'name' => 'Retail']]; }
+        });
+        $this->ensureMediaAssetsTable();
+
+        $r    = $this->withSession($this->sess())->get('admin/vendors/501/edit');
+        $html = (string) $r->getBody();
+
+        $r->assertStatus(200);
+        $this->assertStringContainsString('Standard 10% (legacy)', $html, 'the vendor\'s current plan must still be listed even though it is inactive');
+        $this->assertMatchesRegularExpression(
+            '/<option value="4"[^>]*selected[^>]*>/',
+            $html,
+            'the vendor\'s current (inactive) plan must remain the selected option, not silently fall back to "None"'
+        );
     }
 
     public function testARepositoryUpdateFailureIsSurfacedAsAnError(): void
