@@ -69,7 +69,8 @@ final class ShopController extends BaseVendorController
             }
         }
 
-        $id = service('vendorShopRepository')->create($this->vendorId(), [
+        $repo = service('vendorShopRepository');
+        $id   = $repo->create($this->vendorId(), [
             'name'               => $name,
             'address'            => $this->request->getPost('address'),
             'area'               => $this->request->getPost('area'),
@@ -81,7 +82,17 @@ final class ShopController extends BaseVendorController
             'delivery_radius_km' => $radius,
         ], (int) session()->get('user_id'));
 
-        return redirect()->to('vendor/shops')->with($id ? 'success' : 'error', $id ? 'Shop added.' : 'Could not add the shop.');
+        if (! $id) {
+            return redirect()->to('vendor/shops')->with('error', 'Could not add the shop.');
+        }
+
+        // Shop approval, phase 3 — the vendor needs to know their new shop isn't live
+        // yet, or "Shop added." reads as done when it's actually the start of a review.
+        $pending = ($repo->findById($id, $this->vendorId())['approval_status'] ?? '') === 'pending';
+
+        return redirect()->to('vendor/shops')->with('success', $pending
+            ? 'Shop submitted for admin approval. It will go live once approved.'
+            : 'Shop added.');
     }
 
     public function show(int $id)
@@ -279,8 +290,20 @@ final class ShopController extends BaseVendorController
         }
 
         $repo = service('vendorShopRepository');
-        if ($repo->findById($id, $this->vendorId()) === null) {
+        $shop = $repo->findById($id, $this->vendorId());
+        if ($shop === null) {
             return redirect()->to('vendor/shops')->with('error', 'Shop not found.');
+        }
+
+        // Shop approval, phase 3. A 2nd+ shop awaiting (or refused) admin approval
+        // cannot be opened OR closed by the vendor — neither action makes sense before
+        // the gate resolves: opening would bypass the approval this whole feature
+        // exists to enforce, and closing a shop that was never live is meaningless.
+        // Once approved (or for a 'not_required' first shop) open/close work exactly as
+        // before. Checked before the emergency-close exception below on purpose — a
+        // pending shop has no "emergency" to ratify, only an approval to wait on.
+        if (in_array($shop['approval_status'] ?? 'not_required', ['pending', 'rejected'], true)) {
+            return redirect()->to('vendor/shops')->with('error', 'This shop is awaiting admin approval and cannot be opened or closed yet.');
         }
 
         // X3 (AR-08): online/offline status by non-permitted staff is a request.

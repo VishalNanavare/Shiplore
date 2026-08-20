@@ -92,7 +92,7 @@ trait MinimalSchema
             min_order_value REAL NOT NULL DEFAULT 0, delivery_fee REAL NOT NULL DEFAULT 0, free_delivery_above REAL,
             status TEXT NOT NULL DEFAULT "active",
             approval_status TEXT NOT NULL DEFAULT "not_required", approved_by INTEGER, approved_at TEXT, rejected_reason TEXT,
-            created_at TEXT, updated_at TEXT, deleted_at TEXT
+            created_by INTEGER, created_at TEXT, updated_at TEXT, deleted_at TEXT
         )');
     }
 

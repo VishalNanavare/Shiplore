@@ -73,6 +73,19 @@ final class VendorShopRepository
         $slug = strtoupper(substr((string) (preg_replace('/[^A-Za-z0-9]+/', '', $name) ?: 'SHOP'), 0, 6));
         $db   = Database::connect();
 
+        // Shop approval, phase 3. A vendor's FIRST shop (this repository's write path,
+        // OR RegistrationRepository::createVendorWithShop() at signup) goes live
+        // immediately, exactly as before. Every shop after it needs an admin's sign-off
+        // before it can go live: status='inactive' (already what every storefront/POS/
+        // vendor-status-gate consumer treats as not-live — no changes needed there) and
+        // approval_status='pending', flipped together to 'active'/'approved' only by
+        // Admin\ShopApprovalController::approve() (phase 4).
+        //
+        // Soft-deleted shops don't count: a vendor whose only shop was removed is
+        // effectively starting over, not adding a second shop.
+        $existingShops = $db->table('shops')->where('vendor_id', $vendorId)->where('deleted_at', null)->countAllResults();
+        $isFirstShop   = $existingShops === 0;
+
         $ok = $db->table('shops')->insert([
             'uuid'               => bin2hex(random_bytes(18)),
             'vendor_id'          => $vendorId,
@@ -84,7 +97,8 @@ final class VendorShopRepository
             'latitude'           => ($d['latitude'] ?? '') !== '' ? $d['latitude'] : 0,
             'longitude'          => ($d['longitude'] ?? '') !== '' ? $d['longitude'] : 0,
             'delivery_radius_km' => ($d['delivery_radius_km'] ?? '') !== '' ? $d['delivery_radius_km'] : null,
-            'status'             => 'active',
+            'status'             => $isFirstShop ? 'active' : 'inactive',
+            'approval_status'    => $isFirstShop ? 'not_required' : 'pending',
             'created_by'         => $actorId,
         ]);
 
