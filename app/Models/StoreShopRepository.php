@@ -18,14 +18,16 @@ final class StoreShopRepository
     /** @return list<array<string,mixed>> */
     public function nearby(?float $lat, ?float $lng, int $limit = 30): array
     {
+        // v.status selected alongside display name — same join, no extra query — so
+        // filterInactiveVendors() below can gate on it without a second round-trip.
         $qb = Database::connect()->table('shops s')
-            ->select('s.id, s.name, s.pincode, s.state_code, s.latitude, s.longitude, s.delivery_radius_km, s.prep_time_min, s.pickup_enabled, s.min_order_value, s.delivery_fee, s.free_delivery_above, v.display_name AS vendor, bt.name AS business_type')
+            ->select('s.id, s.name, s.pincode, s.state_code, s.latitude, s.longitude, s.delivery_radius_km, s.prep_time_min, s.pickup_enabled, s.min_order_value, s.delivery_fee, s.free_delivery_above, s.vendor_id, v.display_name AS vendor, v.status AS vendor_status, bt.name AS business_type')
             ->join('vendors v', 'v.id = s.vendor_id', 'left')
             ->join('business_types bt', 'bt.id = v.business_type_id', 'left')
             ->where('s.status', 'active')->where('s.deleted_at', null);
 
         if ($lat === null || $lng === null) {
-            return $qb->orderBy('s.name', 'ASC')->limit($limit)->get()->getResultArray();
+            return $this->filterInactiveVendors($qb->orderBy('s.name', 'ASC')->limit($limit)->get()->getResultArray(), 'nearby() without a location');
         }
 
         // Bounding box pre-filter (≈55 km radius) before the PHP Haversine loop, capped
@@ -57,6 +59,7 @@ final class StoreShopRepository
             ->orderBy($order, '', false)
             ->limit(max($limit * 5, 500))
             ->get()->getResultArray();
+        $shops = $this->filterInactiveVendors($shops, 'nearby() location-scoped bounding box');
 
         // The admin "Max delivery radius (km)" is always the outer cap: a NULL shop
         // radius means "use the admin max", and any shop radius is clamped to it.
@@ -125,16 +128,49 @@ final class StoreShopRepository
         return ($row && $row['max_val'] !== null) ? (float) $row['max_val'] : null;
     }
 
-    /** @return array<string,mixed>|null */
+    /**
+     * @return array<string,mixed>|null
+     *
+     * A direct/deep-linked URL used to render even a deactivated shop or one belonging
+     * to a deactivated vendor — this checked NEITHER status. Staged behind
+     * vendor.enforceStatusGate like every other call site in this file: log-only by
+     * default, so pulling this row out never silently changes production behaviour
+     * before the operator opts in.
+     */
     public function find(int $id): ?array
     {
         $row = Database::connect()->table('shops s')
-            ->select('s.*, v.display_name AS vendor, bt.name AS business_type, bt.code AS business_type_code')
+            ->select('s.*, v.display_name AS vendor, v.status AS vendor_status, bt.name AS business_type, bt.code AS business_type_code')
             ->join('vendors v', 'v.id = s.vendor_id', 'left')
             ->join('business_types bt', 'bt.id = v.business_type_id', 'left')
             ->where('s.id', $id)->where('s.deleted_at', null)
             ->get()->getRowArray();
 
-        return $row ?: null;
+        if ($row === null) {
+            return null;
+        }
+
+        $shop   = ['id' => $row['id'], 'status' => $row['status']];
+        $vendor = ['id' => $row['vendor_id'] ?? null, 'status' => $row['vendor_status'] ?? null];
+        if (service('vendorStatusGate')->shouldBlockForShopStatus($shop, $vendor, 'StoreShopRepository::find shop #' . $id)) {
+            return null;
+        }
+
+        return $row;
+    }
+
+    /**
+     * @param list<array<string,mixed>> $rows each carrying its own vendor_id/vendor_status
+     *        columns from the shared `v` join above — no second query needed.
+     *
+     * @return list<array<string,mixed>>
+     */
+    private function filterInactiveVendors(array $rows, string $context): array
+    {
+        return service('vendorStatusGate')->filterByVendorStatus(
+            $rows,
+            static fn (array $r): array => ['id' => $r['vendor_id'] ?? null, 'status' => $r['vendor_status'] ?? null],
+            'StoreShopRepository::' . $context,
+        );
     }
 }

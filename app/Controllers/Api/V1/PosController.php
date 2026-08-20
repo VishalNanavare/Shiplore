@@ -169,6 +169,13 @@ final class PosController extends BaseApiController
         if ($term === null || $term['status'] !== 'active') {
             return null;
         }
+        // Vendor status lifecycle phase 4 — every POS request funnels through this
+        // resolver (scan, sync, customers), so this one check covers all of them.
+        // Log-only by default; see VendorStatusGate.
+        $vendor = ['id' => $term['vendor_id'] ?? null, 'status' => $term['vendor_status'] ?? null];
+        if (service('vendorStatusGate')->shouldBlockForVendorStatus($vendor, 'PosController terminal #' . $id)) {
+            return null;
+        }
         if (! $this->scope()->isPlatform() && ! in_array((int) $term['vendor_id'], $this->callerVendorIds(), true)) {
             return null; // cross-tenant terminal — not the cashier's vendor
         }

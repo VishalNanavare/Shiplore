@@ -79,4 +79,88 @@ final class VendorStatusGate
 
         return $enforcing;
     }
+
+    /**
+     * The staged decision for a SHOP, covering both halves in one call: its own status
+     * AND its vendor's. For call sites (a direct shop page, the location-scoped nearby
+     * list) that need the combined answer rather than composing isShopActive()/
+     * shouldBlockForVendorStatus() themselves. Same flag, same log tags as the
+     * vendor-only decision — one gate, not two.
+     *
+     * @param array<string,mixed>|null $shop
+     * @param array<string,mixed>|null $vendor
+     */
+    public function shouldBlockForShopStatus(?array $shop, ?array $vendor, string $context): bool
+    {
+        if ($this->isShopActive($shop, $vendor)) {
+            return false;
+        }
+
+        $enforcing = $this->isEnforcing();
+        log_message(
+            $enforcing ? 'warning' : 'notice',
+            sprintf(
+                'vendor-status gate [%s]: shop #%s status="%s" vendor #%s status="%s" — %s',
+                $enforcing ? 'BLOCKED' : 'would block',
+                (string) ($shop['id'] ?? '?'),
+                (string) ($shop['status'] ?? '(none)'),
+                (string) ($vendor['id'] ?? '?'),
+                (string) ($vendor['status'] ?? '(none)'),
+                $context,
+            ),
+        );
+
+        return $enforcing;
+    }
+
+    /**
+     * The bulk equivalent, for LISTING call sites — nearby() can return up to 500 rows
+     * per call, the catalog far more. Logging per row there would flood the log file on
+     * a routine storefront page view, so this logs ONCE per call, aggregated with a
+     * count, not once per excluded row. Log-only keeps every row (nothing is actually
+     * filtered yet); enforcing drops the inactive ones.
+     *
+     * @param list<array<string,mixed>>                                 $rows
+     * @param callable(array<string,mixed>):(array<string,mixed>|null)  $vendorOf maps a
+     *        row to its vendor's ['id'=>...,'status'=>...] (or null)
+     *
+     * @return list<array<string,mixed>>
+     */
+    public function filterByVendorStatus(array $rows, callable $vendorOf, string $context): array
+    {
+        if ($rows === []) {
+            return $rows;
+        }
+
+        $enforcing = $this->isEnforcing();
+        $kept      = [];
+        $excluded  = 0;
+
+        foreach ($rows as $row) {
+            if ($this->isVendorActive($vendorOf($row))) {
+                $kept[] = $row;
+
+                continue;
+            }
+            $excluded++;
+            if (! $enforcing) {
+                $kept[] = $row;
+            }
+        }
+
+        if ($excluded > 0) {
+            log_message(
+                $enforcing ? 'warning' : 'notice',
+                sprintf(
+                    'vendor-status gate [%s]: %d of %d rows excluded for inactive vendors — %s',
+                    $enforcing ? 'BLOCKED' : 'would block',
+                    $excluded,
+                    count($rows),
+                    $context,
+                ),
+            );
+        }
+
+        return $kept;
+    }
 }

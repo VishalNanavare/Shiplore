@@ -45,15 +45,13 @@ final class ManufacturerPosSaleTest extends CIUnitTestCase
         $this->ensureUsersTable();
 
         $db = $this->schemaConn();
-        $db->query('CREATE TABLE IF NOT EXISTS db_products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, vendor_id INTEGER NOT NULL, title TEXT,
-            category_id INTEGER, tax_class_id INTEGER, hsn_id INTEGER,
-            status TEXT NOT NULL DEFAULT "draft", deleted_at TEXT
-        )');
-        $db->query('CREATE TABLE IF NOT EXISTS db_product_variants (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER NOT NULL, sku TEXT,
-            is_default INTEGER NOT NULL DEFAULT 0, making_price REAL, base_price REAL, deleted_at TEXT
-        )');
+        // Shared fixture, not a bespoke CREATE TABLE — this file's own narrower version
+        // used to win the CREATE TABLE IF NOT EXISTS race under --order-by=random
+        // against a different file's WIDER products table, locking this file's process
+        // into a schema missing columns the other file needed. See MinimalSchema's own
+        // comment on ensureProductsTable().
+        $this->ensureProductsTable();
+        $this->ensureProductVariantsTable();
         $db->query('CREATE TABLE IF NOT EXISTS db_product_mshops (
             id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER NOT NULL, mshop_id INTEGER NOT NULL,
             status TEXT NOT NULL DEFAULT "active", UNIQUE(product_id, mshop_id)

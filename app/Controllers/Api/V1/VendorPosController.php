@@ -258,6 +258,11 @@ final class VendorPosController extends BaseApiController
         if ($vendor === null) {
             return $this->failWith('FORBIDDEN', 'This account is not a vendor owner.');
         }
+        // Vendor status lifecycle phase 4. A deactivated vendor's shops must not be
+        // offered for POS installation. Log-only by default; see VendorStatusGate.
+        if (service('vendorStatusGate')->shouldBlockForVendorStatus($vendor, 'VendorPosController::shops')) {
+            return $this->failWith('FORBIDDEN', 'This account is not a vendor owner.');
+        }
 
         $rows = \Config\Database::connect()
             ->table('shops')

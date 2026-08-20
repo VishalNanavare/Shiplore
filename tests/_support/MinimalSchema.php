@@ -54,15 +54,41 @@ trait MinimalSchema
         )');
     }
 
-    /** database/sql/01_master.sql:380, gstin_status added by 12_gst_verification.sql:43 */
+    /** database/sql/06_sync.sql:9 */
+    protected function ensurePosTerminalsTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_pos_terminals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, shop_id INTEGER NOT NULL, vendor_id INTEGER NOT NULL, name TEXT NOT NULL,
+            device_fingerprint TEXT, invoice_prefix TEXT NOT NULL, activation_code TEXT,
+            status TEXT NOT NULL DEFAULT "inactive",
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /** database/sql/13_business_type_commission.sql:12 */
+    protected function ensureBusinessTypesTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_business_types (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, code TEXT, name TEXT NOT NULL, slug TEXT,
+            status TEXT NOT NULL DEFAULT "active"
+        )');
+    }
+
+    /**
+     * database/sql/01_master.sql:380, gstin_status added by 12_gst_verification.sql:43,
+     * min_order_value/delivery_fee/free_delivery_above by 44_shop_delivery_rules.sql:7-9.
+     */
     protected function ensureShopsTable(): void
     {
         $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_shops (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            uuid TEXT, vendor_id INTEGER, name TEXT NOT NULL, code TEXT,
+            uuid TEXT, vendor_id INTEGER, name TEXT NOT NULL, code TEXT, address_json TEXT NOT NULL DEFAULT "{}",
             gstin TEXT, gstin_verified_at TEXT, gstin_status TEXT NOT NULL DEFAULT "unverified",
             pincode TEXT, state_code TEXT, latitude REAL, longitude REAL,
             delivery_radius_km REAL, pickup_enabled INTEGER NOT NULL DEFAULT 0, prep_time_min INTEGER,
+            min_order_value REAL NOT NULL DEFAULT 0, delivery_fee REAL NOT NULL DEFAULT 0, free_delivery_above REAL,
             status TEXT NOT NULL DEFAULT "active",
             created_at TEXT, updated_at TEXT, deleted_at TEXT
         )');
@@ -452,8 +478,70 @@ trait MinimalSchema
         $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_categories (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             uuid TEXT, parent_id INTEGER, name TEXT NOT NULL, slug TEXT NOT NULL,
-            path TEXT NOT NULL, level INTEGER NOT NULL DEFAULT 0,
+            path TEXT NOT NULL, level INTEGER NOT NULL DEFAULT 0, sort_order INTEGER NOT NULL DEFAULT 0,
             status TEXT NOT NULL DEFAULT "active",
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /**
+     * database/sql/01_master.sql:684, product_type/visibility/available_from/
+     * available_to added by 16_product_module.sql:40-64.
+     */
+    /**
+     * `products`/`product_variants` are shared across SIX test files that each used to
+     * carry their own bespoke, mutually-incompatible CREATE TABLE IF NOT EXISTS —
+     * StoreCatalogRepositoryVendorStatusTest, ManufacturerPosSaleTest,
+     * ManufacturerComboTest, ManufacturerInventoryServiceTest,
+     * ManufacturerProductRepositoryTest, ManufacturerProductMshopTest. Whichever ran
+     * first under --order-by=random won the race and silently locked every OTHER file
+     * into its own narrower schema for the rest of the process — this is not
+     * hypothetical, it broke three different files across three separate randomised
+     * runs while this phase was being built. Columns here are the UNION of every
+     * column ANY of the six references by name in a raw INSERT (missing a column a
+     * file's INSERT names is fatal — "no such column" — even though the row it fills
+     * with is otherwise unrelated to that file's own assertions), and every column is
+     * nullable or DEFAULTed unless every caller always supplies it (vendor_id,
+     * product_id): NOT NULL with no default is the one thing that turns "another
+     * file's fixture ran first" into a hard failure for a column THIS file never
+     * touches. The four Manufacturer* files above still carry their own local
+     * CREATE TABLE IF NOT EXISTS calls (harmless — a no-op once this version exists);
+     * only ManufacturerPosSaleTest and this repository's own test call these directly.
+     * base_unit_id and unit_id are BOTH kept as separate columns rather than
+     * reconciled to one name — Combo's fixture calls it unit_id, Mshop's calls it
+     * base_unit_id (the real schema's actual name, 01_master.sql:692); resolving which
+     * one is a naming slip in a file this work did not otherwise touch is out of scope.
+     */
+    protected function ensureProductsTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, vendor_id INTEGER NOT NULL, category_id INTEGER, brand_id INTEGER,
+            tax_class_id INTEGER, hsn_id INTEGER, unit_id INTEGER, base_unit_id INTEGER,
+            title TEXT, slug TEXT, description TEXT,
+            is_online_enabled INTEGER NOT NULL DEFAULT 1,
+            is_pos_enabled INTEGER NOT NULL DEFAULT 1,
+            status TEXT NOT NULL DEFAULT "draft",
+            product_type TEXT NOT NULL DEFAULT "simple",
+            combo_inventory_mode TEXT,
+            visibility TEXT NOT NULL DEFAULT "public",
+            available_from TEXT, available_to TEXT,
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /** database/sql/01_master.sql:730; making_price added by 70_manufacturer.sql for the factory-outlet POS. */
+    protected function ensureProductVariantsTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_product_variants (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, product_id INTEGER NOT NULL, vendor_id INTEGER, unit_id INTEGER,
+            sku TEXT, barcode TEXT, mrp REAL NOT NULL DEFAULT 0, base_price REAL NOT NULL DEFAULT 0,
+            making_price REAL,
+            is_default INTEGER NOT NULL DEFAULT 0,
+            status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, updated_by INTEGER,
             created_at TEXT, updated_at TEXT, deleted_at TEXT
         )');
     }

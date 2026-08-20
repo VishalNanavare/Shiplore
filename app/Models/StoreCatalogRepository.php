@@ -134,6 +134,14 @@ final class StoreCatalogRepository
             // No `vendors` join here — this query stays join-free so the covering
             // index can serve it — so exclude manufacturers with the EXISTS form.
             ->where(self::NOT_MANUFACTURER_EXISTS, null, false);
+        // Vendor status lifecycle phase 4, join-free EXISTS form to match — the
+        // shop-scoped branch below inherits correctness from nearbyShopIds()'s
+        // already-filtered shop_ids (same reasoning as applyFilters()'s product_shops
+        // EXISTS); only THIS global/unscoped branch has no upstream filtering to rely
+        // on. Log-only: omitted entirely while off, same reasoning as applyVendorStatusGate().
+        if (service('vendorStatusGate')->isEnforcing()) {
+            $cntQ->where(self::VENDOR_ACTIVE_EXISTS, null, false);
+        }
         if (array_key_exists('shop_ids', $opts)) {
             $ids = array_values(array_filter(array_map('intval', (array) $opts['shop_ids'])));
             $in  = implode(',', $ids ?: [0]);
@@ -187,6 +195,14 @@ final class StoreCatalogRepository
      * stays join-free so it can be served by the covering index.
      */
     private const NOT_MANUFACTURER_EXISTS = "NOT EXISTS (SELECT 1 FROM vendors mv WHERE mv.id = p.vendor_id AND mv.party_type = 'manufacturer')";
+
+    /**
+     * Vendor status lifecycle phase 4's join-free form, for the same join-free query
+     * sites NOT_MANUFACTURER_EXISTS covers (computeTree()'s global branch,
+     * publishedTitle()). Deliberately unprefixed, matching NOT_MANUFACTURER_EXISTS
+     * exactly — see this file's own test class for why.
+     */
+    private const VENDOR_ACTIVE_EXISTS = "EXISTS (SELECT 1 FROM vendors va WHERE va.id = p.vendor_id AND va.status = 'active')";
 
     /**
      * Browse published products.
@@ -307,13 +323,15 @@ final class StoreCatalogRepository
     {
         $from = $idxHint !== '' ? "products p $idxHint" : 'products p';
 
-        return Database::connect()->table($from)
+        $b = Database::connect()->table($from)
             ->join('categories c', 'c.id = p.category_id', 'left')
             ->join('vendors v', 'v.id = p.vendor_id', 'left')
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
             ->where('p.status', 'published')->where('p.deleted_at', null)
             ->where(self::NOT_HOTEL, null, false)    // hotels are out of the storefront/order process
             ->where(self::NOT_MANUFACTURER, null, false); // manufacturers are B2B-only (monline)
+
+        return $this->applyVendorStatusGate($b);
     }
 
     /**
@@ -411,13 +429,34 @@ final class StoreCatalogRepository
     {
         $from = $idxHint !== '' ? "products p $idxHint" : 'products p';
 
-        return Database::connect()->table($from)
+        $b = Database::connect()->table($from)
             ->join('categories c', 'c.id = p.category_id', 'left')
             ->join('vendors v', 'v.id = p.vendor_id', 'left')
             ->join('product_variants pv', 'pv.product_id = p.id AND pv.is_default = 1', 'left')
             ->where('p.status', 'published')->where('p.deleted_at', null)
             ->where(self::NOT_HOTEL, null, false)    // hotels excluded from storefront
             ->where(self::NOT_MANUFACTURER, null, false); // manufacturers are B2B-only (monline)
+
+        return $this->applyVendorStatusGate($b);
+    }
+
+    /**
+     * Vendor status lifecycle, phase 4 — staged behind vendor.enforceStatusGate like
+     * every other call site in this build. Log-only by default: the WHERE clause is
+     * simply not added, and (deliberately, see this file's class-level test) NOT
+     * logged per request — this backs the highest-volume query in the app (up to
+     * ~960K products), and computing an accurate "would exclude" count would need a
+     * second query on every storefront page view. The `vendors v` join already exists
+     * here for NOT_MANUFACTURER and the display name, so once enforcing this costs one
+     * extra WHERE on an already-present, already-indexed column (idx_vendors_status).
+     */
+    private function applyVendorStatusGate(object $b): object
+    {
+        if (service('vendorStatusGate')->isEnforcing()) {
+            $b->where('v.status', 'active');
+        }
+
+        return $b;
     }
 
     /**
@@ -622,15 +661,24 @@ final class StoreCatalogRepository
      */
     public function publishedTitle(int $productId): ?string
     {
-        $row = Database::connect()->table('products p')
+        $q = Database::connect()->table('products p')
             ->select('p.title')
             ->join('categories c', 'c.id = p.category_id', 'left')
             ->where('p.id', $productId)->where('p.status', 'published')->where('p.deleted_at', null)
             ->where('p.is_online_enabled', 1)
             ->whereIn('p.visibility', ['public', 'logged_in'])
             ->where(self::NOT_HOTEL, null, false)
-            ->where(self::NOT_MANUFACTURER_EXISTS, null, false)
-            ->get()->getRowArray();
+            ->where(self::NOT_MANUFACTURER_EXISTS, null, false);
+
+        // Vendor status lifecycle phase 4 — this guards the quick-add-to-cart endpoint,
+        // a single-row lookup fired on every add-to-cart click, not a bulk listing, so
+        // the same log-only-with-no-per-request-logging reasoning as computeTree()'s
+        // global branch applies.
+        if (service('vendorStatusGate')->isEnforcing()) {
+            $q->where(self::VENDOR_ACTIVE_EXISTS, null, false);
+        }
+
+        $row = $q->get()->getRowArray();
 
         return $row['title'] ?? null;
     }

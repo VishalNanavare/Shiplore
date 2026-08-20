@@ -154,6 +154,122 @@ final class VendorStatusGateTest extends CIUnitTestCase
         $this->assertStringContainsString('WARNING -', $tail, 'enforcing must use warning level, not notice');
     }
 
+    // ------------------------------------------------------- the shop-level staged decision
+
+    /**
+     * shouldBlockForShopStatus() covers BOTH halves in one call — for call sites (a
+     * direct shop page, the location-scoped nearby list) that need the combined answer
+     * rather than composing isShopActive()/shouldBlockForVendorStatus() themselves.
+     * Same flag, same log tags — one gate, not two.
+     */
+    public function testAFullyActiveShopIsNeverBlocked(): void
+    {
+        $gate = new VendorStatusGate();
+        putenv('vendor.enforceStatusGate=true');
+
+        $this->assertFalse($gate->shouldBlockForShopStatus(['id' => 1, 'status' => 'active'], ['id' => 9, 'status' => 'active'], 'unit test'));
+    }
+
+    public function testByDefaultAnInactiveShopIsLoggedButNotBlocked(): void
+    {
+        $gate = new VendorStatusGate();
+
+        $this->assertFalse($gate->shouldBlockForShopStatus(['id' => 1, 'status' => 'inactive'], ['id' => 9, 'status' => 'active'], 'unit test'));
+    }
+
+    public function testWithTheFlagSetAnInactiveShopIsBlocked(): void
+    {
+        putenv('vendor.enforceStatusGate=true');
+
+        $this->assertTrue((new VendorStatusGate())->shouldBlockForShopStatus(['id' => 1, 'status' => 'inactive'], ['id' => 9, 'status' => 'active'], 'unit test'));
+    }
+
+    /** The shop can be perfectly active and still blocked, purely on its vendor. */
+    public function testAnActiveShopIsStillBlockedWhenItsVendorIsNot(): void
+    {
+        putenv('vendor.enforceStatusGate=true');
+
+        $this->assertTrue((new VendorStatusGate())->shouldBlockForShopStatus(['id' => 1, 'status' => 'active'], ['id' => 9, 'status' => 'suspended'], 'unit test'));
+    }
+
+    public function testTheShopContextLabelAppearsInTheLogLine(): void
+    {
+        $log = ROOTPATH . 'writable/logs/log-' . date('Y-m-d') . '.log';
+        $before = is_file($log) ? filesize($log) : 0;
+
+        (new VendorStatusGate())->shouldBlockForShopStatus(['id' => 55, 'status' => 'inactive'], ['id' => 9, 'status' => 'active'], 'UNIQUE-MARKER-shop-page');
+
+        $tail = substr((string) file_get_contents($log), $before);
+        $this->assertStringContainsString('UNIQUE-MARKER-shop-page', $tail);
+        $this->assertStringContainsString('shop #55', $tail, 'must identify WHICH shop, not just the vendor');
+    }
+
+    // ------------------------------------------------------- bulk filtering
+
+    /**
+     * filterByVendorStatus() is for LISTING call sites — nearby() can return up to 500
+     * rows per call, the catalog far more. Logging per row there would flood the log
+     * file on a routine storefront page view, so this logs ONCE per call, aggregated,
+     * not once per excluded row.
+     */
+    public function testAnEmptyListReturnsEmptyAndLogsNothing(): void
+    {
+        $log = ROOTPATH . 'writable/logs/log-' . date('Y-m-d') . '.log';
+        $before = is_file($log) ? filesize($log) : 0;
+
+        $out = (new VendorStatusGate())->filterByVendorStatus([], static fn ($r) => null, 'UNIQUE-MARKER-empty');
+
+        $this->assertSame([], $out);
+        $tail = is_file($log) ? substr((string) file_get_contents($log), $before) : '';
+        $this->assertStringNotContainsString('UNIQUE-MARKER-empty', $tail);
+    }
+
+    public function testAllRowsFromActiveVendorsPassThroughUnchangedAndLogNothing(): void
+    {
+        $log = ROOTPATH . 'writable/logs/log-' . date('Y-m-d') . '.log';
+        $before = is_file($log) ? filesize($log) : 0;
+        $rows = [['v' => 'active'], ['v' => 'active']];
+
+        $out = (new VendorStatusGate())->filterByVendorStatus($rows, static fn ($r) => ['status' => $r['v']], 'UNIQUE-MARKER-all-active');
+
+        $this->assertSame($rows, $out);
+        $tail = is_file($log) ? substr((string) file_get_contents($log), $before) : '';
+        $this->assertStringNotContainsString('UNIQUE-MARKER-all-active', $tail, 'nothing excluded, nothing to log');
+    }
+
+    public function testByDefaultInactiveVendorRowsAreKeptButLogged(): void
+    {
+        $rows = [['id' => 1, 'v' => 'active'], ['id' => 2, 'v' => 'suspended'], ['id' => 3, 'v' => 'suspended']];
+
+        $out = (new VendorStatusGate())->filterByVendorStatus($rows, static fn ($r) => ['status' => $r['v']], 'unit test');
+
+        $this->assertSame($rows, $out, 'log-only must not remove anything');
+    }
+
+    public function testWithTheFlagSetInactiveVendorRowsAreRemoved(): void
+    {
+        putenv('vendor.enforceStatusGate=true');
+        $rows = [['id' => 1, 'v' => 'active'], ['id' => 2, 'v' => 'suspended'], ['id' => 3, 'v' => 'active']];
+
+        $out = (new VendorStatusGate())->filterByVendorStatus($rows, static fn ($r) => ['status' => $r['v']], 'unit test');
+
+        $this->assertSame([['id' => 1, 'v' => 'active'], ['id' => 3, 'v' => 'active']], array_values($out));
+    }
+
+    /** ONE log line for the whole batch, carrying the count — not one per excluded row. */
+    public function testExcludedRowsProduceExactlyOneAggregateLogLine(): void
+    {
+        $log = ROOTPATH . 'writable/logs/log-' . date('Y-m-d') . '.log';
+        $before = is_file($log) ? filesize($log) : 0;
+        $rows = array_fill(0, 50, ['v' => 'suspended']);
+
+        (new VendorStatusGate())->filterByVendorStatus($rows, static fn ($r) => ['status' => $r['v']], 'UNIQUE-MARKER-bulk-50');
+
+        $tail = substr((string) file_get_contents($log), $before);
+        $this->assertSame(1, substr_count($tail, 'UNIQUE-MARKER-bulk-50'), '50 excluded rows must produce exactly one log line, not 50');
+        $this->assertStringContainsString('50', $tail, 'the count itself must be in the line');
+    }
+
     /** An operational vendor logs nothing at all — the log must stay signal, not noise. */
     public function testAnOperationalVendorProducesNoLogLine(): void
     {

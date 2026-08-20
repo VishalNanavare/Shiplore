@@ -58,9 +58,14 @@ final class PosSyncRepository
     /** @return array<string,mixed>|null */
     public function terminal(int $terminalId): ?array
     {
-        $row = Database::connect()->table('pos_terminals')
-            ->select('id, shop_id, vendor_id, name, invoice_prefix, status')
-            ->where('id', $terminalId)->where('deleted_at', null)
+        // v.status selected alongside — an internal lookup only (never serialized to
+        // the client as-is), so adding a column here does not touch the frozen POS
+        // response shape. Lets PosController::terminal() gate on vendor status without
+        // a second query.
+        $row = Database::connect()->table('pos_terminals pt')
+            ->select('pt.id, pt.shop_id, pt.vendor_id, pt.name, pt.invoice_prefix, pt.status, v.status AS vendor_status')
+            ->join('vendors v', 'v.id = pt.vendor_id', 'left')
+            ->where('pt.id', $terminalId)->where('pt.deleted_at', null)
             ->get()->getRowArray();
 
         return $row ?: null;
