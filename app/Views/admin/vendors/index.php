@@ -83,18 +83,12 @@ $mk       = static fn (int $n) => site_url('admin/vendors') . '?' . http_build_q
                             <a href="<?= site_url('admin/vendors/' . $v['id'] . '/edit') ?>" class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
                             <a href="<?= site_url('admin/vendors/' . $v['id'] . '/documents') ?>" class="btn btn-sm btn-outline-secondary" title="KYC documents"><i class="bi bi-file-earmark-text"></i></a>
                             <a href="<?= site_url('admin/vendors/' . $v['id'] . '/statement') ?>" class="btn btn-sm btn-outline-secondary" title="Financial statement"><i class="bi bi-receipt"></i></a>
-                            <form method="post" action="<?= site_url('admin/vendors/' . $v['id'] . '/approve') ?>" class="d-inline">
-                                <?= csrf_field() ?>
-                                <button class="btn btn-sm btn-success" <?= in_array($v['status'], ['approved', 'active'], true) ? 'disabled' : '' ?>>
-                                    <i class="bi bi-check2"></i> Approve
-                                </button>
-                            </form>
-                            <form method="post" action="<?= site_url('admin/vendors/' . $v['id'] . '/reject') ?>" class="d-inline">
-                                <?= csrf_field() ?>
-                                <button class="btn btn-sm btn-outline-danger" <?= $v['status'] === 'rejected' ? 'disabled' : '' ?>>
-                                    <i class="bi bi-x"></i> Reject
-                                </button>
-                            </form>
+                            <?php // Approve/Reject moved to the dedicated "Pending Approval → Vendor
+                                  // Approval" queue (admin/vendor-approvals) — this list no longer shows
+                                  // them at all, regardless of status, so there is no disabled-state logic
+                                  // left to get wrong here (Reject used to stay clickable on an
+                                  // already-approved vendor; the queue's own query only ever lists
+                                  // submitted/under_review rows, so the question does not arise there). ?>
                             <?php // 'terminated' has no button here at all — VendorController refuses both
                                   // directions server-side for it; a disabled button that still POSTs
                                   // wrong would be worse than none. ?>

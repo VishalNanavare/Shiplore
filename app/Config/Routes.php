@@ -203,6 +203,7 @@ $routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']
     // Vendor management
     $routes->get('vendors', 'Admin\VendorController::index');
     $routes->get('vendors/new', 'Admin\VendorController::new');
+    $routes->get('vendor-approvals', 'Admin\VendorApprovalController::index');
     $routes->get('vendors/(:num)', 'Admin\VendorController::show/$1');
     $routes->post('vendors/store', 'Admin\VendorController::store', ['filter' => 'csrf']);
     $routes->get('vendors/(:num)/edit', 'Admin\VendorController::edit/$1');

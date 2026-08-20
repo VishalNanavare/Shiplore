@@ -2,6 +2,9 @@
 $active = $active ?? '';
 // [slug, label, icon, url-path]
 $groups = [
+    ['Pending Approval', 'bi-hourglass-split', [
+        ['vendor-approvals', 'Vendor Approval', 'bi-person-check', 'admin/vendor-approvals'],
+    ]],
     ['Marketplace', 'bi-shop', [
         ['vendors', 'Vendors', 'bi-shop', 'admin/vendors'],
         ['manufacturers', 'Manufacturers', 'bi-building', 'admin/manufacturers'],

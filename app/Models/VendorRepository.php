@@ -71,7 +71,9 @@ final class VendorRepository
     private function applyVendorFilters(object $b, array $f): void
     {
         if (! empty($f['status'])) {
-            $b->where('v.status', $f['status']);
+            // The approval queue passes an array (pending = submitted + under_review);
+            // every existing caller passes a single string — both must keep working.
+            is_array($f['status']) ? $b->whereIn('v.status', $f['status']) : $b->where('v.status', $f['status']);
         }
         // Manufacturers live in this same table under party_type='manufacturer'. Admin
         // screens must say which they want, or the two seller kinds mix silently.
