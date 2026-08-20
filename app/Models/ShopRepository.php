@@ -45,7 +45,7 @@ final class ShopRepository
     private function baseQuery(): object
     {
         return Database::connect()->table('shops s')
-            ->select('s.id, s.name, s.code, s.pincode, s.state_code, s.gstin_status, s.status, s.created_at, v.display_name AS vendor')
+            ->select('s.id, s.name, s.code, s.pincode, s.state_code, s.gstin_status, s.status, s.approval_status, s.created_at, v.display_name AS vendor, v.id AS vendor_id')
             ->join('vendors v', 'v.id = s.vendor_id', 'left')
             ->where('s.deleted_at', null)
             ->orderBy('s.created_at', 'DESC');
@@ -56,6 +56,12 @@ final class ShopRepository
     {
         if (! empty($f['status'])) {
             $b->where('s.status', $f['status']);
+        }
+        // Shop approval, phase 4 — the "Pending Approval → Shop Approval" queue's own
+        // filter, separate from 'status' (open/close/active/inactive is a different
+        // axis from the approval gate — see 85_shop_approval.sql).
+        if (! empty($f['approval_status'])) {
+            $b->where('s.approval_status', $f['approval_status']);
         }
         if (isset($f['q']) && $f['q'] !== '') {
             $q = $f['q'];
@@ -83,6 +89,51 @@ final class ShopRepository
         }
 
         return $ok;
+    }
+
+    /**
+     * Shop approval, phase 4. Flips status AND approval_status together — this IS the
+     * shop's first go-live, so it needs the same facet-cache invalidation
+     * updateStatus() triggers for any other status change. Scoped to
+     * approval_status='pending' in the WHERE itself, not just checked beforehand: a
+     * double-click or a stale queue page cannot re-approve an already-decided shop.
+     */
+    public function approve(int $id, ?int $actorId = null): bool
+    {
+        // update()'s own boolean return is "the SQL executed", true even when the WHERE
+        // matched zero rows — affectedRows() is what actually says whether THIS shop
+        // was pending and got approved, which is what "already decided" needs to refuse.
+        $db = Database::connect();
+        $db->table('shops')
+            ->where('id', $id)->where('deleted_at', null)->where('approval_status', 'pending')
+            ->update([
+                'status' => 'active', 'approval_status' => 'approved',
+                'approved_by' => $actorId, 'approved_at' => date('Y-m-d H:i:s'), 'updated_by' => $actorId,
+            ]);
+        $ok = $db->affectedRows() > 0;
+        if ($ok) {
+            service('facetCache')->invalidate();
+        }
+
+        return $ok;
+    }
+
+    /**
+     * Leaves status exactly where it is (inactive) — a rejected shop was never live and
+     * must not become live. No facet-cache invalidation: nothing storefront-visible
+     * changed. Same pending-only scoping as approve(), for the same reason.
+     */
+    public function reject(int $id, ?int $actorId = null, ?string $reason = null): bool
+    {
+        $db = Database::connect();
+        $db->table('shops')
+            ->where('id', $id)->where('deleted_at', null)->where('approval_status', 'pending')
+            ->update([
+                'approval_status' => 'rejected', 'rejected_reason' => $reason,
+                'approved_by' => $actorId, 'approved_at' => date('Y-m-d H:i:s'), 'updated_by' => $actorId,
+            ]);
+
+        return $db->affectedRows() > 0;
     }
 
     /** @return list<array<string,mixed>> Vendors for the shop-create select. */

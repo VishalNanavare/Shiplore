@@ -243,6 +243,9 @@ $routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']
     $routes->post('shops/(:num)/update', 'Admin\ShopController::update/$1', ['filter' => 'csrf']);
     $routes->post('shops/(:num)/activate', 'Admin\ShopController::activate/$1', ['filter' => 'csrf']);
     $routes->post('shops/(:num)/deactivate', 'Admin\ShopController::deactivate/$1', ['filter' => 'csrf']);
+    $routes->get('shop-approvals', 'Admin\ShopApprovalController::index');
+    $routes->post('shop-approvals/(:num)/approve', 'Admin\ShopApprovalController::approve/$1', ['filter' => 'csrf']);
+    $routes->post('shop-approvals/(:num)/reject', 'Admin\ShopApprovalController::reject/$1', ['filter' => 'csrf']);
 
     // Product approvals
     $routes->get('product-approvals', 'Admin\ProductApprovalController::index');

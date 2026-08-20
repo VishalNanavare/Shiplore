@@ -4,6 +4,7 @@ $active = $active ?? '';
 $groups = [
     ['Pending Approval', 'bi-hourglass-split', [
         ['vendor-approvals', 'Vendor Approval', 'bi-person-check', 'admin/vendor-approvals'],
+        ['shop-approvals', 'Shop Approval', 'bi-shop-window', 'admin/shop-approvals'],
     ]],
     ['Marketplace', 'bi-shop', [
         ['vendors', 'Vendors', 'bi-shop', 'admin/vendors'],
