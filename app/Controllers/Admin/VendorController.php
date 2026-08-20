@@ -291,6 +291,57 @@ final class VendorController extends BaseController
         return $this->transition($id, 'vendor.reject', 'rejected', 'Vendor rejected.');
     }
 
+    /**
+     * Vendor status lifecycle, phase 2 (schema fix in
+     * database/sql/84_vendor_status_lifecycle.sql was phase 1). Writes ONLY
+     * vendors.status — nothing yet reads it for storefront/API visibility or login
+     * gating, so this pair is safe standalone. The gate, once it lands, will read this
+     * exact value: 'active' means operational, anything else does not.
+     */
+    public function activate(int $id): RedirectResponse
+    {
+        if ($denied = $this->guard('vendor.activate')) {
+            return $denied;
+        }
+        if ($blocked = $this->refuseIfTerminated($id)) {
+            return $blocked;
+        }
+
+        return $this->transition($id, 'vendor.activate', 'active', 'Vendor activated.');
+    }
+
+    /**
+     * Writes 'suspended', deliberately NOT 'terminated'. 'terminated' already exists,
+     * already blocks admin impersonation (PortalController::enterVendor/enterShop), and
+     * reinstating from it is meant to stay a separate, more deliberate action — not a
+     * side effect of this simple, reversible toggle.
+     */
+    public function deactivate(int $id): RedirectResponse
+    {
+        if ($denied = $this->guard('vendor.deactivate')) {
+            return $denied;
+        }
+        if ($blocked = $this->refuseIfTerminated($id)) {
+            return $blocked;
+        }
+
+        return $this->transition($id, 'vendor.deactivate', 'suspended', 'Vendor deactivated.');
+    }
+
+    /**
+     * 'terminated' is out of reach of activate/deactivate in both directions. Checked
+     * server-side, not left to a hidden button — a hidden button is not a guard.
+     */
+    private function refuseIfTerminated(int $id): ?RedirectResponse
+    {
+        $vendor = service('vendorRepository')->findById($id);
+        if (($vendor['status'] ?? '') === 'terminated') {
+            return redirect()->to('admin/vendors')->with('error', 'This vendor is terminated. Activate/Deactivate do not apply — terminated is a separate, final state.');
+        }
+
+        return null;
+    }
+
     /** Admin view of a vendor's uploaded KYC documents (previously vendor-only). */
     public function documents(int $id)
     {

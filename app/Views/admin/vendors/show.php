@@ -34,6 +34,22 @@ $m = $metrics ?? [];
             <form method="post" action="<?= site_url('admin/vendors/' . $vendor['id'] . '/approve') ?>" class="m-0"><?= csrf_field() ?><button class="btn btn-sm btn-success"><i class="bi bi-check2 me-1"></i>Approve</button></form>
             <form method="post" action="<?= site_url('admin/vendors/' . $vendor['id'] . '/reject') ?>" class="m-0"><?= csrf_field() ?><button class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg me-1"></i>Reject</button></form>
         <?php endif; ?>
+        <?php // No button at all for 'terminated' — the controller refuses both directions
+              // for it server-side; a button that POSTs to a guaranteed no-op is worse than
+              // none. Shown for every other status, including draft/submitted/under_review —
+              // an admin can activate straight from onboarding without waiting on approve first. ?>
+        <?php if ($vstatus !== 'terminated'): ?>
+            <?php if ($vstatus === 'active'): ?>
+                <form method="post" action="<?= site_url('admin/vendors/' . $vendor['id'] . '/deactivate') ?>" class="m-0"
+                      onsubmit="return confirm('Deactivate <?= esc($vendor['display_name'] ?? 'this vendor', 'attr') ?>? Once enforcement is live this will take all their shops offline and lock out their staff and riders.');">
+                    <?= csrf_field() ?><button class="btn btn-sm btn-outline-warning"><i class="bi bi-pause-circle me-1"></i>Deactivate</button>
+                </form>
+            <?php else: ?>
+                <form method="post" action="<?= site_url('admin/vendors/' . $vendor['id'] . '/activate') ?>" class="m-0">
+                    <?= csrf_field() ?><button class="btn btn-sm btn-outline-success"><i class="bi bi-play-circle me-1"></i>Activate</button>
+                </form>
+            <?php endif; ?>
+        <?php endif; ?>
     </div>
 </div>
 

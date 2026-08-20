@@ -49,7 +49,7 @@ trait MinimalSchema
             uuid TEXT, owner_user_id INTEGER, legal_name TEXT NOT NULL, display_name TEXT NOT NULL,
             slug TEXT, gstin TEXT, gstin_verified_at TEXT, gstin_status TEXT NOT NULL DEFAULT "unverified",
             pan TEXT, state_code TEXT, business_type_id INTEGER, party_type TEXT NOT NULL DEFAULT "vendor",
-            status TEXT NOT NULL DEFAULT "draft",
+            status TEXT NOT NULL DEFAULT "draft", updated_by INTEGER,
             created_at TEXT, updated_at TEXT, deleted_at TEXT
         )');
     }

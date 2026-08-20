@@ -95,6 +95,22 @@ $mk       = static fn (int $n) => site_url('admin/vendors') . '?' . http_build_q
                                     <i class="bi bi-x"></i> Reject
                                 </button>
                             </form>
+                            <?php // 'terminated' has no button here at all — VendorController refuses both
+                                  // directions server-side for it; a disabled button that still POSTs
+                                  // wrong would be worse than none. ?>
+                            <?php if ($v['status'] !== 'terminated'): ?>
+                                <?php if ($v['status'] === 'active'): ?>
+                                    <form method="post" action="<?= site_url('admin/vendors/' . $v['id'] . '/deactivate') ?>" class="d-inline">
+                                        <?= csrf_field() ?>
+                                        <button class="btn btn-sm btn-outline-warning"><i class="bi bi-pause-circle"></i> Deactivate</button>
+                                    </form>
+                                <?php else: ?>
+                                    <form method="post" action="<?= site_url('admin/vendors/' . $v['id'] . '/activate') ?>" class="d-inline">
+                                        <?= csrf_field() ?>
+                                        <button class="btn btn-sm btn-outline-success"><i class="bi bi-play-circle"></i> Activate</button>
+                                    </form>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </div>
                     </td>
                 </tr>

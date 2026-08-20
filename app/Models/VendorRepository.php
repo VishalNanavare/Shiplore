@@ -16,6 +16,20 @@ use Config\Database;
 final class VendorRepository
 {
     /**
+     * The vendors.status ENUM's legal values (database/sql/01_master.sql, extended by
+     * 84_vendor_status_lifecycle.sql to add 'rejected').
+     *
+     * updateStatus() is the SINGLE write path for this column — every caller
+     * (VendorController::transition(), which backs approve/reject/activate/deactivate)
+     * funnels through it. Before this whitelist, an out-of-range value passed straight
+     * to the database, which is exactly how 'rejected' went unnoticed for as long as it
+     * did: MySQL's non-strict mode truncates an illegal ENUM write to '' rather than
+     * erroring, so the reject action always "succeeded" while quietly corrupting the
+     * row. This guard makes an illegal value a caller-visible failure instead.
+     */
+    private const LEGAL_STATUSES = ['draft', 'submitted', 'under_review', 'approved', 'active', 'suspended', 'terminated', 'rejected'];
+
+    /**
      * Paginated vendor list. limit=0 means no limit.
      * @param array<string,mixed>|string|null $f keys: status, q, limit, offset
      * @return list<array<string,mixed>>
@@ -84,6 +98,12 @@ final class VendorRepository
 
     public function updateStatus(int $id, string $status, ?int $actorId = null): bool
     {
+        if (! in_array($status, self::LEGAL_STATUSES, true)) {
+            log_message('error', 'VendorRepository: refusing to set vendor #' . $id . ' status to "' . $status . '" — not a legal vendors.status value.');
+
+            return false;
+        }
+
         return Database::connect()->table('vendors')
             ->where('id', $id)->where('deleted_at', null)
             ->update(['status' => $status, 'updated_by' => $actorId]);

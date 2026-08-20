@@ -209,6 +209,8 @@ $routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']
     $routes->post('vendors/(:num)/update', 'Admin\VendorController::update/$1', ['filter' => 'csrf']);
     $routes->post('vendors/(:num)/approve', 'Admin\VendorController::approve/$1', ['filter' => 'csrf']);
     $routes->post('vendors/(:num)/reject', 'Admin\VendorController::reject/$1', ['filter' => 'csrf']);
+    $routes->post('vendors/(:num)/activate', 'Admin\VendorController::activate/$1', ['filter' => 'csrf']);
+    $routes->post('vendors/(:num)/deactivate', 'Admin\VendorController::deactivate/$1', ['filter' => 'csrf']);
     $routes->get('vendors/(:num)/documents', 'Admin\VendorController::documents/$1');
     $routes->get('vendors/(:num)/statement', 'Admin\VendorController::statement/$1');
     $routes->post('vendors/(:num)/documents/(:num)/verify', 'Admin\VendorController::verifyDoc/$1/$2', ['filter' => 'csrf']);
