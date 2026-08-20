@@ -25,6 +25,9 @@ final class PortalLeaveRedirectTest extends CIUnitTestCase
     use FeatureTestTrait;
     use MinimalSchema;
 
+    /** @var list<int> */
+    private array $insertedShopIds = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -42,6 +45,13 @@ final class PortalLeaveRedirectTest extends CIUnitTestCase
 
     protected function tearDown(): void
     {
+        // In tearDown, not inline after the assertion — a FAILING assertion (i.e.
+        // exactly the case where returnPath()'s real DB lookup regresses) must not
+        // skip cleanup and leak the row into the shared :memory: DB for every later
+        // test in the process (adversarial audit finding, 2026-08-20).
+        if ($this->insertedShopIds !== []) {
+            Database::connect()->table('shops')->whereIn('id', $this->insertedShopIds)->delete();
+        }
         service('superglobals')->unsetServer('HTTP_HOST');
         Services::reset();
         parent::tearDown();
@@ -81,11 +91,11 @@ final class PortalLeaveRedirectTest extends CIUnitTestCase
     public function testLeavingAShopImpersonationReturnsToTheOwningVendorsDetailPage(): void
     {
         Database::connect()->table('shops')->insert(['id' => 8801, 'vendor_id' => 601, 'name' => 'Bandra Outlet', 'status' => 'active']);
+        $this->insertedShopIds[] = 8801;
 
         $r = $this->leave($this->impersonating('vendor.shiplore.test', 'shop', 8801));
 
         $this->assertStringContainsString('admin/vendors/601', (string) $r->getRedirectUrl());
-        Database::connect()->table('shops')->where('id', 8801)->delete();
     }
 
     public function testLeavingAShopWhoseVendorCannotBeResolvedFallsBackToDashboard(): void
@@ -93,6 +103,26 @@ final class PortalLeaveRedirectTest extends CIUnitTestCase
         $r = $this->leave($this->impersonating('vendor.shiplore.test', 'shop', 999999));
 
         $this->assertStringContainsString('admin/dashboard', (string) $r->getRedirectUrl());
+    }
+
+    /**
+     * Adversarial audit finding (2026-08-20, sub-project C, low severity):
+     * returnPath()'s shop branch runs a raw, unguarded DB query, unlike this same
+     * class's audit() helper which wraps its own DB/IO call in try/catch specifically
+     * because "auditing must never block impersonation". Session state has already
+     * been fully restored to the admin identity by the time returnPath() runs
+     * (leave() does that first), so a query failure here isn't a security issue — but
+     * it should still fail safe to admin/dashboard rather than surfacing an uncaught
+     * exception/500 to an admin who is just trying to leave a portal.
+     */
+    public function testLeavingAShopFallsBackToDashboardIfTheVendorLookupQueryFails(): void
+    {
+        Database::connect()->query('DROP TABLE IF EXISTS db_shops');
+
+        $r = $this->leave($this->impersonating('vendor.shiplore.test', 'shop', 8801));
+
+        $this->assertStringContainsString('admin/dashboard', (string) $r->getRedirectUrl());
+        $r->assertSessionHas('success', 'Returned to the admin panel.');
     }
 
     public function testLeavingARiderImpersonationStillGoesToTheDashboard(): void

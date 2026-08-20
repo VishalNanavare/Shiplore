@@ -23,7 +23,7 @@ $m = $metrics ?? [];
     <a href="<?= site_url('admin/vendors') ?>" class="btn btn-sm btn-light"><i class="bi bi-arrow-left me-1"></i>Back to vendors</a>
     <div class="d-flex flex-wrap gap-2">
         <form method="post" action="<?= site_url('admin/portal/enter/vendor/' . $vendor['id']) ?>" class="m-0"
-              onsubmit="return confirm('Open the vendor portal as <?= esc($vendor['display_name'] ?? 'this vendor', 'attr') ?>? You will be signed in as them until you return to admin.');">
+              data-confirm="Open the vendor portal as <?= esc($vendor['display_name'] ?? 'this vendor', 'attr') ?>? You will be signed in as them until you return to admin.">
             <?= csrf_field() ?>
             <button class="btn btn-sm btn-primary"><i class="bi bi-box-arrow-up-right me-1"></i>Go to Vendor Portal</button>
         </form>
@@ -41,7 +41,7 @@ $m = $metrics ?? [];
         <?php if ($vstatus !== 'terminated'): ?>
             <?php if ($vstatus === 'active'): ?>
                 <form method="post" action="<?= site_url('admin/vendors/' . $vendor['id'] . '/deactivate') ?>" class="m-0"
-                      onsubmit="return confirm('Deactivate <?= esc($vendor['display_name'] ?? 'this vendor', 'attr') ?>? Once enforcement is live this will take all their shops offline and lock out their staff and riders.');">
+                      data-confirm="Deactivate <?= esc($vendor['display_name'] ?? 'this vendor', 'attr') ?>? Once enforcement is live this will take all their shops offline and lock out their staff and riders.">
                     <?= csrf_field() ?><button class="btn btn-sm btn-outline-warning"><i class="bi bi-pause-circle me-1"></i>Deactivate</button>
                 </form>
             <?php else: ?>
@@ -171,7 +171,7 @@ $m = $metrics ?? [];
                         <td><span class="badge text-bg-<?= ($s['status'] ?? '') === 'active' || ($s['status'] ?? '') === 'open' ? 'success' : 'secondary' ?>"><?= esc($s['status'] ?? '') ?></span></td>
                         <td class="text-end">
                             <form method="post" action="<?= site_url('admin/portal/enter/shop/' . $s['id']) ?>" class="d-inline"
-                                  onsubmit="return confirm('Open the shop portal for <?= esc($s['name'], 'attr') ?>? You will be signed in as its vendor until you return to admin.');">
+                                  data-confirm="Open the shop portal for <?= esc($s['name'], 'attr') ?>? You will be signed in as its vendor until you return to admin.">
                                 <?= csrf_field() ?>
                                 <button class="btn btn-sm btn-outline-primary" title="Go to Shop Portal"><i class="bi bi-box-arrow-up-right"></i></button>
                             </form>

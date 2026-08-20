@@ -24,7 +24,7 @@ $isActive = in_array($sstatus, ['active', 'open'], true);
     <a href="<?= site_url('admin/shops') ?>" class="btn btn-sm btn-light"><i class="bi bi-arrow-left me-1"></i>Back to shops</a>
     <div class="d-flex flex-wrap gap-2">
         <form method="post" action="<?= site_url('admin/portal/enter/shop/' . $shop['id']) ?>" class="m-0"
-              onsubmit="return confirm('Open the shop portal for <?= esc($shop['name'] ?? 'this shop', 'attr') ?>? You will be signed in as its vendor until you return to admin.');">
+              data-confirm="Open the shop portal for <?= esc($shop['name'] ?? 'this shop', 'attr') ?>? You will be signed in as its vendor until you return to admin.">
             <?= csrf_field() ?>
             <button class="btn btn-sm btn-primary"><i class="bi bi-box-arrow-up-right me-1"></i>Go to Shop Portal</button>
         </form>

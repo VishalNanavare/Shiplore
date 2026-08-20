@@ -225,7 +225,15 @@ final class PortalController extends BaseController
             return 'admin/manufacturers/' . $entityId;
         }
         if ($kind === 'shop') {
-            $vendorId = (int) (Database::connect()->table('shops')->select('vendor_id')->where('id', $entityId)->get()->getRowArray()['vendor_id'] ?? 0);
+            // Fail safe, same posture as audit() below: by this point in leave() the
+            // session has already been fully restored to the admin identity, so a
+            // query failure here isn't a security concern — but it must not turn a
+            // routine "Exit" click into an uncaught exception.
+            try {
+                $vendorId = (int) (Database::connect()->table('shops')->select('vendor_id')->where('id', $entityId)->get()->getRowArray()['vendor_id'] ?? 0);
+            } catch (\Throwable) {
+                $vendorId = 0;
+            }
             if ($vendorId > 0) {
                 return 'admin/vendors/' . $vendorId;
             }

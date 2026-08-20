@@ -18,7 +18,7 @@ $active = ($rider['status'] ?? '') === 'active';
     <div class="d-flex gap-2">
         <?php if ($active): ?>
         <form method="post" action="<?= site_url('admin/portal/enter/rider/' . $rider['id']) ?>" class="m-0"
-              onsubmit="return confirm('Open the rider portal as <?= esc($rider['name'] ?? 'this rider', 'attr') ?>? You will be signed in as them until you return to admin.');">
+              data-confirm="Open the rider portal as <?= esc($rider['name'] ?? 'this rider', 'attr') ?>? You will be signed in as them until you return to admin.">
             <?= csrf_field() ?>
             <button class="btn btn-sm btn-primary"><i class="bi bi-box-arrow-up-right me-1"></i>Go to Rider Portal</button>
         </form>

@@ -6,6 +6,8 @@ use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Services;
 
+require_once __DIR__ . '/../_support/MinimalSchema.php';
+
 /**
  * Phase 6 — Admin Shop management: list (RBAC-guarded), activate (CSRF),
  * permission-denied. Repositories mocked; webAuth session simulated.
@@ -13,6 +15,7 @@ use Config\Services;
 final class AdminShopTest extends CIUnitTestCase
 {
     use FeatureTestTrait;
+    use MinimalSchema;
 
     protected function setUp(): void
     {
@@ -115,6 +118,32 @@ final class AdminShopTest extends CIUnitTestCase
         $result = $this->withSession($this->adminSession())->get('admin/shops');
 
         $this->assertStringNotContainsString('Filtered to vendor:', (string) $result->getBody());
+    }
+
+    /**
+     * Adversarial audit finding (2026-08-20, sub-project C, medium severity): the
+     * "Go to Shop Portal" button built its confirm() message by embedding an
+     * esc(...,'attr')-escaped shop name inside an onsubmit="return confirm('...')"
+     * JS-string-in-HTML-attribute — HTML-attribute-escaping is the wrong context for
+     * text that will be re-parsed as JS, because the browser HTML-decodes the
+     * attribute before executing it, so a shop name containing a quote breaks out of
+     * the string and executes as script in the viewing admin's session. A shop name
+     * is vendor-controlled (a lower-privileged vendor renames their own shop), so
+     * this is a real stored-XSS path. Fix: use ajax-forms.js's existing data-confirm
+     * attribute convention instead, which never re-parses the text as code.
+     *
+     * Source-assertion, not an HTTP render: ShopController::show() runs raw SQL
+     * ("FROM sub_orders", no DBPrefix substitution on raw query strings) that can't
+     * resolve against the test DB's db_-prefixed tables, so this checks the
+     * template's structural safety property directly instead.
+     */
+    public function testShowViewNoLongerBuildsTheConfirmMessageInlineInOnsubmit(): void
+    {
+        $src = file_get_contents(APPPATH . 'Views/admin/shops/show.php');
+        $src = (string) preg_replace('#<\?php\s*/\*.*?\*/\s*\?>#s', '', (string) $src); // strip PHP block comments
+
+        $this->assertStringNotContainsString('onsubmit="return confirm(', $src, 'the vulnerable inline-JS-in-attribute pattern must be gone');
+        $this->assertMatchesRegularExpression('/data-confirm="Open the shop portal for[^"]*"/', $src, 'the safe data-confirm attribute must carry the message instead');
     }
 
     public function testActivateRedirectsBackToList(): void

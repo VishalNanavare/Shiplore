@@ -53,9 +53,19 @@ final class AdminVendorShopNavigationTest extends CIUnitTestCase
         Services::injectMock('vendorGstRepository', new class { public function summary(int $id): ?array { return null; } });
         Services::injectMock('vendorBankAccountRepository', new class { public function defaultForVendor(int $id): ?array { return null; } });
         Services::injectMock('vendorShopRepository', new class {
+            public ?int $lastVendorId = null;
+            public string $shopName   = 'Bandra Outlet';
+
             public function list(int $vendorId): array
             {
-                return [['id' => 8901, 'name' => 'Bandra Outlet', 'code' => 'BAN-1', 'pincode' => '400050', 'delivery_radius_km' => 5, 'status' => 'active']];
+                // Adversarial audit finding (2026-08-20, sub-project C, medium
+                // severity, test-quality): must actually vary by $vendorId — a
+                // fixed return value regardless of the argument would let a
+                // cross-vendor wiring regression (wrong vendor's shops shown) pass
+                // undetected.
+                $this->lastVendorId = $vendorId;
+
+                return [['id' => 8901, 'name' => $this->shopName, 'code' => 'BAN-1', 'pincode' => '400050', 'delivery_radius_km' => 5, 'status' => 'active']];
             }
         });
     }
@@ -101,5 +111,68 @@ final class AdminVendorShopNavigationTest extends CIUnitTestCase
         $r = $this->withSession($this->sess())->get('admin/vendors/' . $this->vendorId);
 
         $this->assertStringContainsString('admin/portal/enter/shop/8901', (string) $r->getBody());
+    }
+
+    public function testShowPassesThisVendorsOwnIdToTheShopRepository(): void
+    {
+        $repo = service('vendorShopRepository');
+
+        $this->withSession($this->sess())->get('admin/vendors/' . $this->vendorId);
+
+        $this->assertSame($this->vendorId, $repo->lastVendorId, 'the Shops card must be scoped to the vendor being viewed, not some other/hardcoded id');
+    }
+
+    /**
+     * Adversarial audit finding (2026-08-20, sub-project C, medium severity): the
+     * "Go to Vendor Portal" button built its confirm() message by embedding an
+     * esc(...,'attr')-escaped vendor name inside onsubmit="return confirm('...')" —
+     * insufficient, because the browser HTML-decodes an attribute value before
+     * executing it as JS, so a name containing a quote breaks out of the string and
+     * executes in the viewing admin's session.
+     *
+     * Checks the structural pattern (attribute name + static prefix), not the raw
+     * hostile substring's presence/absence: TestResponse::getBody() round-trips the
+     * page through DOMDocument (system/Test/DOMParser.php) to support this trait's
+     * DOM-query assertions, and DOMDocument::saveHTML() re-serializes with its OWN
+     * minimal-necessary quoting — it strips a bare apostrophe's entity-encoding
+     * regardless of whether the source used the vulnerable onsubmit pattern or the
+     * safe data-confirm one, so "raw payload absent" is not a meaningful check
+     * against this harness. The real security property — esc(..., 'attr') actually
+     * encodes quotes — is Laminas Escaper's own well-tested behavior, not something
+     * this test needs to re-prove; what matters here is that the vulnerable
+     * JS-string-in-attribute CONTEXT is gone.
+     */
+    public function testGoToVendorPortalUsesTheSafeDataConfirmAttributeNotInlineOnsubmit(): void
+    {
+        Database::connect()->table('vendors')->where('id', $this->vendorId)
+            ->update(['display_name' => "Acme's Store'); alert(document.cookie); //"]);
+
+        $r    = $this->withSession($this->sess())->get('admin/vendors/' . $this->vendorId);
+        $html = (string) $r->getBody();
+
+        $r->assertStatus(200);
+        $this->assertStringNotContainsString('onsubmit="return confirm(', $html, 'no button on this page may still use the vulnerable inline-JS-in-attribute pattern');
+        $this->assertStringContainsString('data-confirm="Open the vendor portal as', $html);
+    }
+
+    /**
+     * Same defect, the new per-row "Go to Shop Portal" button on the Shops card —
+     * this one is reachable via a shop's OWN name, which the shop's vendor can set
+     * themselves (lower-privileged self-service), making it a genuine escalation
+     * from vendor to admin session, not just a self-XSS. See the comment on
+     * testGoToVendorPortalUsesTheSafeDataConfirmAttributeNotInlineOnsubmit() for why
+     * this checks structure, not raw-substring absence.
+     */
+    public function testGoToShopPortalUsesTheSafeDataConfirmAttributeNotInlineOnsubmit(): void
+    {
+        $repo           = service('vendorShopRepository');
+        $repo->shopName = "Bob's Shop'); alert(document.cookie); //";
+
+        $r    = $this->withSession($this->sess())->get('admin/vendors/' . $this->vendorId);
+        $html = (string) $r->getBody();
+
+        $r->assertStatus(200);
+        $this->assertStringNotContainsString('onsubmit="return confirm(', $html, 'no button on this page may still use the vulnerable inline-JS-in-attribute pattern');
+        $this->assertStringContainsString('data-confirm="Open the shop portal for', $html);
     }
 }
