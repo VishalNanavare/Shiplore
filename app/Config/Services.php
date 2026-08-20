@@ -46,6 +46,15 @@ class Services extends BaseService
         return new \App\Libraries\CapabilityResolver();
     }
 
+    public static function vendorStatusGate($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('vendorStatusGate');
+        }
+
+        return new \App\Libraries\VendorStatusGate();
+    }
+
     public static function requestAuthenticator($getShared = true)
     {
         if ($getShared) {
