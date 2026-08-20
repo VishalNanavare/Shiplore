@@ -29,6 +29,9 @@ final class VendorRepository
      */
     private const LEGAL_STATUSES = ['draft', 'submitted', 'under_review', 'approved', 'active', 'suspended', 'terminated', 'rejected'];
 
+    /** vendors.payout_cycle's ENUM values (database/sql/01_master.sql:177) — NOT NULL, so the same truncation risk as LEGAL_STATUSES applies. */
+    private const PAYOUT_CYCLES = ['daily', 'weekly', 'biweekly', 'monthly'];
+
     /**
      * Paginated vendor list. limit=0 means no limit.
      * @param array<string,mixed>|string|null $f keys: status, q, limit, offset
@@ -115,7 +118,7 @@ final class VendorRepository
     public function find(int $id): ?array
     {
         $row = Database::connect()->table('vendors v')
-            ->select('v.id, v.legal_name, v.display_name, v.business_type_id, v.gstin, v.gstin_status, v.status, v.party_type, v.state_code, v.created_at, v.owner_user_id, u.email AS owner_email, u.phone AS owner_phone')
+            ->select('v.id, v.legal_name, v.display_name, v.business_type_id, v.gstin, v.gstin_status, v.status, v.party_type, v.pan, v.state_code, v.commission_plan_id, v.payout_cycle, v.is_composition, v.created_at, v.owner_user_id, u.email AS owner_email, u.phone AS owner_phone')
             ->join('users u', 'u.id = v.owner_user_id', 'left')
             ->where('v.id', $id)->where('v.deleted_at', null)
             ->get()->getRowArray();
@@ -126,13 +129,25 @@ final class VendorRepository
     /** @param array<string,mixed> $d */
     public function update(int $id, array $d, ?int $actorId = null): bool
     {
+        $payoutCycle = (string) ($d['payout_cycle'] ?? 'weekly');
+        if (! in_array($payoutCycle, self::PAYOUT_CYCLES, true)) {
+            log_message('error', 'VendorRepository: refusing to set vendor #' . $id . ' payout_cycle to "' . $payoutCycle . '" — not a legal vendors.payout_cycle value.');
+
+            return false;
+        }
+
         return Database::connect()->table('vendors')
             ->where('id', $id)->where('deleted_at', null)
             ->update([
-                'legal_name'       => mb_substr((string) $d['legal_name'], 0, 191),
-                'display_name'     => mb_substr((string) $d['display_name'], 0, 191),
-                'business_type_id' => (int) $d['business_type_id'],
-                'updated_by'       => $actorId,
+                'legal_name'         => mb_substr((string) $d['legal_name'], 0, 191),
+                'display_name'       => mb_substr((string) $d['display_name'], 0, 191),
+                'business_type_id'   => (int) $d['business_type_id'],
+                'pan'                => ($d['pan'] ?? '') !== '' ? mb_substr((string) $d['pan'], 0, 10) : null,
+                'state_code'         => ($d['state_code'] ?? '') !== '' ? mb_substr((string) $d['state_code'], 0, 2) : null,
+                'commission_plan_id' => ! empty($d['commission_plan_id']) ? (int) $d['commission_plan_id'] : null,
+                'payout_cycle'       => $payoutCycle,
+                'is_composition'     => ! empty($d['is_composition']) ? 1 : 0,
+                'updated_by'         => $actorId,
             ]);
     }
 }

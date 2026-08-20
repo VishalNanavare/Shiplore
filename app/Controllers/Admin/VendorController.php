@@ -182,7 +182,17 @@ final class VendorController extends BaseController
         if ($legal === '' || $display === '' || $btype <= 0) {
             return redirect()->back()->withInput()->with('error', 'Legal name, display name and business type are required.');
         }
-        $repo->update($id, ['legal_name' => $legal, 'display_name' => $display, 'business_type_id' => $btype], (int) session()->get('user_id'));
+        $ok = $repo->update($id, [
+            'legal_name' => $legal, 'display_name' => $display, 'business_type_id' => $btype,
+            'pan'                => strtoupper(trim((string) $this->request->getPost('pan'))),
+            'state_code'         => strtoupper(trim((string) $this->request->getPost('state_code'))),
+            'commission_plan_id' => (int) $this->request->getPost('commission_plan_id'),
+            'payout_cycle'       => trim((string) $this->request->getPost('payout_cycle')) ?: 'weekly',
+            'is_composition'     => (bool) $this->request->getPost('is_composition'),
+        ], (int) session()->get('user_id'));
+        if (! $ok) {
+            return redirect()->back()->withInput()->with('error', 'Vendor could not be updated — check the payout cycle.');
+        }
 
         // Warn if existing products are now in disallowed categories for this business type.
         $allowedIds = array_column((new \App\Models\AdminProductRepository())->allowedCategories($id), 'id');
@@ -218,12 +228,14 @@ final class VendorController extends BaseController
             $mapsKey = '';
         }
 
-        $logoUuid = null;
+        $logoUuid        = null;
+        $commissionPlans = [];
         if ($vendor !== null) {
             $row = \Config\Database::connect()->table('vendors v')
                 ->select('m.uuid')->join('media_assets m', 'm.id = v.logo_media_id', 'left')
                 ->where('v.id', (int) $vendor['id'])->where('m.status', 'active')->get()->getRowArray();
-            $logoUuid = $row['uuid'] ?? null;
+            $logoUuid        = $row['uuid'] ?? null;
+            $commissionPlans = service('commissionRepository')->list('active');
         }
 
         return view('admin/vendors/form', [
@@ -234,6 +246,7 @@ final class VendorController extends BaseController
             'vendor'          => $vendor,
             'logoUuid'        => $logoUuid,
             'businessTypes'   => service('businessTypeRepository')->list('active'),
+            'commissionPlans' => $commissionPlans,
             'mapsKey'         => $mapsKey,
             'states'          => \App\Libraries\Geo\IndiaStates::list(),
             'stateNameToCode' => \App\Libraries\Geo\IndiaStates::nameToCodeMap(),

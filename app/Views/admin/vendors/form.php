@@ -22,6 +22,36 @@
                 <div class="col-md-6"><label class="form-label">Legal Name <span class="text-danger">*</span></label><input name="legal_name" class="form-control" value="<?= esc($isEdit ? $vendor['legal_name'] : old('legal_name'), 'attr') ?>" required></div>
                 <div class="col-md-6"><label class="form-label">Display Name <span class="text-danger">*</span></label><input name="display_name" class="form-control" value="<?= esc($isEdit ? $vendor['display_name'] : old('display_name'), 'attr') ?>" required></div>
                 <?php if ($isEdit): ?>
+                    <div class="col-md-4"><label class="form-label">PAN</label><input name="pan" class="form-control text-uppercase" maxlength="10" value="<?= esc($vendor['pan'] ?? '', 'attr') ?>"></div>
+                    <div class="col-md-4"><label class="form-label">State</label>
+                        <select name="state_code" class="form-select">
+                            <option value="">Choose…</option>
+                            <?php foreach ($states as $code => $name): ?>
+                                <option value="<?= esc($code, 'attr') ?>" <?= (string) ($vendor['state_code'] ?? '') === (string) $code ? 'selected' : '' ?>><?= esc($name) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4"><label class="form-label">Commission Plan</label>
+                        <select name="commission_plan_id" class="form-select">
+                            <option value="">None</option>
+                            <?php foreach ($commissionPlans as $cp): ?>
+                                <option value="<?= esc($cp['id'], 'attr') ?>" <?= (int) ($vendor['commission_plan_id'] ?? 0) === (int) $cp['id'] ? 'selected' : '' ?>><?= esc($cp['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4"><label class="form-label">Payout Cycle</label>
+                        <select name="payout_cycle" class="form-select">
+                            <?php foreach (['daily' => 'Daily', 'weekly' => 'Weekly', 'biweekly' => 'Biweekly', 'monthly' => 'Monthly'] as $val => $label): ?>
+                                <option value="<?= $val ?>" <?= ($vendor['payout_cycle'] ?? 'weekly') === $val ? 'selected' : '' ?>><?= $label ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-8 d-flex align-items-end">
+                        <div class="form-check">
+                            <input type="checkbox" name="is_composition" value="1" class="form-check-input" id="isComposition" <?= ! empty($vendor['is_composition']) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="isComposition">Composition scheme dealer</label>
+                        </div>
+                    </div>
                     <div class="col-md-12">
                         <label class="form-label">Business Logo</label>
                         <div class="d-flex align-items-center gap-3">
