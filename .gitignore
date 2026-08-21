@@ -61,7 +61,7 @@ php.ini
 **/php.ini
 **/.user.ini
 !/.user.ini
-
+/pos/
 # cPanel leftovers. `test_shiplore_in/` is a subdomain docroot whose DIRECTORY NAME is
 # the deployment hostname — no content grep finds that, only a filename scan does.
 /test_shiplore_in/
