@@ -1095,6 +1095,10 @@ $routes->group('api/v1', static function (RouteCollection $routes): void {
     $routes->get('vendor/pos/catalog/(:num)', 'Api\V1\VendorPosController::catalogBootstrap/$1', ['filter' => 'jwtAuth']);
     $routes->get('vendor/pos/masters/(:num)', 'Api\V1\VendorPosController::masters/$1',          ['filter' => 'jwtAuth']);
     $routes->post('vendor/pos/sale',          'Api\V1\VendorPosController::createSale',          ['filter' => 'jwtAuth']);
+    // On-prem Local API's own sync contract — deliberately separate from pos/sync/pull
+    // and pos/sync/push below, which are the older, terminal-activation-based ASP.NET
+    // Windows POS's contract and must not change shape for it.
+    $routes->post('vendor/pos/sync/pull', 'Api\V1\VendorPosController::syncPull', ['filter' => 'jwtAuth']);
     $routes->get('vendor/dashboard',       'Api\V1\VendorApiController::dashboard',      ['filter' => 'jwtAuth']);
     $routes->get('vendor/dashboard/chart', 'Api\V1\VendorApiController::dashboardChart', ['filter' => 'jwtAuth']);
     $routes->get('vendor/analytics',       'Api\V1\VendorApiController::analytics',      ['filter' => 'jwtAuth']);

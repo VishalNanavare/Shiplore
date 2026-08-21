@@ -751,6 +751,65 @@ final class VendorPosController extends BaseApiController
     }
 
     // -------------------------------------------------------------------------
+    // POST /api/v1/vendor/pos/sync/pull
+    // -------------------------------------------------------------------------
+
+    /**
+     * Price-delta pull for the on-prem "Local API" (a separate Flutter/Dart POS
+     * project)'s background sync agent — a DIFFERENT contract from
+     * PosController::pull(), which serves the older, already-shipped ASP.NET
+     * Windows POS's terminal-scoped catalog+stock pull; that one is untouched.
+     *
+     * Vendor-wide, not shop-scoped: a Local API install owns one store's worth
+     * of product_variants rows, all under this vendor, and there is no
+     * per-terminal cloud registration in this contract (auth is the vendor
+     * owner's own JWT).
+     *
+     * since/anchor are Unix timestamps (int). Converted in PHP rather than via
+     * a DB-specific function like MySQL's UNIX_TIMESTAMP(), which the SQLite
+     * test DB doesn't have — portable was cheap here.
+     */
+    public function syncPull()
+    {
+        $vendor = service('vendorAccountRepository')->findByOwnerUserId($this->userId());
+        if ($vendor === null) {
+            return $this->failWith('FORBIDDEN', 'This account is not a vendor owner.');
+        }
+
+        $in     = $this->input();
+        $since  = max(0, (int) ($in['since'] ?? 0));
+        $types  = (array) ($in['types'] ?? ['price']);
+
+        $prices     = [];
+        $nextAnchor = $since;
+
+        if (in_array('price', $types, true)) {
+            $rows = \Config\Database::connect()
+                ->table('product_variants')
+                ->select('id, base_price, updated_at')
+                ->where('vendor_id', (int) $vendor['id'])
+                ->where('deleted_at', null)
+                ->where('updated_at >', date('Y-m-d H:i:s', $since))
+                ->orderBy('updated_at', 'ASC')
+                ->get()->getResultArray();
+
+            foreach ($rows as $row) {
+                $anchor = strtotime((string) $row['updated_at']) ?: $since;
+                $prices[] = [
+                    'variant_id' => (int) $row['id'],
+                    'price'      => (string) $row['base_price'],
+                    'anchor'     => $anchor,
+                ];
+                if ($anchor > $nextAnchor) {
+                    $nextAnchor = $anchor;
+                }
+            }
+        }
+
+        return $this->ok(['prices' => $prices, 'next_anchor' => $nextAnchor]);
+    }
+
+    // -------------------------------------------------------------------------
     // GET /api/v1/vendor/pos/catalog/(:shopId)
     // -------------------------------------------------------------------------
 
