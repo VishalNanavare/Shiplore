@@ -574,6 +574,34 @@ trait MinimalSchema
         )');
     }
 
+    /** database/sql/86_pos_local_sales.sql — the on-prem Local API POS's sales-push table. */
+    protected function ensurePosLocalSalesTables(): void
+    {
+        $db = $this->schemaConn();
+        $db->query('CREATE TABLE IF NOT EXISTS db_pos_local_sales (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT NOT NULL, vendor_id INTEGER NOT NULL, shop_id INTEGER NOT NULL,
+            local_terminal_id TEXT NOT NULL,
+            offline_invoice_no TEXT NOT NULL, server_invoice_no TEXT,
+            subtotal REAL NOT NULL DEFAULT 0, discount_total REAL NOT NULL DEFAULT 0,
+            taxable_value REAL NOT NULL DEFAULT 0, cgst REAL NOT NULL DEFAULT 0, sgst REAL NOT NULL DEFAULT 0,
+            igst REAL NOT NULL DEFAULT 0, cess REAL NOT NULL DEFAULT 0, round_off REAL NOT NULL DEFAULT 0,
+            grand_total REAL NOT NULL DEFAULT 0,
+            sold_at TEXT NOT NULL, sync_status TEXT NOT NULL DEFAULT "synced", created_at TEXT
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_pos_local_sale_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pos_local_sale_id INTEGER NOT NULL, variant_id INTEGER NOT NULL, sku_snapshot TEXT NOT NULL,
+            qty REAL NOT NULL, unit_price REAL NOT NULL, discount_amount REAL NOT NULL DEFAULT 0,
+            taxable_value REAL NOT NULL DEFAULT 0, cgst REAL NOT NULL DEFAULT 0, sgst REAL NOT NULL DEFAULT 0,
+            igst REAL NOT NULL DEFAULT 0, cess REAL NOT NULL DEFAULT 0, line_total REAL NOT NULL DEFAULT 0
+        )');
+        $db->query('CREATE TABLE IF NOT EXISTS db_pos_local_sale_payments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pos_local_sale_id INTEGER NOT NULL, tender_type TEXT NOT NULL, amount REAL NOT NULL
+        )');
+    }
+
     /**
      * database/sql/perf3_facet_tables.php — created by a maintenance script outside
      * the numbered migration chain, and queried WITHOUT the CI4 DBPrefix (confirmed:

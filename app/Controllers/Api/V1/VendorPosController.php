@@ -810,6 +810,136 @@ final class VendorPosController extends BaseApiController
     }
 
     // -------------------------------------------------------------------------
+    // POST /api/v1/vendor/pos/sync/push
+    // -------------------------------------------------------------------------
+
+    /**
+     * Sales-push for the on-prem Local API's background sync agent — a
+     * DIFFERENT contract from PosController::push() (the older, already-
+     * shipped ASP.NET Windows POS's terminal-activation-scoped push; that one
+     * is untouched). Sales land in pos_local_sales, forked from pos_sales
+     * because pos_sales.terminal_id/shift_id/cashier_user_id are all hard
+     * foreign keys this contract has no equivalent for (see
+     * database/sql/86_pos_local_sales.sql).
+     *
+     * shop_id is a top-level request field (the Local API install owns one
+     * store) rather than per-sale. terminal_id stays per-sale exactly as the
+     * Dart client already sends it, but is stored as an opaque string — no
+     * cloud row backs it.
+     *
+     * uuid is each sale's idempotency key, mirroring how PosSyncRepository::
+     * push() dedupes the older client's offline_invoice_no replays.
+     */
+    public function syncPush()
+    {
+        $vendor = service('vendorAccountRepository')->findByOwnerUserId($this->userId());
+        if ($vendor === null) {
+            return $this->failWith('FORBIDDEN', 'This account is not a vendor owner.');
+        }
+
+        $in     = $this->input();
+        $shopId = (int) ($in['shop_id'] ?? 0);
+        $sales  = (array) ($in['sales'] ?? []);
+        if ($sales === []) {
+            return $this->failWith('VALIDATION_ERROR', 'No sales in payload.');
+        }
+
+        $db   = \Config\Database::connect();
+        $shop = $db->table('shops')->select('id, code')
+            ->where('id', $shopId)->where('vendor_id', (int) $vendor['id'])
+            ->where('deleted_at', null)
+            ->get()->getRowArray();
+        if ($shop === null) {
+            return $this->failWith('NOT_FOUND', 'Shop not found for this vendor.');
+        }
+
+        $results = [];
+        foreach ($sales as $sale) {
+            $results[] = $this->pushOneSale($db, (int) $vendor['id'], $shopId, (string) ($shop['code'] ?? ''), (array) $sale);
+        }
+
+        $synced = count(array_filter($results, static fn ($r) => $r['status'] === 'synced'));
+
+        return $this->ok(['results' => $results], ['synced' => $synced, 'received' => count($results)]);
+    }
+
+    /** @param array<string,mixed> $sale @return array<string,mixed> */
+    private function pushOneSale(object $db, int $vendorId, int $shopId, string $shopCode, array $sale): array
+    {
+        $uuid = trim((string) ($sale['uuid'] ?? ''));
+        if ($uuid === '') {
+            return ['uuid' => '', 'status' => 'rejected', 'reason' => 'missing uuid'];
+        }
+
+        $existing = $db->table('pos_local_sales')->select('server_invoice_no')->where('uuid', $uuid)->get()->getRowArray();
+        if ($existing !== null) {
+            return ['uuid' => $uuid, 'status' => 'duplicate', 'server_invoice_no' => $existing['server_invoice_no']];
+        }
+
+        $code      = strtoupper((string) preg_replace('/[^A-Z0-9]/i', '', $shopCode !== '' ? $shopCode : 'S'));
+        $invoiceNo = 'POS-' . $code . '-' . date('Ymd') . '-' . random_int(1000, 9999);
+
+        try {
+            $db->transStart();
+            $db->table('pos_local_sales')->insert([
+                'uuid'               => $uuid,
+                'vendor_id'          => $vendorId,
+                'shop_id'            => $shopId,
+                'local_terminal_id'  => mb_substr((string) ($sale['terminal_id'] ?? ''), 0, 64),
+                'offline_invoice_no' => mb_substr((string) ($sale['offline_invoice_no'] ?? ''), 0, 40),
+                'server_invoice_no'  => $invoiceNo,
+                'subtotal'           => (float) ($sale['subtotal'] ?? 0),
+                'discount_total'     => (float) ($sale['discount_total'] ?? 0),
+                'taxable_value'      => (float) ($sale['taxable_value'] ?? 0),
+                'cgst'               => (float) ($sale['cgst'] ?? 0),
+                'sgst'               => (float) ($sale['sgst'] ?? 0),
+                'igst'               => (float) ($sale['igst'] ?? 0),
+                'cess'               => (float) ($sale['cess'] ?? 0),
+                'round_off'          => (float) ($sale['round_off'] ?? 0),
+                'grand_total'        => (float) ($sale['grand_total'] ?? 0),
+                'sold_at'            => (string) ($sale['sold_at'] ?? date('Y-m-d H:i:s')),
+            ]);
+            $saleId = (int) $db->insertID();
+
+            foreach ((array) ($sale['items'] ?? []) as $item) {
+                $item = (array) $item;
+                $db->table('pos_local_sale_items')->insert([
+                    'pos_local_sale_id' => $saleId,
+                    'variant_id'        => (int) ($item['variant_id'] ?? 0),
+                    'sku_snapshot'      => mb_substr((string) ($item['sku_snapshot'] ?? ''), 0, 64),
+                    'qty'               => (float) ($item['qty'] ?? 0),
+                    'unit_price'        => (float) ($item['unit_price'] ?? 0),
+                    'discount_amount'   => (float) ($item['discount_amount'] ?? 0),
+                    'taxable_value'     => (float) ($item['taxable_value'] ?? 0),
+                    'cgst'              => (float) ($item['cgst'] ?? 0),
+                    'sgst'              => (float) ($item['sgst'] ?? 0),
+                    'igst'              => (float) ($item['igst'] ?? 0),
+                    'cess'              => (float) ($item['cess'] ?? 0),
+                    'line_total'        => (float) ($item['line_total'] ?? 0),
+                ]);
+            }
+
+            foreach ((array) ($sale['payments'] ?? []) as $payment) {
+                $payment = (array) $payment;
+                $db->table('pos_local_sale_payments')->insert([
+                    'pos_local_sale_id' => $saleId,
+                    'tender_type'       => mb_substr((string) ($payment['tender_type'] ?? 'cash'), 0, 20),
+                    'amount'            => (float) ($payment['amount'] ?? 0),
+                ]);
+            }
+
+            $db->transComplete();
+            if ($db->transStatus() === false) {
+                return ['uuid' => $uuid, 'status' => 'conflict', 'reason' => 'transaction failed'];
+            }
+        } catch (\Throwable) {
+            return ['uuid' => $uuid, 'status' => 'conflict', 'reason' => 'server error'];
+        }
+
+        return ['uuid' => $uuid, 'status' => 'synced', 'server_invoice_no' => $invoiceNo];
+    }
+
+    // -------------------------------------------------------------------------
     // GET /api/v1/vendor/pos/catalog/(:shopId)
     // -------------------------------------------------------------------------
 

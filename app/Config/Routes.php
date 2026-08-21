@@ -1099,6 +1099,7 @@ $routes->group('api/v1', static function (RouteCollection $routes): void {
     // and pos/sync/push below, which are the older, terminal-activation-based ASP.NET
     // Windows POS's contract and must not change shape for it.
     $routes->post('vendor/pos/sync/pull', 'Api\V1\VendorPosController::syncPull', ['filter' => 'jwtAuth']);
+    $routes->post('vendor/pos/sync/push', 'Api\V1\VendorPosController::syncPush', ['filter' => 'jwtAuth']);
     $routes->get('vendor/dashboard',       'Api\V1\VendorApiController::dashboard',      ['filter' => 'jwtAuth']);
     $routes->get('vendor/dashboard/chart', 'Api\V1\VendorApiController::dashboardChart', ['filter' => 'jwtAuth']);
     $routes->get('vendor/analytics',       'Api\V1\VendorApiController::analytics',      ['filter' => 'jwtAuth']);
