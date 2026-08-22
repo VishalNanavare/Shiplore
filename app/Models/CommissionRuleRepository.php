@@ -130,4 +130,41 @@ final class CommissionRuleRepository
         return Database::connect()->table('commission_rules')->where('id', $id)->where('deleted_at', null)
             ->update(['deleted_at' => date('Y-m-d H:i:s'), 'updated_by' => $actorId]);
     }
+
+    /** @return list<array<string,mixed>> */
+    public function listOverrides(): array
+    {
+        return Database::connect()->table('vendor_commission_overrides')->where('deleted_at', null)
+            ->orderBy('id', 'DESC')->get()->getResultArray();
+    }
+
+    /** @return array<string,mixed>|null */
+    public function findOverride(int $id): ?array
+    {
+        $row = Database::connect()->table('vendor_commission_overrides')->where('id', $id)->where('deleted_at', null)->get()->getRowArray();
+
+        return $row ?: null;
+    }
+
+    /** @param array<string,mixed> $data */
+    public function createOverride(array $data, ?int $actorId): int
+    {
+        $db = Database::connect();
+        $db->table('vendor_commission_overrides')->insert(array_merge($data, ['created_by' => $actorId]));
+
+        return (int) $db->insertID();
+    }
+
+    /** @param array<string,mixed> $data */
+    public function updateOverride(int $id, array $data, ?int $actorId): bool
+    {
+        return Database::connect()->table('vendor_commission_overrides')->where('id', $id)->where('deleted_at', null)
+            ->update(array_merge($data, ['updated_by' => $actorId]));
+    }
+
+    public function deleteOverride(int $id, ?int $actorId = null): bool
+    {
+        return Database::connect()->table('vendor_commission_overrides')->where('id', $id)->where('deleted_at', null)
+            ->update(['deleted_at' => date('Y-m-d H:i:s'), 'updated_by' => $actorId]);
+    }
 }
