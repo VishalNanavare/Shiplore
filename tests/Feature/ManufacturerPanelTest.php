@@ -369,7 +369,7 @@ final class ManufacturerPanelTest extends CIUnitTestCase
 
         Services::injectMock('adminProductRepository', new class {
             public function allowedCategories(int $v): array { return [['id' => 10, 'name' => 'Fasteners', 'slug' => 'fasteners']]; }
-            public function formMasters(): array { return ['tax' => [['id' => 4, 'name' => 'GST 18%']], 'units' => [['id' => 1, 'name' => 'Piece']], 'brands' => []]; }
+            public function formMasters(?int $categoryId = null): array { return ['tax' => [['id' => 4, 'name' => 'GST 18%']], 'units' => [['id' => 1, 'name' => 'Piece']], 'brands' => []]; }
             public function content(int $p): array { return []; }
             public function seo(int $p): array { return []; }
             public function tagsCsv(int $p): string { return ''; }

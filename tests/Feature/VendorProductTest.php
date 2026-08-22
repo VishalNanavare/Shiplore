@@ -36,7 +36,7 @@ final class VendorProductTest extends CIUnitTestCase
         Services::injectMock('adminProductRepository', new class {
             public bool $created = false;
             public function allowedCategories(int $v): array { return [['id' => 10, 'name' => 'Men\'s Shoes', 'slug' => 'mens']]; }
-            public function formMasters(): array { return ['tax' => [['id' => 4, 'name' => 'GST 18%']], 'units' => [['id' => 1, 'name' => 'Piece']], 'brands' => []]; }
+            public function formMasters(?int $categoryId = null): array { return ['tax' => [['id' => 4, 'name' => 'GST 18%']], 'units' => [['id' => 1, 'name' => 'Piece']], 'brands' => []]; }
             public function skuExists(string $s): bool { return false; }
             public function createWithVariant(array $d, ?int $a = null): ?int { $this->created = true; return 9; }
             public function findById(int $id): ?array { return $id === 9 ? ['id' => 9, 'vendor_id' => 1, 'uuid' => 'u', 'title' => 'X', 'category_id' => 10, 'tax_class_id' => 4, 'base_unit_id' => 1, 'sku' => 'S', 'barcode' => null, 'mrp' => '1', 'base_price' => '1', 'description' => ''] : ($id === 99 ? ['id' => 99, 'vendor_id' => 2] : null); }

@@ -24,15 +24,13 @@ final class CatalogLookupRepository
 
         $variant = service('productVariantRepository')->definingAttributes($categoryId);
 
-        // descriptive (non-variant) attributes mapped to the category, else all
-        $mapped = $db->table('category_attributes ca')
+        // descriptive (non-variant) attributes mapped to the category. A category
+        // with no mapping is "not configured" — empty, never the full platform list.
+        $custom = $db->table('category_attributes ca')
             ->select('a.id, a.code, a.name, a.type')
             ->join('attributes a', 'a.id = ca.attribute_id', 'left')
             ->where('ca.category_id', $categoryId)->where('a.is_variant_defining', 0)->where('a.deleted_at', null)
             ->orderBy('a.name')->get()->getResultArray();
-        $custom = $mapped !== [] ? $mapped : $db->table('attributes')
-            ->select('id, code, name, type')->where('is_variant_defining', 0)->where('status', 'active')->where('deleted_at', null)
-            ->orderBy('name')->get()->getResultArray();
         foreach ($custom as &$c) {
             $c['values'] = $db->table('attribute_values')->select('id, value')->where('attribute_id', (int) $c['id'])->where('deleted_at', null)->orderBy('sort_order')->orderBy('value')->get()->getResultArray();
         }

@@ -575,6 +575,59 @@ trait MinimalSchema
     }
 
     /** database/sql/01_master.sql:575-589. */
+    protected function ensureTaxClassesTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_tax_classes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL, name TEXT NOT NULL, description TEXT, is_exempt INTEGER NOT NULL DEFAULT 0,
+            status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    protected function ensureUnitsTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_units (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL, name TEXT NOT NULL, base_unit_id INTEGER, factor REAL NOT NULL DEFAULT 1,
+            allow_fraction INTEGER NOT NULL DEFAULT 0, status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    protected function ensureBrandsTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_brands (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT, name TEXT NOT NULL, slug TEXT NOT NULL, logo_media_id INTEGER,
+            status TEXT NOT NULL DEFAULT "active", row_version INTEGER NOT NULL DEFAULT 1,
+            last_synced_at TEXT, origin TEXT NOT NULL DEFAULT "server",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    protected function ensureProductLabelsTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_product_labels (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL, name TEXT NOT NULL, color TEXT NOT NULL DEFAULT "primary",
+            sort_order INTEGER NOT NULL DEFAULT 0, status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    protected function ensureCategoryAttributesTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_category_attributes (
+            category_id INTEGER NOT NULL, attribute_id INTEGER NOT NULL, is_filterable INTEGER NOT NULL DEFAULT 1,
+            created_at TEXT, updated_at TEXT
+        )');
+    }
+
     protected function ensureAttributesTable(): void
     {
         $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_attributes (

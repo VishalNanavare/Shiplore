@@ -19,23 +19,22 @@ use Throwable;
 final class ProductVariantRepository
 {
     /**
-     * Variant-defining attributes (+values) a category exposes. If the category
-     * declares attributes via category_attributes, restrict to the variant-
-     * defining ones among them; otherwise fall back to all variant-defining.
+     * Variant-defining attributes (+values) a category exposes, restricted to
+     * what that category actually declares via category_attributes. A category
+     * with no mappings yet has variant governance that simply isn't configured —
+     * that must render as "nothing", never as every variant-defining attribute
+     * on the platform (the unrelated-checkbox-list bug: a Motorcycle Headlight
+     * Guard category showing 87 attributes including junk like "patel").
      * @return list<array<string,mixed>>
      */
     public function definingAttributes(int $categoryId): array
     {
         $db = Database::connect();
-        $mapped = $db->table('category_attributes ca')
+        $attrs = $db->table('category_attributes ca')
             ->select('a.id, a.code, a.name, a.type')
             ->join('attributes a', 'a.id = ca.attribute_id', 'left')
             ->where('ca.category_id', $categoryId)->where('a.is_variant_defining', 1)
             ->where('a.deleted_at', null)->orderBy('a.name')->get()->getResultArray();
-
-        $attrs = $mapped !== [] ? $mapped : $db->table('attributes')
-            ->select('id, code, name, type')->where('is_variant_defining', 1)->where('status', 'active')
-            ->where('deleted_at', null)->orderBy('name')->get()->getResultArray();
 
         foreach ($attrs as &$a) {
             $a['values'] = $db->table('attribute_values')->select('id, value, sort_order')

@@ -39,7 +39,7 @@ final class ShopComboTest extends CIUnitTestCase
         Services::injectMock('comboRepository', $this->combos);
         Services::injectMock('adminProductRepository', new class {
             public function allowedCategories(int $v): array { return [['id' => 10, 'name' => 'Snacks']]; }
-            public function formMasters(): array { return ['tax' => [['id' => 4, 'name' => 'GST 12%']], 'units' => [['id' => 1, 'name' => 'Piece']], 'brands' => []]; }
+            public function formMasters(?int $categoryId = null): array { return ['tax' => [['id' => 4, 'name' => 'GST 12%']], 'units' => [['id' => 1, 'name' => 'Piece']], 'brands' => []]; }
         });
     }
 

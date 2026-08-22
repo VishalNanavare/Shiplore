@@ -382,7 +382,7 @@ final class ProductController extends BaseVendorController
             'shops' => $shops, 'selectedShops' => array_map('intval', $selected),
             'shopLevels' => $pid ? $repo->shopStockLevels($pid, $shopIds) : [], 'lockShops' => ! $isOwner,
             'categories' => $repo->allowedCategories($this->vendorId()),
-            'masters' => $repo->formMasters(),
+            'masters' => $repo->formMasters($product['category_id'] ?? null),
             'images' => $pid ? service('mediaRepository')->forProduct($pid) : [],
             'content' => $pid ? $repo->content($pid) : [],
             'seo'     => $pid ? $repo->seo($pid) : [],

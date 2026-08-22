@@ -130,7 +130,7 @@ final class AdminCrudTest extends CIUnitTestCase
             public array $allowed;
             public function __construct(array $a) { $this->allowed = $a; }
             public function allowedCategories(int $v): array { return array_map(fn ($id) => ['id' => $id, 'name' => 'C' . $id, 'slug' => 'c' . $id], $this->allowed); }
-            public function formMasters(): array { return ['tax' => [['id' => 4, 'name' => 'GST 18%']], 'units' => [['id' => 1, 'name' => 'Piece']], 'brands' => []]; }
+            public function formMasters(?int $categoryId = null): array { return ['tax' => [['id' => 4, 'name' => 'GST 18%']], 'units' => [['id' => 1, 'name' => 'Piece']], 'brands' => []]; }
             public function skuExists(string $s): bool { return false; }
             public function createWithVariant(array $d, ?int $a = null): ?int { return 5; }
             public function findById(int $id): ?array { return null; }

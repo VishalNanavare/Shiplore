@@ -445,7 +445,7 @@ final class ProductController extends BaseManufacturerController
                     : 'This product will be added to your unit.',
 
                 'categories' => $repo->allowedCategories((int) $this->manufacturerId()),
-                'masters'    => $repo->formMasters(),
+                'masters'    => $repo->formMasters($product['category_id'] ?? null),
                 'images'     => $pid ? service('mediaRepository')->forProduct($pid) : [],
                 'content'    => $pid ? $repo->content($pid) : [],
                 'seo'        => $pid ? $repo->seo($pid) : [],

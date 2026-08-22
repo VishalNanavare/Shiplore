@@ -151,16 +151,28 @@ final class AdminProductRepository
     }
 
     /** @return array{tax:list,units:list,brands:list,labels:list,attributes:list,countries:list} */
-    public function formMasters(): array
+    /**
+     * 'attributes' (the specs-tab field list) is category-scoped: a category with
+     * no category_attributes mapping yet is "not configured" and gets an empty
+     * list, never every non-variant-defining attribute on the platform. $categoryId
+     * is null for a not-yet-chosen category on a new product.
+     */
+    public function formMasters(?int $categoryId = null): array
     {
         $db = Database::connect();
+
+        $attributes = $categoryId === null ? [] : $db->table('category_attributes ca')
+            ->select('a.id, a.code, a.name, a.type')
+            ->join('attributes a', 'a.id = ca.attribute_id', 'left')
+            ->where('ca.category_id', $categoryId)->where('a.is_variant_defining', 0)->where('a.deleted_at', null)
+            ->orderBy('a.name')->get()->getResultArray();
 
         return [
             'tax'        => $db->table('tax_classes')->select('id, code, name')->where('deleted_at', null)->get()->getResultArray(),
             'units'      => $db->table('units')->select('id, code, name')->where('deleted_at', null)->get()->getResultArray(),
             'brands'     => $db->table('brands')->select('id, name')->where('status', 'active')->where('deleted_at', null)->orderBy('name')->get()->getResultArray(),
             'labels'     => $db->table('product_labels')->select('id, code, name, color')->where('status', 'active')->where('deleted_at', null)->orderBy('sort_order')->get()->getResultArray(),
-            'attributes' => $db->table('attributes')->select('id, code, name, type')->where('is_variant_defining', 0)->where('deleted_at', null)->orderBy('name')->get()->getResultArray(),
+            'attributes' => $attributes,
             'countries'  => config('Countries')->list,
         ];
     }
