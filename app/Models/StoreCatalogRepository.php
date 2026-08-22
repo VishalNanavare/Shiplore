@@ -699,6 +699,68 @@ final class StoreCatalogRepository
             ->get()->getResultArray();
     }
 
+    /**
+     * Data source for the cascading variant picker (Track C-ii): the product's
+     * variant-defining attributes in order, each with only the values this
+     * product's own variants actually use, plus every variant's exact
+     * attribute-value combination and in-stock flag — so the storefront JS can
+     * filter, e.g., Size options down to what's available once Color is picked.
+     * Same "out of stock" rule as the quick-add sheet (variantsSheet()): managed
+     * inventory, no backorder, tracked, and zero available.
+     * @return array{attributes:list<array{id:int,name:string,values:list<array{id:int,value:string}>}>,variants:list<array{variant_id:int,sku:string,mrp:string,base_price:string,attribute_value_ids:array<int,int>,in_stock:bool}>}
+     */
+    public function variantMatrix(int $productId): array
+    {
+        $db = Database::connect();
+
+        $rows = $db->table('variant_attribute_values vav')
+            ->select('vav.variant_id, a.id AS attribute_id, a.name AS attribute_name, av.id AS value_id, av.value AS value_text, av.sort_order AS value_sort')
+            ->join('product_variants pv', 'pv.id = vav.variant_id')
+            ->join('attributes a', 'a.id = vav.attribute_id', 'left')
+            ->join('attribute_values av', 'av.id = vav.attribute_value_id', 'left')
+            ->where('pv.product_id', $productId)->where('pv.deleted_at', null)->where('pv.status', 'active')
+            ->orderBy('a.name', 'ASC')->orderBy('av.sort_order', 'ASC')->orderBy('av.value', 'ASC')
+            ->get()->getResultArray();
+
+        $attributes = [];
+        $seenValues = [];
+        $variantAttrs = [];
+        foreach ($rows as $r) {
+            $attrId = (int) $r['attribute_id'];
+            $valId  = (int) $r['value_id'];
+            if (! isset($attributes[$attrId])) {
+                $attributes[$attrId] = ['id' => $attrId, 'name' => $r['attribute_name'], 'values' => []];
+            }
+            if (! isset($seenValues[$attrId][$valId])) {
+                $seenValues[$attrId][$valId] = true;
+                $attributes[$attrId]['values'][] = ['id' => $valId, 'value' => $r['value_text']];
+            }
+            $variantAttrs[(int) $r['variant_id']][$attrId] = $valId;
+        }
+
+        $variantRows = $db->table('product_variants')
+            ->select('id AS variant_id, sku, mrp, base_price')
+            ->where('product_id', $productId)->where('deleted_at', null)->where('status', 'active')
+            ->orderBy('id', 'ASC')->get()->getResultArray();
+
+        $variants = [];
+        foreach ($variantRows as $v) {
+            $vid = (int) $v['variant_id'];
+            $st  = $this->variantStock($vid);
+            $out = $st['mode'] === 'managed' && ! $st['backorder'] && $st['tracked'] && $st['available'] <= 0;
+            $variants[] = [
+                'variant_id'          => $vid,
+                'sku'                 => $v['sku'],
+                'mrp'                 => $v['mrp'],
+                'base_price'          => $v['base_price'],
+                'attribute_value_ids' => $variantAttrs[$vid] ?? [],
+                'in_stock'            => ! $out,
+            ];
+        }
+
+        return ['attributes' => array_values($attributes), 'variants' => $variants];
+    }
+
     /** @return list<array<string,mixed>> active labels for the storefront badges */
     public function labels(int $productId): array
     {

@@ -591,6 +591,7 @@ trait MinimalSchema
             title TEXT, slug TEXT, description TEXT,
             is_online_enabled INTEGER NOT NULL DEFAULT 1,
             is_pos_enabled INTEGER NOT NULL DEFAULT 1,
+            inventory_mode TEXT NOT NULL DEFAULT "managed", backorder_enabled INTEGER NOT NULL DEFAULT 0,
             status TEXT NOT NULL DEFAULT "draft",
             product_type TEXT NOT NULL DEFAULT "simple",
             combo_inventory_mode TEXT,
@@ -613,6 +614,18 @@ trait MinimalSchema
             status TEXT NOT NULL DEFAULT "active",
             created_by INTEGER, updated_by INTEGER,
             created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /** database/22082026 current database.sql (inventory) — available is a real column here, not a generated one (SQLite fixture simplification, matching this file's convention for generated/enum columns elsewhere). */
+    protected function ensureInventoryTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_inventory (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            variant_id INTEGER NOT NULL, shop_id INTEGER NOT NULL,
+            on_hand REAL NOT NULL DEFAULT 0, reserved REAL NOT NULL DEFAULT 0, available REAL NOT NULL DEFAULT 0,
+            reorder_level REAL, status TEXT NOT NULL DEFAULT "in_stock",
+            created_at TEXT, updated_at TEXT
         )');
     }
 
