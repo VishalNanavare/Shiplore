@@ -412,7 +412,7 @@ final class SeedRealisticCatalog extends BaseCommand
         foreach ($variantIds as $vi => $v) {
             $zero  = ($vi % 7) === 0;
             $onHand = $zero ? 0 : 5 + (($vi * 3 + $productIndex) % 36);
-            $rows[] = ['variant_id' => (int) $v['id'], 'shop_id' => $shopId, 'on_hand' => $onHand, 'reserved' => 0];
+            $rows[] = ['uuid' => bin2hex(random_bytes(18)), 'variant_id' => (int) $v['id'], 'shop_id' => $shopId, 'on_hand' => $onHand, 'reserved' => 0];
         }
         if ($rows !== []) {
             $db->table('inventory')->insertBatch($rows);
