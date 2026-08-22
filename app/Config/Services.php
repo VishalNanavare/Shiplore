@@ -640,13 +640,23 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('commissionRateRepository') : new \App\Models\CommissionRateRepository();
     }
 
+    public static function commissionRuleRepository($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('commissionRuleRepository') : new \App\Models\CommissionRuleRepository();
+    }
+
+    public static function commissionRuleResolver($getShared = true)
+    {
+        return $getShared ? static::getSharedInstance('commissionRuleResolver') : new \App\Libraries\Commission\CommissionRuleResolver(static::commissionRuleRepository());
+    }
+
     public static function commissionService($getShared = true)
     {
         if ($getShared) {
             return static::getSharedInstance('commissionService');
         }
 
-        return new \App\Libraries\Commission\CommissionService(static::commissionRateRepository(), static::commissionResolver());
+        return new \App\Libraries\Commission\CommissionService(static::commissionRateRepository(), static::commissionResolver(), static::commissionRuleResolver());
     }
 
     public static function otpService($getShared = true)
