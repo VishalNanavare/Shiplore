@@ -41,9 +41,12 @@ final class CategoryRepositoryInferredAttributesTest extends CIUnitTestCase
             $db->table('attributes')->insert(['id' => $id, 'code' => strtolower($name), 'name' => $name, 'type' => 'select', 'is_variant_defining' => 1, 'status' => 'active']);
         }
 
-        // Published product using Color (spec) — should be inferred.
+        // Published product using Color (spec) — should be inferred. is_online_enabled=0
+        // keeps this out of unrelated storefront-visibility queries (StoreCatalogRepository's
+        // computeCount() has no category/vendor scope at all) while still satisfying this
+        // test's own status='published' bar for "real usage".
         $db->table('products')->where('id', 7101)->delete();
-        $db->table('products')->insert(['id' => 7101, 'vendor_id' => 1, 'category_id' => 69101, 'title' => 'Live Top', 'status' => 'published']);
+        $db->table('products')->insert(['id' => 7101, 'vendor_id' => 1, 'category_id' => 69101, 'title' => 'Live Top', 'status' => 'published', 'is_online_enabled' => 0]);
         $db->table('product_attribute_values')->where('product_id', 7101)->delete();
         $db->table('product_attribute_values')->insert(['product_id' => 7101, 'attribute_id' => 6101, 'attribute_value_id' => 1]);
 

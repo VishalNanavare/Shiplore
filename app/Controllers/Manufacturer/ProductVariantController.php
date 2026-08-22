@@ -63,6 +63,7 @@ final class ProductVariantController extends BaseManufacturerController
         return $this->render('manufacturer/products/variants', 'products', 'Variants', [
             'product'           => $product,
             'attributes'        => $vr->definingAttributes((int) $product['category_id']),
+            'existingSelections' => $vr->existingAttributeSelections($productId),
             'variants'          => $variants,
             'barcodesByVariant' => $bcByVariant,
             // Stock is shown ONLY when the view is scoped to a single unit. An owner

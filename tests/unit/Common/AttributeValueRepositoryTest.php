@@ -95,7 +95,10 @@ final class AttributeValueRepositoryTest extends CIUnitTestCase
         $repo = new AttributeValueRepository();
         $id  = $repo->create(['attribute_id' => 1001, 'value' => 'Spec Color'], 7);
 
-        $db->table('products')->insert(['id' => 3001, 'vendor_id' => 1, 'title' => 'Spec Product', 'status' => 'published']);
+        // is_online_enabled=0 keeps this out of unrelated storefront-visibility queries
+        // (StoreCatalogRepository's computeCount() has no category/vendor scope at all)
+        // while still satisfying this repository's own status='published' check.
+        $db->table('products')->insert(['id' => 3001, 'vendor_id' => 1, 'title' => 'Spec Product', 'status' => 'published', 'is_online_enabled' => 0]);
         $db->table('product_attribute_values')->insert(['product_id' => 3001, 'attribute_id' => 1001, 'attribute_value_id' => $id]);
 
         $this->assertSame(['Spec Product'], $repo->inUseBy($id));
@@ -107,7 +110,7 @@ final class AttributeValueRepositoryTest extends CIUnitTestCase
         $repo = new AttributeValueRepository();
         $id  = $repo->create(['attribute_id' => 1001, 'value' => 'Variant Color'], 7);
 
-        $db->table('products')->insert(['id' => 3002, 'vendor_id' => 1, 'title' => 'Variant Product', 'status' => 'published']);
+        $db->table('products')->insert(['id' => 3002, 'vendor_id' => 1, 'title' => 'Variant Product', 'status' => 'published', 'is_online_enabled' => 0]);
         $db->table('product_variants')->insert(['id' => 4001, 'product_id' => 3002, 'vendor_id' => 1, 'sku' => 'VP-1', 'mrp' => '10', 'base_price' => '9', 'status' => 'active']);
         $db->table('variant_attribute_values')->insert(['variant_id' => 4001, 'attribute_id' => 1001, 'attribute_value_id' => $id]);
 

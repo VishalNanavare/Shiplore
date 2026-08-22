@@ -49,7 +49,7 @@ final class AttributeRepositoryInUseTest extends CIUnitTestCase
             'type' => 'text', 'is_variant_defining' => 0, 'status' => 'active',
         ]);
         $db->table('products')->insert([
-            'id' => 601, 'vendor_id' => 1, 'title' => 'Live Product', 'status' => 'published',
+            'id' => 601, 'vendor_id' => 1, 'title' => 'Live Product', 'status' => 'published', 'is_online_enabled' => 0,
         ]);
         $db->table('product_attribute_values')->insert([
             'product_id' => 601, 'attribute_id' => 502, 'value_text' => 'some spec value',
@@ -88,7 +88,7 @@ final class AttributeRepositoryInUseTest extends CIUnitTestCase
             'id' => 504001, 'attribute_id' => 504, 'value' => 'Red',
         ]);
         $db->table('products')->insert([
-            'id' => 603, 'vendor_id' => 1, 'title' => 'Variant Product', 'status' => 'published',
+            'id' => 603, 'vendor_id' => 1, 'title' => 'Variant Product', 'status' => 'published', 'is_online_enabled' => 0,
         ]);
         $db->table('product_variants')->insert([
             'id' => 701, 'product_id' => 603, 'vendor_id' => 1, 'sku' => 'VP-RED',

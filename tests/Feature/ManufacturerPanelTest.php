@@ -931,6 +931,7 @@ final class ManufacturerPanelTest extends CIUnitTestCase
                 return [['id' => 1, 'code' => 'size', 'name' => 'Size', 'type' => 'select', 'values' => [['id' => 5, 'value' => 'M8', 'sort_order' => 1]]]];
             }
             public function listWithValues(int $p): array { return $this->variants; }
+            public function existingAttributeSelections(int $p): array { return []; }
             public function findVariant(int $id): ?array
             {
                 return ['id' => $id, 'product_id' => 77, 'vendor_id' => 1, 'making_price' => '40.00', 'base_price' => '60.00'];

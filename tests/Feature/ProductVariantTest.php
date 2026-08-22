@@ -63,6 +63,7 @@ final class ProductVariantTest extends CIUnitTestCase
             public function definingAttributes(int $c): array { return [['id' => 1, 'code' => 'size', 'name' => 'Size', 'type' => 'select', 'values' => [['id' => 5, 'value' => 'S', 'sort_order' => 1]]]]; }
             public function listWithValues(int $p): array { return []; }
             public function cleanupEmptyDefault(int $productId): void {}
+            public function existingAttributeSelections(int $productId): array { return []; }
         });
         // ProductVariantController::index() also calls productShopRepository->forProduct()
         // directly — real, unmocked, would hit "no such table: product_shops".
@@ -74,6 +75,36 @@ final class ProductVariantTest extends CIUnitTestCase
         // The button reads "Generate" with a dynamic combo-count span, not the older
         // static "Generate combinations" copy this test named itself after.
         $this->assertStringContainsString('id="genBtn"', (string) $r->getBody());
+    }
+
+    /**
+     * A3.1 regression test — the exact bug this session's screenshot showed: a
+     * product with existing Color variants, revisited, must show Color pre-ticked
+     * with its existing values embedded for the builder to pre-populate, not a
+     * blank slate.
+     */
+    public function testVariantsPageEmbedsExistingSelectionsForBuilderToPrepopulate(): void
+    {
+        $this->grant(['product.update']);
+        $this->mockProduct();
+        Services::injectMock('productVariantRepository', new class {
+            public function definingAttributes(int $c): array { return [['id' => 1, 'code' => 'color', 'name' => 'Color', 'type' => 'select', 'values' => [['id' => 5, 'value' => 'Red', 'sort_order' => 1]]]]; }
+            public function listWithValues(int $p): array { return []; }
+            public function cleanupEmptyDefault(int $productId): void {}
+            public function existingAttributeSelections(int $productId): array
+            {
+                return [1 => [['id' => 5, 'text' => 'Red']]];
+            }
+        });
+        Services::injectMock('productShopRepository', new class {
+            public function forProduct(int $productId): array { return []; }
+        });
+        $r = $this->withSession($this->sess())->get('admin/products/9/variants');
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('id="existingSelectionsData"', $body);
+        $this->assertStringContainsString('"text":"Red"', $body);
+        $this->assertStringContainsString('"id":5', $body);
     }
 
     public function testGenerateParsesSelectionsAndForcesVendor(): void

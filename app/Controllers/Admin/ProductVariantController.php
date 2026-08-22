@@ -40,6 +40,7 @@ final class ProductVariantController extends BaseController
             'userName' => session()->get('user_name') ?: 'User',
             'product' => $product,
             'attributes' => $vr->definingAttributes((int) $product['category_id']),
+            'existingSelections' => $vr->existingAttributeSelections($productId),
             'variants' => $variants, 'barcodesByVariant' => $bcByVariant,
             'stockLevels' => $stockLevels, 'inventoryMode' => $product['inventory_mode'] ?? 'managed',
             // Sibling pages the partial links top-right; previously hardcoded there.

@@ -45,6 +45,37 @@ final class ProductVariantRepository
         return $attrs;
     }
 
+    /**
+     * Distinct attribute-value pairs this product's existing (non-deleted) variants
+     * already use, grouped by attribute — so the builder can pre-check attribute
+     * toggles and pre-populate their value pickers on load instead of always
+     * starting from a blank slate (A3.1).
+     * @return array<int,list<array{id:int,text:string}>> attribute_id => values
+     */
+    public function existingAttributeSelections(int $productId): array
+    {
+        $rows = Database::connect()->table('variant_attribute_values vav')
+            ->select('vav.attribute_id, vav.attribute_value_id, av.value')
+            ->join('product_variants pv', 'pv.id = vav.variant_id')
+            ->join('attribute_values av', 'av.id = vav.attribute_value_id', 'left')
+            ->where('pv.product_id', $productId)->where('pv.deleted_at', null)
+            ->get()->getResultArray();
+
+        $byAttribute = [];
+        $seen = [];
+        foreach ($rows as $r) {
+            $attrId = (int) $r['attribute_id'];
+            $valId  = (int) $r['attribute_value_id'];
+            if (isset($seen[$attrId][$valId])) {
+                continue;
+            }
+            $seen[$attrId][$valId] = true;
+            $byAttribute[$attrId][] = ['id' => $valId, 'text' => (string) $r['value']];
+        }
+
+        return $byAttribute;
+    }
+
     /** @return array<string,true> signature => true, for existing variants */
     public function existingSignatures(int $productId): array
     {

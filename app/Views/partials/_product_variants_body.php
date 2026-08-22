@@ -2,8 +2,10 @@
 /**
  * Shared variant-builder + variant-table (Admin + Vendor). Expects:
  * $product, $attributes (defining attrs+values), $variants (listWithValues),
- * $genUrl, $variantUpdateBase, $variantDeleteBase, $bulkUrl, $barcodeBase,
- * $barcodesByVariant, $backUrl.
+ * $existingSelections (attribute_id => [{id,text}] already in use by this
+ * product's variants — pre-checks/pre-populates the builder instead of always
+ * starting blank), $genUrl, $variantUpdateBase, $variantDeleteBase, $bulkUrl,
+ * $barcodeBase, $barcodesByVariant, $backUrl.
  *
  * The builder is step-guided: tick the attributes that vary, then pick their
  * values via a searchable (AJAX) Select2 so an attribute with 1000+ values is
@@ -19,6 +21,7 @@ $lookupBase = str_contains((string) $genUrl, '/manufacturer/')
 // so both buttons 404'd and the prose below advertised pages that did not exist.
 // Each entry is [label, bootstrap icon, url]. Empty => no button group, no prose.
 $siblingLinks = $siblingLinks ?? [];
+$existingSelections = $existingSelections ?? [];
 
 // The two price columns. Vendors and admins price against MRP; a manufacturer prices
 // against its own making (production) cost, and leaves mrp unused at 0. Only the field
@@ -81,8 +84,11 @@ $priceB = $priceB ?? ['base_price', 'Selling price'];
             <div class="text-secondary small js-no-attr">Tick an attribute above to choose its values.</div>
         </div>
 
+        <div class="fw-semibold mb-2">Defaults for new variants</div>
         <div class="row g-3 align-items-end">
-            <div class="col-md-3"><label class="form-label"><span class="badge text-bg-primary me-1">3</span>SKU prefix</label><input name="sku_prefix" class="form-control" value="<?= esc(($variants[0]['sku'] ?? 'SKU'), 'attr') ?>" placeholder="e.g. SHOE"></div>
+            <div class="col-md-3"><label class="form-label">SKU prefix</label><input name="sku_prefix" class="form-control" value="<?= esc(($variants[0]['sku'] ?? 'SKU'), 'attr') ?>" placeholder="e.g. SHOE">
+                <div class="form-text">Inherits this product's existing SKU pattern — change it here if new variants should start differently.</div>
+            </div>
             <div class="col-md-3"><label class="form-label"><?= esc($priceA[1]) ?> (₹)</label><input name="<?= esc($priceA[0], 'attr') ?>" type="number" step="0.01" class="form-control" value="<?= esc(($product[$priceA[0]] ?? ''), 'attr') ?>"></div>
             <div class="col-md-3"><label class="form-label"><?= esc($priceB[1]) ?> (₹)</label><input name="<?= esc($priceB[0], 'attr') ?>" type="number" step="0.01" class="form-control" value="<?= esc(($product[$priceB[0]] ?? ''), 'attr') ?>"></div>
             <div class="col-md-3"><button class="btn btn-primary w-100" id="genBtn" disabled><i class="bi bi-grid-3x3-gap me-1"></i>Generate <span id="comboCount"></span></button></div>
@@ -93,8 +99,9 @@ $priceB = $priceB ?? ['base_price', 'Selling price'];
 
 <div class="card mb-3"><div class="card-body">
     <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#manualAdd"><i class="bi bi-plus-lg me-1"></i>Add one variant manually</button>
+    <div class="form-text mt-1 mb-0">For an odd combination that doesn't fit the grid above (e.g. only some sizes come in a fabric).</div>
     <div class="collapse mt-3" id="manualAdd">
-        <p class="text-secondary small mb-2">For an odd combination that doesn't fit the grid (e.g. only some sizes come in a fabric). Leave an attribute blank to omit it from this one variant.</p>
+        <p class="text-secondary small mb-2">Leave an attribute blank to omit it from this one variant.</p>
         <form method="post" action="<?= $genUrl ?>" class="row g-2 align-items-end" id="manualForm">
             <?= csrf_field() ?>
             <?php foreach ($attributes as $a): ?>
@@ -193,6 +200,7 @@ $priceB = $priceB ?? ['base_price', 'Selling price'];
 
 <template id="tpl-vbc"><div class="input-group input-group-sm mb-1 js-bc-row" style="max-width:640px"><span class="input-group-text"><input type="radio" name="barcode_primary" value="0"></span><select name="barcode_type[]" class="form-select" style="max-width:110px"><option>EAN13</option><option>UPC</option><option>CODE128</option><option>CODE39</option><option>QR</option><option>ISBN</option><option>CUSTOM</option></select><input name="barcode_value[]" class="form-control" placeholder="value"><select name="barcode_pack[]" class="form-select" style="max-width:100px"><option value="unit">Unit</option><option value="retail">Retail</option><option value="master">Master</option></select><button type="button" class="btn btn-outline-danger js-bcrm">&times;</button></div></template>
 
+<script type="application/json" id="existingSelectionsData"><?= json_encode($existingSelections, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
 <script>
 (function () {
   function ready(fn){ document.readyState!=='loading'?fn():document.addEventListener('DOMContentLoaded',fn); }
@@ -255,6 +263,24 @@ $priceB = $priceB ?? ['base_price', 'Selling price'];
       });
     });
     if($) $('.js-attr-values').on('change', recount);
+
+    // A3.1: reflect this product's existing variant state on load — pre-check the
+    // attributes it already varies by and pre-populate their pickers with the
+    // values already in use, rather than always starting from a blank slate.
+    var existingRaw = document.getElementById('existingSelectionsData');
+    var existing = {};
+    try { existing = existingRaw ? JSON.parse(existingRaw.textContent || '{}') : {}; } catch (e) { existing = {}; }
+    if ($) {
+      Object.keys(existing).forEach(function (attrId) {
+        var toggle = document.getElementById('at' + attrId), sel = selFor(attrId), row = rowFor(attrId);
+        if (!toggle || !sel) return;
+        toggle.checked = true;
+        if (row) row.classList.remove('d-none');
+        $(sel).prop('disabled', false);
+        existing[attrId].forEach(function (v) { $(sel).append(new Option(v.text, v.id, true, true)); });
+        $(sel).trigger('change');
+      });
+    }
     recount();
 
     // manual add: drop empty attribute selects so that attribute is omitted from the variant
