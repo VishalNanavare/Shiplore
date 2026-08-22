@@ -31,6 +31,11 @@ $aiUrl  = site_url($panelBase . 'ai-suggest');
 $hasAi      = $panelBase !== 'manufacturer/products/';
 $hasLibrary = ($mediaBase ?? '') !== '';
 $asBase = site_url($panelBase);
+// Same lookupBase derivation _product_variants_body.php already uses, for the specs
+// tab's select/multiselect attribute value pickers.
+$lookupBase = str_contains((string) $actionUrl, '/manufacturer/')
+    ? site_url('manufacturer/lookup/')
+    : (str_contains((string) $actionUrl, '/vendor/') ? site_url('vendor/lookup/') : site_url('admin/lookup/'));
 // S2 shop-assignment context (defaulted so the partial stays safe if a caller omits them).
 // One shop per product (owner's confirmed add flow): vendor -> shop -> type -> info.
 $ctx           = $ctx ?? 'admin';
@@ -336,7 +341,27 @@ $sections = [
                             <div id="faqRows"><?php foreach ((($faqs ?? []) ?: [['question' => '', 'answer' => '']]) as $f): ?><div class="row g-2 mb-2"><div class="col-md-4"><input name="faq_q[]" class="form-control" value="<?= esc($f['question'] ?? '', 'attr') ?>" placeholder="Question"></div><div class="col-md-7"><input name="faq_a[]" class="form-control" value="<?= esc($f['answer'] ?? '', 'attr') ?>" placeholder="Answer"></div><div class="col-md-1"><button type="button" class="btn btn-outline-danger js-rm w-100">&times;</button></div></div><?php endforeach; ?></div>
                             <button type="button" class="btn btn-sm btn-outline-secondary" data-add="#faqRows" data-tpl="faq">+ Add FAQ</button>
                         <?php elseif ($key === 'specs'): ?>
-                            <div class="row g-3"><?php if (empty($masters['attributes'])): ?><div class="col-12 text-secondary">No custom attributes for this category. Add non-variant attributes under Masters → Attributes.</div><?php else: foreach (($masters['attributes'] ?? []) as $a): ?><div class="col-md-4"><label class="form-label"><?= esc($a['name']) ?></label><input name="cattr[<?= esc($a['id'], 'attr') ?>]" class="form-control" value="<?= esc(($cattr[(int) $a['id']] ?? ''), 'attr') ?>"></div><?php endforeach; endif; ?></div>
+                            <div class="row g-3" data-attrvalues-base="<?= esc($lookupBase, 'attr') ?>"><?php if (empty($masters['attributes'])): ?><div class="col-12 text-secondary">No custom attributes for this category. Add non-variant attributes under Masters → Attributes.</div><?php else: foreach (($masters['attributes'] ?? []) as $a):
+                                $aid = (int) $a['id'];
+                                $cur = $cattr[$aid] ?? ['value_text' => null, 'attribute_value_id' => null, 'attribute_value_text' => null];
+                            ?><div class="col-md-4">
+                                <label class="form-label"><?= esc($a['name']) ?></label>
+                                <?php if (in_array($a['type'], ['select', 'multiselect'], true)): ?>
+                                    <!-- product_attribute_values has UNIQUE(product_id, attribute_id), so even a
+                                         multiselect-type attribute can only hold one value per product here — a
+                                         single-choice picker either way, not a real gap for this specific control. -->
+                                    <select class="form-select js-cattr-value" name="cattr[<?= $aid ?>]" data-attr="<?= $aid ?>">
+                                        <option value="">—</option>
+                                        <?php if ($cur['attribute_value_id']): ?><option value="<?= (int) $cur['attribute_value_id'] ?>" selected><?= esc((string) $cur['attribute_value_text']) ?></option><?php endif; ?>
+                                    </select>
+                                <?php elseif ($a['type'] === 'number'): ?>
+                                    <input type="number" name="cattr[<?= $aid ?>]" class="form-control" value="<?= esc($cur['value_text'] ?? '', 'attr') ?>">
+                                <?php elseif ($a['type'] === 'boolean'): ?>
+                                    <div class="form-check pt-2"><input type="checkbox" class="form-check-input" name="cattr[<?= $aid ?>]" value="1" <?= ($cur['value_text'] ?? '') === '1' ? 'checked' : '' ?>></div>
+                                <?php else: ?>
+                                    <input name="cattr[<?= $aid ?>]" class="form-control" value="<?= esc($cur['value_text'] ?? '', 'attr') ?>">
+                                <?php endif; ?>
+                            </div><?php endforeach; endif; ?></div>
                         <?php elseif ($key === 'relations'): ?>
                             <div class="row g-3"><?php foreach (['related' => 'Related', 'upsell' => 'Upsell', 'cross_sell' => 'Cross-sell', 'fbt' => 'Frequently Bought Together', 'alternative' => 'Alternative', 'similar' => 'Similar', 'accessory' => 'Accessory'] as $rt => $rl): ?><div class="col-md-6"><label class="form-label"><?= $rl ?> <span class="text-secondary small">(comma product IDs)</span></label><input name="relations[<?= $rt ?>]" class="form-control" value='<?= esc(implode(',', $relNow[$rt] ?? []), 'attr') ?>'></div><?php endforeach; ?></div>
                         <?php endif; ?>

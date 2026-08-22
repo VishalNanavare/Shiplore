@@ -49,6 +49,24 @@
     if ($ && $.fn && $.fn.select2) {
       $('.js-select').select2({ theme: 'bootstrap-5', width: '100%' });
       $('.js-tags').select2({ theme: 'bootstrap-5', width: '100%', tags: true, tokenSeparators: [','] });
+
+      // Specs tab: select/multiselect-type attribute values, searched via AJAX so an
+      // attribute with many values (e.g. Color) is typeable rather than a giant
+      // dropdown — same lookup endpoint and pattern the variant builder already uses.
+      var attrCard = document.querySelector('[data-attrvalues-base]');
+      var attrBase = attrCard ? attrCard.getAttribute('data-attrvalues-base') : '';
+      document.querySelectorAll('.js-cattr-value').forEach(function (sel) {
+        var attrId = sel.getAttribute('data-attr');
+        $(sel).select2({
+          theme: 'bootstrap-5', width: '100%', allowClear: true, placeholder: '—',
+          minimumInputLength: 0,
+          ajax: {
+            url: attrBase + 'attributes/' + attrId + '/values', delay: 200,
+            data: function (p) { return { q: p.term || '' }; },
+            processResults: function (d) { return { results: (d && d.results) || [] }; },
+          },
+        });
+      });
     }
 
     // Flatpickr date pickers (ISO yyyy-mm-dd to match the DATE columns).

@@ -799,16 +799,50 @@ final class AdminProductRepository
         }
     }
 
-    /** @param array<int|string,mixed> $map attribute_id => value (text or value_id) */
+    /**
+     * @param array<int|string,mixed> $map attribute_id => raw submitted value. For a
+     * select/multiselect-type attribute the raw value is the chosen attribute_value_id
+     * (as a string, same POST field name cattr[id] as every other type — no separate
+     * field needed); for text/number/boolean it's the literal value_text. Multiselect
+     * is rendered as a single-choice picker (see _product_form_body.php's specs tab):
+     * product_attribute_values has UNIQUE(product_id, attribute_id), so this table
+     * cannot structurally hold more than one value per attribute per product — true
+     * multi-value specs would need a schema change, out of scope here.
+     */
     private function saveCustomAttributes(int $productId, array $map, ?int $actorId): void
     {
         $db = Database::connect();
         $db->table('product_attribute_values')->where('product_id', $productId)->delete();
+        if ($map === []) {
+            return;
+        }
+
+        $attrIds = array_map('intval', array_keys($map));
+        $types   = [];
+        foreach ($db->table('attributes')->select('id, type')->whereIn('id', $attrIds)->get()->getResultArray() as $r) {
+            $types[(int) $r['id']] = (string) $r['type'];
+        }
+
         foreach ($map as $attrId => $val) {
             $attrId = (int) $attrId;
             $val    = trim((string) $val);
-            if ($attrId > 0 && $val !== '') {
-                $db->table('product_attribute_values')->insert(['product_id' => $productId, 'attribute_id' => $attrId, 'value_text' => mb_substr($val, 0, 500), 'created_by' => $actorId]);
+            if ($attrId <= 0 || $val === '') {
+                continue;
+            }
+            $isControlled = in_array($types[$attrId] ?? 'text', ['select', 'multiselect'], true);
+            if ($isControlled) {
+                $valueId = (int) $val;
+                if ($valueId > 0) {
+                    $db->table('product_attribute_values')->insert([
+                        'product_id' => $productId, 'attribute_id' => $attrId,
+                        'attribute_value_id' => $valueId, 'created_by' => $actorId,
+                    ]);
+                }
+            } else {
+                $db->table('product_attribute_values')->insert([
+                    'product_id' => $productId, 'attribute_id' => $attrId,
+                    'value_text' => mb_substr($val, 0, 500), 'created_by' => $actorId,
+                ]);
             }
         }
     }
@@ -886,12 +920,26 @@ final class AdminProductRepository
         return Database::connect()->table('product_faqs')->where('product_id', $productId)->where('deleted_at', null)->orderBy('sort_order')->get()->getResultArray();
     }
 
-    /** @return array<int,string> attribute_id => value_text */
+    /**
+     * @return array<int,array{value_text:?string,attribute_value_id:?int,attribute_value_text:?string}>
+     * attribute_id => the saved value. For a select/multiselect-type attribute,
+     * attribute_value_id/attribute_value_text are populated and value_text is null;
+     * for text/number/boolean it's the reverse.
+     */
     public function customAttributes(int $productId): array
     {
         $out = [];
-        foreach (Database::connect()->table('product_attribute_values')->where('product_id', $productId)->get()->getResultArray() as $r) {
-            $out[(int) $r['attribute_id']] = (string) ($r['value_text'] ?? '');
+        $rows = Database::connect()->table('product_attribute_values pav')
+            ->select('pav.attribute_id, pav.value_text, pav.attribute_value_id, av.value AS attribute_value_text')
+            ->join('attribute_values av', 'av.id = pav.attribute_value_id', 'left')
+            ->where('pav.product_id', $productId)
+            ->get()->getResultArray();
+        foreach ($rows as $r) {
+            $out[(int) $r['attribute_id']] = [
+                'value_text' => $r['value_text'] !== null ? (string) $r['value_text'] : null,
+                'attribute_value_id' => $r['attribute_value_id'] !== null ? (int) $r['attribute_value_id'] : null,
+                'attribute_value_text' => $r['attribute_value_text'] !== null ? (string) $r['attribute_value_text'] : null,
+            ];
         }
 
         return $out;
