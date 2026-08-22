@@ -37,7 +37,19 @@ $loc    = $location ?? service('locationService')->get();
 $c      = $content ?? [];
 $specs  = $specs ?? [];
 $vars   = $variants ?? [];
-$picker = count($vars) > 1;
+$matrix = $variantMatrix ?? ['attributes' => [], 'variants' => []];
+// Cascading picker (Color -> Size) only kicks in with 2+ variant-defining
+// attributes; a single-attribute product keeps the existing flat picker below.
+$cascade = count($matrix['attributes']) >= 2 && count($matrix['variants']) > 1;
+$picker  = ! $cascade && count($vars) > 1;
+$cascadeDefault = null;
+if ($cascade) {
+    foreach ($matrix['variants'] as $mv) {
+        if ($mv['in_stock']) { $cascadeDefault = $mv; break; }
+    }
+    $cascadeDefault = $cascadeDefault ?? $matrix['variants'][0];
+}
+$defaultValueIds = $cascadeDefault['attribute_value_ids'] ?? [];
 // strip_tags() removes disallowed TAGS but keeps ATTRIBUTES on the tags it allows, so
 // `<p onmouseover="...">` survives it untouched. These five fields are vendor-authored
 // rich text stored verbatim, echoed unescaped on this PUBLIC page, and a vendor can
@@ -98,7 +110,24 @@ $hasInfo = ! empty($c['ingredients']) || ! empty($c['usage_instructions']) || ! 
             </div>
         </div>
 
-        <?php if ($picker): ?>
+        <?php if ($cascade): ?>
+            <script type="application/json" id="variantMatrixData"><?= json_encode($matrix, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+            <div class="mb-3" id="stCascade">
+                <?php foreach ($matrix['attributes'] as $ai => $attr): ?>
+                    <div class="mb-2 st-cascade-row" data-attr-id="<?= (int) $attr['id'] ?>" data-attr-index="<?= $ai ?>">
+                        <label class="form-label small fw-semibold mb-1"><?= esc($attr['name']) ?></label>
+                        <div class="st-variants">
+                            <?php foreach ($attr['values'] as $val): ?>
+                                <button type="button" class="st-variant st-cascade-opt<?= (($defaultValueIds[$attr['id']] ?? null) === $val['id']) ? ' active' : '' ?>" data-value-id="<?= (int) $val['id'] ?>">
+                                    <span class="st-variant-label"><?= esc($val['value']) ?></span>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                <div class="small" id="stCascadeStock" style="<?= ($cascadeDefault['in_stock'] ?? true) ? 'display:none' : '' ?>"><span class="badge text-bg-light border text-secondary">Out of stock for this combination</span></div>
+            </div>
+        <?php elseif ($picker): ?>
             <div class="mb-3">
                 <label class="form-label small fw-semibold mb-1">Select option <span class="text-secondary fw-normal">(<?= count($vars) ?>)</span></label>
                 <div class="st-variants" id="stVariants">
@@ -125,11 +154,11 @@ $hasInfo = ! empty($c['ingredients']) || ! empty($c['usage_instructions']) || ! 
                 <div class="text-secondary small">Inclusive of all taxes</div>
             </div>
             <div class="d-flex gap-2 align-items-center">
-                <?php if (! empty($product['variant_id']) || $picker): ?>
+                <?php if (! empty($product['variant_id']) || $picker || $cascade): ?>
                     <form method="post" action="<?= site_url('store/cart/add') ?>" class="d-flex gap-2 align-items-center" data-ajax-stay><?= csrf_field() ?>
-                        <input type="hidden" name="variant_id" id="stVarId" value="<?= esc($picker ? $vars[0]['variant_id'] : $product['variant_id'], 'attr') ?>">
+                        <input type="hidden" name="variant_id" id="stVarId" value="<?= esc($cascade ? $cascadeDefault['variant_id'] : ($picker ? $vars[0]['variant_id'] : $product['variant_id']), 'attr') ?>">
                         <input name="qty" type="number" min="<?= esc($min, 'attr') ?>" step="<?= esc($step, 'attr') ?>" <?= $max ? 'max="' . esc($max, 'attr') . '"' : '' ?> value="<?= esc($min, 'attr') ?>" class="form-control form-control-sm" style="width:74px">
-                        <button class="btn btn-success btn-lg px-4 fw-semibold"><i class="bi bi-bag-plus me-1"></i>Add</button>
+                        <button type="submit" id="stAddBtn" class="btn btn-success btn-lg px-4 fw-semibold"<?= ($cascade && ! $cascadeDefault['in_stock']) ? ' disabled' : '' ?>><i class="bi bi-bag-plus me-1"></i>Add</button>
                     </form>
                 <?php endif; ?>
                 <form method="post" action="<?= site_url('store/wishlist/add') ?>" data-ajax-stay><?= csrf_field() ?><input type="hidden" name="product_id" value="<?= esc($product['id'], 'attr') ?>"><button class="btn btn-outline-secondary btn-lg" title="Save"><i class="bi bi-heart"></i></button></form>
@@ -245,6 +274,94 @@ $hasInfo = ! empty($c['ingredients']) || ! empty($c['usage_instructions']) || ! 
         if (m > p) { mrpEl.textContent = fmt(m); mrpEl.style.display = ''; offEl.textContent = Math.round((m - p) / m * 100) + '% OFF'; offEl.style.display = ''; }
         else { if (mrpEl) { mrpEl.style.display = 'none'; } if (offEl) { offEl.style.display = 'none'; } }
     });
+})();
+</script>
+<?php endif; ?>
+<?php if ($cascade): ?>
+<script>
+(function () {
+    var dataEl = document.getElementById('variantMatrixData');
+    var cascadeWrap = document.getElementById('stCascade');
+    if (!dataEl || !cascadeWrap) { return; }
+    var matrix; try { matrix = JSON.parse(dataEl.textContent || '{}'); } catch (e) { return; }
+    var attrs = matrix.attributes || [], variants = matrix.variants || [];
+    var fmt = function (n) { return '₹' + Math.round(n).toLocaleString('en-IN'); };
+    var selected = {}; // attribute id -> value id, from whichever buttons render .active
+
+    // build `selected` from the DOM so it reflects the server-rendered defaults.
+    cascadeWrap.querySelectorAll('.st-cascade-row').forEach(function (row) {
+        var aid = parseInt(row.getAttribute('data-attr-id'), 10);
+        var activeBtn = row.querySelector('.st-cascade-opt.active');
+        if (activeBtn) { selected[aid] = parseInt(activeBtn.getAttribute('data-value-id'), 10); }
+    });
+
+    function variantsMatchingBefore(index) {
+        // variants matching every LOCKED-IN selection for attributes strictly before `index`.
+        return variants.filter(function (v) {
+            for (var i = 0; i < index; i++) {
+                var aid = attrs[i].id;
+                if (v.attribute_value_ids[aid] !== selected[aid]) { return false; }
+            }
+            return true;
+        });
+    }
+
+    function refreshRow(index) {
+        var row = cascadeWrap.querySelector('.st-cascade-row[data-attr-index="' + index + '"]');
+        if (!row) { return; }
+        var candidates = variantsMatchingBefore(index);
+        var stockByValue = {}; // value id -> any candidate in stock
+        candidates.forEach(function (v) {
+            var vid = v.attribute_value_ids[attrs[index].id];
+            if (vid === undefined) { return; }
+            if (!(vid in stockByValue)) { stockByValue[vid] = false; }
+            if (v.in_stock) { stockByValue[vid] = true; }
+        });
+        row.querySelectorAll('.st-cascade-opt').forEach(function (btn) {
+            var vid = parseInt(btn.getAttribute('data-value-id'), 10);
+            var exists = vid in stockByValue;
+            btn.style.display = exists ? '' : 'none';
+            btn.disabled = exists && ! stockByValue[vid];
+            btn.classList.toggle('st-cascade-out', exists && ! stockByValue[vid]);
+        });
+    }
+
+    function resolveAndApply() {
+        if (! attrs.every(function (a) { return selected[a.id] !== undefined; })) { return; }
+        var match = variants.filter(function (v) {
+            return attrs.every(function (a) { return v.attribute_value_ids[a.id] === selected[a.id]; });
+        })[0];
+        if (! match) { return; }
+        var hid = document.getElementById('stVarId'); if (hid) { hid.value = match.variant_id; }
+        var p = parseFloat(match.base_price) || 0, m = parseFloat(match.mrp) || 0;
+        var priceEl = document.getElementById('stPrice'); if (priceEl) { priceEl.textContent = fmt(p); }
+        var mrpEl = document.getElementById('stMrp'), offEl = document.getElementById('stOff');
+        if (m > p) { mrpEl.textContent = fmt(m); mrpEl.style.display = ''; offEl.textContent = Math.round((m - p) / m * 100) + '% OFF'; offEl.style.display = ''; }
+        else { if (mrpEl) { mrpEl.style.display = 'none'; } if (offEl) { offEl.style.display = 'none'; } }
+        var stockNote = document.getElementById('stCascadeStock'); if (stockNote) { stockNote.style.display = match.in_stock ? 'none' : ''; }
+        var addBtn = document.getElementById('stAddBtn'); if (addBtn) { addBtn.disabled = ! match.in_stock; }
+    }
+
+    cascadeWrap.addEventListener('click', function (e) {
+        var b = e.target.closest ? e.target.closest('.st-cascade-opt') : null;
+        if (! b || b.disabled) { return; }
+        var row = b.closest('.st-cascade-row');
+        var idx = parseInt(row.getAttribute('data-attr-index'), 10);
+        row.querySelectorAll('.st-cascade-opt').forEach(function (x) { x.classList.remove('active'); });
+        b.classList.add('active');
+        selected[attrs[idx].id] = parseInt(b.getAttribute('data-value-id'), 10);
+        // a change earlier in the chain invalidates every LATER selection — re-derive forward.
+        for (var i = idx + 1; i < attrs.length; i++) {
+            delete selected[attrs[i].id];
+            var laterRow = cascadeWrap.querySelector('.st-cascade-row[data-attr-index="' + i + '"]');
+            if (laterRow) { laterRow.querySelectorAll('.st-cascade-opt').forEach(function (x) { x.classList.remove('active'); }); }
+            refreshRow(i);
+        }
+        resolveAndApply();
+    });
+
+    attrs.forEach(function (a, i) { refreshRow(i); });
+    resolveAndApply();
 })();
 </script>
 <?php endif; ?>

@@ -43,6 +43,19 @@ final class StorefrontTest extends CIUnitTestCase
             public function typeFacets(array $opts): array { return []; }
             public function priceBounds(array $opts): array { return ['lo' => 0.0, 'hi' => 0.0]; }
             public function variants(int $productId): array { return [['variant_id' => 3, 'sku' => 'SK1', 'base_price' => '2499', 'mrp' => '3999', 'is_default' => 1, 'label' => null]]; }
+            public function variantMatrix(int $productId): array
+            {
+                return [
+                    'attributes' => [
+                        ['id' => 1, 'name' => 'Color', 'values' => [['id' => 10, 'value' => 'Black'], ['id' => 11, 'value' => 'Purple']]],
+                        ['id' => 2, 'name' => 'Size', 'values' => [['id' => 20, 'value' => 'S'], ['id' => 21, 'value' => 'M']]],
+                    ],
+                    'variants' => [
+                        ['variant_id' => 3, 'sku' => 'SK1', 'mrp' => '3999', 'base_price' => '2499', 'attribute_value_ids' => [1 => 10, 2 => 20], 'in_stock' => true],
+                        ['variant_id' => 4, 'sku' => 'SK2', 'mrp' => '3999', 'base_price' => '2499', 'attribute_value_ids' => [1 => 11, 2 => 21], 'in_stock' => true],
+                    ],
+                ];
+            }
         });
     }
 
@@ -92,6 +105,26 @@ final class StorefrontTest extends CIUnitTestCase
         $this->assertStringContainsString('application/ld+json', $body);
         $this->assertStringContainsString('"@type":"Product"', $body);
         $this->assertStringContainsString('Running Sneakers', $body);
+    }
+
+    /**
+     * Track C-ii — the product detail page must embed the cascading variant
+     * matrix (attributes + per-variant attribute-value ids + stock) so the JS
+     * can filter Size options by the chosen Color, not just render one flat
+     * button per full combo.
+     */
+    public function testProductDetailEmbedsVariantMatrixForCascadingPicker(): void
+    {
+        $this->catalogMock();
+        Services::injectMock('mediaRepository', new class {
+            public function forProduct(int $id): array { return []; }
+        });
+        $r = $this->get('store/product/running-sneakers');
+        $r->assertStatus(200);
+        $body = (string) $r->getBody();
+        $this->assertStringContainsString('id="variantMatrixData"', $body);
+        $this->assertStringContainsString('"name":"Color"', $body);
+        $this->assertStringContainsString('"name":"Size"', $body);
     }
 
     public function testNearbyShopsRender(): void

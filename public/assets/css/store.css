@@ -165,6 +165,10 @@ body.st-body { background: var(--st-bg); color: var(--st-ink); font-family: "Int
 .st-variant-label { font-size: .8rem; font-weight: 600; color: var(--st-ink); }
 .st-variant-price { font-size: .8rem; font-weight: 700; color: var(--st-primary); margin-top: .1rem; }
 
+/* ---- Cascading variant picker (Color -> Size), product detail ---- */
+.st-cascade-opt.st-cascade-out { opacity: .45; text-decoration: line-through; cursor: not-allowed; }
+.st-cascade-opt:disabled { pointer-events: none; }
+
 /* ---- Quick-add variant bottom sheet ---- */
 .st-variant-sheet { height: auto; max-height: 72vh; border-top-left-radius: 1rem; border-top-right-radius: 1rem; }
 .st-variant-sheet .offcanvas-body { overflow-y: auto; }

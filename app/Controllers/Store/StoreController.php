@@ -263,6 +263,7 @@ final class StoreController extends BaseStoreController
             'content'   => $repo->content($pid),
             'specs'     => $repo->specifications($pid),
             'variants'  => $repo->variants($pid),
+            'variantMatrix' => $repo->variantMatrix($pid),
             'location'  => $loc,
         ]);
     }
