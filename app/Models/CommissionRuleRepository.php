@@ -56,4 +56,41 @@ final class CommissionRuleRepository
 
         return $base->where('category_id', null)->get()->getRowArray();
     }
+
+    public function ruleForProduct(int $productId, float $gmv): ?array
+    {
+        return $this->matchRule('product_id', $productId, $gmv);
+    }
+
+    public function ruleForCategory(int $categoryId, float $gmv): ?array
+    {
+        return $this->matchRule('category_id', $categoryId, $gmv);
+    }
+
+    public function ruleForBusinessType(int $businessTypeId, float $gmv): ?array
+    {
+        return $this->matchRule('business_type_id', $businessTypeId, $gmv);
+    }
+
+    /**
+     * Shared matcher for the three commission_rules scopes. Only 'percentage'/'fixed'
+     * commission_type rows are ever matched — 'slab'/'exception' are out of scope for
+     * this resolver (no design exists for them), so they are simply excluded here,
+     * never half-applied.
+     * @return array<string,mixed>|null
+     */
+    private function matchRule(string $scopeColumn, int $scopeId, float $gmv): ?array
+    {
+        $today = date('Y-m-d');
+
+        return Database::connect()->table('commission_rules')
+            ->where($scopeColumn, $scopeId)->where('deleted_at', null)
+            ->whereIn('commission_type', ['percentage', 'fixed'])
+            ->groupStart()->where('effective_from', null)->orWhere('effective_from <=', $today)->groupEnd()
+            ->groupStart()->where('effective_to', null)->orWhere('effective_to >=', $today)->groupEnd()
+            ->groupStart()->where('min_gmv', null)->orWhere('min_gmv <=', $gmv)->groupEnd()
+            ->groupStart()->where('max_gmv', null)->orWhere('max_gmv >=', $gmv)->groupEnd()
+            ->orderBy('priority', 'DESC')->orderBy('id', 'ASC')
+            ->get()->getRowArray();
+    }
 }
