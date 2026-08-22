@@ -593,6 +593,7 @@ trait MinimalSchema
         $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_attribute_values (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             attribute_id INTEGER NOT NULL, value TEXT NOT NULL, sort_order INTEGER NOT NULL DEFAULT 0,
+            status TEXT NOT NULL DEFAULT \'active\',
             created_by INTEGER, updated_by INTEGER,
             created_at TEXT, updated_at TEXT, deleted_at TEXT
         )');
