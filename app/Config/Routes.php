@@ -352,6 +352,7 @@ $routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']
     $routes->post('attributes/(:num)/update', 'Admin\AttributeController::update/$1', ['filter' => 'csrf']);
     $routes->post('attributes/(:num)/activate', 'Admin\AttributeController::activate/$1', ['filter' => 'csrf']);
     $routes->post('attributes/(:num)/deactivate', 'Admin\AttributeController::deactivate/$1', ['filter' => 'csrf']);
+    $routes->post('attributes/(:num)/delete', 'Admin\AttributeController::delete/$1', ['filter' => 'csrf']);
 
     // Brands
     $routes->get('brands', 'Admin\BrandController::index');

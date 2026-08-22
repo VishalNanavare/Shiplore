@@ -61,6 +61,30 @@ final class AttributeController extends BaseController
         return $this->transition($id, 'inactive', 'Attribute deactivated.');
     }
 
+    public function delete(int $id): RedirectResponse
+    {
+        if ($denied = $this->guard('attribute.manage')) {
+            return $denied;
+        }
+
+        $repo  = service('attributeRepository');
+        $inUse = $repo->inUseBy($id);
+        if ($inUse !== []) {
+            return redirect()->to('admin/attributes')->with(
+                'error',
+                'Cannot delete: still in use by ' . implode(', ', $inUse) . '.',
+            );
+        }
+
+        if ($repo->findById($id) === null) {
+            return redirect()->to('admin/attributes')->with('error', 'Attribute not found.');
+        }
+
+        $repo->delete($id, (int) session()->get('user_id'));
+
+        return redirect()->to('admin/attributes')->with('success', 'Attribute deleted.');
+    }
+
     private function transition(int $id, string $status, string $okMessage): RedirectResponse
     {
         if ($denied = $this->guard('attribute.manage')) {
@@ -68,6 +92,17 @@ final class AttributeController extends BaseController
         }
 
         $repo = service('attributeRepository');
+
+        if ($status === 'inactive') {
+            $inUse = $repo->inUseBy($id);
+            if ($inUse !== []) {
+                return redirect()->to('admin/attributes')->with(
+                    'error',
+                    'Cannot deactivate: still in use by ' . implode(', ', $inUse) . '.',
+                );
+            }
+        }
+
         if ($repo->findById($id) === null) {
             return redirect()->to('admin/attributes')->with('error', 'Attribute not found.');
         }
