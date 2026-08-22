@@ -31,6 +31,7 @@
                             <?php else: ?>
                                 <form method="post" action="<?= site_url('admin/attributes/' . $a['id'] . '/deactivate') ?>" data-ajax-refresh><?= csrf_field() ?><button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pause"></i> Deactivate</button></form>
                             <?php endif; ?>
+                            <form method="post" action="<?= site_url('admin/attributes/' . $a['id'] . '/delete') ?>" data-ajax-refresh onsubmit="return confirm('Delete this attribute? This cannot be undone. Blocked automatically if it is still in use by a published product.')" class="d-inline"><?= csrf_field() ?><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form>
                         </td>
                     </tr>
                 <?php endforeach; ?>
