@@ -93,4 +93,41 @@ final class CommissionRuleRepository
             ->orderBy('priority', 'DESC')->orderBy('id', 'ASC')
             ->get()->getRowArray();
     }
+
+    /** @return list<array<string,mixed>> */
+    public function listRules(): array
+    {
+        return Database::connect()->table('commission_rules')->where('deleted_at', null)
+            ->orderBy('priority', 'DESC')->orderBy('id', 'DESC')->get()->getResultArray();
+    }
+
+    /** @return array<string,mixed>|null */
+    public function findRule(int $id): ?array
+    {
+        $row = Database::connect()->table('commission_rules')->where('id', $id)->where('deleted_at', null)->get()->getRowArray();
+
+        return $row ?: null;
+    }
+
+    /** @param array<string,mixed> $data */
+    public function createRule(array $data, ?int $actorId): int
+    {
+        $db = Database::connect();
+        $db->table('commission_rules')->insert(array_merge($data, ['created_by' => $actorId]));
+
+        return (int) $db->insertID();
+    }
+
+    /** @param array<string,mixed> $data */
+    public function updateRule(int $id, array $data, ?int $actorId): bool
+    {
+        return Database::connect()->table('commission_rules')->where('id', $id)->where('deleted_at', null)
+            ->update(array_merge($data, ['updated_by' => $actorId]));
+    }
+
+    public function deleteRule(int $id, ?int $actorId = null): bool
+    {
+        return Database::connect()->table('commission_rules')->where('id', $id)->where('deleted_at', null)
+            ->update(['deleted_at' => date('Y-m-d H:i:s'), 'updated_by' => $actorId]);
+    }
 }
