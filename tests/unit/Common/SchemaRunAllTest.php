@@ -31,6 +31,10 @@ final class SchemaRunAllTest extends CIUnitTestCase
         // One-off backfill over EXISTING vendor rows; a fresh database has nothing
         // to backfill, and running it is a no-op at best.
         '14_vendor_business_type_assign.sql',
+        // Same shape: one-off backfill of categories.default_commission_rate /
+        // business_types.default_commission_rate into commission_rules rows. A
+        // fresh database has no default_commission_rate values to migrate.
+        '88_commission_rules_backfill.sql',
         // Demo/sample data, loaded by hand when someone wants a populated panel.
         '99_demo_seed.sql',
         '99b_demo_staff_logins.sql',

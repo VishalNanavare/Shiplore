@@ -319,6 +319,12 @@ $routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']
     $routes->get('commission', 'Admin\CommissionController::index');
     $routes->post('commission/(:num)/activate', 'Admin\CommissionController::activate/$1', ['filter' => 'csrf']);
     $routes->post('commission/(:num)/deactivate', 'Admin\CommissionController::deactivate/$1', ['filter' => 'csrf']);
+    $routes->get('commission-rules', 'Admin\CommissionRuleController::index');
+    $routes->get('commission-rules/new', 'Admin\CommissionRuleController::new');
+    $routes->post('commission-rules/store', 'Admin\CommissionRuleController::store', ['filter' => 'csrf']);
+    $routes->get('commission-rules/(:num)/edit', 'Admin\CommissionRuleController::edit/$1');
+    $routes->post('commission-rules/(:num)/update', 'Admin\CommissionRuleController::update/$1', ['filter' => 'csrf']);
+    $routes->post('commission-rules/(:num)/delete', 'Admin\CommissionRuleController::delete/$1', ['filter' => 'csrf']);
 
     // Customers
     $routes->get('customers', 'Admin\CustomerController::index');

@@ -8,10 +8,17 @@
 <?php if ($m = session('success')): ?><div class="alert alert-success"><?= esc($m) ?></div><?php endif; ?>
 <?php if ($m = session('error')): ?><div class="alert alert-danger"><?= esc($m) ?></div><?php endif; ?>
 
-<div class="alert alert-info d-flex align-items-center"><i class="bi bi-info-circle me-2"></i><div class="small">Commission resolves in priority: <strong>Product → Subcategory → Category → Business Type → Global default</strong>.</div></div>
+<div class="alert alert-info d-flex align-items-center"><i class="bi bi-info-circle me-2"></i><div class="small">Commission resolves in priority: <strong>Vendor override → Product rule → Category rule (walking every ancestor) → Business Type rule → Global default</strong>.</div></div>
 
 <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center"><span class="fw-semibold">Commission Plans</span><span class="text-secondary small"><?= count($plans) ?> total</span></div>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Commission Plans</span>
+        <div class="d-flex gap-2 align-items-center">
+            <span class="text-secondary small"><?= count($plans) ?> total</span>
+            <a href="<?= site_url('admin/commission-rules') ?>" class="btn btn-sm btn-outline-primary">Manage rules</a>
+            <a href="<?= site_url('admin/vendor-commission-overrides') ?>" class="btn btn-sm btn-outline-primary">Manage overrides</a>
+        </div>
+    </div>
     <div class="card-body">
         <?php if (empty($plans)): ?>
             <div class="text-center text-secondary py-5"><i class="bi bi-percent display-6 d-block mb-2"></i>No commission plans yet.</div>
