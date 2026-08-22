@@ -334,6 +334,8 @@ $routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']
     $routes->post('categories/(:num)/update', 'Admin\CategoryController::update/$1', ['filter' => 'csrf']);
     $routes->post('categories/(:num)/activate', 'Admin\CategoryController::activate/$1', ['filter' => 'csrf']);
     $routes->post('categories/(:num)/deactivate', 'Admin\CategoryController::deactivate/$1', ['filter' => 'csrf']);
+    $routes->get('categories/(:num)/attributes', 'Admin\CategoryController::attributesForm/$1');
+    $routes->post('categories/(:num)/attributes/save', 'Admin\CategoryController::saveAttributes/$1', ['filter' => 'csrf']);
 
     // Masters — Business Types
     $routes->get('business-types', 'Admin\BusinessTypeController::index');

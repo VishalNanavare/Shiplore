@@ -97,6 +97,46 @@ final class CategoryRepository
         ]);
     }
 
+    /**
+     * Attribute ids currently mapped to this category (A2.1's fix means an
+     * unmapped category shows no attributes at all, so this mapping is the
+     * only way attributes ever appear on a category's product form/variants).
+     * @return list<int>
+     */
+    public function mappedAttributeIds(int $categoryId): array
+    {
+        $rows = Database::connect()->table('category_attributes')
+            ->select('attribute_id')->where('category_id', $categoryId)
+            ->orderBy('attribute_id', 'ASC')->get()->getResultArray();
+
+        return array_map(static fn ($r) => (int) $r['attribute_id'], $rows);
+    }
+
+    /**
+     * Replaces the category's full attribute mapping with exactly the given set —
+     * simplest correct semantics for a checkbox-list admin screen: whatever is
+     * checked on save is the new mapping. Same transStart/transStatus shape as
+     * BrandController::saveCategories()'s brand_categories mapping: transComplete()
+     * alone rolls back silently on failure, and without checking transStatus() the
+     * caller would report "saved" regardless.
+     * @param list<int> $attributeIds
+     * @return bool true if the mapping was saved
+     */
+    public function setAttributeMapping(int $categoryId, array $attributeIds): bool
+    {
+        $db = Database::connect();
+        $db->transStart();
+        $db->table('category_attributes')->where('category_id', $categoryId)->delete();
+
+        if ($attributeIds !== []) {
+            $rows = array_map(static fn ($id) => ['category_id' => $categoryId, 'attribute_id' => $id], array_unique($attributeIds));
+            $db->table('category_attributes')->insertBatch($rows);
+        }
+        $db->transComplete();
+
+        return $db->transStatus();
+    }
+
     private function slug(string $name): string
     {
         $s = trim((string) preg_replace('/[^a-z0-9]+/', '-', strtolower($name)), '-');

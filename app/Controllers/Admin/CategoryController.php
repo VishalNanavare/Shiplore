@@ -105,6 +105,44 @@ final class CategoryController extends BaseController
         ]);
     }
 
+    public function attributesForm(int $id)
+    {
+        if ($denied = $this->guard('category.update')) {
+            return $denied;
+        }
+        $category = service('categoryRepository')->findById($id);
+        if ($category === null) {
+            return redirect()->to('admin/categories')->with('error', 'Category not found.');
+        }
+
+        return view('admin/categories/attributes', [
+            'title'     => 'Attributes · ' . $category['name'] . ' · Admin',
+            'pageTitle' => 'Attributes — ' . $category['name'],
+            'active'    => 'categories',
+            'userName'  => session()->get('user_name') ?: 'User',
+            'category'  => $category,
+            'attributes' => service('attributeRepository')->list('active'),
+            'mappedIds'  => service('categoryRepository')->mappedAttributeIds($id),
+        ]);
+    }
+
+    public function saveAttributes(int $id): RedirectResponse
+    {
+        if ($denied = $this->guard('category.update')) {
+            return $denied;
+        }
+        if (service('categoryRepository')->findById($id) === null) {
+            return redirect()->to('admin/categories')->with('error', 'Category not found.');
+        }
+
+        $ids  = array_filter(array_map('intval', (array) $this->request->getPost('attribute_ids')));
+        $saved = service('categoryRepository')->setAttributeMapping($id, $ids);
+
+        return $saved
+            ? redirect()->to('admin/categories/' . $id . '/attributes')->with('success', 'Attribute mapping saved.')
+            : redirect()->to('admin/categories/' . $id . '/attributes')->with('error', 'Could not save the attribute mapping. Nothing was changed.');
+    }
+
     public function activate(int $id): RedirectResponse
     {
         return $this->transition($id, 'active', 'Category activated.');

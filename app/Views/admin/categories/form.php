@@ -22,6 +22,7 @@
             </div>
             <div class="d-flex gap-2 mt-4">
                 <button class="btn btn-primary"><i class="bi bi-check2 me-1"></i><?= $isEdit ? 'Update' : 'Create' ?></button>
+                <?php if ($isEdit): ?><a href="<?= site_url('admin/categories/' . $row['id'] . '/attributes') ?>" class="btn btn-outline-primary"><i class="bi bi-tags me-1"></i>Manage attributes</a><?php endif; ?>
                 <a href="<?= site_url('admin/categories') ?>" class="btn btn-light">Cancel</a>
             </div>
         </form>
