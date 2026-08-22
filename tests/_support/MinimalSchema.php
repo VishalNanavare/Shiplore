@@ -574,6 +574,51 @@ trait MinimalSchema
         )');
     }
 
+    /** database/sql/01_master.sql:575-589. */
+    protected function ensureAttributesTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_attributes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL, name TEXT NOT NULL, type TEXT NOT NULL,
+            is_variant_defining INTEGER NOT NULL DEFAULT 0,
+            status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /** database/sql/01_master.sql:591-604. */
+    protected function ensureAttributeValuesTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_attribute_values (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            attribute_id INTEGER NOT NULL, value TEXT NOT NULL, sort_order INTEGER NOT NULL DEFAULT 0,
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /** database/sql/16_product_module.sql:248-265 — non-variant custom specs/EAV. */
+    protected function ensureProductAttributeValuesTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_product_attribute_values (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER NOT NULL, attribute_id INTEGER NOT NULL, attribute_value_id INTEGER,
+            value_text TEXT,
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT
+        )');
+    }
+
+    /** database/sql/01_master.sql:762-774 — ties a variant to its Size/Color/etc. value(s). */
+    protected function ensureVariantAttributeValuesTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_variant_attribute_values (
+            variant_id INTEGER NOT NULL, attribute_id INTEGER NOT NULL, attribute_value_id INTEGER NOT NULL,
+            created_at TEXT, updated_at TEXT
+        )');
+    }
+
     /** database/sql/86_pos_local_sales.sql — the on-prem Local API POS's sales-push table. */
     protected function ensurePosLocalSalesTables(): void
     {
