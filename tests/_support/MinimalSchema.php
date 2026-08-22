@@ -78,6 +78,48 @@ trait MinimalSchema
         )');
     }
 
+    /** database/22082026 current database.sql:71 (commission_plans, existing/read-only here) */
+    protected function ensureCommissionPlansTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_commission_plans (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT, name TEXT NOT NULL, type TEXT NOT NULL DEFAULT "flat",
+            default_rate REAL, min_amount REAL, max_amount REAL, base TEXT NOT NULL DEFAULT "pre_tax",
+            valid_from TEXT NOT NULL, valid_to TEXT,
+            status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /** database/22082026 current database.sql (commission_rules), extended by 13_business_type_commission.sql:65-72 */
+    protected function ensureCommissionRulesTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_commission_rules (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            commission_plan_id INTEGER NOT NULL, business_type_id INTEGER, category_id INTEGER,
+            product_id INTEGER, promotion_id INTEGER,
+            min_gmv REAL, max_gmv REAL, rate REAL NOT NULL DEFAULT 0,
+            commission_type TEXT NOT NULL DEFAULT "percentage", fixed_amount REAL,
+            include_gst INTEGER NOT NULL DEFAULT 0, priority INTEGER NOT NULL DEFAULT 0,
+            version INTEGER NOT NULL DEFAULT 1, effective_from TEXT, effective_to TEXT,
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
+    /** database/22082026 current database.sql (vendor_commission_overrides) */
+    protected function ensureVendorCommissionOverridesTable(): void
+    {
+        $this->schemaConn()->query('CREATE TABLE IF NOT EXISTS db_vendor_commission_overrides (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            vendor_id INTEGER NOT NULL, category_id INTEGER, rate REAL NOT NULL,
+            valid_from TEXT NOT NULL, valid_to TEXT, status TEXT NOT NULL DEFAULT "active",
+            created_by INTEGER, updated_by INTEGER,
+            created_at TEXT, updated_at TEXT, deleted_at TEXT
+        )');
+    }
+
     /**
      * database/sql/01_master.sql:380, gstin_status added by 12_gst_verification.sql:43,
      * min_order_value/delivery_fee/free_delivery_above by 44_shop_delivery_rules.sql:7-9,
