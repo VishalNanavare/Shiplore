@@ -353,6 +353,14 @@ $routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']
     $routes->post('attributes/(:num)/activate', 'Admin\AttributeController::activate/$1', ['filter' => 'csrf']);
     $routes->post('attributes/(:num)/deactivate', 'Admin\AttributeController::deactivate/$1', ['filter' => 'csrf']);
     $routes->post('attributes/(:num)/delete', 'Admin\AttributeController::delete/$1', ['filter' => 'csrf']);
+    $routes->get('attributes/(:num)/values', 'Admin\AttributeValueController::index/$1');
+    $routes->get('attributes/(:num)/values/new', 'Admin\AttributeValueController::new/$1');
+    $routes->post('attributes/(:num)/values/store', 'Admin\AttributeValueController::store/$1', ['filter' => 'csrf']);
+    $routes->get('attributes/(:num)/values/(:num)/edit', 'Admin\AttributeValueController::edit/$1/$2');
+    $routes->post('attributes/(:num)/values/(:num)/update', 'Admin\AttributeValueController::update/$1/$2', ['filter' => 'csrf']);
+    $routes->post('attributes/(:num)/values/(:num)/activate', 'Admin\AttributeValueController::activate/$1/$2', ['filter' => 'csrf']);
+    $routes->post('attributes/(:num)/values/(:num)/deactivate', 'Admin\AttributeValueController::deactivate/$1/$2', ['filter' => 'csrf']);
+    $routes->post('attributes/(:num)/values/(:num)/delete', 'Admin\AttributeValueController::delete/$1/$2', ['filter' => 'csrf']);
 
     // Brands
     $routes->get('brands', 'Admin\BrandController::index');

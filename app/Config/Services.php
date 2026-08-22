@@ -240,6 +240,15 @@ class Services extends BaseService
         return new \App\Models\AttributeRepository();
     }
 
+    public static function attributeValueRepository($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('attributeValueRepository');
+        }
+
+        return new \App\Models\AttributeValueRepository();
+    }
+
     public static function brandRepository($getShared = true)
     {
         return $getShared ? static::getSharedInstance('brandRepository') : new \App\Models\BrandRepository();

@@ -26,6 +26,9 @@
                         <td><?= $a['is_variant_defining'] ? '<span class="badge bg-info-subtle text-info">Yes</span>' : '<span class="text-secondary small">No</span>' ?></td>
                         <td><span class="badge text-bg-<?= $a['status'] === 'active' ? 'success' : 'secondary' ?>"><?= esc($a['status']) ?></span></td>
                         <td class="text-end">
+                            <?php if (in_array($a['type'], ['select', 'multiselect'], true)): ?>
+                                <a href="<?= site_url('admin/attributes/' . $a['id'] . '/values') ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-list-ul"></i> Manage values</a>
+                            <?php endif; ?>
                             <?php if ($a['status'] !== 'active'): ?>
                                 <a href="<?= site_url('admin/attributes/' . $a['id'] . '/edit') ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a> <form method="post" action="<?= site_url('admin/attributes/' . $a['id'] . '/activate') ?>" data-ajax-refresh><?= csrf_field() ?><button class="btn btn-sm btn-success"><i class="bi bi-check2"></i> Activate</button></form>
                             <?php else: ?>
