@@ -325,6 +325,12 @@ $routes->group('admin', ['filter' => 'webAuth:platform', 'subdomain' => 'admin']
     $routes->get('commission-rules/(:num)/edit', 'Admin\CommissionRuleController::edit/$1');
     $routes->post('commission-rules/(:num)/update', 'Admin\CommissionRuleController::update/$1', ['filter' => 'csrf']);
     $routes->post('commission-rules/(:num)/delete', 'Admin\CommissionRuleController::delete/$1', ['filter' => 'csrf']);
+    $routes->get('vendor-commission-overrides', 'Admin\VendorCommissionOverrideController::index');
+    $routes->get('vendor-commission-overrides/new', 'Admin\VendorCommissionOverrideController::new');
+    $routes->post('vendor-commission-overrides/store', 'Admin\VendorCommissionOverrideController::store', ['filter' => 'csrf']);
+    $routes->get('vendor-commission-overrides/(:num)/edit', 'Admin\VendorCommissionOverrideController::edit/$1');
+    $routes->post('vendor-commission-overrides/(:num)/update', 'Admin\VendorCommissionOverrideController::update/$1', ['filter' => 'csrf']);
+    $routes->post('vendor-commission-overrides/(:num)/delete', 'Admin\VendorCommissionOverrideController::delete/$1', ['filter' => 'csrf']);
 
     // Customers
     $routes->get('customers', 'Admin\CustomerController::index');
