@@ -26,9 +26,17 @@ final class AdminCategoryAttributeMappingTest extends CIUnitTestCase
         Services::injectMock('categoryRepository', new class {
             public function findById(int $id): ?array
             {
-                return $id === 1 ? ['id' => 1, 'name' => 'Short Top', 'status' => 'active'] : null;
+                return match ($id) {
+                    1 => ['id' => 1, 'name' => 'Short Top', 'status' => 'active'],
+                    2 => ['id' => 2, 'name' => 'Unmapped Category', 'status' => 'active'],
+                    default => null,
+                };
             }
-            public function mappedAttributeIds(int $categoryId): array { return [10]; }
+            public function mappedAttributeIds(int $categoryId): array
+            {
+                return $categoryId === 1 ? [10] : [];
+            }
+            public function inferredAttributeIds(int $categoryId): array { return [20]; }
             public function setAttributeMapping(int $categoryId, array $attributeIds): bool { return true; }
         });
 
@@ -101,6 +109,26 @@ final class AdminCategoryAttributeMappingTest extends CIUnitTestCase
         $result = $this->withSession($session)->post('admin/categories/1/attributes/save', $data);
         $result->assertRedirect();
         $result->assertSessionHas('success');
+    }
+
+    public function testBootstrapPreChecksInferredAttributesWhenUnmapped(): void
+    {
+        $result = $this->withSession($this->adminSession())->get('admin/categories/2/attributes?bootstrap=1');
+        $result->assertStatus(200);
+        $body = (string) $result->getBody();
+        $this->assertStringContainsString('value="20" id="attr20" checked', $body);
+        $this->assertStringContainsString('suggested', strtolower($body));
+    }
+
+    public function testBootstrapIsIgnoredWhenAlreadyMapped(): void
+    {
+        // id=1 already has an explicit mapping ([10]); bootstrap must never override
+        // an existing mapping, even if the query flag is present.
+        $result = $this->withSession($this->adminSession())->get('admin/categories/1/attributes?bootstrap=1');
+        $result->assertStatus(200);
+        $body = (string) $result->getBody();
+        $this->assertStringContainsString('value="10" id="attr10" checked', $body);
+        $this->assertStringNotContainsString('value="20" id="attr20" checked', $body);
     }
 
     public function testPermissionDeniedRedirectsToDashboard(): void

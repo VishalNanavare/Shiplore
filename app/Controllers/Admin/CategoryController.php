@@ -115,14 +115,27 @@ final class CategoryController extends BaseController
             return redirect()->to('admin/categories')->with('error', 'Category not found.');
         }
 
+        $repo      = service('categoryRepository');
+        $mappedIds = $repo->mappedAttributeIds($id);
+
+        // Bootstrap (A2.3): only offered when there is nothing explicit to lose —
+        // never overrides a mapping an admin already saved. Purely a suggestion for
+        // the checkboxes below; nothing is written until Save is clicked.
+        $bootstrapped = false;
+        if ($mappedIds === [] && $this->request->getGet('bootstrap') !== null) {
+            $mappedIds    = $repo->inferredAttributeIds($id);
+            $bootstrapped = true;
+        }
+
         return view('admin/categories/attributes', [
             'title'     => 'Attributes · ' . $category['name'] . ' · Admin',
             'pageTitle' => 'Attributes — ' . $category['name'],
             'active'    => 'categories',
             'userName'  => session()->get('user_name') ?: 'User',
             'category'  => $category,
-            'attributes' => service('attributeRepository')->list('active'),
-            'mappedIds'  => service('categoryRepository')->mappedAttributeIds($id),
+            'attributes'   => service('attributeRepository')->list('active'),
+            'mappedIds'    => $mappedIds,
+            'bootstrapped' => $bootstrapped,
         ]);
     }
 

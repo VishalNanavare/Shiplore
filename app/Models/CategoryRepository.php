@@ -98,6 +98,38 @@ final class CategoryRepository
     }
 
     /**
+     * Attributes real published products in this category actually use, inferred
+     * from product_attribute_values (specs) and variant_attribute_values
+     * (variants) — never applied automatically. An admin reviews this list on the
+     * A2.2 mapping screen (?bootstrap=1) and only category_attributes rows they
+     * explicitly Save become real. Scoped to published products only: a draft or
+     * rejected product's attribute usage is exactly the unreviewed noise (junk
+     * like "patel") this initiative exists to stop reintroducing.
+     * @return list<int>
+     */
+    public function inferredAttributeIds(int $categoryId): array
+    {
+        $db = Database::connect();
+
+        $viaSpec = $db->table('product_attribute_values pav')
+            ->select('pav.attribute_id')
+            ->join('products p', 'p.id = pav.product_id')
+            ->where('p.category_id', $categoryId)->where('p.status', 'published')
+            ->get()->getResultArray();
+
+        $viaVariant = $db->table('variant_attribute_values vav')
+            ->select('vav.attribute_id')
+            ->join('product_variants pv', 'pv.id = vav.variant_id')
+            ->join('products p', 'p.id = pv.product_id')
+            ->where('p.category_id', $categoryId)->where('p.status', 'published')
+            ->get()->getResultArray();
+
+        $ids = array_merge(array_column($viaSpec, 'attribute_id'), array_column($viaVariant, 'attribute_id'));
+
+        return array_values(array_unique(array_map('intval', $ids)));
+    }
+
+    /**
      * Attribute ids currently mapped to this category (A2.1's fix means an
      * unmapped category shows no attributes at all, so this mapping is the
      * only way attributes ever appear on a category's product form/variants).

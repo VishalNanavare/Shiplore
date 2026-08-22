@@ -10,6 +10,11 @@
     <div class="card-header fw-semibold">Attributes for "<?= esc($category['name']) ?>"</div>
     <div class="card-body">
         <p class="text-secondary small">Only checked attributes appear on this category's product form and Variants page. A category with nothing checked shows no attribute fields at all — it is not yet configured, not "everything".</p>
+        <?php if (! empty($bootstrapped)): ?>
+            <div class="alert alert-info">Nothing was mapped yet, so these checkboxes are <strong>suggested</strong> from what this category's published products already use — nothing is saved until you click "Save mapping". Uncheck anything that doesn't belong.</div>
+        <?php elseif (empty($mappedIds) && ! empty($attributes)): ?>
+            <div class="alert alert-light border">Not configured yet. <a href="<?= site_url('admin/categories/' . $category['id'] . '/attributes?bootstrap=1') ?>">Suggest a mapping from this category's existing products</a>, or check attributes below manually.</div>
+        <?php endif; ?>
         <?php if (empty($attributes)): ?>
             <div class="text-center text-secondary py-5"><i class="bi bi-tags display-6 d-block mb-2"></i>No active attributes yet. <a href="<?= site_url('admin/attributes/new') ?>">Create one</a>.</div>
         <?php else: ?>
