@@ -35,4 +35,25 @@ final class CommissionRuleRepository
 
         return (float) ($row['total'] ?? 0.0);
     }
+
+    /**
+     * Best-matching active override for this vendor: a row scoped to the product's
+     * leaf category beats a vendor-wide (category_id IS NULL) row when both exist.
+     * @return array<string,mixed>|null
+     */
+    public function activeVendorOverride(int $vendorId, int $categoryId): ?array
+    {
+        $today = date('Y-m-d');
+        $base  = Database::connect()->table('vendor_commission_overrides')
+            ->where('vendor_id', $vendorId)->where('status', 'active')->where('deleted_at', null)
+            ->where('valid_from <=', $today)
+            ->groupStart()->where('valid_to', null)->orWhere('valid_to >=', $today)->groupEnd();
+
+        $specific = (clone $base)->where('category_id', $categoryId)->get()->getRowArray();
+        if ($specific !== null) {
+            return $specific;
+        }
+
+        return $base->where('category_id', null)->get()->getRowArray();
+    }
 }
