@@ -38,7 +38,15 @@
     </div>
 </div>
 <style>
-.impersonation-bar{position:sticky;top:0;z-index:1080;background:linear-gradient(90deg,#7c2d12,#b45309);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+/* z-index BELOW .app-topbar's 1030 (app.css), deliberately. This bar is a sticky
+   sibling that renders right under the topbar and never visually overlaps it — but
+   at 1080 it outranked the topbar's own stacking context, which caps everything
+   inside it (including its user/notification dropdowns, Bootstrap default
+   z-index:1000) at 1030. Any value here >= 1030 swallows those dropdown popups, and
+   at 1080 it also sat above SweetAlert2's default z-index:1060, hiding every
+   SweetAlert behind it too. 1020 keeps the bar solid over ordinary scrolling
+   .app-content while staying clear of every interactive overlay in the app. */
+.impersonation-bar{position:sticky;top:0;z-index:1020;background:linear-gradient(90deg,#7c2d12,#b45309);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.18)}
 .impersonation-bar__inner{max-width:1320px;margin:0 auto;padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.875rem}
 .impersonation-bar__text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .impersonation-bar a,.impersonation-bar .btn-light{--bs-btn-color:#7c2d12}
