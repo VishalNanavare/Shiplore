@@ -53,10 +53,17 @@ final class StaffController extends BaseManufacturerController
             return $denied;
         }
 
+        $units = $this->units();
+
         return $this->render('manufacturer/staff/form', 'staff', 'Add Staff', [
             'staff'    => null,
-            'units'    => $this->units(),
-            'assigned' => [],
+            'units'    => $units,
+            // A single-unit manufacturer has no real assignment DECISION to make;
+            // leaving the checkbox unchecked by default is a silent trap — the form
+            // has no required marker on it, so "Create staff" fails validation with
+            // no visible reason the user connects to a checkbox they never noticed.
+            // @see Vendor\StaffController::new(), the counterpart this mirrors.
+            'assigned' => count($units) === 1 ? [(int) $units[0]['id']] : [],
             'types'    => ManufacturerStaffRepository::types(),
         ]);
     }

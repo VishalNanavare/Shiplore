@@ -98,6 +98,48 @@ final class VendorStaffTest extends CIUnitTestCase
         $this->assertStringContainsString('Login email', (string) $r->getBody());
     }
 
+    /**
+     * A vendor with exactly one shop has no real assignment DECISION to make, but the
+     * "Assign" checkbox rendered unchecked by default — a form.php:49 `checked`
+     * attribute driven entirely by $assigned, which StaffController::new() only ever
+     * populated from a ?shop= query param. Reported live: filling in every other *
+     * required field and clicking "Create staff" without noticing the lone checkbox
+     * (no asterisk, no visual cue it's required) fails validated() at
+     * "Assign the staff member to at least one of your shops." — read as "Add staff
+     * isn't working" because nothing about the form suggested that click was needed.
+     */
+    public function testNewFormPreselectsTheOnlyShopWhenTheVendorHasExactlyOne(): void
+    {
+        Services::injectMock('vendorShopRepository', new class {
+            public function list(int $v): array { return [['id' => 42, 'name' => 'Little Feet Kidswear']]; }
+        });
+
+        $r = $this->withSession($this->sess())->get('vendor/staff/new');
+
+        $r->assertStatus(200);
+        $this->assertMatchesRegularExpression(
+            '/name="shop_ids\[\]" value="42"[^>]*checked/',
+            (string) $r->getBody(),
+            'the only shop a single-shop vendor could possibly assign to should be preselected',
+        );
+    }
+
+    /** A vendor with more than one shop keeps the existing behaviour: no default pick. */
+    public function testNewFormLeavesShopsUnselectedWhenTheVendorHasMoreThanOne(): void
+    {
+        $r = $this->withSession($this->sess())->get('vendor/staff/new');
+
+        $r->assertStatus(200);
+        $this->assertDoesNotMatchRegularExpression(
+            '/name="shop_ids\[\]" value="1"[^>]*checked/',
+            (string) $r->getBody(),
+        );
+        $this->assertDoesNotMatchRegularExpression(
+            '/name="shop_ids\[\]" value="2"[^>]*checked/',
+            (string) $r->getBody(),
+        );
+    }
+
     public function testCreateConstrainsShopsToOwnVendor(): void
     {
         // shop 99 is not the vendor's; it must be filtered out, only 1 + 2 survive

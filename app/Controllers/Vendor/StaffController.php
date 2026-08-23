@@ -43,10 +43,17 @@ final class StaffController extends BaseVendorController
 
         // Preselect a shop when adding staff from a shop console.
         $preselect = (int) $this->request->getGet('shop');
-        $assigned  = $preselect > 0 && in_array($preselect, $this->allowedShopIds(), true) ? [$preselect] : [];
+        $shops     = $this->shops();
+        $assigned  = $preselect > 0 && in_array($preselect, $this->allowedShopIds(), true)
+            ? [$preselect]
+            // A single-shop vendor has no real assignment DECISION to make; leaving
+            // the checkbox unchecked by default is a silent trap — the form has no
+            // required marker on it, so "Create staff" fails validation with no
+            // visible reason the user connects to a checkbox they never noticed.
+            : (count($shops) === 1 ? [(int) $shops[0]['id']] : []);
 
         return $this->render('vendor/staff/form', 'staff', 'Add Staff', [
-            'staff' => null, 'shops' => $this->shops(), 'assigned' => $assigned,
+            'staff' => null, 'shops' => $shops, 'assigned' => $assigned,
             'asRequest' => ! $this->canManageStaff(),
         ]);
     }
