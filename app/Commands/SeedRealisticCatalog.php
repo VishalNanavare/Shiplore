@@ -358,14 +358,19 @@ final class SeedRealisticCatalog extends BaseCommand
             $mrp   = (int) round($base * $mult);
 
             $productId = service('adminProductRepository')->createWithVariant([
-                'vendor_id'    => $vendorId,
-                'category_id'  => $categoryId,
-                'tax_class_id' => self::TAX_CLASS_ID,
-                'unit_id'      => self::UNIT_ID,
-                'title'        => $title,
-                'description'  => $title . ' from our latest collection — quality fabric, everyday comfort, true-to-size fit.',
-                'mrp'          => $mrp,
-                'base_price'   => $base,
+                'vendor_id'         => $vendorId,
+                'category_id'       => $categoryId,
+                'tax_class_id'      => self::TAX_CLASS_ID,
+                'unit_id'           => self::UNIT_ID,
+                'title'             => $title,
+                'description'       => $title . ' from our latest collection — quality fabric, everyday comfort, true-to-size fit.',
+                'mrp'               => $mrp,
+                'base_price'        => $base,
+                // headerColumns() defaults this OFF for admin-created drafts; this
+                // seeder simulates a live storefront catalog, so it must opt in
+                // explicitly or every seeded product publishes invisible to the
+                // customer-facing product query (visibleScope() requires it = 1).
+                'is_online_enabled' => 1,
             ], self::SEED_ACTOR_ID);
             if ($productId === null) {
                 continue;
