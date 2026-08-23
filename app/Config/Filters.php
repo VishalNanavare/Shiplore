@@ -4,7 +4,6 @@ namespace Config;
 
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
-use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\ForceHTTPS;
 use CodeIgniter\Filters\Honeypot;
@@ -24,7 +23,11 @@ class Filters extends BaseFilters
      * or [filter_name => [classname1, classname2, ...]]
      */
     public array $aliases = [
-        'csrf'          => CSRF::class,
+        // App\Filters\Csrf (extends the framework's) converts a failed AJAX POST's
+        // thrown SecurityException into the same JSON envelope AjaxRedirectFilter
+        // uses for a redirect, so ajax-forms.js can show it instead of silently
+        // document.write()-ing a raw error page over the form.
+        'csrf'          => \App\Filters\Csrf::class,
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
