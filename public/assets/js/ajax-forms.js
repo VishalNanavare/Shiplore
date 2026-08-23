@@ -261,6 +261,37 @@
                 var res = out.json;
                 rotateCsrf(res, out.hash);
 
+                // Opt-in: this form wants EVERY result — success or failure — shown as
+                // a centered confirm modal, with no automatic navigation either way.
+                // data-ajax-success-confirm's value is the confirm button's label on
+                // success ('OK' when the attribute is present but empty); a failure
+                // always says 'OK' and, critically, does NOT navigate anywhere — the
+                // page only ever reloads after a SUCCESS, once the user dismisses the
+                // modal, so a validation error leaves the form and its input exactly
+                // as the user left it instead of losing it to the redirect-on-failure
+                // behaviour below (built for a full-page form, not a modal hosted on
+                // the page it would otherwise navigate back to).
+                var successConfirm = form.getAttribute('data-ajax-success-confirm');
+                if (successConfirm === null && submitter) {
+                    successConfirm = submitter.getAttribute('data-ajax-success-confirm');
+                }
+                if (successConfirm !== null) {
+                    finish(form, buttons);
+                    var afterDismiss = res.ok ? function () { window.location.reload(); } : function () {};
+                    var fallbackMsg  = res.ok ? 'Done' : 'Something went wrong. Please try again.';
+                    if (hasSwal()) {
+                        window.Swal.fire({
+                            icon: res.ok ? 'success' : 'error',
+                            title: res.message || fallbackMsg,
+                            confirmButtonText: res.ok ? (successConfirm || 'OK') : 'OK'
+                        }).then(afterDismiss);
+                    } else {
+                        window.alert(res.message || fallbackMsg);
+                        afterDismiss();
+                    }
+                    return;
+                }
+
                 if (res.ok) {
                     // "Stay" actions (wishlist / add-to-cart / quick toggles) opt out of
                     // the full-page navigation: the controller still does its usual
@@ -282,32 +313,6 @@
                         form.dispatchEvent(new CustomEvent('app:success', {
                             bubbles: true, detail: { response: res, form: form, submitter: submitter }
                         }));
-                        return;
-                    }
-
-                    // Opt-in: a centered confirm modal instead of the default toast +
-                    // immediate navigate. data-ajax-success-confirm's value is the
-                    // confirm button's label ('OK' when the attribute is present but
-                    // empty). The page only reloads once the user dismisses it, so a
-                    // multi-field success message (e.g. "Staff member created.") stays
-                    // readable instead of flashing past during a page transition.
-                    var successConfirm = form.getAttribute('data-ajax-success-confirm');
-                    if (successConfirm === null && submitter) {
-                        successConfirm = submitter.getAttribute('data-ajax-success-confirm');
-                    }
-                    if (successConfirm !== null) {
-                        finish(form, buttons);
-                        var reload = function () { window.location.reload(); };
-                        if (hasSwal()) {
-                            window.Swal.fire({
-                                icon: 'success',
-                                title: res.message || 'Done',
-                                confirmButtonText: successConfirm || 'OK'
-                            }).then(reload);
-                        } else {
-                            window.alert(res.message || 'Done');
-                            reload();
-                        }
                         return;
                     }
 

@@ -146,4 +146,55 @@ final class AjaxFormTest extends CIUnitTestCase
             'assets/js/ajax-forms.js and public/assets/js/ajax-forms.js have diverged',
         );
     }
+
+    // -------------------------------------------------- data-ajax-success-confirm
+
+    /**
+     * A form carrying data-ajax-success-confirm wants EVERY result — success or
+     * failure — shown as a centered SweetAlert with no automatic navigation
+     * either way (reported live: the default error path's redirect-after-1.5s,
+     * built for a full-page form, was firing for a form now hosted in a modal on
+     * the page it would "helpfully" navigate back to, and the toast before it was
+     * too brief to read — together that looked exactly like an unexplained auto
+     * page reload). Only a SUCCESS reloads, and only once the user dismisses the
+     * modal themselves.
+     *
+     * Source assertions (no JS runner in this project, matching the pattern this
+     * file already uses for the cross-origin guard) — comments stripped first for
+     * the same reason: this feature's own comments discuss the very identifiers
+     * being searched for.
+     */
+    public function testAjaxSuccessConfirmHandlesBothOutcomesBeforeTheDefaultRedirectPath(): void
+    {
+        $js   = (string) file_get_contents(FCPATH . 'assets/js/ajax-forms.js');
+        $code = preg_replace('!/\*.*?\*/|//[^\n]*!s', '', $js);
+
+        $confirmPos = strpos($code, "getAttribute('data-ajax-success-confirm')");
+        $okBranchPos = strpos($code, 'if (res.ok) {');
+        $this->assertNotFalse($confirmPos, 'the data-ajax-success-confirm check must exist');
+        $this->assertNotFalse($okBranchPos, 'the existing if (res.ok) branch must still exist');
+        $this->assertLessThan(
+            $okBranchPos,
+            $confirmPos,
+            'the opt-in check must run BEFORE the default res.ok branch, so it sees a FAILURE too — not just success',
+        );
+
+        // Isolate the opt-in block's own body: from its guard to its own `return;`.
+        $blockStart = strpos($code, 'if (successConfirm !== null) {', $confirmPos);
+        $this->assertNotFalse($blockStart);
+        $blockEnd = strpos($code, 'return;', $blockStart);
+        $this->assertNotFalse($blockEnd);
+        $block = substr($code, $blockStart, $blockEnd - $blockStart);
+
+        $this->assertStringNotContainsString(
+            'res.redirect',
+            $block,
+            'the opt-in block must never consult res.redirect — no automatic navigation on failure, unlike the default error path',
+        );
+        $this->assertMatchesRegularExpression(
+            '/res\.ok\s*\?\s*function\s*\(\s*\)\s*\{\s*window\.location\.reload\(\)/',
+            $block,
+            'reload must be CONDITIONAL on res.ok — a failure must not reload and lose the user\'s input',
+        );
+    }
 }
