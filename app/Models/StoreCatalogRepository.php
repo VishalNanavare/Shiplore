@@ -275,6 +275,34 @@ final class StoreCatalogRepository
     }
 
     /**
+     * Ids of a category and every category beneath it, read from the materialised
+     * `categories.path`. A category with no path resolves to just itself.
+     *
+     * @param array{id:int|string,path?:string|null} $cat the resolved category row
+     * @return list<int> never empty — falls back to the category's own id
+     */
+    private function categorySubtreeIds(array $cat): array
+    {
+        $path = (string) ($cat['path'] ?? '');
+        if ($path === '') {
+            return [(int) $cat['id']];
+        }
+
+        // CategoryRepository::create() writes the path as `/<parent ids>/<own id>/`,
+        // ALREADY slash-terminated, so appending another one built the pattern
+        // `/101//%` — which cannot match a child's `/101/105/`. rtrim() first so the
+        // descendant prefix carries exactly one slash under that format and under the
+        // older slug paths ('snacks'), stored without a trailing one. The slash is
+        // what keeps the match on a path boundary: `/101/%` cannot swallow `/1010/`.
+        $descendants = rtrim($path, '/') . '/';
+        $rows        = Database::connect()->table('categories')->select('id')
+            ->groupStart()->where('path', $path)->orLike('path', $descendants, 'after')->groupEnd()
+            ->where('deleted_at', null)->get()->getResultArray();
+
+        return array_map('intval', array_column($rows, 'id')) ?: [(int) $cat['id']];
+    }
+
+    /**
      * Base published-product builder shared by products()/countProducts().
      *
      * @param string $idxHint Optional MySQL index hint appended to the FROM clause
@@ -355,13 +383,8 @@ final class StoreCatalogRepository
             // is used instead of a LIKE on c.path that forces a full scan.
             $cat = Database::connect()->table('categories')->select('id, path')
                 ->where('slug', (string) $opts['category'])->where('deleted_at', null)->get()->getRowArray();
-            if ($cat !== null && ($cat['path'] ?? '') !== '') {
-                $subIds = Database::connect()->table('categories')->select('id')
-                    ->groupStart()->where('path', $cat['path'])->orLike('path', $cat['path'] . '/', 'after')->groupEnd()
-                    ->where('deleted_at', null)->get()->getResultArray();
-                $b->whereIn('p.category_id', array_column($subIds, 'id') ?: [(int) $cat['id']]);
-            } elseif ($cat !== null) {
-                $b->where('p.category_id', (int) $cat['id']);
+            if ($cat !== null) {
+                $b->whereIn('p.category_id', $this->categorySubtreeIds($cat));
             }
         }
         if (! in_array('brand', $skip, true) && ! empty($opts['brand'])) {
