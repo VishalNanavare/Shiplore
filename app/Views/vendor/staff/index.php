@@ -29,7 +29,7 @@ $availBadge = ['available' => 'success', 'busy' => 'warning', 'offline' => 'seco
 <div class="row g-3">
     <div class="col-lg-7"><div class="card h-100">
         <div class="card-header d-flex justify-content-between align-items-center"><span class="fw-semibold">Staff</span>
-            <?php if (! empty($canManage)): ?><a href="<?= site_url('vendor/staff/new') ?>" class="btn btn-sm btn-primary"><i class="bi bi-person-plus me-1"></i>Add staff</a><?php else: ?><span class="text-secondary small"><?= count($staff) ?></span><?php endif; ?>
+            <?php if (! empty($canManage)): ?><button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal"><i class="bi bi-person-plus me-1"></i>Add staff</button><?php else: ?><span class="text-secondary small"><?= count($staff) ?></span><?php endif; ?>
         </div>
         <div class="table-responsive" data-ajax-region><table class="table table-hover align-middle mb-0">
             <thead class="table-light"><tr><th>Name</th><th>Role</th><th>Shops</th><th>Status</th><?php if (! empty($canManage)): ?><th></th><?php endif; ?></tr></thead>
@@ -72,4 +72,30 @@ $availBadge = ['available' => 'success', 'busy' => 'warning', 'offline' => 'seco
         </table></div>
     </div></div>
 </div>
+
+<?php if (! empty($canManage)): ?>
+<div class="modal fade" id="addStaffModal" tabindex="-1" aria-labelledby="addStaffModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" action="<?= site_url('vendor/staff') ?>" data-ajax-success-confirm="Continue">
+                <?= csrf_field() ?>
+                <div class="modal-header">
+                    <h2 class="modal-title h5 mb-0" id="addStaffModalLabel"><i class="bi bi-person-plus me-1"></i>Add staff</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <?php if (! empty($asRequest)): ?>
+                        <div class="alert alert-info d-flex align-items-center"><i class="bi bi-shield-check me-2"></i>This change will be <strong class="mx-1">submitted to the vendor for approval</strong> before it takes effect.</div>
+                    <?php endif; ?>
+                    <?= $this->include('vendor/staff/_form_fields') ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i>Create staff</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 <?= $this->endSection() ?>

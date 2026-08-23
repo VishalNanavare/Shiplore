@@ -19,8 +19,9 @@ final class StaffController extends BaseVendorController
         if ($denied = $this->requireVendor()) {
             return $denied;
         }
-        $repo = service('vendorStaffRepository');
-        $vid  = $this->vendorId();
+        $repo  = service('vendorStaffRepository');
+        $vid   = $this->vendorId();
+        $shops = $this->shops();
 
         return $this->render('vendor/staff/index', 'staff', 'Staff & Riders', [
             'staff'    => $repo->staffWithShops($vid),
@@ -32,6 +33,9 @@ final class StaffController extends BaseVendorController
             // Server-side check in addRider() is the real boundary; this only hides
             // the form for a role that would just get "You don't have permission."
             'canAddRider' => $this->isOwner() || $this->can('rider.manage') || $this->can('vendor_staff.manage'),
+            // Backing data for the "Add Staff" modal's shared _form_fields partial.
+            'shops'    => $shops,
+            'assigned' => $this->defaultAssignedShops($shops),
         ]);
     }
 
@@ -46,11 +50,7 @@ final class StaffController extends BaseVendorController
         $shops     = $this->shops();
         $assigned  = $preselect > 0 && in_array($preselect, $this->allowedShopIds(), true)
             ? [$preselect]
-            // A single-shop vendor has no real assignment DECISION to make; leaving
-            // the checkbox unchecked by default is a silent trap — the form has no
-            // required marker on it, so "Create staff" fails validation with no
-            // visible reason the user connects to a checkbox they never noticed.
-            : (count($shops) === 1 ? [(int) $shops[0]['id']] : []);
+            : $this->defaultAssignedShops($shops);
 
         return $this->render('vendor/staff/form', 'staff', 'Add Staff', [
             'staff' => null, 'shops' => $shops, 'assigned' => $assigned,
@@ -226,6 +226,19 @@ final class StaffController extends BaseVendorController
     private function shops(): array
     {
         return service('vendorShopRepository')->list((int) $this->vendorId());
+    }
+
+    /**
+     * A single-shop vendor has no real assignment DECISION to make; leaving the
+     * "Assign" checkbox unchecked by default is a silent trap — the form has no
+     * required marker on it, so "Create staff" fails validation with no visible
+     * reason the user connects to a checkbox they never noticed.
+     * @param list<array<string,mixed>> $shops
+     * @return list<int>
+     */
+    private function defaultAssignedShops(array $shops): array
+    {
+        return count($shops) === 1 ? [(int) $shops[0]['id']] : [];
     }
 
     /**

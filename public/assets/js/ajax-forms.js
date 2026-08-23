@@ -285,6 +285,32 @@
                         return;
                     }
 
+                    // Opt-in: a centered confirm modal instead of the default toast +
+                    // immediate navigate. data-ajax-success-confirm's value is the
+                    // confirm button's label ('OK' when the attribute is present but
+                    // empty). The page only reloads once the user dismisses it, so a
+                    // multi-field success message (e.g. "Staff member created.") stays
+                    // readable instead of flashing past during a page transition.
+                    var successConfirm = form.getAttribute('data-ajax-success-confirm');
+                    if (successConfirm === null && submitter) {
+                        successConfirm = submitter.getAttribute('data-ajax-success-confirm');
+                    }
+                    if (successConfirm !== null) {
+                        finish(form, buttons);
+                        var reload = function () { window.location.reload(); };
+                        if (hasSwal()) {
+                            window.Swal.fire({
+                                icon: 'success',
+                                title: res.message || 'Done',
+                                confirmButtonText: successConfirm || 'OK'
+                            }).then(reload);
+                        } else {
+                            window.alert(res.message || 'Done');
+                            reload();
+                        }
+                        return;
+                    }
+
                     if (res.redirect && !stay) {
                         // Relay the success message to the destination page, keep the
                         // overlay up through the navigation for a smooth transition.

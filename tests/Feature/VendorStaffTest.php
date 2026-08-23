@@ -99,6 +99,61 @@ final class VendorStaffTest extends CIUnitTestCase
     }
 
     /**
+     * "Add staff" is now a modal on the list page itself, not a link to a separate
+     * page — the form fields (including the shop-assignment table) must be present
+     * in the vendor/staff response body, and the button must trigger the modal
+     * instead of navigating away.
+     */
+    public function testStaffListPageEmbedsTheAddStaffModal(): void
+    {
+        $body = (string) $this->withSession($this->sess())->get('vendor/staff')->getBody();
+
+        $this->assertStringContainsString('id="addStaffModal"', $body);
+        $this->assertStringContainsString('data-bs-target="#addStaffModal"', $body);
+        $this->assertStringContainsString('name="shop_ids[]"', $body, 'the shared form-fields partial must be rendered inside the modal');
+        $this->assertDoesNotMatchRegularExpression(
+            '/href="[^"]*vendor\/staff\/new"[^>]*>\s*<i[^>]*>\s*<\/i>\s*Add staff/',
+            $body,
+            'the button must no longer link to the standalone /new page',
+        );
+    }
+
+    /**
+     * The modal's create form must reuse the same single-shop preselection as the
+     * standalone /new page — VendorStaffTest's sibling test for that page already
+     * pins the underlying defaultAssignedShops() logic; this pins it flows into
+     * index()'s modal too.
+     */
+    public function testAddStaffModalPreselectsTheOnlyShopWhenTheVendorHasExactlyOne(): void
+    {
+        Services::injectMock('vendorShopRepository', new class {
+            public function list(int $v): array { return [['id' => 42, 'name' => 'Little Feet Kidswear']]; }
+        });
+
+        $body = (string) $this->withSession($this->sess())->get('vendor/staff')->getBody();
+
+        $this->assertMatchesRegularExpression(
+            '/name="shop_ids\[\]" value="42"[^>]*checked/',
+            $body,
+        );
+    }
+
+    /**
+     * The modal's create form must opt into the "show a centered success modal,
+     * reload on confirm" ajax-forms.js behaviour rather than its default
+     * toast-then-navigate — see ajax-forms.js's data-ajax-success-confirm handling.
+     */
+    public function testAddStaffModalFormOptsIntoTheSuccessConfirmModal(): void
+    {
+        $body = (string) $this->withSession($this->sess())->get('vendor/staff')->getBody();
+
+        $this->assertMatchesRegularExpression(
+            '/<form[^>]*action="[^"]*vendor\/staff"[^>]*data-ajax-success-confirm/',
+            $body,
+        );
+    }
+
+    /**
      * A vendor with exactly one shop has no real assignment DECISION to make, but the
      * "Assign" checkbox rendered unchecked by default — a form.php:49 `checked`
      * attribute driven entirely by $assigned, which StaffController::new() only ever
